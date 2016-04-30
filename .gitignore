@@ -7,3 +7,12 @@ release.properties
 dependency-reduced-pom.xml
 buildNumber.properties
 .mvn/timing.properties
+/src/main/webapp/classic/
+/src/main/webapp/ext/
+/src/main/webapp/modern/
+/src/main/webapp/modern.json
+/src/main/webapp/classic.json
+/src/main/webapp/index.html
+/src/main/webapp/cache.appcache
+/src/main/webapp/archive/
+/src/main/sencha/build/
