@@ -20,18 +20,19 @@
         </message-converters>
     </annotation-driven>
 
-    <!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
-    <resources mapping="/resources/**" location="/resources/" />
     <!-- static resources like Javascript, images, css and its location -->
-    <resources mapping="/app/**" location="/app/"/>
-    <resources mapping="/include/**" location="/include/"/>
-
     <!-- ExtJS -->
+    <resources mapping="/resources/**" location="/resources/" />
     <resources mapping="/ext/**" location="/ext/"/>
+    <resources mapping="/app/**" location="/app/"/>
     <resources mapping="/classic/**" location="/classic/"/>
     <resources mapping="/modern/**" location="/modern/"/>
-    <resources mapping="/resources/**" location="/resources/"/>
     <resources mapping="/archive/**" location="/archive/"/>
+    <resources mapping="/index.html" location="/index.html"/>
+    <resources mapping="/cache.appcache" location="/cache.appcache"/>
+    <resources mapping="/cache.appcache" location="/cache.appcache"/>
+    <resources mapping="/classic.json" location="/classic.json"/>
+    <resources mapping="/modern.json" location="/modern.json"/>
 
     <!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
     <beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">

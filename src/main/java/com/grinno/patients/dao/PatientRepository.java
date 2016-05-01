@@ -22,12 +22,14 @@ public class PatientRepository {
     /**
      *
      * @param patient
+     * @return 
      */
-    public void insert(Patient patient) {
+    public Patient insert(Patient patient) {
         if (!mongoTemplate.collectionExists(Patient.class)) {
             mongoTemplate.createCollection(Patient.class);
         }
         mongoTemplate.insert(patient, COLLECTION_NAME);
+        return patient;
     }
 
     /**
@@ -58,9 +60,9 @@ public class PatientRepository {
         return mongoTemplate.findAll(Patient.class, COLLECTION_NAME);
     }
 
-    public Patient remove(String pesel) {
+    public Patient remove(String id) {
         Patient patient = mongoTemplate.findOne(
-                Query.query(Criteria.where("pesel").is(pesel)), Patient.class, COLLECTION_NAME);
+                Query.query(Criteria.where("_id").is(id)), Patient.class, COLLECTION_NAME);
         mongoTemplate.remove(patient, COLLECTION_NAME);
 
         return patient;

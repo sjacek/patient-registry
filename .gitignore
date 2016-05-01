@@ -16,3 +16,10 @@ buildNumber.properties
 /src/main/webapp/cache.appcache
 /src/main/webapp/archive/
 /src/main/sencha/build/
+/src/main/webapp/resources/ext/
+/src/main/webapp/resources/font-awesome/
+/src/main/webapp/resources/font-ext/
+/src/main/webapp/resources/fonts/
+/src/main/webapp/resources/Patients-all.css
+/src/main/webapp/resources/Patients-all_1.css
+/src/main/webapp/resources/Patients-all_2.css

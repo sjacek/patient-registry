@@ -38,7 +38,6 @@ public class Patient extends AbstractEntity {
     private String firstName;
     private String secondName;
     private String lastName;
-
     private String pesel;
 
     public Patient() {
