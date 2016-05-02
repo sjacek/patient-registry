@@ -23,3 +23,6 @@ buildNumber.properties
 /src/main/webapp/resources/Patients-all.css
 /src/main/webapp/resources/Patients-all_1.css
 /src/main/webapp/resources/Patients-all_2.css
+/src/main/sencha/sass/example/bootstrap.json
+/src/main/sencha/classic.json
+/src/main/sencha/modern.json
