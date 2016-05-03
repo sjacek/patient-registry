@@ -94,7 +94,7 @@ public class Patient extends AbstractEntity {
 
     @Override
     public String toString() {
-        return "Patient[" + getFirstName() + ", " + getSecondName() + ", " + getLastName() + ", " + getPesel() + "]";
+        return super.toString() + "[" + getFirstName() + ", " + getSecondName() + ", " + getLastName() + ", " + getPesel() + "]";
     }
 
     @Override

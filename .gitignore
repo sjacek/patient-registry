@@ -26,3 +26,5 @@ buildNumber.properties
 /src/main/sencha/sass/example/bootstrap.json
 /src/main/sencha/classic.json
 /src/main/sencha/modern.json
+/test1/nbproject/private/
+/nbproject/

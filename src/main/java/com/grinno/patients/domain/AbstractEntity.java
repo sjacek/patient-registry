@@ -28,9 +28,15 @@ import javax.json.JsonObjectBuilder;
 public abstract class AbstractEntity implements JsonItem, Serializable {
 
     @Override
+    public String toString() {
+        return this.getClass().getTypeName();
+    }
+
+    @Override
     public JsonObject toJson() {
         JsonObjectBuilder builder = Json.createObjectBuilder();
         addJson(builder);
         return builder.build();
     }
+
 }

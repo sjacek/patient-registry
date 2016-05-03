@@ -16,8 +16,9 @@
  */
 package com.grinno.patients.ajax;
 
-import com.grinno.patients.dao.PatientRepository;
+import com.grinno.patients.dao.UserRepository;
 import com.grinno.patients.model.Patient;
+import com.grinno.patients.model.User;
 import com.grinno.patients.vo.Result;
 import com.grinno.patients.vo.ResultFactory;
 import java.util.List;
@@ -37,13 +38,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * @author jacek
  */
 @Controller
-@RequestMapping("/patient")
-public class PatientHandler extends AbstractHandler {
+@RequestMapping("/user")
+public class UserHandler extends AbstractHandler {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(PatientHandler.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserHandler.class);
 
     @Autowired
-    public PatientRepository patientRepository;
+    public UserRepository userRepository;
     
     @RequestMapping(value="/find", method = RequestMethod.GET, produces = {"application/json"})
     @ResponseBody
@@ -52,28 +53,28 @@ public class PatientHandler extends AbstractHandler {
         if (sessionUser == null)
             return getJsonErrorMsg("User is not logged on");
 */        
-        Patient patient = patientRepository.findOneById(id);
-        return getJsonSuccessData(patient);
+        User user = userRepository.findOneById(id);
+        return getJsonSuccessData(user);
 //        return getJsonErrorMsg(ar.getMsg());
     }
 
     @RequestMapping(value="/store", method = RequestMethod.POST, produces = {"application/json"})
     @ResponseBody
     public String store(@RequestParam(value="data", required = true) String jsonData, HttpServletRequest request) {
-        LOGGER.debug("PatientHandler.store(" + jsonData + ")");
+        LOGGER.debug("UserHandler.store(" + jsonData + ")");
 /*        User sessionUser = getSessionUser(request);
         if (sessionUser == null)
             return getJsonErrorMsg("User is not logged on");
 */
         JsonObject jsonObj = parseJsonObject(jsonData);
-        Patient patient = new Patient(
+        User user = new User(
+                jsonObj.getString("loginName"),
                 jsonObj.getString("firstName"),
-                jsonObj.getString("secondName"),
                 jsonObj.getString("lastName"),
-                jsonObj.getString("pesel"));
-        patientRepository.insert(patient);
-//        Result<Patient> result = ResultFactory.getSuccessResult(patientRepository.findOneByPesel(pesel));
-        Result<Patient> result = ResultFactory.getSuccessResult(patient);
+                jsonObj.getString("email")
+                );
+        userRepository.insert(user);
+        Result<User> result = ResultFactory.getSuccessResult(user);
         return getJsonSuccessData(result.getData());
     }
 
@@ -86,7 +87,7 @@ public class PatientHandler extends AbstractHandler {
             return getJsonErrorMsg("User is not logged on");
         }
 */
-        Result<List<Patient>> result = ResultFactory.getSuccessResult(patientRepository.findAll());
+        Result<List<User>> result = ResultFactory.getSuccessResult(userRepository.findAll());
         
         if (result.isSuccess())
             return getJsonSuccessData(result.getData());
@@ -102,7 +103,7 @@ public class PatientHandler extends AbstractHandler {
         }
 */
         JsonObject jsonObj = parseJsonObject(jsonData);
-        Result<Patient> result = ResultFactory.getSuccessResult(patientRepository.remove(jsonObj.getString("id")));
+        Result<User> result = ResultFactory.getSuccessResult(userRepository.remove(jsonObj.getString("id")));
 
         if (result.isSuccess())
             return getJsonSuccessData(result.getData());

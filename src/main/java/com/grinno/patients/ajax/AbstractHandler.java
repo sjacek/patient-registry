@@ -50,9 +50,9 @@ public class AbstractHandler {
         
         final JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
         
-        for (JsonItem ji : results) {
+        results.stream().forEach((ji) -> {
             arrayBuilder.add(ji.toJson());
-        }
+        });
         
         builder.add("data", arrayBuilder);
         
