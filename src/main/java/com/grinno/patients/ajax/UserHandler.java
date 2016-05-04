@@ -17,7 +17,6 @@
 package com.grinno.patients.ajax;
 
 import com.grinno.patients.dao.UserRepository;
-import com.grinno.patients.model.Patient;
 import com.grinno.patients.model.User;
 import com.grinno.patients.vo.Result;
 import com.grinno.patients.vo.ResultFactory;

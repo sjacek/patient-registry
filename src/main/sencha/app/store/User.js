@@ -17,24 +17,20 @@
 
 /* global Ext */
 
-Ext.define('Patients.store.Patients', {
+Ext.define('Patients.store.User', {
     extend: 'Ext.data.Store',
-
-    alias: 'store.patients',
-
+    requires: ['Patients.model.User'],
     pageSize: 25,
     autoLoad: true,
     autoSync: true,
-    model: 'Patients.model.PatientModel',
+    model: 'Patients.model.User',
     proxy: {
-        type: 'rest',
-        url: '/patients.svc/patients',
+        type: 'ajax',
+        url: '/patients/user/findAll.json',
         reader: {
             type: 'json',
-            rootProperty: 'patients'
-        },
-        writer: {
-            type: 'json'
+            rootProperty: 'data',
+            totalProperty: 'total'
         }
 //    proxy: {
 //        type: 'rest',

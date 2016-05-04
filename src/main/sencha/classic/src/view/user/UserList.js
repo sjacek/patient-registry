@@ -20,53 +20,53 @@
 /**
  * This view is an example list of people.
  */
-Ext.define('Patients.view.patient.PatientList', {
+Ext.define('Patients.view.user.UserList', {
     extend: 'Ext.grid.Panel',
-    xtype: 'patientlist',
+    xtype: 'userlist',
 
     requires: [
-        'Patients.model.PatientViewModel',
-        'Patients.store.Patient'
+        'Patients.model.UserViewModel',
+        'Patients.store.User'
     ],
-    controller: 'patientlist',
-    reference: 'patientListGrid',
+    controller: 'userlist',
+    reference: 'userListGrid',
 
-    title: 'Patient List',
+    title: 'User List',
 
     listeners: {
         selectionchange: 'onSelectionChange',
 //        select: 'onItemSelected'
         rowdblclick: 'onRowDblClick'
     },
-    viewModel: { type: 'patient' },
+    viewModel: { type: 'user' },
 //    bind: '{patients}',
-    store: { type: 'patient' },
+    store: { type: 'user' },
 
     columns: [
         { text: 'Id',          dataIndex: 'id' },
+        { text: 'Login',       dataIndex: 'loginName' },
         { text: 'First Name',  dataIndex: 'firstName' },
-        { text: 'Second Name', dataIndex: 'secondName' },
         { text: 'Last Name',   dataIndex: 'lastName' },
-        { text: 'PESEL',       dataIndex: 'pesel', flex: 1 }
+        { text: 'e-mail',      dataIndex: 'email', flex: 1 }
     ],
     tbar: ['->', {
             text: 'Add',
-            tooltip: 'Add a new patient',
+            tooltip: 'Add a new user',
             handler: 'onAdd'
         },{
             text: 'Edit',
-            reference: 'editPatientButton',
-            tooltip: 'Edit selected patient\'s data',
+            reference: 'editUserButton',
+            tooltip: 'Edit selected user\'s data',
             disabled: true,
             handler: 'onEdit'
         },{
             text: 'Remove',
-            reference: 'removePatientButton',
-            tooltip: 'Remove selected patient',
+            reference: 'removeUserButton',
+            tooltip: 'Remove selected user',
             disabled: true,
             handler: 'onRemove'
     }],
     dockedItems: [
-        { xtype: 'pagingtoolbar', store: { type: 'patient' } , dock: 'bottom', displayInfo: true }
+        { xtype: 'pagingtoolbar', store: { type: 'user' } , dock: 'bottom', displayInfo: true }
     ]
 });

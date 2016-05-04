@@ -17,7 +17,8 @@ Ext.define('Patients.view.main.Main', {
         'Patients.view.main.MainModel',
         'Patients.view.main.PersonnelList',
         'Patients.view.main.IssuersList',
-        'Patients.view.patient.PatientList'
+        'Patients.view.patient.PatientList',
+        'Patients.view.user.UserList'
     ],
     controller: 'main',
     viewModel: {
@@ -169,6 +170,7 @@ Ext.define('Patients.view.main.Main', {
                 data: {
                     items: [
                         { title: 'Issuers',  xtype: 'issuerslist' },
+                        { title: 'Users',    xtype: 'userlist' },
                         { title: 'Patients', xtype: 'patientlist' }
                 ]},
                 proxy: {

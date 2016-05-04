@@ -21,22 +21,39 @@
 /**
  * This class is the ViewModel for the ticket details view.
  */
-Ext.define('Patients.model.PatientViewModel', {
+Ext.define('Patients.model.UserViewModel', {
     extend: 'Ext.app.ViewModel',
     requires: [
-        'Patients.model.PatientModel'
+        'Patients.model.User'
     ],
 
-    // This enables "viewModel: { type: 'patient' }" in the view:
-    alias: 'viewmodel.patient',
-
+    // This enables "viewModel: { type: 'user' }" in the view:
+    alias: 'viewmodel.user',
     stores: {
-        patients: {
-            model: 'Patients.model.PatientModel',
+        users: {
+            model: 'Patients.model.User',
             autoLoad: true,
             proxy: {
                 type: 'ajax',
-                url: '/patients/patient/findAll.json',
+                url: '/patients/user/findAll.json',
+                reader: {
+                    type: 'json',
+                    rootProperty: 'data'
+                },
+                writer: {
+                    type: 'json'
+                }
+            }
+        }
+    }
+/*
+    stores: {
+        users: {
+            model: 'Patients.model.UserModel',
+            autoLoad: true,
+            proxy: {
+                type: 'ajax',
+                url: '/patients/user',
                 reader: {
                     type: 'json',
                     rootProperty: 'data'
@@ -69,5 +86,5 @@ Ext.define('Patients.model.PatientViewModel', {
 ////                value: 2
 ////            }]
 //        }
-    }
+    }*/
 });
