@@ -21,16 +21,16 @@ Ext.define('Patients.model.User', {
     extend: 'Ext.data.Model',
     config: {
         fields: [ 'id', 'loginName', 'firstName', 'lastName', 'email' ]
-    } /*,
+    },
     idProperty: 'id',
     proxy: {
         type: 'ajax',
         idParam: 'id',
         api: {
-            create: '/patients/user/store.json',
-            read: '/patients/user/find.json',
-            update: '/patients/user/store.json',
-            destroy: '/patients/user/remove.json'
+            create:  'user/store.json',
+            read:    'user/find.json',
+            update:  'user/store.json',
+            destroy: 'user/remove.json'
         },
         reader: {
             type: 'json',
@@ -43,20 +43,5 @@ Ext.define('Patients.model.User', {
             rootProperty: 'data',
             writeAllFields: true
         }
-    }*/
-//    proxy: {
-//        type: 'rest',
-//        url: '/patients.svc/patients' //,
-////        reader: {
-////            type: 'json',
-////            root: 'data'
-////        },
-////        writer: {
-////            type: 'json',
-////            allowSingle: true,
-////            encode: true,
-////            root: 'data',
-////            writeAllFields: true
-////        }
-//    }
+    }
 });

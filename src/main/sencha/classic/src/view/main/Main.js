@@ -15,8 +15,6 @@ Ext.define('Patients.view.main.Main', {
         'Ext.window.MessageBox',
         'Patients.view.main.MainController',
         'Patients.view.main.MainModel',
-        'Patients.view.main.PersonnelList',
-        'Patients.view.main.IssuersList',
         'Patients.view.patient.PatientList',
         'Patients.view.user.UserList'
     ],

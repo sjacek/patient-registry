@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2015 jsztajnke
+ * Copyright (C) 2016 Jacek Sztajnke
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,16 +17,14 @@
 
 /* global Ext */
 
-/**
- * This view is an example list of people.
- */
 Ext.define('Patients.view.user.UserList', {
     extend: 'Ext.grid.Panel',
     xtype: 'userlist',
 
     requires: [
         'Patients.model.UserViewModel',
-        'Patients.store.User'
+        'Patients.store.User',
+	'Patients.plugin.Clearable'
     ],
     controller: 'userlist',
     reference: 'userListGrid',
@@ -49,22 +47,37 @@ Ext.define('Patients.view.user.UserList', {
         { text: 'Last Name',   dataIndex: 'lastName' },
         { text: 'e-mail',      dataIndex: 'email', flex: 1 }
     ],
-    tbar: ['->', {
-            text: 'Add',
-            tooltip: 'Add a new user',
-            handler: 'onAdd'
-        },{
-            text: 'Edit',
-            reference: 'editUserButton',
-            tooltip: 'Edit selected user\'s data',
-            disabled: true,
-            handler: 'onEdit'
-        },{
-            text: 'Remove',
-            reference: 'removeUserButton',
-            tooltip: 'Remove selected user',
-            disabled: true,
-            handler: 'onRemove'
+    tbar: [{
+        text: 'Add',
+        tooltip: 'Add a new user',
+        handler: 'onAdd'
+    },{
+        text: 'Edit',
+        reference: 'editUserButton',
+        tooltip: 'Edit selected user\'s data',
+        disabled: true,
+        handler: 'onEdit'
+    },{
+        text: 'Remove',
+        reference: 'removeUserButton',
+        tooltip: 'Remove selected user',
+        disabled: true,
+        handler: 'onRemove'
+    },
+    '->',
+    {
+	emptyText: "Filter",
+	xtype: 'textfield',
+	width: 250,
+	plugins: [ {
+            ptype: 'clearable'
+	} ],
+	listeners: {
+            change: {
+		fn: 'onFilter',
+		buffer: 500
+            }
+	}
     }],
     dockedItems: [
         { xtype: 'pagingtoolbar', store: { type: 'user' } , dock: 'bottom', displayInfo: true }

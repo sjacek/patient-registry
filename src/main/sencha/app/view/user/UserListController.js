@@ -84,6 +84,18 @@ Ext.define('Patients.view.user.UserListController', {
             user = model.getSelection();
         console.log(user);
         grid.getStore().remove(user);
-    }
+    },
 
+    onFilter: function(tf) {
+    	var value = tf.getValue();
+	var store = this.getStore(this.getObjectStoreName());
+	if (value) {
+            this.getViewModel().set('filter', value);
+            store.filter('filter', value);
+	}
+	else {
+            this.getViewModel().set('filter', null);
+            store.removeFilter('filter');
+	}
+    }
 });

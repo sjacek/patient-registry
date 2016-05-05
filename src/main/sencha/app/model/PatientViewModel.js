@@ -36,7 +36,7 @@ Ext.define('Patients.model.PatientViewModel', {
             autoLoad: true,
             proxy: {
                 type: 'ajax',
-                url: '/patients/patient/findAll.json',
+                url: 'patient/findAll.json',
                 reader: {
                     type: 'json',
                     rootProperty: 'data'
@@ -44,14 +44,6 @@ Ext.define('Patients.model.PatientViewModel', {
                 writer: {
                     type: 'json'
                 }
-//            proxy: {
-//                type: 'rest',
-//                url: '/patients.svc/patients'//,
-////                reader: {
-////                    type: 'json',
-////                    rootProperty: 'patients',
-////                    totalProperty: 'total'
-////                }
             }
         }
 //        patients: {

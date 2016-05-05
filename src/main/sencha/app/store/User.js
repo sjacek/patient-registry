@@ -19,6 +19,9 @@
 
 Ext.define('Patients.store.User', {
     extend: 'Ext.data.Store',
+
+    alias: 'store.user',
+
     requires: ['Patients.model.User'],
     pageSize: 25,
     autoLoad: true,
@@ -26,19 +29,11 @@ Ext.define('Patients.store.User', {
     model: 'Patients.model.User',
     proxy: {
         type: 'ajax',
-        url: '/patients/user/findAll.json',
+        url: 'user/findAll.json',
         reader: {
             type: 'json',
             rootProperty: 'data',
             totalProperty: 'total'
         }
-//    proxy: {
-//        type: 'rest',
-//        url: '/patients.svc/patients'//,
-////        reader: {
-////            type: 'json',
-////            rootProperty: 'patients',
-////            totalProperty: 'total'
-////        }
     }
 });

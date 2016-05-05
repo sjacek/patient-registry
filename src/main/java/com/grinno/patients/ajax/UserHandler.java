@@ -53,7 +53,8 @@ public class UserHandler extends AbstractHandler {
             return getJsonErrorMsg("User is not logged on");
 */        
         User user = userRepository.findOneById(id);
-        return getJsonSuccessData(user);
+        Result<User> result = ResultFactory.getSuccessResult(user);
+        return getJsonSuccessData(result.getData());
 //        return getJsonErrorMsg(ar.getMsg());
     }
 

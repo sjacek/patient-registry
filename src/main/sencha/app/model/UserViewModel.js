@@ -35,7 +35,7 @@ Ext.define('Patients.model.UserViewModel', {
             autoLoad: true,
             proxy: {
                 type: 'ajax',
-                url: '/patients/user/findAll.json',
+                url: 'user/findAll.json',
                 reader: {
                     type: 'json',
                     rootProperty: 'data'
@@ -46,45 +46,4 @@ Ext.define('Patients.model.UserViewModel', {
             }
         }
     }
-/*
-    stores: {
-        users: {
-            model: 'Patients.model.UserModel',
-            autoLoad: true,
-            proxy: {
-                type: 'ajax',
-                url: '/patients/user',
-                reader: {
-                    type: 'json',
-                    rootProperty: 'data'
-                },
-                writer: {
-                    type: 'json'
-                }
-//            proxy: {
-//                type: 'rest',
-//                url: '/patients.svc/patients'//,
-////                reader: {
-////                    type: 'json',
-////                    rootProperty: 'patients',
-////                    totalProperty: 'total'
-////                }
-            }
-        }
-//        patients: {
-//            model: 'Patients.model.PatientModel',
-////            autoLoad: true,
-//            remoteFilter: true //,
-////            filters: [{
-////                property: 'assigneeId',
-////                value: '{currentUser.id}'
-////            }, {
-////                property: 'projectId',
-////                value: '{projectId}'
-////            }, {
-////                property: 'status',
-////                value: 2
-////            }]
-//        }
-    }*/
 });
