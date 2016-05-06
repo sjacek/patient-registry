@@ -30,8 +30,8 @@ Ext.define('Patients.view.user.UserController', {
         var form = this.lookupReference('form');
         
         if (form.isValid()) {
-            var user = this.getViewModel().get('theUser');
-
+            var viewModel = this.getViewModel();
+            var user = viewModel.get('theUser');
             Ext.Msg.wait('Saving', 'Saving user...');
             user.save({
                 scope: this,

@@ -48,6 +48,7 @@ public class UserHandler extends AbstractHandler {
     @RequestMapping(value="/find", method = RequestMethod.GET, produces = {"application/json"})
     @ResponseBody
     public String find(@RequestParam(value = "id", required = true) String id, HttpServletRequest request) {
+        LOGGER.debug("UserHandler.user()");
 /*        User sessionUser = getSessionUser(request);
         if (sessionUser == null)
             return getJsonErrorMsg("User is not logged on");
@@ -81,7 +82,7 @@ public class UserHandler extends AbstractHandler {
     @RequestMapping(value="/findAll", method = RequestMethod.GET, produces = {"application/json"})
     @ResponseBody
     public String findAll(HttpServletRequest request) {
-        LOGGER.debug("PatientHandler.findAll()");
+        LOGGER.debug("UserHandler.findAll()");
 /*        User sessionUser = getSessionUser(request);
         if (sessionUser == null) {
             return getJsonErrorMsg("User is not logged on");

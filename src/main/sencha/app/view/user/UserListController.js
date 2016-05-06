@@ -20,8 +20,11 @@
 
 Ext.define('Patients.view.user.UserListController', {
     extend: 'Ext.app.ViewController',
-
     alias: 'controller.userlist',
+
+    requires: [
+        'Patients.store.User'
+    ],
 
 //    onItemSelected: function() {
 //        var grid = this.lookupReference('patientListGrid'),
@@ -55,9 +58,17 @@ Ext.define('Patients.view.user.UserListController', {
     },
 
     onAdd: function() {
+	var user = this.getView().getStore().getModel().create();
+//	this.getViewModel().set('theUser', model.create());
+
         this.fireEvent('createTab', 'User - New', {
             xtype: 'user',
-            session: true
+            session: true,
+            viewModel: {
+                data: {
+                    theUser: user
+                }
+            }
         });
     },
 
