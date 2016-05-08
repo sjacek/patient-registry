@@ -1,5 +1,6 @@
 package com.grinno.patients.dao;
 
+import com.grinno.patients.model.User;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,10 +10,13 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
-import com.grinno.patients.model.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Repository
 public class UserRepository {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserRepository.class);
 
     public static final String COLLECTION_NAME = "user";
 
@@ -21,15 +25,24 @@ public class UserRepository {
 
     /**
      *
-     * @param user
-     * @return 
+     * @param user 
      */
-    public User insert(User user) {
+    public void insert(User user) {
+        LOGGER.debug("User.insert 1(" + user + ")");
+
         if (!mongoTemplate.collectionExists(User.class)) {
+        LOGGER.debug("User.insert 2");
             mongoTemplate.createCollection(User.class);
         }
-        mongoTemplate.insert(user, COLLECTION_NAME);
-        return user;
+        try {
+        LOGGER.debug("User.insert 3");
+            mongoTemplate.save(user, COLLECTION_NAME);
+        LOGGER.debug("User.insert 4");
+        }
+        catch(Exception ex){
+            LOGGER.warn("User insert failed.", ex);
+        }
+        LOGGER.debug("User.insert 5");
     }
 
     /**
@@ -38,8 +51,7 @@ public class UserRepository {
      * @return
      */
     public User findOneById(String id) {
-        return mongoTemplate.findOne(
-                Query.query(Criteria.where("id").is(id)), User.class, COLLECTION_NAME);
+        return mongoTemplate.findOne(Query.query(Criteria.where("id").is(id)), User.class, COLLECTION_NAME);
     }
 
     /**
@@ -48,8 +60,7 @@ public class UserRepository {
      * @return
      */
     public User findOneByPesel(String pesel) {
-        return mongoTemplate.findOne(
-                Query.query(Criteria.where("pesel").is(pesel)), User.class, COLLECTION_NAME);
+        return mongoTemplate.findOne(Query.query(Criteria.where("pesel").is(pesel)), User.class, COLLECTION_NAME);
     }
 
     /**
@@ -57,12 +68,14 @@ public class UserRepository {
      * @return
      */
     public List<User> findAll() {
-        return mongoTemplate.findAll(User.class, COLLECTION_NAME);
+        LOGGER.debug("User.findAll 1");
+        List<User> users =  mongoTemplate.findAll(User.class, COLLECTION_NAME);
+        LOGGER.debug("User.findAll 2(" + users + ")");
+        return users;
     }
 
     public User remove(String id) {
-        User user = mongoTemplate.findOne(
-                Query.query(Criteria.where("_id").is(id)), User.class, COLLECTION_NAME);
+        User user = mongoTemplate.findOne(Query.query(Criteria.where("_id").is(id)), User.class, COLLECTION_NAME);
         mongoTemplate.remove(user, COLLECTION_NAME);
 
         return user;
@@ -77,10 +90,10 @@ public class UserRepository {
         update.set("firstName", user.getFirstName());
         update.set("lastName", user.getLastName());
         update.set("email", user.getEmail());
-        update.set("authorities", user.getAuthorities());
+/*        update.set("authorities", user.getAuthorities());
         update.set("locale", user.getLocale());
         update.set("enabled", user.isEnabled());
-
+*/
         mongoTemplate.updateFirst(query, update, User.class);
 
         return user;

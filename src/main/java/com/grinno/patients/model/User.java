@@ -46,7 +46,7 @@ import org.springframework.util.StringUtils;
 @JsonInclude(NON_NULL)
 public class User extends AbstractEntity {
 
-    final private Logger LOGGER = LoggerFactory.getLogger(this.getClass());
+    private static Logger LOGGER = LoggerFactory.getLogger(User.class);
 
     @Id
     private String id;
@@ -64,41 +64,41 @@ public class User extends AbstractEntity {
     @NotBlank(message = "{fieldrequired}")
     private String email;
 
-    private List<String> authorities;
-
-    @JsonIgnore
-    private String passwordHash;
-
-    @NotBlank(message = "{fieldrequired}")
-    private String locale;
-
-    private boolean enabled;
-
-    @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user")
-    private Set<PersistentLogin> persistentLogins = new HashSet<>();
-
-    @Transient
-    private int failedLogins;
-
-    @Transient
-    private Date lockedOutUntil;
-
-    @Transient
-    private Date lastAccess;
-
-    @JsonIgnore
-    private String passwordResetToken;
-
-    @JsonIgnore
-    private Date passwordResetTokenValidUntil;
-
-    @JsonIgnore
-    private boolean deleted;
-
-    @JsonIgnore
-    private String secret;
-
+//    private List<String> authorities;
+//
+//    @JsonIgnore
+//    private String passwordHash;
+//
+//    @NotBlank(message = "{fieldrequired}")
+//    private String locale;
+//
+//    private boolean enabled;
+//
+//    @JsonIgnore
+//    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user")
+//    private Set<PersistentLogin> persistentLogins = new HashSet<>();
+//
+//    @Transient
+//    private int failedLogins;
+//
+//    @Transient
+//    private Date lockedOutUntil;
+//
+//    @Transient
+//    private Date lastAccess;
+//
+//    @JsonIgnore
+//    private String passwordResetToken;
+//
+//    @JsonIgnore
+//    private Date passwordResetTokenValidUntil;
+//
+//    @JsonIgnore
+//    private boolean deleted;
+//
+//    @JsonIgnore
+//    private String secret;
+//
     public User() {
         LOGGER.debug("User()");
     }
@@ -152,105 +152,105 @@ public class User extends AbstractEntity {
         this.email = email;
     }
 
-    public List<String> getAuthorities() {
-        return this.authorities;
-    }
-
-    public void setAuthorities(List<String> authorities) {
-        this.authorities = authorities;
-    }
-
-    public String getPasswordHash() {
-        return this.passwordHash;
-    }
-
-    public void setPasswordHash(String passwordHash) {
-        this.passwordHash = passwordHash;
-    }
-
-    public boolean isEnabled() {
-        return this.enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    public String getLocale() {
-        return this.locale;
-    }
-
-    public void setLocale(String locale) {
-        this.locale = locale;
-    }
-
-    public int getFailedLogins() {
-        return this.failedLogins;
-    }
-
-    public void setFailedLogins(int failedLogins) {
-        this.failedLogins = failedLogins;
-    }
-
-    public Date getLockedOutUntil() {
-        return this.lockedOutUntil;
-    }
-
-    public void setLockedOutUntil(Date lockedOutUntil) {
-        this.lockedOutUntil = lockedOutUntil;
-    }
-
-    public Date getLastAccess() {
-        return this.lastAccess;
-    }
-
-    public void setLastAccess(Date lastAccess) {
-        this.lastAccess = lastAccess;
-    }
-
-    public String getPasswordResetToken() {
-        return this.passwordResetToken;
-    }
-
-    public void setPasswordResetToken(String passwordResetToken) {
-        this.passwordResetToken = passwordResetToken;
-    }
-
-    public Date getPasswordResetTokenValidUntil() {
-        return this.passwordResetTokenValidUntil;
-    }
-
-    public void setPasswordResetTokenValidUntil(Date passwordResetTokenValidUntil) {
-        this.passwordResetTokenValidUntil = passwordResetTokenValidUntil;
-    }
-
-    public boolean isDeleted() {
-        return this.deleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        this.deleted = deleted;
-    }
-
-    public Set<PersistentLogin> getPersistentLogins() {
-	return this.persistentLogins;
-    }
-
-    public void setPersistentLogins(Set<PersistentLogin> persistentLogins) {
-	this.persistentLogins = persistentLogins;
-    }
-
-    public String getSecret() {
-        return this.secret;
-    }
-
-    public void setSecret(String secret) {
-        this.secret = secret;
-    }
-
-    public boolean isTwoFactorAuth() {
-        return StringUtils.hasText(this.getSecret());
-    }
+//    public List<String> getAuthorities() {
+//        return this.authorities;
+//    }
+//
+//    public void setAuthorities(List<String> authorities) {
+//        this.authorities = authorities;
+//    }
+//
+//    public String getPasswordHash() {
+//        return this.passwordHash;
+//    }
+//
+//    public void setPasswordHash(String passwordHash) {
+//        this.passwordHash = passwordHash;
+//    }
+//
+//    public boolean isEnabled() {
+//        return this.enabled;
+//    }
+//
+//    public void setEnabled(boolean enabled) {
+//        this.enabled = enabled;
+//    }
+//
+//    public String getLocale() {
+//        return this.locale;
+//    }
+//
+//    public void setLocale(String locale) {
+//        this.locale = locale;
+//    }
+//
+//    public int getFailedLogins() {
+//        return this.failedLogins;
+//    }
+//
+//    public void setFailedLogins(int failedLogins) {
+//        this.failedLogins = failedLogins;
+//    }
+//
+//    public Date getLockedOutUntil() {
+//        return this.lockedOutUntil;
+//    }
+//
+//    public void setLockedOutUntil(Date lockedOutUntil) {
+//        this.lockedOutUntil = lockedOutUntil;
+//    }
+//
+//    public Date getLastAccess() {
+//        return this.lastAccess;
+//    }
+//
+//    public void setLastAccess(Date lastAccess) {
+//        this.lastAccess = lastAccess;
+//    }
+//
+//    public String getPasswordResetToken() {
+//        return this.passwordResetToken;
+//    }
+//
+//    public void setPasswordResetToken(String passwordResetToken) {
+//        this.passwordResetToken = passwordResetToken;
+//    }
+//
+//    public Date getPasswordResetTokenValidUntil() {
+//        return this.passwordResetTokenValidUntil;
+//    }
+//
+//    public void setPasswordResetTokenValidUntil(Date passwordResetTokenValidUntil) {
+//        this.passwordResetTokenValidUntil = passwordResetTokenValidUntil;
+//    }
+//
+//    public boolean isDeleted() {
+//        return this.deleted;
+//    }
+//
+//    public void setDeleted(boolean deleted) {
+//        this.deleted = deleted;
+//    }
+//
+//    public Set<PersistentLogin> getPersistentLogins() {
+//	return this.persistentLogins;
+//    }
+//
+//    public void setPersistentLogins(Set<PersistentLogin> persistentLogins) {
+//	this.persistentLogins = persistentLogins;
+//    }
+//
+//    public String getSecret() {
+//        return this.secret;
+//    }
+//
+//    public void setSecret(String secret) {
+//        this.secret = secret;
+//    }
+//
+//    public boolean isTwoFactorAuth() {
+//        return StringUtils.hasText(this.getSecret());
+//    }
 
     @Override
     public String toString() {
@@ -260,17 +260,18 @@ public class User extends AbstractEntity {
     @Override
     public void addJson(JsonObjectBuilder builder) {
 
-        final JsonArrayBuilder authoritiesBuilder = Json.createArrayBuilder();
-        authorities.forEach((s) -> authoritiesBuilder.add(s));
-
+//        final JsonArrayBuilder authoritiesBuilder = Json.createArrayBuilder();
+//        if (authorities != null)
+//            authorities.forEach((s) -> authoritiesBuilder.add(s));
+//
         builder.add("id", id)
                 .add("loginName", loginName)
                 .add("firstName", firstName)
                 .add("lastName", lastName)
                 .add("email", email)
-                .add("authorities", authoritiesBuilder)
-                .add("locale", locale)
-                .add("enabled", enabled)
+//                .add("authorities", authoritiesBuilder)
+//                .add("locale", locale)
+//                .add("enabled", enabled)
                 ;
     }
 }

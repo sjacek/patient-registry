@@ -20,9 +20,33 @@
 Ext.define('Patients.model.User', {
     extend: 'Ext.data.Model',
     config: {
-        fields: [ 'id', 'loginName', 'firstName', 'lastName', 'email' ]
+        fields: [{
+            name: 'internal_id',
+            type: 'int',
+            persist: false
+        },
+        {
+            name: 'id',
+            type: 'string'
+        },
+        {
+            name: 'loginName',
+            type: 'string'
+        },
+        {
+            name: 'firstName',
+            type: 'string'
+        },
+        {
+            name: 'lastName',
+            type: 'string'
+        },
+        {
+            name: 'email',
+            type: 'string'
+        }]
     },
-    idProperty: 'id',
+    idProperty: 'internal_id',
     proxy: {
         type: 'ajax',
         idParam: 'id',
