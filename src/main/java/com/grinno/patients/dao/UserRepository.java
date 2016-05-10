@@ -28,21 +28,17 @@ public class UserRepository {
      * @param user 
      */
     public void insert(User user) {
-        LOGGER.debug("User.insert 1(" + user + ")");
+        LOGGER.debug("User.insert(" + user + ")");
 
         if (!mongoTemplate.collectionExists(User.class)) {
-        LOGGER.debug("User.insert 2");
             mongoTemplate.createCollection(User.class);
         }
         try {
-        LOGGER.debug("User.insert 3");
             mongoTemplate.save(user, COLLECTION_NAME);
-        LOGGER.debug("User.insert 4");
         }
         catch(Exception ex){
             LOGGER.warn("User insert failed.", ex);
         }
-        LOGGER.debug("User.insert 5");
     }
 
     /**

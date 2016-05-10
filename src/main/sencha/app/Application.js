@@ -25,11 +25,12 @@
  */
 Ext.define('Patients.Application', {
     extend: 'Ext.app.Application',
-    
+    requires: [ 'Patients.store.Authority' ],
     name: 'Patients',
 
     stores: [
         // TODO: add global / shared stores here
+        'Authority'
     ],
     
     views: [

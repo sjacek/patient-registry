@@ -31,19 +31,56 @@ Ext.define('Patients.model.User', {
         },
         {
             name: 'loginName',
-            type: 'string'
+            type: 'string',
+            validators : [
+                { type : "notBlank" },
+                {
+                    type : "length",
+                    min : 0,
+                    max : 255
+                } ]
         },
         {
             name: 'firstName',
-            type: 'string'
+            type: 'string',
+            validators : [
+                { type : "notBlank" },
+                {
+                    type : "length",
+                    min : 0,
+                    max : 255
+                } ]
         },
         {
             name: 'lastName',
-            type: 'string'
+            type: 'string',
+            validators : [
+                { type : "notBlank" },
+                {
+                    type : "length",
+                    min : 0,
+                    max : 255
+                } ]
         },
         {
             name: 'email',
-            type: 'string'
+            type: 'string',
+            validators : [
+                { type : "email" },
+                {
+                    type : "length",
+                    min : 0,
+                    max : 255
+                } ]
+        }, {
+            name : 'newPassword',
+            type : 'string'
+        }, {
+            name : 'newPasswordRetype',
+            type : 'string'
+        }, {
+            name : 'authorities',
+            type : 'string'
         }]
     },
     idProperty: 'internal_id',

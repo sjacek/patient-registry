@@ -64,7 +64,7 @@ public class User extends AbstractEntity {
     @NotBlank(message = "{fieldrequired}")
     private String email;
 
-//    private List<String> authorities;
+    private List<String> authorities;
 //
 //    @JsonIgnore
 //    private String passwordHash;
@@ -152,14 +152,14 @@ public class User extends AbstractEntity {
         this.email = email;
     }
 
-//    public List<String> getAuthorities() {
-//        return this.authorities;
-//    }
-//
-//    public void setAuthorities(List<String> authorities) {
-//        this.authorities = authorities;
-//    }
-//
+    public List<String> getAuthorities() {
+        return this.authorities;
+    }
+
+    public void setAuthorities(List<String> authorities) {
+        this.authorities = authorities;
+    }
+
 //    public String getPasswordHash() {
 //        return this.passwordHash;
 //    }
@@ -260,16 +260,16 @@ public class User extends AbstractEntity {
     @Override
     public void addJson(JsonObjectBuilder builder) {
 
-//        final JsonArrayBuilder authoritiesBuilder = Json.createArrayBuilder();
-//        if (authorities != null)
-//            authorities.forEach((s) -> authoritiesBuilder.add(s));
-//
+        final JsonArrayBuilder authoritiesBuilder = Json.createArrayBuilder();
+        if (authorities != null)
+            authorities.forEach((s) -> authoritiesBuilder.add(s));
+
         builder.add("id", id)
                 .add("loginName", loginName)
                 .add("firstName", firstName)
                 .add("lastName", lastName)
                 .add("email", email)
-//                .add("authorities", authoritiesBuilder)
+                .add("authorities", authoritiesBuilder)
 //                .add("locale", locale)
 //                .add("enabled", enabled)
                 ;

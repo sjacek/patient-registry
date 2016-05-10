@@ -23,7 +23,9 @@ Ext.define('Patients.view.user.User', {
 
     requires: [
         'Patients.view.user.UserController',
-        'Ext.form.Panel'
+        'Ext.form.Panel',
+        'Ext.form.field.Tag',
+        'Patients.store.Authority'
     ],
 
     controller: 'user',
@@ -78,6 +80,59 @@ Ext.define('Patients.view.user.User', {
                 allowBlank: true,
                 bind: '{theUser.email}',
                 publishes: ['value']
+            }, {
+                xtype: 'textfield',
+                name: 'newPassword',
+		fieldLabel: 'New Password',
+                allowBlank: true,
+                bind: '{theUser.newPassword}',
+		inputType: 'password',
+                publishes: ['value'],
+		validator: function() {
+                    var newPasswordRetypeField = this.up().getForm().findField('newPasswordRetype');
+                    var newPasswordRetype = newPasswordRetypeField.getValue();
+                    var newPassword = this.getValue();
+                    if ((Ext.isEmpty(newPassword) && Ext.isEmpty(newPasswordRetype)) || (newPassword === newPasswordRetype)) {
+			newPasswordRetypeField.clearInvalid();
+			return true;
+                    }
+                    newPasswordRetypeField.markInvalid('Passwords do not match!');
+                    return 'Passwords do not match!';
+		}
+            }, {
+                xtype: 'textfield',
+                name: 'newPasswordRetype',
+                fieldLabel: 'Retype New Password',
+                bind: '{theUser.newPasswordRetype}',
+                inputType: 'password',
+                publishes: ['value'],
+                validator: function() {
+                    var newPasswordField = this.up().getForm().findField('newPassword');
+                    var newPassword = newPasswordField.getValue();
+                    var newPasswordRetype = this.getValue();
+                    if ((Ext.isEmpty(newPassword) && Ext.isEmpty(newPasswordRetype)) || (newPassword === newPasswordRetype)) {
+                        newPasswordField.clearInvalid();
+                        return true;
+                    }
+                    newPasswordField.markInvalid('Passwords do not match!');
+                    return 'Passwords do not match!';
+                }
+            }, {
+		xtype: 'tagfield',
+		fieldLabel: 'Authorities',
+		store: 'authority',
+		bind: {
+			value: '{theUser.authorities}'
+		},
+		name: 'authorities',
+		displayField: 'value',
+		valueField: 'value',
+		queryMode: 'local',
+		forceSelection: true,
+		autoSelect: true,
+		editable: false,
+		selectOnFocus: false,
+		filterPickList: true
             }],
         tbar: [{
                 text: 'Reset',
