@@ -45,8 +45,14 @@ Ext.define('Patients.view.user.UserList', {
         { text: 'Login',       dataIndex: 'loginName' },
         { text: 'First Name',  dataIndex: 'firstName' },
         { text: 'Last Name',   dataIndex: 'lastName' },
-        { text: 'e-mail',      dataIndex: 'email', flex: 1 }
-    ],
+        { text: 'e-mail',      dataIndex: 'email', flex: 1 },
+	{
+            text: 'Authorities',
+            xtype: 'templatecolumn',
+            tpl: '<tpl for="authorities"><span class="label label-info">{.}</span>&nbsp;</tpl>',
+            flex: 1,
+            dataIndex: 'authorities'
+        }],
     tbar: [{
         text: 'Add',
         tooltip: 'Add a new user',

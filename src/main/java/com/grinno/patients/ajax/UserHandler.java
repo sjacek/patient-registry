@@ -20,8 +20,10 @@ import com.grinno.patients.dao.UserRepository;
 import com.grinno.patients.model.User;
 import com.grinno.patients.vo.Result;
 import com.grinno.patients.vo.ResultFactory;
+import java.util.ArrayList;
 import java.util.List;
 import javax.json.JsonObject;
+import javax.json.JsonValue;
 import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,11 +70,17 @@ public class UserHandler extends AbstractHandler {
             return getJsonErrorMsg("User is not logged on");
 */
         JsonObject jsonObj = parseJsonObject(jsonData);
+
+        List<String> authorities = new ArrayList<>();
+        jsonObj.getJsonArray("authorities").stream().forEach(v -> authorities.add(v.toString()) );
+        
         User user = new User(
                 jsonObj.getString("loginName"),
                 jsonObj.getString("firstName"),
                 jsonObj.getString("lastName"),
-                jsonObj.getString("email")
+                jsonObj.getString("email"),
+                authorities,
+                jsonObj.getString("passwordHash")
                 );
         userRepository.insert(user);
         Result<User> result = ResultFactory.getSuccessResult(user);

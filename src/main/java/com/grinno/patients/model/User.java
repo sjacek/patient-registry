@@ -20,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 import com.grinno.patients.domain.AbstractEntity;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -46,8 +47,6 @@ import org.springframework.util.StringUtils;
 @JsonInclude(NON_NULL)
 public class User extends AbstractEntity {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(User.class);
-
     @Id
     private String id;
 
@@ -65,9 +64,9 @@ public class User extends AbstractEntity {
     private String email;
 
     private List<String> authorities;
-//
-//    @JsonIgnore
-//    private String passwordHash;
+
+    @JsonIgnore
+    private String passwordHash;
 //
 //    @NotBlank(message = "{fieldrequired}")
 //    private String locale;
@@ -100,15 +99,15 @@ public class User extends AbstractEntity {
 //    private String secret;
 //
     public User() {
-        LOGGER.debug("User()");
     }
 
-    public User(String loginName, String firstName, String lastName, String email) {
-        LOGGER.debug("User(" + loginName +"," + firstName + "," + lastName + "," + email + ")");
+    public User(String loginName, String firstName, String lastName, String email, List<String> authorities, String passwordHash) {
         this.loginName = loginName;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
+        this.authorities = authorities;
+        this.passwordHash = passwordHash;
     }
 
     
@@ -160,14 +159,14 @@ public class User extends AbstractEntity {
         this.authorities = authorities;
     }
 
-//    public String getPasswordHash() {
-//        return this.passwordHash;
-//    }
-//
-//    public void setPasswordHash(String passwordHash) {
-//        this.passwordHash = passwordHash;
-//    }
-//
+    public String getPasswordHash() {
+        return this.passwordHash;
+    }
+
+    public void setPasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
+    }
+
 //    public boolean isEnabled() {
 //        return this.enabled;
 //    }
@@ -270,6 +269,7 @@ public class User extends AbstractEntity {
                 .add("lastName", lastName)
                 .add("email", email)
                 .add("authorities", authoritiesBuilder)
+                .add("passwordHash", this.passwordHash)
 //                .add("locale", locale)
 //                .add("enabled", enabled)
                 ;

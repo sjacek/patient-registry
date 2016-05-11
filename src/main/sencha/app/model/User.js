@@ -79,6 +79,9 @@ Ext.define('Patients.model.User', {
             name : 'newPasswordRetype',
             type : 'string'
         }, {
+            name : 'passwordHash',
+            type : 'string'
+        }, {
             name : 'authorities',
             type : 'string'
         }]
