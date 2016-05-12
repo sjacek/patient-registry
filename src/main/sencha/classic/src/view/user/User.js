@@ -141,6 +141,7 @@ Ext.define('Patients.view.user.User', {
                 }
             }, {
                 text: 'Save',
+        	iconCls: 'x-fa fa-floppy-o',
                 formBind: true,
                 listeners: {
                     click: 'onSaveClick'

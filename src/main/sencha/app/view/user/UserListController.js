@@ -90,11 +90,34 @@ Ext.define('Patients.view.user.UserListController', {
     },
     
     onRemove: function() {
-        var grid = this.lookupReference('userListGrid'),
-            model = grid.getSelectionModel(),
-            user = model.getSelection();
-        console.log(user);
-        grid.getStore().remove(user);
+        var store = this.getView().getStore();
+        this.getView().getSelection().forEach(function(record) {
+            var user = store.findRecord("id", record.data.id);
+            Ext.Msg.wait('Removing', 'Removing user...');
+            user.erase({
+                scope: this,
+                failure: function(record, operation) {
+                    Ext.toast({
+                        title: 'Remove',
+                        html: 'Unable to remove User',
+                        align: 't',
+                        bodyPadding: 10
+                    });
+                },
+		success: function(record, operation) {
+                    Ext.toast({
+                        title: 'Remove',
+                        html: 'User removed successfully',
+                        align: 't',
+                        bodyPadding: 10
+                    });
+		},
+                callback: function() {
+                    Ext.Msg.hide();
+//                    store.destroy(user);
+                }
+            });
+        });
     },
 
     onFilter: function(tf) {

@@ -20,10 +20,10 @@ import com.grinno.patients.dao.UserRepository;
 import com.grinno.patients.model.User;
 import com.grinno.patients.vo.Result;
 import com.grinno.patients.vo.ResultFactory;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import javax.json.JsonObject;
-import javax.json.JsonValue;
 import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,30 +58,17 @@ public class UserHandler extends AbstractHandler {
         User user = userRepository.findOneById(id);
         Result<User> result = ResultFactory.getSuccessResult(user);
         return getJsonSuccessData(result.getData());
-//        return getJsonErrorMsg(ar.getMsg());
     }
 
     @RequestMapping(value="/store", method = RequestMethod.POST, produces = {"application/json"})
     @ResponseBody
-    public String store(@RequestParam(value="data", required = true) String jsonData, HttpServletRequest request) {
-        LOGGER.debug("UserHandler.store(" + jsonData + ")");
+    public String store(@RequestParam(value="data", required = true) String json, HttpServletRequest request) {
+        LOGGER.debug("UserHandler.store(" + json + ")");
 /*        User sessionUser = getSessionUser(request);
         if (sessionUser == null)
             return getJsonErrorMsg("User is not logged on");
 */
-        JsonObject jsonObj = parseJsonObject(jsonData);
-
-        List<String> authorities = new ArrayList<>();
-        jsonObj.getJsonArray("authorities").stream().forEach(v -> authorities.add(v.toString()) );
-        
-        User user = new User(
-                jsonObj.getString("loginName"),
-                jsonObj.getString("firstName"),
-                jsonObj.getString("lastName"),
-                jsonObj.getString("email"),
-                authorities,
-                jsonObj.getString("passwordHash")
-                );
+        User user = new User(parseJsonObject(json));
         userRepository.insert(user);
         Result<User> result = ResultFactory.getSuccessResult(user);
         return getJsonSuccessData(result.getData());

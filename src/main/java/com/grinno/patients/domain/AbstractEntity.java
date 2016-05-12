@@ -39,4 +39,5 @@ public abstract class AbstractEntity implements JsonItem, Serializable {
         return builder.build();
     }
 
+//    public abstract void copy(AbstractEntity entity);
 }

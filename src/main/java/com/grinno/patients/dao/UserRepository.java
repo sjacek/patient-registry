@@ -28,7 +28,7 @@ public class UserRepository {
      * @param user 
      */
     public void insert(User user) {
-        LOGGER.debug("User.insert(" + user + ")");
+        LOGGER.debug("UserRepository.insert(" + user + ")");
 
         if (!mongoTemplate.collectionExists(User.class)) {
             mongoTemplate.createCollection(User.class);
@@ -64,14 +64,15 @@ public class UserRepository {
      * @return
      */
     public List<User> findAll() {
-        LOGGER.debug("User.findAll 1");
         List<User> users =  mongoTemplate.findAll(User.class, COLLECTION_NAME);
-        LOGGER.debug("User.findAll 2(" + users + ")");
+        LOGGER.debug("UserRepository.findAll():" + users);
         return users;
     }
 
     public User remove(String id) {
+        LOGGER.debug("UserRepository.remove(" + id + ")");
         User user = mongoTemplate.findOne(Query.query(Criteria.where("_id").is(id)), User.class, COLLECTION_NAME);
+        LOGGER.debug("UserRepository.remove(" + user + ")");
         mongoTemplate.remove(user, COLLECTION_NAME);
 
         return user;
@@ -86,10 +87,10 @@ public class UserRepository {
         update.set("firstName", user.getFirstName());
         update.set("lastName", user.getLastName());
         update.set("email", user.getEmail());
-/*        update.set("authorities", user.getAuthorities());
-        update.set("locale", user.getLocale());
-        update.set("enabled", user.isEnabled());
-*/
+        update.set("authorities", user.getAuthorities());
+        update.set("passwordHash", user.getPasswordHash());
+//        update.set("locale", user.getLocale());
+//        update.set("enabled", user.isEnabled());
         mongoTemplate.updateFirst(query, update, User.class);
 
         return user;

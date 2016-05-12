@@ -56,6 +56,7 @@ Ext.define('Patients.view.user.UserList', {
     tbar: [{
         text: 'Add',
         tooltip: 'Add a new user',
+        iconCls: 'x-fa fa-plus',
         handler: 'onAdd'
     },{
         text: 'Edit',
@@ -67,6 +68,7 @@ Ext.define('Patients.view.user.UserList', {
         text: 'Remove',
         reference: 'removeUserButton',
         tooltip: 'Remove selected user',
+        iconCls: 'x-fa fa-trash-o',
         disabled: true,
         handler: 'onRemove'
     },
