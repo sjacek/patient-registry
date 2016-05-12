@@ -50,7 +50,8 @@ public class AbstractHandler {
         
         final JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
         
-        results.stream().forEach((ji) -> {
+        results.stream().forEach(ji -> {
+            JsonObject jo = ji.toJson();
             arrayBuilder.add(ji.toJson());
         });
         

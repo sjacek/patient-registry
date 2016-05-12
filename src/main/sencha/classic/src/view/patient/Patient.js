@@ -43,7 +43,6 @@ Ext.define('Patients.view.patient.Patient', {
     componentCls: 'patient-detail',
     bodyPadding: 20,
     
-//    title: 'Patient Data',
     closable: true,
     autoShow: true,
     grid: null,
@@ -52,14 +51,14 @@ Ext.define('Patients.view.patient.Patient', {
         reference: 'form',
         items: [{
                 xtype: 'textfield',
-                name: 'firstname',
+                name: 'firstName',
                 fieldLabel: 'First Name',
                 allowBlank: false,
                 bind: '{thePatient.firstName}',
                 publishes: ['value']
             }, {
                 xtype: 'textfield',
-                name: 'secondname',
+                name: 'secondName',
                 fieldLabel: 'Second Name',
                 allowBlank: true,
                 bind: '{thePatient.secondName}',
@@ -67,7 +66,7 @@ Ext.define('Patients.view.patient.Patient', {
 
             }, {
                 xtype: 'textfield',
-                name: 'lastname',
+                name: 'lastName',
                 fieldLabel: 'Last Name',
                 allowBlank: false,
                 bind: '{thePatient.lastName}',
@@ -89,6 +88,7 @@ Ext.define('Patients.view.patient.Patient', {
                 }
             }, {
                 text: 'Save',
+        	iconCls: 'x-fa fa-floppy-o',
                 formBind: true,
                 listeners: {
                     click: 'onSaveClick'

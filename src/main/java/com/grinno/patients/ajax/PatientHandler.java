@@ -65,14 +65,8 @@ public class PatientHandler extends AbstractHandler {
         if (sessionUser == null)
             return getJsonErrorMsg("User is not logged on");
 */
-        JsonObject jsonObj = parseJsonObject(jsonData);
-        Patient patient = new Patient(
-                jsonObj.getString("firstName"),
-                jsonObj.getString("secondName"),
-                jsonObj.getString("lastName"),
-                jsonObj.getString("pesel"));
-        patientRepository.insert(patient);
-//        Result<Patient> result = ResultFactory.getSuccessResult(patientRepository.findOneByPesel(pesel));
+        Patient patient = new Patient(parseJsonObject(jsonData));
+        patientRepository.save(patient);
         Result<Patient> result = ResultFactory.getSuccessResult(patient);
         return getJsonSuccessData(result.getData());
     }

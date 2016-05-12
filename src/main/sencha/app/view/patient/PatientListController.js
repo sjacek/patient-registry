@@ -23,12 +23,10 @@ Ext.define('Patients.view.patient.PatientListController', {
 
     alias: 'controller.patientlist',
 
-//    onItemSelected: function() {
-//        var grid = this.lookupReference('patientListGrid'),
-//            model = grid.getSelectionModel();
-//        console.log(model);
-//    },
-    
+    requires: [
+        'Patients.store.Patient'
+    ],
+
     onSelectionChange: function(model /*, selected, eOpts*/) {
         var count = model.getCount();
         if (count > 0) {
@@ -55,9 +53,16 @@ Ext.define('Patients.view.patient.PatientListController', {
     },
 
     onAdd: function() {
+	var patient = this.getView().getStore().getModel().create();
+
         this.fireEvent('createTab', 'Patient - New', {
             xtype: 'patient',
-            session: true
+            session: true,
+            viewModel: {
+                data: {
+                    thePatient: patient
+                }
+            }
         });
     },
 
@@ -79,11 +84,46 @@ Ext.define('Patients.view.patient.PatientListController', {
     },
     
     onRemove: function() {
-        var grid = this.lookupReference('patientListGrid'),
-            model = grid.getSelectionModel(),
-            patient = model.getSelection();
-        console.log(patient);
-        grid.getStore().remove(patient);
-    }
+        var store = this.getView().getStore();
+        this.getView().getSelection().forEach(function(record) {
+            var patient = store.findRecord("id", record.data.id);
+            Ext.Msg.wait('Removing', 'Removing patient...');
+            patient.erase({
+                scope: this,
+                failure: function(record, operation) {
+                    Ext.toast({
+                        title: 'Remove',
+                        html: 'Unable to remove patient',
+                        align: 't',
+                        bodyPadding: 10
+                    });
+                },
+		success: function(record, operation) {
+                    Ext.toast({
+                        title: 'Remove',
+                        html: 'Patient removed successfully',
+                        align: 't',
+                        bodyPadding: 10
+                    });
+		},
+                callback: function() {
+                    Ext.Msg.hide();
+//                    store.destroy(user);
+                }
+            });
+        });
+    },
 
+    onFilter: function(tf) {
+    	var value = tf.getValue();
+	var store = this.getStore(this.getObjectStoreName());
+	if (value) {
+            this.getViewModel().set('filter', value);
+            store.filter('filter', value);
+	}
+	else {
+            this.getViewModel().set('filter', null);
+            store.removeFilter('filter');
+	}
+    }
 });

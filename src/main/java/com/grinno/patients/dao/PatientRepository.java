@@ -1,5 +1,6 @@
 package com.grinno.patients.dao;
 
+import static com.grinno.patients.dao.UserRepository.COLLECTION_NAME;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,9 +11,14 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
 import com.grinno.patients.model.Patient;
+import com.grinno.patients.model.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Repository
 public class PatientRepository {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(PatientRepository.class);
 
     public static final String COLLECTION_NAME = "patient";
 
@@ -21,15 +27,20 @@ public class PatientRepository {
 
     /**
      *
-     * @param patient
-     * @return 
+     * @param patient 
      */
-    public Patient insert(Patient patient) {
+    public void save(Patient patient) {
+        LOGGER.debug("PatientRepository.insert(" + patient + ")");
+
         if (!mongoTemplate.collectionExists(Patient.class)) {
             mongoTemplate.createCollection(Patient.class);
         }
-        mongoTemplate.insert(patient, COLLECTION_NAME);
-        return patient;
+        try {
+            mongoTemplate.save(patient, COLLECTION_NAME);
+        }
+        catch(Exception ex){
+            LOGGER.warn("Patient insert failed.", ex);
+        }
     }
 
     /**

@@ -37,11 +37,10 @@ Ext.define('Patients.view.user.UserList', {
         rowdblclick: 'onRowDblClick'
     },
     viewModel: { type: 'user' },
-//    bind: '{patients}',
     store: { type: 'user' },
 
     columns: [
-        { text: 'Id',          dataIndex: 'id' },
+//        { text: 'Id',          dataIndex: 'id' },
         { text: 'Login',       dataIndex: 'loginName' },
         { text: 'First Name',  dataIndex: 'firstName' },
         { text: 'Last Name',   dataIndex: 'lastName' },

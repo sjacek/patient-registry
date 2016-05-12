@@ -35,19 +35,19 @@ Ext.define('Patients.view.patient.PatientController', {
             Ext.Msg.wait('Saving', 'Saving patient...');
             patient.save({
                 scope: this,
-                callback: this.onComplete
+		success: function(record, operation) {
+                    Ext.toast({
+                        title: 'Save',
+                        html: 'Patient saved successfully',
+                        align: 't',
+                        bodyPadding: 10
+                    });
+		},
+                callback: function() {
+                    Ext.Msg.hide();
+                }
             });
         }
-    },
-    
-    onComplete: function() {
-        Ext.Msg.hide();
-        Patients.toast({
-            title: 'Save',
-            html: 'Patient saved successfully',
-            align: 't',
-            bodyPadding: 10
-        });
     },
 
     onCancelClick: function() {

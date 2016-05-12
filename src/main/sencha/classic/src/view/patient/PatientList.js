@@ -17,16 +17,14 @@
 
 /* global Ext */
 
-/**
- * This view is an example list of people.
- */
 Ext.define('Patients.view.patient.PatientList', {
     extend: 'Ext.grid.Panel',
     xtype: 'patientlist',
 
     requires: [
         'Patients.model.PatientViewModel',
-        'Patients.store.Patient'
+        'Patients.store.Patient',
+	'Patients.plugin.Clearable'
     ],
     controller: 'patientlist',
     reference: 'patientListGrid',
@@ -35,23 +33,22 @@ Ext.define('Patients.view.patient.PatientList', {
 
     listeners: {
         selectionchange: 'onSelectionChange',
-//        select: 'onItemSelected'
         rowdblclick: 'onRowDblClick'
     },
     viewModel: { type: 'patient' },
-//    bind: '{patients}',
     store: { type: 'patient' },
 
     columns: [
-        { text: 'Id',          dataIndex: 'id' },
+//        { text: 'Id',          dataIndex: 'id' },
         { text: 'First Name',  dataIndex: 'firstName' },
         { text: 'Second Name', dataIndex: 'secondName' },
         { text: 'Last Name',   dataIndex: 'lastName' },
         { text: 'PESEL',       dataIndex: 'pesel', flex: 1 }
     ],
-    tbar: ['->', {
+    tbar: [{
             text: 'Add',
             tooltip: 'Add a new patient',
+            iconCls: 'x-fa fa-plus',
             handler: 'onAdd'
         },{
             text: 'Edit',
@@ -63,8 +60,24 @@ Ext.define('Patients.view.patient.PatientList', {
             text: 'Remove',
             reference: 'removePatientButton',
             tooltip: 'Remove selected patient',
+            iconCls: 'x-fa fa-trash-o',
             disabled: true,
             handler: 'onRemove'
+        },
+    '->',
+    {
+	emptyText: "Filter",
+	xtype: 'textfield',
+	width: 250,
+	plugins: [ {
+            ptype: 'clearable'
+	} ],
+	listeners: {
+            change: {
+		fn: 'onFilter',
+		buffer: 500
+            }
+	}
     }],
     dockedItems: [
         { xtype: 'pagingtoolbar', store: { type: 'patient' } , dock: 'bottom', displayInfo: true }

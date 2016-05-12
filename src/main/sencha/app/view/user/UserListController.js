@@ -26,12 +26,6 @@ Ext.define('Patients.view.user.UserListController', {
         'Patients.store.User'
     ],
 
-//    onItemSelected: function() {
-//        var grid = this.lookupReference('patientListGrid'),
-//            model = grid.getSelectionModel();
-//        console.log(model);
-//    },
-    
     onSelectionChange: function(model /*, selected, eOpts*/) {
         var count = model.getCount();
         if (count > 0) {
@@ -59,7 +53,6 @@ Ext.define('Patients.view.user.UserListController', {
 
     onAdd: function() {
 	var user = this.getView().getStore().getModel().create();
-//	this.getViewModel().set('theUser', model.create());
 
         this.fireEvent('createTab', 'User - New', {
             xtype: 'user',
@@ -99,7 +92,7 @@ Ext.define('Patients.view.user.UserListController', {
                 failure: function(record, operation) {
                     Ext.toast({
                         title: 'Remove',
-                        html: 'Unable to remove User',
+                        html: 'Unable to remove user',
                         align: 't',
                         bodyPadding: 10
                     });

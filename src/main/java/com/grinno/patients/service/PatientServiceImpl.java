@@ -30,9 +30,9 @@ public class PatientServiceImpl extends AbstractService implements PatientServic
     @Transactional(readOnly = false, propagation = REQUIRED)
     @Override
     public Result<Patient> store(String idPatient, String firstName, String secondName, String lastName, String pesel) {
-        Patient patient = new Patient(firstName, secondName, lastName, pesel);
+        Patient patient = new Patient(idPatient, firstName, secondName, lastName, pesel);
         if (idPatient == null) {
-            patientRepository.insert(patient);
+            patientRepository.save(patient);
         } else {
             patientRepository.updateFirst(idPatient, patient);
         }

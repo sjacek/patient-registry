@@ -16,10 +16,12 @@
  */
 package com.grinno.patients.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 import com.grinno.patients.domain.AbstractEntity;
+import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -28,35 +30,42 @@ import org.springframework.data.mongodb.core.mapping.Document;
  * @author jsztajnke
  */
 @Document
+@JsonInclude(NON_NULL)
 public class Patient extends AbstractEntity {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(Patient.class);
 
     @Id
     private String id;
 
+    @NotBlank(message = "{fieldrequired}")
     private String firstName;
+
     private String secondName;
+
+    @NotBlank(message = "{fieldrequired}")
     private String lastName;
+
+    @NotBlank(message = "{fieldrequired}")
     private String pesel;
 
     public Patient() {
-        LOGGER.debug("Patient()");
     }
 
-    public Patient(String firstName, String secondName, String lastName, String pesel) {
-        LOGGER.debug("Patient(" + firstName + "," + secondName + "," + lastName + "," + pesel + ")");
+    public Patient(JsonObject json) {
+        this.id = json.getString("id", null);
+        this.firstName = json.getString("firstName", "");
+        this.secondName = json.getString("secondName", null);
+        this.lastName = json.getString("lastName", "");
+        this.pesel = json.getString("pesel", "");
+    }
+    
+    public Patient(String id, String firstName, String secondName, String lastName, String pesel) {
+        this.id = id;
         this.firstName = firstName;
         this.secondName = secondName;
         this.lastName = lastName;
         this.pesel = pesel;
     }
 
-//    @Override
-//    public void copy(AbstractEntity entity) {
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//    }
-    
     public String getId() {
         return id;
     }
@@ -104,11 +113,11 @@ public class Patient extends AbstractEntity {
 
     @Override
     public void addJson(JsonObjectBuilder builder) {
-        builder.add("id", id)
-               .add("firstName", firstName)
-               .add("secondName", secondName)
-               .add("lastName", lastName)
-               .add("pesel", pesel);
+        builder.add("id", checkNull(id))
+               .add("firstName", checkNull(firstName))
+               .add("secondName", checkNull(secondName))
+               .add("lastName", checkNull(lastName))
+               .add("pesel", checkNull(pesel));
     }
 
 }

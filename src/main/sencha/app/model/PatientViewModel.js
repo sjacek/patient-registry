@@ -18,13 +18,10 @@
 
 /* global Ext */
 
-/**
- * This class is the ViewModel for the ticket details view.
- */
 Ext.define('Patients.model.PatientViewModel', {
     extend: 'Ext.app.ViewModel',
     requires: [
-        'Patients.model.PatientModel'
+        'Patients.model.Patient'
     ],
 
     // This enables "viewModel: { type: 'patient' }" in the view:
@@ -32,7 +29,7 @@ Ext.define('Patients.model.PatientViewModel', {
 
     stores: {
         patients: {
-            model: 'Patients.model.PatientModel',
+            model: 'Patients.model.Patient',
             autoLoad: true,
             proxy: {
                 type: 'ajax',

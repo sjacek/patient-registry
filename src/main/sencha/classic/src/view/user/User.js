@@ -45,7 +45,6 @@ Ext.define('Patients.view.user.User', {
     componentCls: 'user-detail',
     bodyPadding: 20,
     
-//    title: 'User Data',
     closable: true,
     autoShow: true,
     grid: null,

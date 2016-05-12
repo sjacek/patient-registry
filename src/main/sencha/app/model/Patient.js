@@ -17,12 +17,57 @@
 
 /* global Ext */
 
-Ext.define('Patients.model.PatientModel', {
+Ext.define('Patients.model.Patient', {
     extend: 'Ext.data.Model',
     config: {
-        fields: [ 'id', 'firstName', 'secondName', 'lastName', 'pesel' ]
+        fields: [{
+            name: 'internal_id',
+            type: 'int',
+            persist: false
+        },{
+            name: 'id',
+            type: 'string'
+        }, {
+            name: 'firstName',
+            type: 'string',
+            validators : [
+                { type : "notBlank" },
+                {
+                    type : "length",
+                    min : 0,
+                    max : 255
+                } ]
+        }, {
+            name: 'secondName',
+            type: 'string',
+            validators : [
+                {
+                    type : "length",
+                    min : 0,
+                    max : 255
+                } ]
+        }, {
+            name: 'lastName',
+            type: 'string',
+            validators : [
+                { type : "notBlank" },
+                {
+                    type : "length",
+                    min : 0,
+                    max : 255
+                } ]
+        }, {
+            name: 'pesel',
+            type: 'string',
+            validators : [
+                {
+                    type : "length",
+                    min : 11,
+                    max : 11
+                } ]
+        }]
     },
-    idProperty: 'id',
+    idProperty: 'internal_id',
     proxy: {
         type: 'ajax',
         idParam: 'id',

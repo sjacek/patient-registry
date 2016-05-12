@@ -16,34 +16,20 @@
  */
 package com.grinno.patients.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 import com.grinno.patients.domain.AbstractEntity;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonString;
-import javax.json.JsonValue;
-import javax.persistence.CascadeType;
-import javax.persistence.OneToMany;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.util.StringUtils;
 
 /**
  *
@@ -57,22 +43,22 @@ public class User extends AbstractEntity {
     private String id;
 
     @NotBlank(message = "{fieldrequired}")
-    private String loginName = "";
+    private String loginName;
 
     @NotBlank(message = "{fieldrequired}")
-    private String lastName = "";
+    private String lastName;
 
     @NotBlank(message = "{fieldrequired}")
-    private String firstName = "";
+    private String firstName;
 
     @Email(message = "{invalidemail}")
     @NotBlank(message = "{fieldrequired}")
-    private String email = "";
+    private String email;
 
     private Set<String> authorities = new HashSet<>();
 
-    @JsonIgnore
-    private String passwordHash = "";
+    @NotBlank(message = "{fieldrequired}")
+    private String passwordHash;
 //
 //    @NotBlank(message = "{fieldrequired}")
 //    private String locale;
@@ -108,7 +94,7 @@ public class User extends AbstractEntity {
     }
 
     public User(JsonObject json) {
-        this.id = json.getString("id", "");
+        this.id = json.getString("id", null);
         this.loginName = json.getString("loginName", "");
         this.firstName = json.getString("firstName", "");
         this.lastName = json.getString("lastName", "");
@@ -117,17 +103,6 @@ public class User extends AbstractEntity {
         this.passwordHash = json.getString("passwordHash", "");
     }
     
-//    @Override
-//    public void copy(AbstractEntity entity) {
-//        User user = (User)entity;
-//        user.loginName = this.loginName;
-//        user.firstName = this.firstName;
-//        user.lastName = this.lastName;
-//        user.email = this.email;
-//        user.authorities = this.authorities;
-//        user.passwordHash = this.passwordHash;
-//    }
-
     public String getId() {
         return this.id;
     }
@@ -279,13 +254,13 @@ public class User extends AbstractEntity {
         final JsonArrayBuilder authoritiesBuilder = Json.createArrayBuilder();
         authorities.forEach(s -> authoritiesBuilder.add(s));
 
-        builder.add("id", id)
-                .add("loginName", loginName)
-                .add("firstName", firstName)
-                .add("lastName", lastName)
-                .add("email", email)
+        builder.add("id", checkNull(id))
+                .add("loginName", checkNull(loginName))
+                .add("firstName", checkNull(firstName))
+                .add("lastName", checkNull(lastName))
+                .add("email", checkNull(email))
                 .add("authorities", authoritiesBuilder)
-                .add("passwordHash", this.passwordHash)
+                .add("passwordHash", checkNull(passwordHash))
 //                .add("locale", locale)
 //                .add("enabled", enabled)
                 ;

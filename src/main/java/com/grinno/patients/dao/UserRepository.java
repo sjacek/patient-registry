@@ -27,7 +27,7 @@ public class UserRepository {
      *
      * @param user 
      */
-    public void insert(User user) {
+    public void save(User user) {
         LOGGER.debug("UserRepository.insert(" + user + ")");
 
         if (!mongoTemplate.collectionExists(User.class)) {

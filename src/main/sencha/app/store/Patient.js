@@ -22,19 +22,18 @@ Ext.define('Patients.store.Patient', {
 
     alias: 'store.patient',
 
+    requires: ['Patients.model.Patient'],
     pageSize: 25,
     autoLoad: true,
     autoSync: true,
-    model: 'Patients.model.PatientModel',
+    model: 'Patients.model.Patient',
     proxy: {
         type: 'ajax',
         url: 'patient/findAll.json',
         reader: {
             type: 'json',
-            rootProperty: 'data'
-        },
-        writer: {
-            type: 'json'
+            rootProperty: 'data',
+            totalProperty: 'total'
         }
     }
 });
