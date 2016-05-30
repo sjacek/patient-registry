@@ -1,10 +1,24 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (C) 2016 jacek
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package com.grinno.patients.service;
 
+import ch.ralscha.extdirectspring.annotation.ExtDirectMethod;
+import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.STORE_MODIFY;
+import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.STORE_READ;
 import com.grinno.patients.dao.PatientRepository;
 import com.grinno.patients.model.Patient;
 import com.grinno.patients.vo.Result;
@@ -27,9 +41,10 @@ public class PatientServiceImpl extends AbstractService implements PatientServic
     @Autowired
     protected PatientRepository patientRepository;
     
+    @ExtDirectMethod(STORE_MODIFY)
     @Transactional(readOnly = false, propagation = REQUIRED)
     @Override
-    public Result<Patient> store(String idPatient, String firstName, String secondName, String lastName, String pesel) {
+    public Result<Patient> update(String idPatient, String firstName, String secondName, String lastName, String pesel) {
         Patient patient = new Patient(idPatient, firstName, secondName, lastName, pesel);
         if (idPatient == null) {
             patientRepository.save(patient);
@@ -39,18 +54,20 @@ public class PatientServiceImpl extends AbstractService implements PatientServic
         return ResultFactory.getSuccessResult(patient);
     }
 
+    @ExtDirectMethod(STORE_MODIFY)
     @Transactional(readOnly = false, propagation = REQUIRED)
     @Override
-    public Result<Patient> remove(String idPatient) {
+    public Result<Patient> destroy(String idPatient) {
         Patient patient = patientRepository.remove(idPatient);
         String msg = "Patient PESEL=" + patient.getPesel() + " was deleted";
         LOGGER.info(msg);
         return ResultFactory.getSuccessResultMsg(msg);
     }
     
+    @ExtDirectMethod(STORE_READ)
     @Transactional(readOnly = true, propagation = SUPPORTS)
     @Override
-    public Result<Patient> find(String idPatient) {
+    public Result<Patient> read(String idPatient) {
         Patient patient = patientRepository.findOneById(idPatient);
         return ResultFactory.getSuccessResult(patient);
     }

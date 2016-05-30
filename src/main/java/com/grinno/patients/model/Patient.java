@@ -16,13 +16,13 @@
  */
 package com.grinno.patients.model;
 
+import ch.rasc.extclassgenerator.Model;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
-import com.grinno.patients.domain.AbstractEntity;
+import com.grinno.patients.domain.AbstractPersistable;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import org.hibernate.validator.constraints.NotBlank;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
@@ -30,11 +30,14 @@ import org.springframework.data.mongodb.core.mapping.Document;
  * @author jsztajnke
  */
 @Document
+@Model(value = "Patients.model.Patient",
+        readMethod = "patientService.read",
+        createMethod = "patientService.update",
+        updateMethod = "patientService.update",
+//        destroyMethod = "patientService.destroy",
+        paging = true, identifier = "negative")
 @JsonInclude(NON_NULL)
-public class Patient extends AbstractEntity {
-
-    @Id
-    private String id;
+public class Patient extends AbstractPersistable {
 
     @NotBlank(message = "{fieldrequired}")
     private String firstName;
@@ -51,7 +54,7 @@ public class Patient extends AbstractEntity {
     }
 
     public Patient(JsonObject json) {
-        this.id = json.getString("id", null);
+        super.setId(json.getString("id", null));
         this.firstName = json.getString("firstName", "");
         this.secondName = json.getString("secondName", null);
         this.lastName = json.getString("lastName", "");
@@ -59,19 +62,11 @@ public class Patient extends AbstractEntity {
     }
     
     public Patient(String id, String firstName, String secondName, String lastName, String pesel) {
-        this.id = id;
+        super.setId(id);
         this.firstName = firstName;
         this.secondName = secondName;
         this.lastName = lastName;
         this.pesel = pesel;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getFirstName() {
@@ -113,8 +108,8 @@ public class Patient extends AbstractEntity {
 
     @Override
     public void addJson(JsonObjectBuilder builder) {
-        builder.add("id", checkNull(id))
-               .add("firstName", checkNull(firstName))
+        super.addJson(builder);
+        builder.add("firstName", checkNull(firstName))
                .add("secondName", checkNull(secondName))
                .add("lastName", checkNull(lastName))
                .add("pesel", checkNull(pesel));

@@ -15,8 +15,8 @@ import java.util.List;
  */
 public interface PatientService {
 
-    public Result<Patient> store(String idPatient, String firstName, String secondName, String lastName, String pesel);
-    public Result<Patient> remove (String idPatient);
-    public Result<Patient> find(String idPatient);
+    public Result<Patient> update(String idPatient, String firstName, String secondName, String lastName, String pesel);
+    public Result<Patient> destroy (String idPatient);
+    public Result<Patient> read(String idPatient);
     public Result<List<Patient>> findAll();
 }
