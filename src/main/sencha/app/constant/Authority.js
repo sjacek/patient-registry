@@ -18,7 +18,7 @@
 /* global Ext */
 
 Ext.define('Patients.constant.Authority', {
-	singleton: true,
-	ADMIN: 'ADMIN',
-	USER: 'USER'
+    singleton: true,
+    ADMIN: 'ADMIN',
+    USER: 'USER'
 });

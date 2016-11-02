@@ -14,18 +14,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 /* global Ext */
 
 Ext.define('Patients.plugin.Clearable', {
     extend: 'Ext.plugin.Abstract',
     alias: 'plugin.clearable',
-
     config: {
         toggleEvent: 'change',
         weight: -100
     },
-
     init: function (field) {
         var plugin = this;
         var toggleEvent = field.clearableEvent || plugin.getToggleEvent();
@@ -85,14 +82,12 @@ Ext.define('Patients.plugin.Clearable', {
 
         Ext.Function.interceptAfter(field, 'setReadOnly', plugin.syncClearTriggerVisibility, plugin);
     },
-    
     destroy: function () {
         var field = this.getCmp();
         if (field.clearableListeners) {
             field.clearableListeners.destroy();
         }
     },
-
     /**
      * Considers all conditions to set trigger visibility. Can be overridden to influence
      * when trigger is made visible.

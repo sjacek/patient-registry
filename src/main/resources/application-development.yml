@@ -1,0 +1,18 @@
+spring:
+  resources:
+    cache-period: 0
+    static-locations: file:./src/main/sencha
+  jpa:
+    show-sql: true
+
+server:
+  port: 8088
+  compression:
+    enabled: false
+
+logging:
+  level:
+    org.springframework.data.mongodb: INFO
+    org.springframework: INFO
+    org.apache: INFO
+    ch: INFO

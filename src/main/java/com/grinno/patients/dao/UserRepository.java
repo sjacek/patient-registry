@@ -83,7 +83,7 @@ public class UserRepository {
         query.addCriteria(Criteria.where("_id").is(id));
 
         Update update = new Update();
-        update.set("loginName", user.getLoginName());
+//        update.set("loginName", user.getLoginName());
         update.set("firstName", user.getFirstName());
         update.set("lastName", user.getLastName());
         update.set("email", user.getEmail());

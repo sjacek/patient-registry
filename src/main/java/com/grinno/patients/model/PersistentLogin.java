@@ -7,17 +7,19 @@ import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.Transient;
-import org.springframework.data.mongodb.core.mapping.Document;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
-/**
- *
- * @author jacek
- */
-@Document
-@JsonInclude(NON_NULL)
+import ch.rasc.bsoncodec.annotation.BsonDocument;
+import ch.rasc.bsoncodec.annotation.Id;
+import ch.rasc.bsoncodec.annotation.Transient;
+import ch.rasc.extclassgenerator.Model;
+import ch.rasc.extclassgenerator.ModelField;
+
+@BsonDocument
+@Model(value = "Patients.model.PersistentLogin", idProperty = "series",
+        readMethod = "userConfigService.readPersistentLogins", writeAllFields = false,
+        destroyMethod = "userConfigService.destroyPersistentLogin")
+@JsonInclude(Include.NON_NULL)
 public class PersistentLogin {
 
     @Id
@@ -29,6 +31,7 @@ public class PersistentLogin {
     @NotNull
     private String token;
 
+    @ModelField(dateFormat = "time")
     private Date lastUsed;
 
     @Size(min = 0, max = 39)

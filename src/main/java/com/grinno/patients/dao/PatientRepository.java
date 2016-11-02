@@ -1,6 +1,5 @@
 package com.grinno.patients.dao;
 
-import static com.grinno.patients.dao.UserRepository.COLLECTION_NAME;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +10,6 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
 import com.grinno.patients.model.Patient;
-import com.grinno.patients.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

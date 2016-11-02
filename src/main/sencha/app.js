@@ -3,12 +3,11 @@
  * needed for your application, but these edits will have to be merged by
  * Sencha Cmd when upgrading.
  */
-/* global Ext */
-
 Ext.application({
     name: 'Patients',
-    extend: 'Patients.Application'
-/*
+
+    extend: 'Patients.Application',
+
     requires: [
         'Patients.view.main.Main'
     ],
@@ -18,7 +17,7 @@ Ext.application({
     // modern toolkit, the main view will be added to the Viewport.
     //
     mainView: 'Patients.view.main.Main'
-*/	
+	
     //-------------------------------------------------------------------------
     // Most customizations should be made to Patients.Application. If you need to
     // customize this file, doing so below this section reduces the likelihood

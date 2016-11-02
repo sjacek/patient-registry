@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2016 jsztajnke
+ * Copyright (C) 2016 Jacek Sztajnke
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
  */
 
 
-/* global Ext */
+/* global Ext, serverUrl, POLLING_URLS, REMOTING_API, securityService */
 
 /**
  * The main application class. An instance of this class is created by app.js when it
@@ -25,47 +25,61 @@
  */
 Ext.define('Patients.Application', {
     extend: 'Ext.app.Application',
-    requires: [ 'Patients.store.Authority' ],
+    requires: ['Ext.direct.*', 'Ext.form.action.DirectSubmit', 'Patients.*', 'Ext.state.Manager', 'Ext.state.LocalStorageProvider', 'Ext.container.Container'],
     name: 'Patients',
 
-    stores: [
-        // TODO: add global / shared stores here
-        'Authority'
-    ],
-    
-    views: [
-        'Patients.view.login.Login',
-        'Patients.view.main.Main'
-    ],
-    controllers: [
-        'Root@Patients.controller'
-    ],
+    stores: ['Navigation', 'Languages', 'Authority'],
 
-/*
-    launch: function () {
-        // It's important to note that this type of application could use
-        // any type of storage, i.e., Cookies, LocalStorage, etc.
-        var loggedIn;
+    constructor: function () {
+        // <debug>
+        Ext.Ajax.on('beforerequest', function (conn, options, eOpts) {
+            options.withCredentials = true;
+        }, this);
+        // </debug>
 
-        // Check to see the current value of the localStorage key
-        loggedIn = localStorage.getItem("PatientsLoggedIn");
-
-        // This ternary operator determines the value of the PatientsLoggedIn key.
-        // If PatientsLoggedIn isn't true, we display the login window,
-        // otherwise, we display the main view
-        Ext.create({
-//            xtype: loggedIn ? 'app-main' : 'login'
-            xtype: 'login'
+        var heartbeat = new Ext.direct.PollingProvider({
+            id: 'heartbeat',
+            type: 'polling',
+            interval: 5 * 60 * 1000, // 5 minutes
+            url: serverUrl + POLLING_URLS.heartbeat
         });
+
+        REMOTING_API.url = serverUrl + REMOTING_API.url;
+        REMOTING_API.maxRetries = 0;
+
+        Ext.direct.Manager.addProvider(REMOTING_API, heartbeat);
+        Ext.direct.Manager.getProvider('heartbeat').disconnect();
+
+        Ext.state.Manager.setProvider(new Ext.state.LocalStorageProvider());
+
+        this.callParent(arguments);
     },
-*/
+
+    launch: function () {
+        Ext.getBody().removeCls('loading');
+        Ext.fly('loading_container').destroy();
+
+        var me = this;
+        var token = window.location.search.split('token=')[1];
+        if (token) {
+            me.fireEvent('pwreset', me, token);
+        } else if (window.location.search === '?logout') {
+            me.fireEvent('logout', me);
+        } else {
+            Patients.Util.getCsrfToken().then(function () {
+                securityService.getAuthUser(function (user, e, success) {
+                    if (user) {
+                        me.fireEvent('signedin', me, user);
+                    } else {
+                        me.fireEvent('notsignedin', me);
+                    }
+                });
+            });
+
+        }
+    },
+
     onAppUpdate: function () {
-        Ext.Msg.confirm('Application Update', 'This application has an update, reload?',
-            function (choice) {
-                if (choice === 'yes') {
-                    window.location.reload();
-                }
-            }
-        );
+        window.location.reload();
     }
 });

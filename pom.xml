@@ -1,210 +1,257 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
+    <prerequisites>
+        <maven>3.3.9</maven>
+    </prerequisites>
 
     <groupId>com.grinno</groupId>
     <artifactId>patients</artifactId>
     <version>0.0.1</version>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
 
-    <name>patients</name>
+    <name>Patients</name>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>1.4.1.RELEASE</version>
+        <relativePath /> <!-- lookup parent from repository -->
+    </parent>
 
     <properties>
-        <java-version>1.8</java-version>
-        <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
+        <start-class>com.grinno.patients.Application</start-class>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <java.version>1.8</java.version>
+        <maven.build.timestamp.format>yyyy-MM-dd'T'HH-mm-ssZ</maven.build.timestamp.format>
+        <build.timestamp>${maven.build.timestamp}</build.timestamp>
+        <client.app.dir>${basedir}/src/main/sencha</client.app.dir>
 
         <org.springframework-version>4.2.6.RELEASE</org.springframework-version>
-        <org.spring-data-mongodb-version>1.9.1.RELEASE</org.spring-data-mongodb-version>
+        <org.spring-data-mongodb-version>1.9.4.RELEASE</org.spring-data-mongodb-version>
         <org.aspectj-version>1.8.9</org.aspectj-version>
         <org.slf4j-version>1.7.21</org.slf4j-version>
         <com.fasterxml.jackson.core-version>2.7.4</com.fasterxml.jackson.core-version>
         <com.querydsl-version>4.1.1</com.querydsl-version>
     </properties>
-    
+
     <dependencies>
         <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
-            <version>6.9.10</version>
-            <scope>test</scope>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <!--exclusions>
+                    <exclusion>
+                            <groupId>org.springframework.boot</groupId>
+                            <artifactId>spring-boot-starter-tomcat</artifactId>
+                    </exclusion>
+            </exclusions-->
         </dependency>
+        <!--dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-jetty</artifactId>
+        </dependency-->
+
         <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-validator</artifactId>
-            <version>5.2.4.Final</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>javax</groupId>
-            <artifactId>javaee-web-api</artifactId>
-            <version>7.0</version>
-            <scope>provided</scope>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
 
-        <!-- Spring -->
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-            <version>${org.springframework-version}</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
             <exclusions>
-                <!-- Exclude Commons Logging in favor of SLF4j -->
                 <exclusion>
-                    <groupId>commons-logging</groupId>
-                    <artifactId>commons-logging</artifactId>
+                    <artifactId>activation</artifactId>
+                    <groupId>javax.activation</groupId>
                 </exclusion>
             </exclusions>
         </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-webmvc</artifactId>
-            <version>${org.springframework-version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-web</artifactId>
-            <version>${org.springframework-version}</version>
-        </dependency>
-		
-        <!-- Spring Data for MongoDB-->	
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-mongodb</artifactId>
-            <version>${org.spring-data-mongodb-version}</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
         </dependency>
 
         <dependency>
-            <groupId>com.querydsl</groupId>
-            <artifactId>querydsl-jpa</artifactId>
-            <version>${com.querydsl-version}</version>
-        </dependency>
-		
-                        			
-        <!-- AspectJ -->
-        <dependency>
-            <groupId>org.aspectj</groupId>
-            <artifactId>aspectjrt</artifactId>
-            <version>${org.aspectj-version}</version>
-        </dependency>	
-
-        <!-- Jackson  -->
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-core</artifactId>
-            <version>${com.fasterxml.jackson.core-version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>${com.fasterxml.jackson.core-version}</version>
-        </dependency>
-	
-        <!-- Logging -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${org.slf4j-version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>jcl-over-slf4j</artifactId>
-            <version>${org.slf4j-version}</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <version>${org.slf4j-version}</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.17</version>
+            <groupId>com.google.zxing</groupId>
+            <artifactId>javase</artifactId>
+            <version>3.3.0</version>
             <exclusions>
                 <exclusion>
-                    <groupId>javax.mail</groupId>
-                    <artifactId>mail</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>javax.jms</groupId>
-                    <artifactId>jms</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.sun.jdmk</groupId>
-                    <artifactId>jmxtools</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.sun.jmx</groupId>
-                    <artifactId>jmxri</artifactId>
+                    <artifactId>jcommander</artifactId>
+                    <groupId>com.beust</groupId>
                 </exclusion>
             </exclusions>
-            <scope>runtime</scope>
         </dependency>
 
-        <!-- @Inject -->
         <dependency>
-            <groupId>javax.inject</groupId>
-            <artifactId>javax.inject</artifactId>
-            <version>1</version>
+            <groupId>javax</groupId>
+            <artifactId>javaee-api</artifactId>
+            <version>7.0</version>
+            <type>jar</type>
         </dependency>
-				
-        <!-- Servlet -->
+
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-            <version>2.5</version>
-            <scope>provided</scope>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongodb-driver</artifactId>
         </dependency>
+
         <dependency>
-            <groupId>javax.servlet.jsp</groupId>
-            <artifactId>jsp-api</artifactId>
-            <version>2.2</version>
-            <scope>provided</scope>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
         </dependency>
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>jstl</artifactId>
-            <version>1.2</version>
-        </dependency>
-	
+
         <dependency>
             <groupId>ch.ralscha</groupId>
             <artifactId>extdirectspring</artifactId>
-            <version>1.6.1</version>
+            <version>1.7.0</version>
         </dependency>
 
         <dependency>
             <groupId>ch.rasc</groupId>
             <artifactId>extclassgenerator-annotations</artifactId>
-            <version>1.0.9</version>
+            <version>1.0.10</version>
         </dependency>
 
         <dependency>
-            <groupId>org.glassfish</groupId>
-            <artifactId>javax.json</artifactId>
-            <version>1.0.4</version>
-            <type>jar</type>
+            <groupId>eu.bitwalker</groupId>
+            <artifactId>UserAgentUtils</artifactId>
+            <version>1.20</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.unbescape</groupId>
+            <artifactId>unbescape</artifactId>
+            <version>1.1.4.RELEASE</version>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.samskivert</groupId>
+            <artifactId>jmustache</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>de.danielbechler</groupId>
+            <artifactId>java-object-diff</artifactId>
+            <version>0.94</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ch.rasc</groupId>
+            <artifactId>constgen</artifactId>
+            <version>1.0.3</version>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>ch.rasc</groupId>
+            <artifactId>bsoncodec</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.immutables</groupId>
+            <artifactId>value</artifactId>
+            <version>2.3.7</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>ch.rasc</groupId>
+            <artifactId>bsoncodec-apt</artifactId>
+            <version>1.0.2</version>
+            <optional>true</optional>
         </dependency>
     </dependencies>
 
     <build>
+        <finalName>patients</finalName>
         <plugins>
+
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>
+                            <groupId>ch.rasc</groupId>
+                            <artifactId>constgen</artifactId>
+                        </exclude>
+                        <exclude>
+                            <groupId>ch.rasc</groupId>
+                            <artifactId>bsoncodec-apt</artifactId>
+                        </exclude>
+                        <exclude>
+                            <groupId>com.squareup</groupId>
+                            <artifactId>javapoet</artifactId>
+                        </exclude>
+                        <exclude>
+                            <groupId>com.google.auto</groupId>
+                            <artifactId>auto-common</artifactId>
+                        </exclude>
+                        <exclude>
+                            <groupId>com.google.auto.service</groupId>
+                            <artifactId>auto-service</artifactId>
+                        </exclude>
+                        <exclude>
+                            <groupId>org.immutables</groupId>
+                            <artifactId>value</artifactId>
+                        </exclude>
+                        <exclude>
+                            <groupId>com.google.code.findbugs</groupId>
+                            <artifactId>jsr305</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.5.1</version>
+                <configuration>
+                    <debug>true</debug>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <compilerArgs>
+                        <compilerArg>-parameters</compilerArg>
+                        <compilerArg>-AgenerateCodecProvider=false</compilerArg>
+                    </compilerArgs>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>application-development.yml</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+
             <plugin>
                 <groupId>com.mysema.maven</groupId>
                 <artifactId>apt-maven-plugin</artifactId>
                 <version>1.1.2</version>
                 <executions>
-                    <execution>
-                        <id>jpa</id>
-                        <goals>
-                            <goal>process</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.basedir}/target/generated-sources/java</outputDirectory>
-                            <processor>com.querydsl.apt.jpa.JPAAnnotationProcessor</processor>
-                        </configuration>
-                    </execution>
                     <execution>
                         <id>modelgen</id>
                         <phase>compile</phase>
@@ -213,7 +260,7 @@
                         </goals>
                         <configuration>
                             <processor>ch.rasc.extclassgenerator.ModelAnnotationProcessor</processor>
-                            <outputDirectory>${basedir}/src/main/sencha/app</outputDirectory>
+                            <outputDirectory>${client.app.dir}/app</outputDirectory>
                             <options>
                                 <debug>true</debug>
                                 <outputFormat>extjs5</outputFormat>
@@ -226,20 +273,9 @@
                 </executions>
                 <dependencies>
                     <dependency>
-                        <groupId>com.querydsl</groupId>
-                        <artifactId>querydsl-apt</artifactId>
-                        <version>${com.querydsl-version}</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>com.querydsl</groupId>
-                        <artifactId>querydsl-jpa</artifactId>
-                        <classifier>apt</classifier>
-                        <version>${com.querydsl-version}</version>
-                    </dependency>
-                    <dependency>
                         <groupId>ch.rasc</groupId>
                         <artifactId>extclassgenerator</artifactId>
-                        <version>1.0.9</version>
+                        <version>1.0.10</version>
                     </dependency>
                 </dependencies>
             </plugin>
@@ -247,72 +283,110 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
-                <version>1.5.0</version>
                 <executions>
                     <execution>
-                        <id>sencha-compile</id>
-                        <phase>compile</phase>
+                        <id>sencha-app-clean-development</id>
                         <goals>
                             <goal>exec</goal>
                         </goals>
+                        <phase>clean</phase>
                         <configuration>
-                            <executable>/opt/Sencha/sencha</executable>
-                            <workingDirectory>${basedir}/src/main/sencha</workingDirectory>
+                            <executable>sencha</executable>
+                            <workingDirectory>${client.app.dir}</workingDirectory>
+                            <arguments>
+                                <argument>app</argument>
+                                <argument>clean</argument>
+                                <argument>development</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>sencha-app-clean</id>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <phase>clean</phase>
+                        <configuration>
+                            <executable>sencha</executable>
+                            <workingDirectory>${client.app.dir}</workingDirectory>
+                            <arguments>
+                                <argument>app</argument>
+                                <argument>clean</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>sencha-app-build</id>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <phase>prepare-package</phase>
+                        <configuration>
+                            <executable>sencha</executable>
+                            <workingDirectory>${client.app.dir}</workingDirectory>
                             <arguments>
                                 <argument>app</argument>
                                 <argument>build</argument>
-                                <argument>--destination</argument>
-                                <argument>${basedir}/src/main/webapp</argument>
                             </arguments>
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>        
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.5.1</version>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                    <compilerArguments>
-                        <endorseddirs>${endorsed.dir}</endorseddirs>
-                    </compilerArguments>
-                </configuration>
             </plugin>
+
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>2.6</version>
-                <configuration>
-                    <failOnMissingWebXml>false</failOnMissingWebXml>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>2.10</version>
+                <artifactId>maven-antrun-plugin</artifactId>
                 <executions>
                     <execution>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>copy</goal>
-                        </goals>
+                        <phase>prepare-package</phase>
                         <configuration>
-                            <outputDirectory>${endorsed.dir}</outputDirectory>
-                            <silent>true</silent>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>javax</groupId>
-                                    <artifactId>javaee-endorsed-api</artifactId>
-                                    <version>7.0</version>
-                                    <type>jar</type>
-                                </artifactItem>
-                            </artifactItems>
+                            <target>
+
+                                <copy todir="${basedir}/target/classes/static">
+                                    <fileset dir="${client.app.dir}">
+                                        <include name="locale-*.js" />
+                                        <include name="i18n-*.js" />
+                                        <include name="robots.txt" />
+                                    </fileset>
+                                </copy>
+
+                                <copy todir="${basedir}/target/classes/static"
+                                      includeEmptyDirs="false">
+                                    <fileset dir="${client.app.dir}/build/production/Patients">
+                                        <exclude name="**/Readme.md" />
+                                        <exclude name="resources/ext/" />
+                                        <exclude name="resources/fonts/OpenSans*" />
+                                    </fileset>
+                                </copy>
+
+                                <checksum file="${basedir}/target/classes/static/i18n-de.js"
+                                          algorithm="SHA-1" property="i18n_de_sha1" />
+                                <checksum file="${basedir}/target/classes/static/i18n-en.js"
+                                          algorithm="SHA-1" property="i18n_en_sha1" />
+
+                                <replace file="${basedir}/target/classes/static/index.html">
+                                    <replacefilter token="var serverUrl = 'http://localhost:8080/';"
+                                                   value="var serverUrl = '';" />
+
+                                    <replacefilter token="var i18nEnUrl = 'i18n-en.js';"
+                                                   value="var i18nEnUrl = 'i18n-en.js?_dc=${i18n_en_sha1}';" />
+
+                                    <replacefilter token="var i18nDeUrl = 'i18n-de.js';"
+                                                   value="var i18nDeUrl = 'i18n-de.js?_dc=${i18n_de_sha1}';" />
+
+                                </replace>
+
+                                <replaceregexp file="${basedir}/target/classes/static/index.html"
+                                               match="&lt;!--.*--&gt;" replace="" />
+
+                            </target>
                         </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>
+
         </plugins>
     </build>
 

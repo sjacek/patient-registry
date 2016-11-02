@@ -1,34 +1,33 @@
-Ext JS 6.0.1.250 - JavaScript Library
-Copyright (c) 2006-2015, Sencha Inc.
+Ext JS 6.2.0.981 - JavaScript Library
+Copyright (c) 2006-2016, Sencha Inc.
 All rights reserved.
 licensing@sencha.com
 
-http://www.sencha.com/license
+options: http://www.sencha.com/license
+license: http://www.sencha.com/legal/sencha-sdk-software-license-agreement
 
-Open Source License
+
+Commercial License
 ------------------------------------------------------------------------------------------
-This version of Ext JS is licensed under the terms of the Open Source GPL 3.0 license. 
-
-http://www.gnu.org/licenses/gpl.html
-
-There are several FLOSS exceptions available for use with this release for
-open source applications that are distributed under a license other than GPL.
-
-* Open Source License Exception for Applications
-
-  http://www.sencha.com/products/floss-exception.php
-
-* Open Source License Exception for Development
-
-  http://www.sencha.com/products/ux-exception.php
+This version of Sencha Ext JS is licensed commercially. This is the appropriate option 
+if you are creating proprietary applications and you are not prepared to distribute and 
+share the source code of your application under the GPL v3 license. 
+See http://www.sencha.com/legal/sencha-sdk-software-license-agreement for license terms.
 
 
-Alternate Licensing
+Beta License
 ------------------------------------------------------------------------------------------
-Commercial and OEM Licenses are available for an alternate download of Ext JS.
-This is the appropriate option if you are creating proprietary applications and you are 
-not prepared to distribute and share the source code of your application under the 
-GPL v3 license. Please visit http://www.sencha.com/license for more details.
+If this is a Beta version of Sencha Ext JS, use is permitted for internal evaluation 
+and review purposes and not use for production purposes.
+See http://www.sencha.com/legal/sencha-sdk-software-license-agreement (Beta License) 
+for license terms. 
+
+
+Open Source Licensing
+------------------------------------------------------------------------------------------
+Open Source Licensing is available for an alternate download of Sencha Ext JS.
+For more details, please visit: www.sencha.com/license/.
+This version of Sencha Ext JS may not be used under an open source license.
 
 
 Third Party Content
@@ -47,6 +46,10 @@ Location: http://www.JSON.org/js.html
 Library: flexible-js-formatting - date parsing and formatting
 License: MIT
 Location: http://code.google.com/p/flexible-js-formatting/
+
+Library: spin.js - animated graphic
+License: MIT
+Location: http://fgnass.github.com/spin.js/
 
 Library: sparkline.js - micro charts
 License: BSD

@@ -7,6 +7,25 @@
     -->
     <import file="${basedir}/.sencha/app/build-impl.xml"/>
 
+	<target name="-check.ext">
+	   <property file="${basedir}/ext/version.properties"/>
+	   <property file="${basedir}/.sencha/app/sencha.cfg" />
+	   
+       <condition property="download.ext">
+	     <not>
+           <equals arg1="${version.full}" arg2="${app.framework.version}" forcestring="true" trim="true"/>
+	     </not>
+       </condition>	   
+	  
+	</target>
+	
+	<target name="init.ext" if="download.ext" depends="-check.ext">
+	    <delete dir="ext" quiet="true"/>
+        <get src="http://repo.rasc.ch/ext-${app.framework.version}.zip" dest="${basedir}"/>
+		<unzip src="ext-${app.framework.version}.zip" dest="ext"/>
+		<delete file="ext-${app.framework.version}.zip" />
+    </target>
+
     <!--
     The following targets can be provided to inject logic before and/or after key steps
     of the build process:
