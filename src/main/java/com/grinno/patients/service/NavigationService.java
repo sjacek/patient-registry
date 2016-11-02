@@ -33,18 +33,19 @@ public class NavigationService {
         this.rootNodes.add(new NavigationNode("user_users", "user.Container", true, null,
                 "x-fa fa-users", "users", Authority.ADMIN));
 
+        this.rootNodes.add(new NavigationNode("patient_patients", "patient.Container", true, null,
+                "x-fa fa-address-book", "patients", Authority.ADMIN, Authority.USER));
+
         this.rootNodes.add(new NavigationNode("Blank", "main.BlankPage", true, null,
                 "x-fa fa-clock-o", "blank", Authority.USER));
     }
 
     @ExtDirectMethod(TREE_LOAD)
-    public List<NavigationNode> getNavigation(Locale locale,
-            @AuthenticationPrincipal MongoUserDetails userDetails) {
+    public List<NavigationNode> getNavigation(Locale locale, @AuthenticationPrincipal MongoUserDetails userDetails) {
 
         if (userDetails != null && !userDetails.isPreAuth()) {
             return this.rootNodes.stream()
-                    .map(n -> NavigationNode.copyOf(n, userDetails.getAuthorities(),
-                            locale, this.messageSource))
+                    .map(n -> NavigationNode.copyOf(n, userDetails.getAuthorities(), locale, this.messageSource))
                     .filter(Objects::nonNull).collect(Collectors.toList());
         }
 

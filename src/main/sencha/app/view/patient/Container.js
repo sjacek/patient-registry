@@ -14,13 +14,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 /* global Ext */
 
-Ext.define('Patients.constant.Authority', {
-    singleton: true,
-    ANY: 'ANY',
-    ADMIN: 'ADMIN',
-    BUSINESS: 'BUSINESS',
-    USER: 'USER'
+Ext.define('Patients.view.patient.Container', {
+    extend: 'Ext.container.Container',
+    layout: {
+        type: 'card'
+    },
+    controller: {
+        xclass: 'Patients.view.patient.Controller'
+    },
+    viewModel: {
+        xclass: 'Patients.view.patient.ViewModel'
+    },
+    items: [{
+            xclass: 'Patients.view.patient.Grid'
+        }]
 });

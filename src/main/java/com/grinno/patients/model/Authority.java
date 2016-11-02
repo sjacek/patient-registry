@@ -1,5 +1,5 @@
 package com.grinno.patients.model;
 
 public enum Authority {
-    ADMIN, USER
+    ANY, ADMIN, BUSINESS, USER
 }

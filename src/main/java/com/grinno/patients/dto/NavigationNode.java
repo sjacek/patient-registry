@@ -48,7 +48,7 @@ public class NavigationNode {
     private final String routeId;
 
     @JsonIgnore
-    private EnumSet<Authority> authorities;
+    private final EnumSet<Authority> authorities;
 
     private final List<NavigationNode> children = new ArrayList<>();
 
@@ -68,20 +68,17 @@ public class NavigationNode {
     }
 
     public static NavigationNode copyOf(NavigationNode source,
-            Collection<? extends GrantedAuthority> authorities, Locale locale,
-            MessageSource messageSource) {
+            Collection<? extends GrantedAuthority> authorities, Locale locale, MessageSource messageSource) {
         if (hasAuthority(source, authorities)) {
             NavigationNode menuNode = new NavigationNode(
-                    messageSource.getMessage(source.getText(), null, source.getText(),
-                            locale),
+                    messageSource.getMessage(source.getText(), null, source.getText(), locale),
                     source.getView(), source.getLeaf(), source.getSelectable(),
                     source.getIconCls(), source.getRouteId());
 
             List<NavigationNode> children = new ArrayList<>();
             for (NavigationNode sourceChild : source.getChildren()) {
                 if (hasAuthority(sourceChild, authorities)) {
-                    NavigationNode copy = NavigationNode.copyOf(sourceChild, authorities,
-                            locale, messageSource);
+                    NavigationNode copy = NavigationNode.copyOf(sourceChild, authorities, locale, messageSource);
                     if (copy != null) {
                         children.add(copy);
                     }

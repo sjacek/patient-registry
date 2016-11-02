@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2016 Jacek Sztajnke
+ * Copyright (C) 2015 jsztajnke
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,10 +17,23 @@
 
 /* global Ext */
 
-Ext.define('Patients.constant.Authority', {
-    singleton: true,
-    ANY: 'ANY',
-    ADMIN: 'ADMIN',
-    BUSINESS: 'BUSINESS',
-    USER: 'USER'
+Ext.define('Patients.store.Patient', {
+    extend: 'Ext.data.Store',
+
+    alias: 'store.patient',
+
+    requires: ['Patients.model.Patient'],
+    pageSize: 25,
+    autoLoad: true,
+    autoSync: true,
+    model: 'Patients.model.Patient',
+    proxy: {
+        type: 'ajax',
+        url: 'patient/findAll.json',
+        reader: {
+            type: 'json',
+            rootProperty: 'data',
+            totalProperty: 'total'
+        }
+    }
 });
