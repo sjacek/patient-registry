@@ -62,7 +62,20 @@ Ext.define('Patients.view.main.MainController', {
         }
 
         Patients.app.authUser = user;
-        if (user.locale === 'de') {
+        if (user.locale === 'pl') {
+            if (localStorage.patients_locale !== 'pl') {
+                localStorage.patients_locale = 'pl';
+                window.location.reload();
+            } else {
+                var script = document.createElement('script');
+                var src = 'locale-pl.js';
+                if (Ext.manifest.loader.cache) {
+                    src += '?' + Ext.manifest.loader.cacheParam + '=' + Ext.manifest.loader.cache;
+                }
+                script.src = src;
+                document.getElementsByTagName('head')[0].appendChild(script);
+            }
+        } else if (user.locale === 'de') {
             if (localStorage.patients_locale !== 'de') {
                 localStorage.patients_locale = 'de';
                 window.location.reload();

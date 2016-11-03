@@ -108,7 +108,7 @@ class DevelopmentConfig {
     }
 
     private void writeI18n(Path clientDir) throws IOException {
-        List<Locale> locales = Arrays.asList(Locale.ENGLISH, Locale.GERMAN);
+        List<Locale> locales = Arrays.asList(Locale.ENGLISH, Locale.GERMAN, new Locale("pl", "PL"));
         for (Locale locale : locales) {
             String tag = locale.toLanguageTag();
             String output = "var i18n = "

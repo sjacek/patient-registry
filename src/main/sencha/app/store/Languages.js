@@ -26,5 +26,8 @@ Ext.define('Patients.store.Languages', {
         }, {
             value: 'en',
             text: i18n.language_english
+        }, {
+            value: 'pl',
+            text: i18n.language_polish
         }]
 });

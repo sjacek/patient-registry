@@ -1,9 +1,5 @@
 package com.grinno.patients;
 
-import java.lang.invoke.MethodHandles;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.data.web.SpringDataWebAutoConfiguration;
@@ -19,15 +15,11 @@ import ch.ralscha.extdirectspring.controller.ApiController;
 
 @Configuration
 @ComponentScan(basePackageClasses = {ExtDirectSpring.class, Application.class},
-        excludeFilters = {
-            @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = ApiController.class)})
-@EnableAutoConfiguration(exclude = {MustacheAutoConfiguration.class,
-    SpringDataWebAutoConfiguration.class})
+        excludeFilters = {@ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = ApiController.class)})
+@EnableAutoConfiguration(exclude = {MustacheAutoConfiguration.class, SpringDataWebAutoConfiguration.class})
 @EnableAsync
 @EnableScheduling
 public class Application {
-
-//    public static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     public static void main(String[] args) {
         // -Dspring.profiles.active=development

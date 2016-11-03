@@ -75,8 +75,7 @@ public class SecurityService {
     }
 
     @ExtDirectMethod
-    public UserDetailDto getAuthUser(
-            @AuthenticationPrincipal MongoUserDetails userDetails) {
+    public UserDetailDto getAuthUser(@AuthenticationPrincipal MongoUserDetails userDetails) {
 
         if (userDetails != null) {
             User user = userDetails.getUser(this.mongoDb);
@@ -97,8 +96,7 @@ public class SecurityService {
     @ExtDirectMethod(ExtDirectMethodType.FORM_POST)
     @PreAuthorize("hasAuthority('PRE_AUTH')")
     public ExtDirectFormPostResult signin2fa(HttpServletRequest request,
-            @AuthenticationPrincipal MongoUserDetails userDetails,
-            @RequestParam("code") int code) {
+            @AuthenticationPrincipal MongoUserDetails userDetails, @RequestParam("code") int code) {
 
         User user = userDetails.getUser(this.mongoDb);
         if (user != null) {
@@ -110,18 +108,15 @@ public class SecurityService {
 
                 userDetails.grantAuthorities();
 
-                Authentication newAuth = new UsernamePasswordAuthenticationToken(
-                        userDetails, null, userDetails.getAuthorities());
+                Authentication newAuth = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(newAuth);
 
                 ExtDirectFormPostResult result = new ExtDirectFormPostResult();
-                result.addResultProperty(AUTH_USER, new UserDetailDto(userDetails, user,
-                        CsrfController.getCsrfToken(request)));
+                result.addResultProperty(AUTH_USER, new UserDetailDto(userDetails, user, CsrfController.getCsrfToken(request)));
                 return result;
             }
 
-            BadCredentialsException excp = new BadCredentialsException(
-                    "Bad verification code");
+            BadCredentialsException excp = new BadCredentialsException("Bad verification code");
             AuthenticationFailureBadCredentialsEvent event = new AuthenticationFailureBadCredentialsEvent(
                     SecurityContextHolder.getContext().getAuthentication(), excp);
             this.applicationEventPublisher.publishEvent(event);
@@ -150,9 +145,7 @@ public class SecurityService {
 
     @ExtDirectMethod(ExtDirectMethodType.FORM_POST)
     @RequireAnyAuthority
-    public ExtDirectFormPostResult disableScreenLock(
-            @AuthenticationPrincipal MongoUserDetails userDetails,
-            @RequestParam("password") String password) {
+    public ExtDirectFormPostResult disableScreenLock(@AuthenticationPrincipal MongoUserDetails userDetails, @RequestParam("password") String password) {
 
         User user = this.mongoDb.getCollection(User.class)
                 .find(Filters.eq(CUser.id, userDetails.getUserDbId()))
@@ -171,15 +164,11 @@ public class SecurityService {
         String token = UUID.randomUUID().toString();
 
         User user = this.mongoDb.getCollection(User.class).findOneAndUpdate(
-                Filters.and(Filters.eq(CUser.email, email),
-                        Filters.eq(CUser.deleted, false)),
+                Filters.and(Filters.eq(CUser.email, email), Filters.eq(CUser.deleted, false)),
                 Updates.combine(
-                        Updates.set(CUser.passwordResetTokenValidUntil,
-                                Date.from(ZonedDateTime.now(ZoneOffset.UTC).plusHours(4)
-                                        .toInstant())),
+                        Updates.set(CUser.passwordResetTokenValidUntil, Date.from(ZonedDateTime.now(ZoneOffset.UTC).plusHours(4).toInstant())),
                         Updates.set(CUser.passwordResetToken, token)),
-                new FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
-                .upsert(false));
+                new FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER).upsert(false));
 
         if (user != null) {
             this.mailService.sendPasswortResetEmail(user);
@@ -215,13 +204,11 @@ public class SecurityService {
                     updates.add(Updates.set(CUser.passwordHash, user.getPasswordHash()));
 
                     MongoUserDetails principal = new MongoUserDetails(user);
-                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                            principal, null, principal.getAuthorities());
+                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(principal, null, principal.getAuthorities());
                     SecurityContextHolder.getContext().setAuthentication(authToken);
 
                     result = new ExtDirectFormPostResult();
-                    result.addResultProperty(AUTH_USER,
-                            new UserDetailDto(principal, user, null));
+                    result.addResultProperty(AUTH_USER, new UserDetailDto(principal, user, null));
                 } else {
                     result = new ExtDirectFormPostResult(false);
                 }
@@ -230,8 +217,7 @@ public class SecurityService {
                 updates.add(Updates.unset(CUser.passwordResetToken));
                 updates.add(Updates.unset(CUser.passwordResetTokenValidUntil));
 
-                this.mongoDb.getCollection(User.class).updateOne(
-                        Filters.eq(CUser.id, user.getId()), Updates.combine(updates));
+                this.mongoDb.getCollection(User.class).updateOne(Filters.eq(CUser.id, user.getId()), Updates.combine(updates));
 
                 return result;
             }
@@ -243,13 +229,11 @@ public class SecurityService {
     @ExtDirectMethod
     @RequireAdminAuthority
     public UserDetailDto switchUser(String userId) {
-        User switchToUser = this.mongoDb.getCollection(User.class)
-                .find(Filters.eq(CUser.id, userId)).first();
+        User switchToUser = this.mongoDb.getCollection(User.class).find(Filters.eq(CUser.id, userId)).first();
         if (switchToUser != null) {
 
             MongoUserDetails principal = new MongoUserDetails(switchToUser);
-            UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
-                    principal, null, principal.getAuthorities());
+            UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(principal, null, principal.getAuthorities());
 
             SecurityContextHolder.getContext().setAuthentication(token);
 

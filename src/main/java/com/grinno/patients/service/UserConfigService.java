@@ -51,8 +51,7 @@ public class UserConfigService {
     private final MessageSource messageSource;
 
     @Autowired
-    public UserConfigService(MongoDb mongoDb, Validator validator,
-            PasswordEncoder passwordEncoder, MessageSource messageSource) {
+    public UserConfigService(MongoDb mongoDb, Validator validator, PasswordEncoder passwordEncoder, MessageSource messageSource) {
         this.mongoDb = mongoDb;
         this.messageSource = messageSource;
         this.validator = validator;
@@ -60,8 +59,7 @@ public class UserConfigService {
     }
 
     @ExtDirectMethod(STORE_READ)
-    public ExtDirectStoreResult<UserSettings> readSettings(
-            @AuthenticationPrincipal MongoUserDetails userDetails) {
+    public ExtDirectStoreResult<UserSettings> readSettings(@AuthenticationPrincipal MongoUserDetails userDetails) {
         UserSettings userSettings = new UserSettings(userDetails.getUser(this.mongoDb));
         return new ExtDirectStoreResult<>(userSettings);
     }
@@ -85,39 +83,30 @@ public class UserConfigService {
     }
 
     @ExtDirectMethod(STORE_MODIFY)
-    public ValidationMessagesResult<UserSettings> updateSettings(
-            UserSettings modifiedUserSettings,
+    public ValidationMessagesResult<UserSettings> updateSettings(UserSettings modifiedUserSettings,
             @AuthenticationPrincipal MongoUserDetails userDetails, Locale locale) {
 
-        List<ValidationMessages> validations = ValidationUtil
-                .validateEntity(this.validator, modifiedUserSettings);
+        List<ValidationMessages> validations = ValidationUtil.validateEntity(this.validator, modifiedUserSettings);
         User user = userDetails.getUser(this.mongoDb);
         List<Bson> updates = new ArrayList<>();
 
-        if (StringUtils.hasText(modifiedUserSettings.getNewPassword())
-                && validations.isEmpty()) {
-            if (this.passwordEncoder.matches(modifiedUserSettings.getCurrentPassword(),
-                    user.getPasswordHash())) {
-                if (modifiedUserSettings.getNewPassword()
-                        .equals(modifiedUserSettings.getNewPasswordRetype())) {
-                    user.setPasswordHash(this.passwordEncoder
-                            .encode(modifiedUserSettings.getNewPassword()));
+        if (StringUtils.hasText(modifiedUserSettings.getNewPassword()) && validations.isEmpty()) {
+            if (this.passwordEncoder.matches(modifiedUserSettings.getCurrentPassword(), user.getPasswordHash())) {
+                if (modifiedUserSettings.getNewPassword().equals(modifiedUserSettings.getNewPasswordRetype())) {
+                    user.setPasswordHash(this.passwordEncoder.encode(modifiedUserSettings.getNewPassword()));
                     updates.add(Updates.set(CUser.passwordHash, user.getPasswordHash()));
                 } else {
-                    for (String field : new String[]{"newPassword",
-                        "newPasswordRetype"}) {
+                    for (String field : new String[]{"newPassword", "newPasswordRetype"}) {
                         ValidationMessages error = new ValidationMessages();
                         error.setField(field);
-                        error.setMessage(this.messageSource
-                                .getMessage("userconfig_pwdonotmatch", null, locale));
+                        error.setMessage(this.messageSource.getMessage("userconfig_pwdonotmatch", null, locale));
                         validations.add(error);
                     }
                 }
             } else {
                 ValidationMessages error = new ValidationMessages();
                 error.setField("currentPassword");
-                error.setMessage(this.messageSource.getMessage("userconfig_wrongpassword",
-                        null, locale));
+                error.setMessage(this.messageSource.getMessage("userconfig_wrongpassword", null, locale));
                 validations.add(error);
             }
         }
@@ -125,8 +114,7 @@ public class UserConfigService {
         if (!isEmailUnique(user.getId(), modifiedUserSettings.getEmail())) {
             ValidationMessages validationError = new ValidationMessages();
             validationError.setField(CUser.email);
-            validationError.setMessage(
-                    this.messageSource.getMessage("user_emailtaken", null, locale));
+            validationError.setMessage(this.messageSource.getMessage("user_emailtaken", null, locale));
             validations.add(validationError);
         }
 
@@ -143,8 +131,7 @@ public class UserConfigService {
         }
 
         if (!updates.isEmpty()) {
-            this.mongoDb.getCollection(User.class).updateOne(
-                    Filters.eq(CUser.id, user.getId()), Updates.combine(updates));
+            this.mongoDb.getCollection(User.class).updateOne(Filters.eq(CUser.id, user.getId()), Updates.combine(updates));
         }
 
         return new ValidationMessagesResult<>(modifiedUserSettings, validations);
@@ -157,21 +144,15 @@ public class UserConfigService {
     }
 
     @ExtDirectMethod(STORE_READ)
-    public List<PersistentLogin> readPersistentLogins(
-            @AuthenticationPrincipal MongoUserDetails userDetails) {
+    public List<PersistentLogin> readPersistentLogins(@AuthenticationPrincipal MongoUserDetails userDetails) {
 
-        return StreamSupport
-                .stream(this.mongoDb.getCollection(PersistentLogin.class)
-                        .find(Filters.eq(CPersistentLogin.userId,
-                                userDetails.getUserDbId()))
-                        .spliterator(), false)
-                .peek(p -> {
+        return StreamSupport.stream(this.mongoDb.getCollection(PersistentLogin.class).find(Filters.eq(CPersistentLogin.userId,
+                userDetails.getUserDbId())).spliterator(), false).peek(p -> {
                     String ua = p.getUserAgent();
                     if (StringUtils.hasText(ua)) {
                         UserAgent userAgent = UserAgent.parseUserAgentString(ua);
                         p.setUserAgentName(userAgent.getBrowser().getGroup().getName());
-                        p.setUserAgentVersion(
-                                userAgent.getBrowserVersion().getMajorVersion());
+                        p.setUserAgentVersion(userAgent.getBrowserVersion().getMajorVersion());
                         p.setOperatingSystem(userAgent.getOperatingSystem().getName());
                     }
                 }).collect(Collectors.toList());
@@ -179,11 +160,10 @@ public class UserConfigService {
     }
 
     @ExtDirectMethod(STORE_MODIFY)
-    public void destroyPersistentLogin(String series,
-            @AuthenticationPrincipal MongoUserDetails userDetails) {
-        this.mongoDb.getCollection(PersistentLogin.class)
-                .deleteOne(Filters.and(Filters.eq(CPersistentLogin.series, series),
-                        Filters.eq(CPersistentLogin.userId, userDetails.getUserDbId())));
+    public void destroyPersistentLogin(String series, @AuthenticationPrincipal MongoUserDetails userDetails) {
+        this.mongoDb.getCollection(PersistentLogin.class).deleteOne(
+                Filters.and(Filters.eq(CPersistentLogin.series, series),
+                Filters.eq(CPersistentLogin.userId, userDetails.getUserDbId())));
     }
 
 }

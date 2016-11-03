@@ -38,6 +38,7 @@ var i18n = {
     language:"Language",
     language_english:"English",
     language_german:"German",
+    language_polish:"Polish",
     language_select:"Select language",
     main_403_descr:"You don't have permission to access this resource",
     main_404_descr:"Seems you've hit a wall!",

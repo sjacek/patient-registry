@@ -38,6 +38,7 @@ var i18n = {
     language:"Sprache",
     language_english:"Englisch",
     language_german:"Deutsch",
+    language_polish:"Polen",
     language_select:"Sprache auswählen",
     main_403_descr:"Du hast keine Berechtigung.",
     main_404_descr:"Die angeforderte Seite existiert nicht",
