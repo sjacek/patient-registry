@@ -65,7 +65,8 @@
      *      ]
      */
     "requires": [
-        "font-awesome"
+        "font-awesome",
+        "ext-locale"
     ],
 
     /**
@@ -516,7 +517,7 @@
      * names.
      *
      */
-    
+    "locale": [ "pl", "en", "de" ],
 
     /**
      * File / directory name patttern to ignore when copying to the builds. Must be a
