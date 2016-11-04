@@ -65,7 +65,7 @@ Ext.define('Patients.view.patient.Grid', {
             text: i18n.create,
             tooltip: i18n.patient_create_tooltip,
             iconCls: 'x-fa fa-plus',
-            handler: 'onAdd'
+            handler: 'newObject'
         }, {
             text: 'Edit',
             reference: 'editPatientButton',

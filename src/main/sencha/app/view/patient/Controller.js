@@ -23,6 +23,11 @@ Ext.define('Patients.view.patient.Controller', {
         objectName: i18n.patient,
         objectNamePlural: i18n.patients
     },
+    erase: function () {
+        this.eraseObject(this.getSelectedObject().get('id'), null, function () {
+            Patients.Util.errorToast(i18n.user_lastadmin_error);
+        }, this);
+    },
 
     onSaveClick: function() {
         var form = this.lookupReference('form');

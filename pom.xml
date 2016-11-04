@@ -359,20 +359,19 @@
                                     </fileset>
                                 </copy>
 
-                                <checksum file="${basedir}/target/classes/static/i18n-de.js"
-                                          algorithm="SHA-1" property="i18n_de_sha1" />
-                                <checksum file="${basedir}/target/classes/static/i18n-en.js"
-                                          algorithm="SHA-1" property="i18n_en_sha1" />
+                                <checksum file="${basedir}/target/classes/static/i18n-de.js" algorithm="SHA-1" property="i18n_de_sha1" />
+                                <checksum file="${basedir}/target/classes/static/i18n-en.js" algorithm="SHA-1" property="i18n_en_sha1" />
+                                <checksum file="${basedir}/target/classes/static/i18n-pl.js" algorithm="SHA-1" property="i18n_pl_sha1" />
 
                                 <replace file="${basedir}/target/classes/static/index.html">
                                     <replacefilter token="var serverUrl = 'http://localhost:8080/';"
                                                    value="var serverUrl = '';" />
-
                                     <replacefilter token="var i18nEnUrl = 'i18n-en.js';"
                                                    value="var i18nEnUrl = 'i18n-en.js?_dc=${i18n_en_sha1}';" />
-
                                     <replacefilter token="var i18nDeUrl = 'i18n-de.js';"
                                                    value="var i18nDeUrl = 'i18n-de.js?_dc=${i18n_de_sha1}';" />
+                                    <replacefilter token="var i18nPlUrl = 'i18n-pl.js';"
+                                                   value="var i18nPlUrl = 'i18n-pl.js?_dc=${i18n_pl_sha1}';" />
 
                                 </replace>
 

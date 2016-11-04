@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestHeader;
 
 import ch.ralscha.extdirectspring.annotation.ExtDirectMethod;
-import com.grinno.patients.Application;
 import java.lang.invoke.MethodHandles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,25 +17,28 @@ public class LogService {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    private final static String lineSeparator = System.getProperty("line.separator");
+    private final static String LINE_SEPARATOR = System.getProperty("line.separator");
 
     @ExtDirectMethod
     @Async
-    public void logClientCrash(@RequestHeader(value = HttpHeaders.USER_AGENT,
-            required = false) String userAgent, Map<String, Object> crashData) {
+    public void logClientCrash(@RequestHeader(value = HttpHeaders.USER_AGENT, required = false) String userAgent, Map<String, Object> crashData) {
 
         StringBuilder sb = new StringBuilder();
-        sb.append("JavaScript Error");
-        sb.append(lineSeparator);
-        sb.append("User-Agent: ").append(userAgent);
-        crashData.forEach((k, v) -> {
-            sb.append(lineSeparator);
-            sb.append(k);
-            sb.append(": ");
-            sb.append(v);
-        });
+        sb.append("JavaScript Error").append(LINE_SEPARATOR).append("User-Agent: ").append(userAgent);
+
+        crashData.forEach((k, v) ->
+                sb.append(LINE_SEPARATOR).append(k).append(": ").append(v));
 
         LOGGER.error(sb.toString());
     }
 
+    @ExtDirectMethod
+    @Async
+    public void logDebug(@RequestHeader(value = HttpHeaders.USER_AGENT, required = false) String userAgent, Map<String, Object> data) {
+        StringBuilder sb = new StringBuilder();
+        data.forEach((k, v) ->
+                sb.append(LINE_SEPARATOR).append(k).append(": ").append(v));
+
+        LOGGER.debug(sb.toString());
+    }
 }

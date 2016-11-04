@@ -5,7 +5,10 @@ var REMOTING_API = {
     "logService" : [ {
       "name" : "logClientCrash",
       "len" : 1
-    } ],
+    }, {
+      "name" : "logDebug",
+      "len" : 1
+    }],
     "navigationService" : [ {
       "name" : "getNavigation",
       "len" : 1

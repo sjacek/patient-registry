@@ -114,23 +114,23 @@
                         language = navigator.browserLanguage;
                     }
 
-                    if (language && language.slice(0, 2) === 'pl') {
-                        localStorage.patients_locale = 'pl';
-                        script.src = i18nPlUrl;
+                    if (language && language.slice(0, 2) === 'en') {
+                        localStorage.patients_locale = 'en';
+                        script.src = i18nEnUrl;
                     } else if (language && language.slice(0, 2) === 'de') {
                         localStorage.patients_locale = 'de';
                         script.src = i18nDeUrl;
                     } else {
-                        localStorage.patients_locale = 'en';
-                        script.src = i18nEnUrl;
+                        localStorage.patients_locale = 'pl';
+                        script.src = i18nPlUrl;
                     }
                 } else {
-                    if (appLocale === 'pl') {
-                        script.src = i18nPlUrl;
+                    if (appLocale === 'en') {
+                        script.src = i18nEnUrl;
                     } else if (appLocale === 'de') {
                         script.src = i18nDeUrl;
                     } else {
-                        script.src = i18nEnUrl;
+                        script.src = i18nPlUrl;
                     }
                 }
 

@@ -26,21 +26,37 @@ Ext.define('Patients.view.patient.ViewModel', {
     alias: 'viewmodel.patient',
 
     stores: {
-        patients: {
+        objects: {
             model: 'Patients.model.Patient',
-            autoLoad: true,
-            proxy: {
-                type: 'ajax',
-                url: 'patient/findAll.json',
-                reader: {
-                    type: 'json',
-                    rootProperty: 'data'
-                },
-                writer: {
-                    type: 'json'
-                }
-            }
+            autoLoad: false,
+            buffered: true,
+            remoteSort: true,
+            remoteFilter: true,
+            sorters: [{
+                    property: 'lastName',
+                    direction: 'ASC'
+                }],
+            listeners: {
+                load: 'onObjectStoreLoad'
+            },
+            pageSize: 100,
+            leadingBufferZone: 200
         }
+//        patients: {
+//            model: 'Patients.model.Patient',
+//            autoLoad: true,
+//            proxy: {
+//                type: 'ajax',
+//                url: 'patient/findAll.json',
+//                reader: {
+//                    type: 'json',
+//                    rootProperty: 'data'
+//                },
+//                writer: {
+//                    type: 'json'
+//                }
+//            }
+//        }
 //        patients: {
 //            model: 'Patients.model.PatientModel',
 ////            autoLoad: true,

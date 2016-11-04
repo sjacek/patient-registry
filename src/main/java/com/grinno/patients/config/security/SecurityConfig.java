@@ -37,17 +37,14 @@ class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
         if (environment.acceptsProfiles("development")) {
-            web.ignoring().antMatchers("/resources/**", "/build/**", "/ext/**",
-                    "/**/*.js", "/bootstrap.json", "/robots.txt");
+            web.ignoring().antMatchers("/resources/**", "/build/**", "/ext/**", "/**/*.js", "/bootstrap.json", "/robots.txt");
         } else {
-            web.ignoring().antMatchers("/resources/**", "/app.js", "/app.json",
-                    "/locale-de.js", "/i18n-de.js", "/i18n-en.js", "/robots.txt");
+            web.ignoring().antMatchers("/resources/**", "/app.js", "/app.json", "/locale-de.js", "/i18n-de.js", "/i18n-en.js", "/i18n-pl.js", "/robots.txt");
         }
     }
 
     @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth,
-            UserDetailsService userDetailsService, PasswordEncoder passwordEncoder)
+    public void configureGlobal(AuthenticationManagerBuilder auth, UserDetailsService userDetailsService, PasswordEncoder passwordEncoder)
             throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
     }

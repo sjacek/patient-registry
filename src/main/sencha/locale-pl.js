@@ -1,6 +1,6 @@
 Ext.onReady(function(){
     if(Ext.Date){
-        Ext.Date.monthNames=["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"];
+        Ext.Date.monthNames=["Styczeń","Luty","Marzec","Kwiecień","Maj","Czerwiec","Lipiec","Sierpień","September","Oktober","November","Dezember"];
         Ext.Date.defaultFormat="d.m.Y";
         Ext.Date.getShortMonthName=function(a){
             return Ext.Date.monthNames[a].substring(0,3);
@@ -124,7 +124,7 @@ Ext.define("Ext.locale.de.form.field.ComboBox",{
 function(){
     Ext.apply(Ext.form.field.ComboBox.prototype.defaultListConfig,{
         loadingText:"Lade Daten ..."
-    })
+    });
 });
 Ext.define("Ext.locale.de.form.field.VTypes",{
     override:"Ext.form.field.VTypes",
@@ -210,7 +210,7 @@ function(){
                 cls:Ext.baseCSSPrefix+"html-editor-tip"
             }
         }
-    })
+    });
 });
 Ext.define("Ext.locale.de.grid.header.Container",{
     override:"Ext.grid.header.Container",
