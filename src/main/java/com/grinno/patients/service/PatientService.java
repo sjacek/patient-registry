@@ -16,17 +16,169 @@
  */
 package com.grinno.patients.service;
 
+import ch.ralscha.extdirectspring.annotation.ExtDirectMethod;
+import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.STORE_MODIFY;
+import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.STORE_READ;
+import ch.ralscha.extdirectspring.bean.ExtDirectStoreReadRequest;
+import ch.ralscha.extdirectspring.bean.ExtDirectStoreResult;
+import ch.ralscha.extdirectspring.filter.StringFilter;
+import com.grinno.patients.config.MongoDb;
+import com.grinno.patients.config.security.RequireUserAuthority;
+import com.grinno.patients.model.CPatient;
 import com.grinno.patients.model.Patient;
-import com.grinno.patients.vo.Result;
+import com.grinno.patients.util.QueryUtil;
+import com.grinno.patients.util.ValidationMessages;
+import com.grinno.patients.util.ValidationMessagesResult;
+import com.grinno.patients.util.ValidationUtil;
+import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Sorts;
+import com.mongodb.client.model.UpdateOptions;
+import com.mongodb.client.model.Updates;
+import com.mongodb.client.result.UpdateResult;
+import java.lang.invoke.MethodHandles;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import javax.validation.Validator;
+import org.bson.conversions.Bson;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.stereotype.Service;
 
 /**
  *
  * @author jacek
  */
-public interface PatientService {
-    public Result<Patient> update(String idPatient, String firstName, String secondName, String lastName, String pesel);
-    public Result<Patient> destroy (String idPatient);
-    public Result<Patient> read(String idPatient);
-    public Result<List<Patient>> findAll();
+@Service
+@RequireUserAuthority
+public class PatientService {
+
+    public static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
+    private final MessageSource messageSource;
+
+    private final Validator validator;
+
+    private final MongoDb mongoDb;
+
+    @Autowired
+    private MongoTemplate mongoTemplate;
+
+    @Autowired
+    public PatientService(MongoDb mongoDb, Validator validator, MessageSource messageSource, MailService mailService) {
+        this.mongoDb = mongoDb;
+        this.messageSource = messageSource;
+        this.validator = validator;
+    }
+
+    @ExtDirectMethod(STORE_READ)
+    public ExtDirectStoreResult<Patient> read(ExtDirectStoreReadRequest request) {
+
+        LOGGER.debug("read 1");
+
+        MongoCollection patientCollection = mongoDb.getCollection(Patient.class);
+        if (patientCollection.count() == 0) {
+            return new ExtDirectStoreResult<>(new ArrayList<Patient>());
+        }
+
+        FindIterable<Patient> find;
+        long total;
+        LOGGER.debug("read 2");
+        StringFilter filter = request.getFirstFilterForField("filter");
+        if (filter != null) {
+            List<Bson> orFilters = new ArrayList<>();
+            orFilters.add(Filters.regex(CPatient.lastName, filter.getValue(), "i"));
+            orFilters.add(Filters.regex(CPatient.firstName, filter.getValue(), "i"));
+
+            LOGGER.debug("read 3");
+            total = mongoDb.getCollection(Patient.class).count(Filters.or(orFilters));
+            find = mongoDb.getCollection(Patient.class).find(Filters.or(orFilters));
+            LOGGER.debug("read 4");
+        }
+        else {
+            LOGGER.debug("read 5");
+            total = mongoDb.getCollection(Patient.class).count();
+            find = mongoDb.getCollection(Patient.class).find();
+            LOGGER.debug("read 6");
+        }
+
+        find.sort(Sorts.orderBy(QueryUtil.getSorts(request)));
+        find.skip(request.getStart());
+        find.limit(request.getLimit());
+
+        LOGGER.debug("read end");
+        return new ExtDirectStoreResult<>(total, QueryUtil.toList(find));
+    }
+
+    @ExtDirectMethod(STORE_MODIFY)
+    public ExtDirectStoreResult<Patient> destroy(Patient destroyPatient) {
+        ExtDirectStoreResult<Patient> result = new ExtDirectStoreResult<>();
+
+        LOGGER.debug("destroy 1");
+        mongoDb.getCollection(Patient.class).deleteOne(Filters.eq(CPatient.id, destroyPatient.getId()));
+        result.setSuccess(Boolean.TRUE);
+
+        LOGGER.debug("destroy end");
+        return result;
+    }
+
+    @ExtDirectMethod(STORE_MODIFY)
+    public ValidationMessagesResult<Patient> update(Patient updatedEntity, Locale locale) {
+        List<ValidationMessages> violations = validateEntity(updatedEntity, locale);
+
+        LOGGER.debug("update 1: " + updatedEntity.toString());
+        if (violations.isEmpty()) {
+            LOGGER.debug("update 2");
+            List<Bson> updates = new ArrayList<>();
+//            updates.add(Updates.set(CPatient.email, updatedEntity.getEmail()));
+            updates.add(Updates.set(CPatient.firstName, updatedEntity.getFirstName()));
+            updates.add(Updates.set(CPatient.lastName, updatedEntity.getLastName()));
+            updates.add(Updates.set(CPatient.pesel, updatedEntity.getPesel()));
+
+            LOGGER.debug("update 3");
+            mongoDb.getCollection(Patient.class).updateOne(Filters.eq(CPatient.id, updatedEntity.getId()), Updates.combine(updates), new UpdateOptions().upsert(true));
+            LOGGER.debug("update 4");
+            return new ValidationMessagesResult<>(updatedEntity);
+        }
+
+        ValidationMessagesResult<Patient> result = new ValidationMessagesResult<>(updatedEntity);
+        result.setValidations(violations);
+        LOGGER.debug("update end");
+        return result;
+    }
+
+    private List<ValidationMessages> validateEntity(Patient patient, Locale locale) {
+        List<ValidationMessages> validations = ValidationUtil.validateEntity(validator, patient);
+
+//        if (!isEmailUnique(patient.getId(), patient.getEmail())) {
+//            ValidationMessages validationError = new ValidationMessages();
+//            validationError.setField(CPatient.email);
+//            validationError.setMessage(this.messageSource.getMessage("patient_emailtaken", null, locale));
+//            validations.add(validationError);
+//        }
+        return validations;
+    }
+
+//    private boolean isEmailUnique(String patientId, String email) {
+//        if (StringUtils.hasText(email)) {
+//            long count;
+//            if (patientId != null) {
+//                count = this.mongoDb.getCollection(Patient.class)
+//                        .count(Filters.and(
+//                                Filters.regex(CPatient.email, "^" + email + "$", "i"),
+//                                Filters.ne(CPatient.id, patientId)));
+//            } else {
+//                count = this.mongoDb.getCollection(Patient.class)
+//                        .count(Filters.regex(CPatient.email, "^" + email + "$", "i"));
+//            }
+//
+//            return count == 0;
+//        }
+//        return true;
+//    }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 jacek
+ * Copyright (C) 2016 Pivotal Software, Inc.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,33 +14,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.grinno.patients.domain;
-
-import java.io.Serializable;
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
+package com.grinno.patients.model;
 
 /**
  *
  * @author jacek
  */
-public abstract class AbstractEntity implements JsonItem, Serializable {
+class Utils {
 
-    @Override
-    public String toString() {
-        return this.getClass().getTypeName();
-    }
-
-    @Override
-    public JsonObject toJson() {
-        JsonObjectBuilder builder = Json.createObjectBuilder();
-        addJson(builder);
-        return builder.build();
-    }
-
-    final protected String checkNull(String s) {
+    public static final String checkNull(String s) {
         if (s != null) return s;
         return "";
     }
+    
+    public static final Integer checkNull(Integer n) {
+        if (n != null) return n;
+        return -1;
+    }
+    
 }

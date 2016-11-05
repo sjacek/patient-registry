@@ -10,13 +10,14 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
 import com.grinno.patients.model.Patient;
+import java.lang.invoke.MethodHandles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Repository
 public class PatientRepository {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(PatientRepository.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     public static final String COLLECTION_NAME = "patient";
 
@@ -28,7 +29,7 @@ public class PatientRepository {
      * @param patient 
      */
     public void save(Patient patient) {
-        LOGGER.debug("PatientRepository.insert(" + patient + ")");
+        LOGGER.debug("PatientRepository.save(" + patient + ")");
 
         if (!mongoTemplate.collectionExists(Patient.class)) {
             mongoTemplate.createCollection(Patient.class);
@@ -37,7 +38,7 @@ public class PatientRepository {
             mongoTemplate.save(patient, COLLECTION_NAME);
         }
         catch(Exception ex){
-            LOGGER.warn("Patient insert failed.", ex);
+            LOGGER.warn("Patient save failed.", ex);
         }
     }
 
@@ -47,8 +48,7 @@ public class PatientRepository {
      * @return
      */
     public Patient findOneById(String id) {
-        return mongoTemplate.findOne(
-                Query.query(Criteria.where("id").is(id)), Patient.class, COLLECTION_NAME);
+        return mongoTemplate.findOne(Query.query(Criteria.where("id").is(id)), Patient.class, COLLECTION_NAME);
     }
 
     /**

@@ -1,6 +1,7 @@
 package com.grinno.patients.dao;
 
 import com.grinno.patients.model.User;
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,7 @@ import org.slf4j.LoggerFactory;
 @Repository
 public class UserRepository {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(UserRepository.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     public static final String COLLECTION_NAME = "user";
 

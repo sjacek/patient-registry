@@ -16,7 +16,7 @@ public abstract class ValidationUtil {
         Set<ConstraintViolation<T>> constraintViolations = validator.validate(entity, groups);
         Map<String, List<String>> fieldMessages = new HashMap<>();
         if (!constraintViolations.isEmpty()) {
-            for (ConstraintViolation<T> constraintViolation : constraintViolations) {
+            constraintViolations.stream().forEach((constraintViolation) -> {
                 String property = constraintViolation.getPropertyPath().toString();
                 List<String> messages = fieldMessages.get(property);
                 if (messages == null) {
@@ -24,7 +24,7 @@ public abstract class ValidationUtil {
                     fieldMessages.put(property, messages);
                 }
                 messages.add(constraintViolation.getMessage());
-            }
+            });
         }
         List<ValidationMessages> validationErrors = new ArrayList<>();
         fieldMessages.forEach((k, v) -> {

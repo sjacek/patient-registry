@@ -1,5 +1,6 @@
 package com.grinno.patients.config;
 
+import com.grinno.patients.model.CPatient;
 import javax.annotation.PostConstruct;
 
 import org.bson.Document;
@@ -17,6 +18,7 @@ import com.mongodb.client.model.Indexes;
 
 import com.grinno.patients.model.CPersistentLogin;
 import com.grinno.patients.model.CUser;
+import com.grinno.patients.model.Patient;
 import com.grinno.patients.model.PersistentLogin;
 import com.grinno.patients.model.User;
 
@@ -34,13 +36,20 @@ public class MongoDb {
     public void createIndexes() {
 
         if (!indexExists(User.class, CUser.email)) {
-            this.getCollection(User.class).createIndex(Indexes.ascending(CUser.email),
-                    new IndexOptions().unique(true));
+            getCollection(User.class).createIndex(Indexes.ascending(CUser.email), new IndexOptions().unique(true));
         }
 
         if (!indexExists(PersistentLogin.class, CPersistentLogin.userId)) {
-            this.getCollection(PersistentLogin.class)
-                    .createIndex(Indexes.ascending(CPersistentLogin.userId));
+            getCollection(PersistentLogin.class).createIndex(Indexes.ascending(CPersistentLogin.userId));
+        }
+
+        if (!indexExists(Patient.class, CPatient.pesel)) {
+            getCollection(Patient.class).createIndex(Indexes.ascending(CPatient.pesel), new IndexOptions().unique(true));
+        }
+
+        if (!indexExists(Patient.class, CPatient.lastName + "_" + CPatient.firstName)) {
+            getCollection(Patient.class).createIndex(
+                    Indexes.compoundIndex(Indexes.ascending(CPatient.lastName), Indexes.ascending(CPatient.firstName)), new IndexOptions().unique(true));
         }
 
     }
@@ -66,8 +75,7 @@ public class MongoDb {
     }
 
     public boolean collectionExists(final String collectionName) {
-        return this.getMongoDatabase().listCollections()
-                .filter(Filters.eq("name", collectionName)).first() != null;
+        return this.getMongoDatabase().listCollections().filter(Filters.eq("name", collectionName)).first() != null;
     }
 
     public MongoDatabase getMongoDatabase() {
@@ -75,16 +83,14 @@ public class MongoDb {
     }
 
     public <T> MongoCollection<T> getCollection(Class<T> documentClass) {
-        return this.getMongoDatabase().getCollection(getCollectionName(documentClass),
-                documentClass);
+        return this.getMongoDatabase().getCollection(getCollectionName(documentClass), documentClass);
     }
 
     private static String getCollectionName(Class<?> documentClass) {
         return StringUtils.uncapitalize(documentClass.getSimpleName());
     }
 
-    public <T> MongoCollection<T> getCollection(String collectionName,
-            Class<T> documentClass) {
+    public <T> MongoCollection<T> getCollection(String collectionName, Class<T> documentClass) {
         return this.getMongoDatabase().getCollection(collectionName, documentClass);
     }
 

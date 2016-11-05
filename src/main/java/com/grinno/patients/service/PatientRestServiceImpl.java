@@ -33,8 +33,8 @@ import static org.springframework.transaction.annotation.Propagation.SUPPORTS;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
-@Service("patientService")
-public class PatientServiceImpl extends AbstractService implements PatientService {
+@Service("patientRestService")
+public class PatientRestServiceImpl extends AbstractService implements PatientRestService {
 
     final protected Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 

@@ -20,15 +20,11 @@ public class MongoConfig {
     }
 
     @Bean
-    public MongoDatabase mongoDatabase(MongoClient mongoClient,
-            MongoProperties properties) {
+    public MongoDatabase mongoDatabase(MongoClient mongoClient, MongoProperties properties) {
         MongoClientURI uri = new MongoClientURI(properties.getUri());
-        return mongoClient.getDatabase(uri.getDatabase())
-                .withCodecRegistry(CodecRegistries
-                        .fromRegistries(MongoClient.getDefaultCodecRegistry(),
-                                CodecRegistries
-                                .fromProviders(new ListCodec.Provider()),
-                                CodecRegistries.fromProviders(new com.grinno.patients.config.PojoCodecProvider())));
+        return mongoClient.getDatabase(uri.getDatabase()).withCodecRegistry(CodecRegistries.fromRegistries(MongoClient.getDefaultCodecRegistry(),
+                CodecRegistries.fromProviders(new ListCodec.Provider()),
+                CodecRegistries.fromProviders(new PojoCodecProvider())));
     }
 
 }

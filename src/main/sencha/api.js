@@ -6,7 +6,7 @@ var REMOTING_API = {
       "name" : "logClientCrash",
       "len" : 1
     }, {
-      "name" : "logDebug",
+      "name" : "debug",
       "len" : 1
     }],
     "navigationService" : [ {
@@ -72,6 +72,16 @@ var REMOTING_API = {
       "len" : 1
     }, {
       "name" : "unlock",
+      "len" : 1
+    }, {
+      "name" : "update",
+      "len" : 1
+    } ],
+    "patientService" : [ {
+      "name" : "destroy",
+      "len" : 1
+    }, {
+      "name" : "read",
       "len" : 1
     }, {
       "name" : "update",

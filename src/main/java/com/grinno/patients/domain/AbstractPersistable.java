@@ -23,6 +23,7 @@ import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
 import ch.rasc.extclassgenerator.ModelField;
+import static com.grinno.patients.domain.Utils.checkNull;
 import java.io.Serializable;
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -86,10 +87,5 @@ public abstract class AbstractPersistable implements JsonItem, Serializable {
     @Override
     public void addJson(JsonObjectBuilder builder) {
         builder.add("id", checkNull(id));
-    }
-
-    final protected String checkNull(String s) {
-        if (s != null) return s;
-        return "";
     }
 }

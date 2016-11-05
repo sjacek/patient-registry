@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import com.mongodb.client.MongoCollection;
 
 import com.grinno.patients.model.Authority;
+import com.grinno.patients.model.Patient;
 import com.grinno.patients.model.User;
 
 @Component
@@ -27,7 +28,7 @@ class Startup {
 
     private void init() {
 
-        MongoCollection<User> userCollection = this.mongoDb.getCollection(User.class);
+        MongoCollection<User> userCollection = mongoDb.getCollection(User.class);
         if (userCollection.count() == 0) {
             // admin user
             User adminUser = new User();
@@ -54,6 +55,9 @@ class Startup {
             userCollection.insertOne(normalUser);
         }
 
+        MongoCollection<Patient> patientCollection = mongoDb.getCollection(Patient.class);
+        if (patientCollection.count() == 0) {
+        }
     }
 
 }

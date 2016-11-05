@@ -34,11 +34,7 @@ public class LogService {
 
     @ExtDirectMethod
     @Async
-    public void logDebug(@RequestHeader(value = HttpHeaders.USER_AGENT, required = false) String userAgent, Map<String, Object> data) {
-        StringBuilder sb = new StringBuilder();
-        data.forEach((k, v) ->
-                sb.append(LINE_SEPARATOR).append(k).append(": ").append(v));
-
-        LOGGER.debug(sb.toString());
+    public void debug(String message) {
+        LOGGER.debug(message);
     }
 }

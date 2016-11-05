@@ -18,13 +18,12 @@
 
 Ext.define('Patients.view.patient.ViewModel', {
     extend: 'Ext.app.ViewModel',
-    requires: [
-        'Patients.model.Patient'
-    ],
+    requires: ['Ext.data.BufferedStore'],
 
-    // This enables "viewModel: { type: 'patient' }" in the view:
-    alias: 'viewmodel.patient',
-
+    data: {
+        selectedObject: null,
+        totalCount: null
+    },
     stores: {
         objects: {
             model: 'Patients.model.Patient',
@@ -41,7 +40,27 @@ Ext.define('Patients.view.patient.ViewModel', {
             },
             pageSize: 100,
             leadingBufferZone: 200
+        },
+    formulas: {
+        isUserDisabled: {
+            bind: {
+                bindTo: '{selectedObject}',
+                deep: true
+            },
+            get: function (selectedObject) {
+                return !selectedObject || selectedObject.phantom || !selectedObject.get('enabled');
+            }
+        },
+        isPhantomObject: {
+            bind: {
+                bindTo: '{selectedObject}',
+                deep: true
+            },
+            get: function (selectedObject) {
+                return !selectedObject || selectedObject.phantom;
+            }
         }
+    }
 //        patients: {
 //            model: 'Patients.model.Patient',
 //            autoLoad: true,
