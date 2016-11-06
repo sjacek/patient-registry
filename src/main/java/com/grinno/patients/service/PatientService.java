@@ -37,6 +37,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
+import static com.grinno.patients.util.PeselValidator.peselIsValid;
 
 /**
  *
@@ -65,11 +66,10 @@ public class PatientService {
     public ExtDirectStoreResult<Patient> read(ExtDirectStoreReadRequest request) {
 
         StringFilter filter = request.getFirstFilterForField("filter");
-        List<Patient> list = (filter != null) ? 
-            patientRepository.findAllWithFilter(filter.getValue())
+        List<Patient> list = (filter != null)
+                ? patientRepository.findAllWithFilter(filter.getValue())
 //            patientRepository.findAllWithFilter(filter.getValue(), request.getStart(), request.getLimit())
-        :
-            patientRepository.findAll();
+                : patientRepository.findAll();
 
         LOGGER.debug("read size:[" + list.size() + "]");
 
@@ -98,7 +98,7 @@ public class PatientService {
             LOGGER.debug("update 2");
 //            patientRepository.updateFirst(patient);
             patientRepository.save(patient);
-/*            
+            /*            
             LOGGER.debug("update 2");
             List<Bson> updates = new ArrayList<>();
 //            updates.add(Updates.set(CPatient.email, patient.getEmail()));
@@ -110,7 +110,7 @@ public class PatientService {
             mongoDb.getCollection(Patient.class).updateOne(Filters.eq(CPatient.id, patient.getId()), Updates.combine(updates), new UpdateOptions().upsert(true));
             LOGGER.debug("update 4");
             return new ValidationMessagesResult<>(patient);
-*/        }
+             */        }
 
         ValidationMessagesResult<Patient> result = new ValidationMessagesResult<>(patient);
         result.setValidations(violations);
@@ -121,6 +121,12 @@ public class PatientService {
     private List<ValidationMessages> validateEntity(Patient patient, Locale locale) {
         List<ValidationMessages> validations = ValidationUtil.validateEntity(validator, patient);
 
+        if (!peselIsValid(patient.getPesel())) {
+            ValidationMessages validationError = new ValidationMessages();
+            validationError.setField("pesel");
+            validationError.setMessage(messageSource.getMessage("patient_pesel_not_valid", null, locale));
+            validations.add(validationError);
+        }
 //        if (!isEmailUnique(patient.getId(), patient.getEmail())) {
 //            ValidationMessages validationError = new ValidationMessages();
 //            validationError.setField(CPatient.email);

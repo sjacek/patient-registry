@@ -11,7 +11,6 @@ import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.codec.binary.Base32;
 
-import com.grinno.patients.Application;
 import java.lang.invoke.MethodHandles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,8 +54,7 @@ public class TotpAuthUtil {
 
     public static String randomSecret() {
         String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
-        return new Random().ints(16, 0, 32).mapToObj(i -> String.valueOf(chars.charAt(i)))
-                .collect(Collectors.joining());
+        return new Random().ints(16, 0, 32).mapToObj(i -> String.valueOf(chars.charAt(i))).collect(Collectors.joining());
     }
 
 }
