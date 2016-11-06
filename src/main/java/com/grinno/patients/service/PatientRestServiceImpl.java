@@ -46,11 +46,7 @@ public class PatientRestServiceImpl extends AbstractService implements PatientRe
     @Override
     public Result<Patient> update(String idPatient, String firstName, String secondName, String lastName, String pesel) {
         Patient patient = new Patient(idPatient, firstName, secondName, lastName, pesel);
-        if (idPatient == null) {
-            patientRepository.save(patient);
-        } else {
-            patientRepository.updateFirst(idPatient, patient);
-        }
+        patientRepository.updateFirst(idPatient, patient);
         return ResultFactory.getSuccessResult(patient);
     }
 

@@ -78,11 +78,11 @@ public class SecurityService {
     public UserDetailDto getAuthUser(@AuthenticationPrincipal MongoUserDetails userDetails) {
 
         if (userDetails != null) {
-            User user = userDetails.getUser(this.mongoDb);
+            User user = userDetails.getUser(mongoDb);
             UserDetailDto userDetailDto = new UserDetailDto(userDetails, user, null);
 
             if (!userDetails.isPreAuth()) {
-                this.mongoDb.getCollection(User.class).updateOne(
+                mongoDb.getCollection(User.class).updateOne(
                         Filters.eq(CUser.id, userDetails.getUserDbId()),
                         Updates.set(CUser.lastAccess, new Date()));
             }
@@ -98,11 +98,11 @@ public class SecurityService {
     public ExtDirectFormPostResult signin2fa(HttpServletRequest request,
             @AuthenticationPrincipal MongoUserDetails userDetails, @RequestParam("code") int code) {
 
-        User user = userDetails.getUser(this.mongoDb);
+        User user = userDetails.getUser(mongoDb);
         if (user != null) {
             if (TotpAuthUtil.verifyCode(user.getSecret(), code, 3)) {
 
-                this.mongoDb.getCollection(User.class).updateOne(
+                mongoDb.getCollection(User.class).updateOne(
                         Filters.eq(CUser.id, userDetails.getUserDbId()),
                         Updates.set(CUser.lastAccess, new Date()));
 
@@ -119,9 +119,9 @@ public class SecurityService {
             BadCredentialsException excp = new BadCredentialsException("Bad verification code");
             AuthenticationFailureBadCredentialsEvent event = new AuthenticationFailureBadCredentialsEvent(
                     SecurityContextHolder.getContext().getAuthentication(), excp);
-            this.applicationEventPublisher.publishEvent(event);
+            applicationEventPublisher.publishEvent(event);
 
-            user = userDetails.getUser(this.mongoDb);
+            user = userDetails.getUser(mongoDb);
             if (user.getLockedOutUntil() != null) {
                 HttpSession session = request.getSession(false);
                 if (session != null) {
@@ -147,11 +147,11 @@ public class SecurityService {
     @RequireAnyAuthority
     public ExtDirectFormPostResult disableScreenLock(@AuthenticationPrincipal MongoUserDetails userDetails, @RequestParam("password") String password) {
 
-        User user = this.mongoDb.getCollection(User.class)
+        User user = mongoDb.getCollection(User.class)
                 .find(Filters.eq(CUser.id, userDetails.getUserDbId()))
                 .projection(Projections.include(CUser.passwordHash)).first();
 
-        boolean matches = this.passwordEncoder.matches(password, user.getPasswordHash());
+        boolean matches = passwordEncoder.matches(password, user.getPasswordHash());
         userDetails.setScreenLocked(!matches);
         ExtDirectFormPostResult result = new ExtDirectFormPostResult(matches);
 
@@ -163,7 +163,7 @@ public class SecurityService {
 
         String token = UUID.randomUUID().toString();
 
-        User user = this.mongoDb.getCollection(User.class).findOneAndUpdate(
+        User user = mongoDb.getCollection(User.class).findOneAndUpdate(
                 Filters.and(Filters.eq(CUser.email, email), Filters.eq(CUser.deleted, false)),
                 Updates.combine(
                         Updates.set(CUser.passwordResetTokenValidUntil, Date.from(ZonedDateTime.now(ZoneOffset.UTC).plusHours(4).toInstant())),
@@ -217,7 +217,7 @@ public class SecurityService {
                 updates.add(Updates.unset(CUser.passwordResetToken));
                 updates.add(Updates.unset(CUser.passwordResetTokenValidUntil));
 
-                this.mongoDb.getCollection(User.class).updateOne(Filters.eq(CUser.id, user.getId()), Updates.combine(updates));
+                mongoDb.getCollection(User.class).updateOne(Filters.eq(CUser.id, user.getId()), Updates.combine(updates));
 
                 return result;
             }
@@ -229,7 +229,7 @@ public class SecurityService {
     @ExtDirectMethod
     @RequireAdminAuthority
     public UserDetailDto switchUser(String userId) {
-        User switchToUser = this.mongoDb.getCollection(User.class).find(Filters.eq(CUser.id, userId)).first();
+        User switchToUser = mongoDb.getCollection(User.class).find(Filters.eq(CUser.id, userId)).first();
         if (switchToUser != null) {
 
             MongoUserDetails principal = new MongoUserDetails(switchToUser);

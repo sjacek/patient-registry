@@ -22,32 +22,20 @@ import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.STORE_RE
 import ch.ralscha.extdirectspring.bean.ExtDirectStoreReadRequest;
 import ch.ralscha.extdirectspring.bean.ExtDirectStoreResult;
 import ch.ralscha.extdirectspring.filter.StringFilter;
-import com.grinno.patients.config.MongoDb;
 import com.grinno.patients.config.security.RequireUserAuthority;
-import com.grinno.patients.model.CPatient;
+import com.grinno.patients.dao.PatientRepository;
 import com.grinno.patients.model.Patient;
-import com.grinno.patients.util.QueryUtil;
 import com.grinno.patients.util.ValidationMessages;
 import com.grinno.patients.util.ValidationMessagesResult;
 import com.grinno.patients.util.ValidationUtil;
-import com.mongodb.client.FindIterable;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.model.Filters;
-import com.mongodb.client.model.Sorts;
-import com.mongodb.client.model.UpdateOptions;
-import com.mongodb.client.model.Updates;
-import com.mongodb.client.result.UpdateResult;
 import java.lang.invoke.MethodHandles;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import javax.validation.Validator;
-import org.bson.conversions.Bson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
 /**
@@ -64,14 +52,11 @@ public class PatientService {
 
     private final Validator validator;
 
-    private final MongoDb mongoDb;
+    private final PatientRepository patientRepository;
 
     @Autowired
-    private MongoTemplate mongoTemplate;
-
-    @Autowired
-    public PatientService(MongoDb mongoDb, Validator validator, MessageSource messageSource, MailService mailService) {
-        this.mongoDb = mongoDb;
+    public PatientService(PatientRepository patientRepository, Validator validator, MessageSource messageSource, MailService mailService) {
+        this.patientRepository = patientRepository;
         this.messageSource = messageSource;
         this.validator = validator;
     }
@@ -79,8 +64,16 @@ public class PatientService {
     @ExtDirectMethod(STORE_READ)
     public ExtDirectStoreResult<Patient> read(ExtDirectStoreReadRequest request) {
 
-        LOGGER.debug("read 1");
+        StringFilter filter = request.getFirstFilterForField("filter");
+        List<Patient> list = (filter != null) ? 
+            patientRepository.findAllWithFilter(filter.getValue(), request.getStart(), request.getLimit())
+        :
+            patientRepository.findAll();
 
+        LOGGER.debug("read size:[" + list.size() + "]");
+
+        return new ExtDirectStoreResult<>(list);
+/*        
         MongoCollection patientCollection = mongoDb.getCollection(Patient.class);
         if (patientCollection.count() == 0) {
             return new ExtDirectStoreResult<>(new ArrayList<Patient>());
@@ -113,14 +106,14 @@ public class PatientService {
 
         LOGGER.debug("read end");
         return new ExtDirectStoreResult<>(total, QueryUtil.toList(find));
-    }
+*/    }
 
     @ExtDirectMethod(STORE_MODIFY)
     public ExtDirectStoreResult<Patient> destroy(Patient destroyPatient) {
         ExtDirectStoreResult<Patient> result = new ExtDirectStoreResult<>();
 
         LOGGER.debug("destroy 1");
-        mongoDb.getCollection(Patient.class).deleteOne(Filters.eq(CPatient.id, destroyPatient.getId()));
+//        mongoDb.getCollection(Patient.class).deleteOne(Filters.eq(CPatient.id, destroyPatient.getId()));
         result.setSuccess(Boolean.TRUE);
 
         LOGGER.debug("destroy end");
@@ -134,6 +127,9 @@ public class PatientService {
         LOGGER.debug("update 1: " + updatedEntity.toString());
         if (violations.isEmpty()) {
             LOGGER.debug("update 2");
+            patientRepository.updateFirst(updatedEntity.getId(), updatedEntity);
+/*            
+            LOGGER.debug("update 2");
             List<Bson> updates = new ArrayList<>();
 //            updates.add(Updates.set(CPatient.email, updatedEntity.getEmail()));
             updates.add(Updates.set(CPatient.firstName, updatedEntity.getFirstName()));
@@ -144,7 +140,7 @@ public class PatientService {
             mongoDb.getCollection(Patient.class).updateOne(Filters.eq(CPatient.id, updatedEntity.getId()), Updates.combine(updates), new UpdateOptions().upsert(true));
             LOGGER.debug("update 4");
             return new ValidationMessagesResult<>(updatedEntity);
-        }
+*/        }
 
         ValidationMessagesResult<Patient> result = new ValidationMessagesResult<>(updatedEntity);
         result.setValidations(violations);

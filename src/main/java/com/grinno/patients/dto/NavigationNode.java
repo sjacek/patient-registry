@@ -67,8 +67,7 @@ public class NavigationNode {
         }
     }
 
-    public static NavigationNode copyOf(NavigationNode source,
-            Collection<? extends GrantedAuthority> authorities, Locale locale, MessageSource messageSource) {
+    public static NavigationNode copyOf(NavigationNode source, Collection<? extends GrantedAuthority> authorities, Locale locale, MessageSource messageSource) {
         if (hasAuthority(source, authorities)) {
             NavigationNode menuNode = new NavigationNode(
                     messageSource.getMessage(source.getText(), null, source.getText(), locale),

@@ -28,7 +28,7 @@ Ext.define('Patients.view.patient.Controller', {
             Patients.Util.errorToast(i18n.user_lastadmin_error);
         }, this);
     },
-
+/*
     onSaveClick: function() {
         var form = this.lookupReference('form');
         
@@ -52,7 +52,7 @@ Ext.define('Patients.view.patient.Controller', {
             });
         }
     },
-
+*/
     onCancelClick: function() {
         this.getView().destroy();        
     }

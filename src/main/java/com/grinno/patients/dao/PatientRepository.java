@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
 import com.grinno.patients.model.Patient;
+import com.mongodb.WriteResult;
 import java.lang.invoke.MethodHandles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,24 +27,6 @@ public class PatientRepository {
 
     /**
      *
-     * @param patient 
-     */
-    public void save(Patient patient) {
-        LOGGER.debug("PatientRepository.save(" + patient + ")");
-
-        if (!mongoTemplate.collectionExists(Patient.class)) {
-            mongoTemplate.createCollection(Patient.class);
-        }
-        try {
-            mongoTemplate.save(patient, COLLECTION_NAME);
-        }
-        catch(Exception ex){
-            LOGGER.warn("Patient save failed.", ex);
-        }
-    }
-
-    /**
-     *
      * @param id
      * @return
      */
@@ -57,8 +40,7 @@ public class PatientRepository {
      * @return
      */
     public Patient findOneByPesel(String pesel) {
-        return mongoTemplate.findOne(
-                Query.query(Criteria.where("pesel").is(pesel)), Patient.class, COLLECTION_NAME);
+        return mongoTemplate.findOne(Query.query(Criteria.where("pesel").is(pesel)), Patient.class, COLLECTION_NAME);
     }
 
     /**
@@ -69,6 +51,25 @@ public class PatientRepository {
         return mongoTemplate.findAll(Patient.class, COLLECTION_NAME);
     }
 
+    /**
+     *
+     * @param filter
+     * @param skip
+     * @param limit
+     * @return
+     */
+    public List<Patient> findAllWithFilter(String filter, int skip, int limit) {
+        LOGGER.debug("findAllWithFilter mongodb:" + mongoTemplate.getDb());
+        Query query = new Query();
+        query.skip(skip);
+        query.limit(limit);
+        query.addCriteria(Criteria.where("lastName").regex(filter));
+        query.addCriteria(Criteria.where("firstName").regex(filter));
+        query.addCriteria(Criteria.where("pesel").regex(filter));
+        
+        return mongoTemplate.find(query, Patient.class, COLLECTION_NAME);
+    }
+    
     public Patient remove(String id) {
         Patient patient = mongoTemplate.findOne(
                 Query.query(Criteria.where("_id").is(id)), Patient.class, COLLECTION_NAME);
@@ -87,8 +88,12 @@ public class PatientRepository {
         update.set("lastName", patient.getLastName());
         update.set("pesel", patient.getPesel());
 
-        mongoTemplate.updateFirst(query, update, Patient.class);
+        WriteResult result = mongoTemplate.updateFirst(query, update, Patient.class);
+        if (result.getN() == 0) {
+            mongoTemplate.save(patient, COLLECTION_NAME);
+        }
 
         return patient;
     }
+
 }

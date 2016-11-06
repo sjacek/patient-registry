@@ -31,7 +31,7 @@ public class ConfigurationDto {
     private Integer loginLockAttempts;
 
     public String getLogLevel() {
-        return this.logLevel;
+        return logLevel;
     }
 
     public void setLogLevel(String logLevel) {
@@ -39,7 +39,7 @@ public class ConfigurationDto {
     }
 
     public Integer getLoginLockMinutes() {
-        return this.loginLockMinutes;
+        return loginLockMinutes;
     }
 
     public void setLoginLockMinutes(Integer loginLockMinutes) {
@@ -47,7 +47,7 @@ public class ConfigurationDto {
     }
 
     public Integer getLoginLockAttempts() {
-        return this.loginLockAttempts;
+        return loginLockAttempts;
     }
 
     public void setLoginLockAttempts(Integer loginLockAttempts) {

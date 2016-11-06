@@ -40,6 +40,12 @@ Ext.define('Patients.view.user.Grid', {
         preserveScrollOnRefresh: true
     },
     columns: [{
+            text: i18n.id,
+            dataIndex: 'id',
+            flex: 0,
+            stateId: 'view.user.Grid.id',
+            hidden: true
+        }, {
             text: i18n.user_email,
             dataIndex: 'email',
             flex: 1,

@@ -31,7 +31,7 @@ public final class PojoCodecProvider implements CodecProvider {
             return (Codec<T>) new PersistentLoginCodec();
         }
         if (clazz.equals(Patient.class)) {
-            return (Codec<T>) new PatientCodec(uUIDStringGenerator);
+            return (Codec<T>) new PatientCodec();
         }
         if (clazz.equals(User.class)) {
             return (Codec<T>) new UserCodec(uUIDStringGenerator);

@@ -4,3 +4,7 @@
 /bootstrap.json
 /bootstrap.jsonp
 /sencha-error-*.log
+/app/model/User.js
+/app/model/UserSettings.js
+/app/model/PersistentLogin.js
+/app/model/Patient.js

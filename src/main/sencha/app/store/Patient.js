@@ -28,12 +28,14 @@ Ext.define('Patients.store.Patient', {
     autoSync: true,
     model: 'Patients.model.Patient',
     proxy: {
-        type: 'ajax',
-        url: 'patient/findAll.json',
-        reader: {
-            type: 'json',
-            rootProperty: 'data',
-            totalProperty: 'total'
-        }
+        type: 'direct',
+        directFn: 'patientService.read'
+//        type: 'ajax',
+//        url: 'patientService/read.json',
+//        reader: {
+//            type: 'json',
+//            rootProperty: 'data',
+//            totalProperty: 'total'
+//        }
     }
 });

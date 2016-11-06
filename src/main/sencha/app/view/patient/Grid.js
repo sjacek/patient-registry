@@ -44,7 +44,8 @@ Ext.define('Patients.view.patient.Grid', {
             text: i18n.id,
             dataIndex: 'id',
             flex: 0,
-            stateId: 'view.patient.Grid.id'
+            stateId: 'view.patient.Grid.id',
+            hidden: true
         }, {
             text: i18n.patient_firstname,
             dataIndex: 'firstName',
