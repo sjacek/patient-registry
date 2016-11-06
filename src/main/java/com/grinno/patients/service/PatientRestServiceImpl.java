@@ -46,7 +46,7 @@ public class PatientRestServiceImpl extends AbstractService implements PatientRe
     @Override
     public Result<Patient> update(String idPatient, String firstName, String secondName, String lastName, String pesel) {
         Patient patient = new Patient(idPatient, firstName, secondName, lastName, pesel);
-        patientRepository.updateFirst(idPatient, patient);
+        patientRepository.save(patient);
         return ResultFactory.getSuccessResult(patient);
     }
 
@@ -54,9 +54,10 @@ public class PatientRestServiceImpl extends AbstractService implements PatientRe
     @Transactional(readOnly = false, propagation = REQUIRED)
     @Override
     public Result<Patient> destroy(String idPatient) {
-        Patient patient = patientRepository.remove(idPatient);
+        Patient patient = patientRepository.findOne(idPatient);
+        patientRepository.delete(idPatient);
         String msg = "Patient PESEL=" + patient.getPesel() + " was deleted";
-        LOGGER.info(msg);
+        LOGGER.debug(msg);
         return ResultFactory.getSuccessResultMsg(msg);
     }
     
@@ -64,7 +65,7 @@ public class PatientRestServiceImpl extends AbstractService implements PatientRe
     @Transactional(readOnly = true, propagation = SUPPORTS)
     @Override
     public Result<Patient> read(String idPatient) {
-        Patient patient = patientRepository.findOneById(idPatient);
+        Patient patient = patientRepository.findOne(idPatient);
         return ResultFactory.getSuccessResult(patient);
     }
 
