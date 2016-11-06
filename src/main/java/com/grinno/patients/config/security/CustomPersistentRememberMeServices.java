@@ -29,7 +29,6 @@ import com.mongodb.client.model.Projections;
 import com.mongodb.client.model.ReturnDocument;
 import com.mongodb.client.model.Updates;
 
-import com.grinno.patients.Application;
 import com.grinno.patients.config.AppProperties;
 import com.grinno.patients.config.MongoDb;
 import com.grinno.patients.model.CPersistentLogin;
@@ -91,8 +90,7 @@ public class CustomPersistentRememberMeServices extends AbstractRememberMeServic
     }
 
     @Override
-    protected UserDetails processAutoLoginCookie(String[] cookieTokens,
-            HttpServletRequest request, HttpServletResponse response) {
+    protected UserDetails processAutoLoginCookie(String[] cookieTokens, HttpServletRequest request, HttpServletResponse response) {
 
         String series = getPersistentToken(cookieTokens);
 
@@ -101,16 +99,13 @@ public class CustomPersistentRememberMeServices extends AbstractRememberMeServic
                         Updates.combine(
                                 Updates.set(CPersistentLogin.lastUsed, new Date()),
                                 Updates.set(CPersistentLogin.token, generateTokenData()),
-                                Updates.set(CPersistentLogin.ipAddress,
-                                        request.getRemoteAddr()),
-                                Updates.set(CPersistentLogin.userAgent,
-                                        request.getHeader(HttpHeaders.USER_AGENT))),
+                                Updates.set(CPersistentLogin.ipAddress, request.getRemoteAddr()),
+                                Updates.set(CPersistentLogin.userAgent, request.getHeader(HttpHeaders.USER_AGENT))),
                         new FindOneAndUpdateOptions()
                         .returnDocument(ReturnDocument.AFTER));
 
         User user = this.mongoDb.getCollection(User.class)
-                .find(Filters.and(Filters.eq(CUser.id, pl.getUserId()),
-                        Filters.eq(CUser.deleted, false)))
+                .find(Filters.and(Filters.eq(CUser.id, pl.getUserId()), Filters.eq(CUser.deleted, false)))
                 .projection(Projections.include(CUser.email)).first();
 
         String loginName = user.getEmail();
@@ -138,8 +133,7 @@ public class CustomPersistentRememberMeServices extends AbstractRememberMeServic
         LOGGER.debug("Creating new persistent login for user {}", loginName);
 
         User user = this.mongoDb.getCollection(User.class)
-                .find(Filters.and(Filters.eq(CUser.email, loginName),
-                        Filters.eq(CUser.deleted, false)))
+                .find(Filters.and(Filters.eq(CUser.email, loginName), Filters.eq(CUser.deleted, false)))
                 .first();
 
         if (user != null) {
@@ -150,14 +144,11 @@ public class CustomPersistentRememberMeServices extends AbstractRememberMeServic
             newPersistentLogin.setLastUsed(new Date());
             newPersistentLogin.setIpAddress(request.getRemoteAddr());
             newPersistentLogin.setUserAgent(request.getHeader(HttpHeaders.USER_AGENT));
-            this.mongoDb.getCollection(PersistentLogin.class)
-                    .insertOne(newPersistentLogin);
+            this.mongoDb.getCollection(PersistentLogin.class).insertOne(newPersistentLogin);
 
-            addCookie(newPersistentLogin.getSeries(), newPersistentLogin.getToken(),
-                    request, response);
+            addCookie(newPersistentLogin.getSeries(), newPersistentLogin.getToken(), request, response);
         } else {
-            throw new UsernameNotFoundException(
-                    "User " + loginName + " was not found in the database");
+            throw new UsernameNotFoundException("User " + loginName + " was not found in the database");
         }
 
     }
@@ -199,20 +190,17 @@ public class CustomPersistentRememberMeServices extends AbstractRememberMeServic
     private String getPersistentToken(String[] cookieTokens) {
 
         if (cookieTokens.length != 2) {
-            throw new InvalidCookieException("Cookie token did not contain " + 2
-                    + " tokens, but contained '" + Arrays.toString(cookieTokens) + "'");
+            throw new InvalidCookieException("Cookie token did not contain " + 2 + " tokens, but contained '" + Arrays.toString(cookieTokens) + "'");
         }
 
         final String presentedSeries = cookieTokens[0];
         final String presentedToken = cookieTokens[1];
 
-        PersistentLogin pl = this.mongoDb.getCollection(PersistentLogin.class)
-                .find(Filters.eq(CPersistentLogin.series, presentedSeries)).first();
+        PersistentLogin pl = this.mongoDb.getCollection(PersistentLogin.class).find(Filters.eq(CPersistentLogin.series, presentedSeries)).first();
 
         if (pl == null) {
             // No series match, so we can't authenticate using this cookie
-            throw new RememberMeAuthenticationException(
-                    "No persistent token found for series id: " + presentedSeries);
+            throw new RememberMeAuthenticationException("No persistent token found for series id: " + presentedSeries);
         }
 
         String token = pl.getToken();

@@ -16,7 +16,6 @@
  */
 package com.grinno.patients.model;
 
-import ch.rasc.bsoncodec.annotation.BsonDocument;
 import ch.rasc.extclassgenerator.Model;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
@@ -25,19 +24,26 @@ import static com.grinno.patients.model.Utils.checkNull;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import org.hibernate.validator.constraints.NotBlank;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.index.CompoundIndexes;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  *
  * @author jsztajnke
  */
-@BsonDocument
+@Document
+@CompoundIndexes({
+    @CompoundIndex(name = "lastName_firstName", def = "{'lastName': 1, 'firstName': 1}")
+})
 @Model(value = "Patients.model.Patient",
         readMethod = "patientService.read",
         createMethod = "patientService.update",
         updateMethod = "patientService.update",
         destroyMethod = "patientService.destroy",
-        paging = true
-//        ,identifier = "uuid"
+        paging = true,
+        identifier = "uuid"
 )
 @JsonInclude(NON_NULL)
 public class Patient extends AbstractPersistable {
@@ -48,14 +54,17 @@ public class Patient extends AbstractPersistable {
 //    private String id;
 //
     @NotBlank(message = "{fieldrequired}")
+    @Indexed
     private String firstName;
 
     private String secondName;
 
     @NotBlank(message = "{fieldrequired}")
+    @Indexed
     private String lastName;
 
     @NotBlank(message = "{fieldrequired}")
+    @Indexed
     private String pesel;
 
 //    @Email(message = "{fieldrequired}")

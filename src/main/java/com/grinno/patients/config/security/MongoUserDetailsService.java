@@ -26,8 +26,7 @@ public class MongoUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String loginName)
             throws UsernameNotFoundException {
         User user = this.mongoDb.getCollection(User.class)
-                .find(Filters.and(Filters.eq(CUser.email, loginName),
-                        Filters.eq(CUser.deleted, false)))
+                .find(Filters.and(Filters.eq(CUser.email, loginName), Filters.eq(CUser.deleted, false)))
                 .first();
         if (user != null) {
             return new MongoUserDetails(user);

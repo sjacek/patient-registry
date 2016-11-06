@@ -16,25 +16,14 @@
  */
 package com.grinno.patients.dao;
 
-import com.grinno.patients.model.Patient;
-import java.util.List;
+import com.grinno.patients.model.Dictionary;
 import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.querydsl.QueryDslPredicateExecutor;
-import org.springframework.data.repository.PagingAndSortingRepository;
 
 /**
  *
  * @author jacek
  */
-public interface PatientRepository extends
-        MongoRepository<Patient, String>,
-        PagingAndSortingRepository<Patient, String>,
-        QueryDslPredicateExecutor<Patient>,
-        PatientRepositoryCustom {
-
-    Patient findByPesel(String pesel);
-
-    @Query("{$or:[ {lastName: {$regex:?0,$options:'i'}}, {firstName: {$regex:?0,$options:'i'}}, {pesel: {$regex:?0,$options:'i'}} ] }")
-    List<Patient> findAllWithFilter(String filter);
+public interface DictionaryRepository extends MongoRepository<Dictionary, String>, QueryDslPredicateExecutor<Dictionary> {
+    Dictionary findByName(String name);
 }

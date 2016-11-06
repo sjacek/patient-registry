@@ -6,6 +6,9 @@ var REMOTING_API = {
       "name" : "logClientCrash",
       "len" : 1
     }, {
+      "name" : "info",
+      "len" : 1
+    }, {
       "name" : "debug",
       "len" : 1
     }],

@@ -13,8 +13,7 @@ import com.grinno.patients.model.CUser;
 import com.grinno.patients.model.User;
 
 @Component
-public class UserAuthSuccessfulHandler
-        implements ApplicationListener<InteractiveAuthenticationSuccessEvent> {
+public class UserAuthSuccessfulHandler implements ApplicationListener<InteractiveAuthenticationSuccessEvent> {
 
     private final MongoDb mongoDb;
 

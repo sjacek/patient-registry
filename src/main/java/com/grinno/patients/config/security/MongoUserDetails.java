@@ -64,8 +64,7 @@ public class MongoUserDetails implements UserDetails {
         }
 
         if (StringUtils.hasText(user.getSecret())) {
-            this.authorities = Collections.unmodifiableCollection(
-                    AuthorityUtils.createAuthorityList("PRE_AUTH"));
+            this.authorities = Collections.unmodifiableCollection(AuthorityUtils.createAuthorityList("PRE_AUTH"));
         } else {
             this.authorities = Collections.unmodifiableCollection(this.userAuthorities);
         }
@@ -96,8 +95,7 @@ public class MongoUserDetails implements UserDetails {
 
     public User getUser(MongoDb mongoDb) {
         return mongoDb.getCollection(User.class)
-                .find(Filters.and(Filters.eq(CUser.id, getUserDbId()),
-                        Filters.eq(CUser.deleted, false)))
+                .find(Filters.and(Filters.eq(CUser.id, getUserDbId()), Filters.eq(CUser.deleted, false)))
                 .first();
     }
 
@@ -130,8 +128,7 @@ public class MongoUserDetails implements UserDetails {
     }
 
     public boolean hasAuthority(String authority) {
-        return getAuthorities().stream()
-                .anyMatch(a -> authority.equals(a.getAuthority()));
+        return getAuthorities().stream().anyMatch(a -> authority.equals(a.getAuthority()));
     }
 
     public boolean isScreenLocked() {
@@ -146,9 +143,9 @@ public class MongoUserDetails implements UserDetails {
             Collection<String> stringAuthorities) {
         List<GrantedAuthority> authorities = new ArrayList<>(stringAuthorities.size());
 
-        for (String stringAuthority : stringAuthorities) {
+        stringAuthorities.stream().forEach((stringAuthority) -> {
             authorities.add(new SimpleGrantedAuthority(stringAuthority));
-        }
+        });
 
         return authorities;
     }

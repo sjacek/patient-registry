@@ -66,53 +66,22 @@ public class PatientService {
 
         StringFilter filter = request.getFirstFilterForField("filter");
         List<Patient> list = (filter != null) ? 
-            patientRepository.findAllWithFilter(filter.getValue(), request.getStart(), request.getLimit())
+            patientRepository.findAllWithFilter(filter.getValue())
+//            patientRepository.findAllWithFilter(filter.getValue(), request.getStart(), request.getLimit())
         :
             patientRepository.findAll();
 
         LOGGER.debug("read size:[" + list.size() + "]");
 
         return new ExtDirectStoreResult<>(list);
-/*        
-        MongoCollection patientCollection = mongoDb.getCollection(Patient.class);
-        if (patientCollection.count() == 0) {
-            return new ExtDirectStoreResult<>(new ArrayList<Patient>());
-        }
-
-        FindIterable<Patient> find;
-        long total;
-        LOGGER.debug("read 2");
-        StringFilter filter = request.getFirstFilterForField("filter");
-        if (filter != null) {
-            List<Bson> orFilters = new ArrayList<>();
-            orFilters.add(Filters.regex(CPatient.lastName, filter.getValue(), "i"));
-            orFilters.add(Filters.regex(CPatient.firstName, filter.getValue(), "i"));
-
-            LOGGER.debug("read 3");
-            total = mongoDb.getCollection(Patient.class).count(Filters.or(orFilters));
-            find = mongoDb.getCollection(Patient.class).find(Filters.or(orFilters));
-            LOGGER.debug("read 4");
-        }
-        else {
-            LOGGER.debug("read 5");
-            total = mongoDb.getCollection(Patient.class).count();
-            find = mongoDb.getCollection(Patient.class).find();
-            LOGGER.debug("read 6");
-        }
-
-        find.sort(Sorts.orderBy(QueryUtil.getSorts(request)));
-        find.skip(request.getStart());
-        find.limit(request.getLimit());
-
-        LOGGER.debug("read end");
-        return new ExtDirectStoreResult<>(total, QueryUtil.toList(find));
-*/    }
+    }
 
     @ExtDirectMethod(STORE_MODIFY)
     public ExtDirectStoreResult<Patient> destroy(Patient destroyPatient) {
         ExtDirectStoreResult<Patient> result = new ExtDirectStoreResult<>();
 
         LOGGER.debug("destroy 1");
+        patientRepository.delete(destroyPatient);
 //        mongoDb.getCollection(Patient.class).deleteOne(Filters.eq(CPatient.id, destroyPatient.getId()));
         result.setSuccess(Boolean.TRUE);
 
@@ -121,28 +90,29 @@ public class PatientService {
     }
 
     @ExtDirectMethod(STORE_MODIFY)
-    public ValidationMessagesResult<Patient> update(Patient updatedEntity, Locale locale) {
-        List<ValidationMessages> violations = validateEntity(updatedEntity, locale);
+    public ValidationMessagesResult<Patient> update(Patient patient, Locale locale) {
+        List<ValidationMessages> violations = validateEntity(patient, locale);
 
-        LOGGER.debug("update 1: " + updatedEntity.toString());
+        LOGGER.debug("update 1: " + patient.toString());
         if (violations.isEmpty()) {
             LOGGER.debug("update 2");
-            patientRepository.updateFirst(updatedEntity.getId(), updatedEntity);
+//            patientRepository.updateFirst(patient);
+            patientRepository.save(patient);
 /*            
             LOGGER.debug("update 2");
             List<Bson> updates = new ArrayList<>();
-//            updates.add(Updates.set(CPatient.email, updatedEntity.getEmail()));
-            updates.add(Updates.set(CPatient.firstName, updatedEntity.getFirstName()));
-            updates.add(Updates.set(CPatient.lastName, updatedEntity.getLastName()));
-            updates.add(Updates.set(CPatient.pesel, updatedEntity.getPesel()));
+//            updates.add(Updates.set(CPatient.email, patient.getEmail()));
+            updates.add(Updates.set(CPatient.firstName, patient.getFirstName()));
+            updates.add(Updates.set(CPatient.lastName, patient.getLastName()));
+            updates.add(Updates.set(CPatient.pesel, patient.getPesel()));
 
             LOGGER.debug("update 3");
-            mongoDb.getCollection(Patient.class).updateOne(Filters.eq(CPatient.id, updatedEntity.getId()), Updates.combine(updates), new UpdateOptions().upsert(true));
+            mongoDb.getCollection(Patient.class).updateOne(Filters.eq(CPatient.id, patient.getId()), Updates.combine(updates), new UpdateOptions().upsert(true));
             LOGGER.debug("update 4");
-            return new ValidationMessagesResult<>(updatedEntity);
+            return new ValidationMessagesResult<>(patient);
 */        }
 
-        ValidationMessagesResult<Patient> result = new ValidationMessagesResult<>(updatedEntity);
+        ValidationMessagesResult<Patient> result = new ValidationMessagesResult<>(patient);
         result.setValidations(violations);
         LOGGER.debug("update end");
         return result;

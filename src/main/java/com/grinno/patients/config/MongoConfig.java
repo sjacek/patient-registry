@@ -1,6 +1,8 @@
 package com.grinno.patients.config;
 
-import com.mongodb.Mongo;
+import com.grinno.patients.model.Patient;
+import com.grinno.patients.model.PersistentLogin;
+import com.grinno.patients.model.User;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -9,10 +11,7 @@ import org.springframework.context.annotation.Configuration;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoDatabase;
-import java.lang.invoke.MethodHandles;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.data.authentication.UserCredentials;
+import javax.annotation.PostConstruct;
 import org.springframework.data.mongodb.MongoDbFactory;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
@@ -21,19 +20,15 @@ import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
 @EnableConfigurationProperties(MongoProperties.class)
 public class MongoConfig {
 
-    public static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-
     @Bean
     public MongoClient mongoClient(MongoProperties properties) {
         MongoClientURI uri = new MongoClientURI(properties.getUri());
-        LOGGER.debug(uri.getURI());
         return new MongoClient(uri);
     }
 
     @Bean
     public MongoDatabase mongoDatabase(MongoClient mongoClient, MongoProperties properties) {
         MongoClientURI uri = new MongoClientURI(properties.getUri());
-        LOGGER.debug(uri.getURI());
         return mongoClient.getDatabase(uri.getDatabase()).withCodecRegistry(CodecRegistries.fromRegistries(MongoClient.getDefaultCodecRegistry(),
                 CodecRegistries.fromProviders(new ListCodec.Provider()),
                 CodecRegistries.fromProviders(new PojoCodecProvider())));
@@ -48,4 +43,25 @@ public class MongoConfig {
     public MongoTemplate mongoTemplate(MongoProperties properties) throws Exception {
         return new MongoTemplate(mongoDbFactory(properties));
     }
+
+//    @PostConstruct
+//    public void createCollections(MongoTemplate mongoTemplate) {
+//        if (!mongoTemplate.collectionExists(User.class)) {
+//            mongoTemplate.createCollection(User.class);
+//        }
+//        if (!mongoTemplate.collectionExists(PersistentLogin.class)) {
+//            mongoTemplate.createCollection(PersistentLogin.class);
+//        }
+//        if (!mongoTemplate.collectionExists(Patient.class)) {
+//            mongoTemplate.createCollection(Patient.class);
+//        }
+//    }
+    
+//    @PostConstruct
+//    public void createIndexes() {
+//        mongoTemplate.indexOps(User.class).ensureIndex(new Index("email", ASC));
+//        mongoTemplate.indexOps(PersistentLogin.class).ensureIndex(new Index("userId", ASC));
+//        mongoTemplate.indexOps(Patient.class).ensureIndex(new Index("pesel", ASC));
+//        mongoTemplate.indexOps(Patient.class).ensureIndex(new CompoundIndexDefinition("pesel", ASC));
+//    }
 }

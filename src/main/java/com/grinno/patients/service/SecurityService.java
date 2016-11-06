@@ -95,8 +95,7 @@ public class SecurityService {
 
     @ExtDirectMethod(ExtDirectMethodType.FORM_POST)
     @PreAuthorize("hasAuthority('PRE_AUTH')")
-    public ExtDirectFormPostResult signin2fa(HttpServletRequest request,
-            @AuthenticationPrincipal MongoUserDetails userDetails, @RequestParam("code") int code) {
+    public ExtDirectFormPostResult signin2fa(HttpServletRequest request, @AuthenticationPrincipal MongoUserDetails userDetails, @RequestParam("code") int code) {
 
         User user = userDetails.getUser(mongoDb);
         if (user != null) {

@@ -67,29 +67,11 @@ Ext.define('Patients.view.main.MainController', {
                 localStorage.patients_locale = 'pl';
                 window.location.reload();
             }
-//            else {
-//                var script = document.createElement('script');
-//                var src = 'locale-pl.js';
-//                if (Ext.manifest.loader.cache) {
-//                    src += '?' + Ext.manifest.loader.cacheParam + '=' + Ext.manifest.loader.cache;
-//                }
-//                script.src = src;
-//                document.getElementsByTagName('head')[0].appendChild(script);
-//            }
         } else if (user.locale === 'de') {
             if (localStorage.patients_locale !== 'de') {
                 localStorage.patients_locale = 'de';
                 window.location.reload();
             }
-//            else {
-//                var script = document.createElement('script');
-//                var src = 'locale-de.js';
-//                if (Ext.manifest.loader.cache) {
-//                    src += '?' + Ext.manifest.loader.cacheParam + '=' + Ext.manifest.loader.cache;
-//                }
-//                script.src = src;
-//                document.getElementsByTagName('head')[0].appendChild(script);
-//            }
         } else {
             if (localStorage.patients_locale !== 'en') {
                 localStorage.patients_locale = 'en';

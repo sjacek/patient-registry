@@ -41,8 +41,7 @@ public class JsonAuthSuccessHandler implements AuthenticationSuccessHandler {
     }
 
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request,
-            HttpServletResponse response, Authentication authentication)
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
             throws IOException, ServletException {
 
         Map<String, Object> result = new HashMap<>();
@@ -62,8 +61,7 @@ public class JsonAuthSuccessHandler implements AuthenticationSuccessHandler {
                 user = this.mongoDb.getCollection(User.class)
                         .find(Filters.eq(CUser.id, userDetails.getUserDbId())).first();
             }
-            result.put(SecurityService.AUTH_USER, new UserDetailDto(userDetails, user,
-                    CsrfController.getCsrfToken(request)));
+            result.put(SecurityService.AUTH_USER, new UserDetailDto(userDetails, user, CsrfController.getCsrfToken(request)));
         }
 
         response.getWriter().print(this.objectMapper.writeValueAsString(result));

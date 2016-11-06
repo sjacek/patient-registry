@@ -1,7 +1,5 @@
 package com.grinno.patients.config;
 
-import com.grinno.patients.model.Patient;
-import com.grinno.patients.model.PatientCodec;
 import org.bson.codecs.Codec;
 import org.bson.codecs.configuration.CodecProvider;
 import org.bson.codecs.configuration.CodecRegistry;
@@ -29,9 +27,6 @@ public final class PojoCodecProvider implements CodecProvider {
     public <T> Codec<T> get(final Class<T> clazz, final CodecRegistry registry) {
         if (clazz.equals(PersistentLogin.class)) {
             return (Codec<T>) new PersistentLoginCodec();
-        }
-        if (clazz.equals(Patient.class)) {
-            return (Codec<T>) new PatientCodec();
         }
         if (clazz.equals(User.class)) {
             return (Codec<T>) new UserCodec(uUIDStringGenerator);

@@ -34,6 +34,12 @@ public class LogService {
 
     @ExtDirectMethod
     @Async
+    public void info(String message) {
+        LOGGER.info(message);
+    }
+
+    @ExtDirectMethod
+    @Async
     public void debug(String message) {
         LOGGER.debug(message);
     }
