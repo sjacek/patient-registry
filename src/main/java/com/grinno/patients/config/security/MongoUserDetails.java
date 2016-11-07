@@ -16,6 +16,7 @@ import org.springframework.util.StringUtils;
 import com.mongodb.client.model.Filters;
 
 import com.grinno.patients.config.MongoDb;
+import com.grinno.patients.dao.UserRepository;
 import com.grinno.patients.model.CUser;
 import com.grinno.patients.model.User;
 
@@ -54,8 +55,7 @@ public class MongoUserDetails implements UserDetails {
             this.locale = Locale.ENGLISH;
         }
 
-        this.locked = user.getLockedOutUntil() != null
-                && user.getLockedOutUntil().after(new Date());
+        this.locked = user.getLockedOutUntil() != null && user.getLockedOutUntil().after(new Date());
 
         if (user.getAuthorities() != null) {
             this.userAuthorities = createAuthorityList(user.getAuthorities());
@@ -94,9 +94,11 @@ public class MongoUserDetails implements UserDetails {
     }
 
     public User getUser(MongoDb mongoDb) {
-        return mongoDb.getCollection(User.class)
-                .find(Filters.and(Filters.eq(CUser.id, getUserDbId()), Filters.eq(CUser.deleted, false)))
-                .first();
+        return mongoDb.getCollection(User.class).find(Filters.and(Filters.eq(CUser.id, getUserDbId()), Filters.eq(CUser.deleted, false))).first();
+    }
+
+    public User getUser(UserRepository userRepository) {
+        return userRepository.findOneNotDeleted(getUserDbId());
     }
 
     public String getUserDbId() {

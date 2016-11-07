@@ -24,35 +24,13 @@ Ext.define('Patients.view.patient.Controller', {
         objectNamePlural: i18n.patients
     },
     erase: function () {
-        this.eraseObject(this.getSelectedObject().get('id'), null, function () {
-            Patients.Util.errorToast(i18n.user_lastadmin_error);
-        }, this);
+        this.eraseObject(this.getSelectedObject().get('firstName') + " " + this.getSelectedObject().get('lastName'), function() {
+            this.getView().deselectAll();
+            this.onGridRefresh();
+            Patients.Util.successToast(i18n.destroysuccessful);
+        }, null, this);
+//        this.onGridRefresh();
     },
-/*
-    onSaveClick: function() {
-        var form = this.lookupReference('form');
-        
-        if (form.isValid()) {
-            var patient = this.getViewModel().get('thePatient');
-
-            Ext.Msg.wait('Saving', 'Saving patient...');
-            patient.save({
-                scope: this,
-		success: function(record, operation) {
-                    Ext.toast({
-                        title: 'Save',
-                        html: 'Patient saved successfully',
-                        align: 't',
-                        bodyPadding: 10
-                    });
-		},
-                callback: function() {
-                    Ext.Msg.hide();
-                }
-            });
-        }
-    },
-*/
     onCancelClick: function() {
         this.getView().destroy();        
     }

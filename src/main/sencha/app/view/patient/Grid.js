@@ -33,7 +33,7 @@ Ext.define('Patients.view.patient.Grid', {
         selection: '{selectedObject}'
     },
     listeners: {
-        itemclick: 'onItemclick',
+        itemdblclick: 'onItemdblclick',
         afterRender: 'onBaseAfterRender'
     },
     cls: 'shadow',
@@ -66,20 +66,28 @@ Ext.define('Patients.view.patient.Grid', {
             text: i18n.create,
             tooltip: i18n.patient_create_tooltip,
             iconCls: 'x-fa fa-plus',
+            ui: 'soft-green',
             handler: 'newObject'
         }, {
             text: 'Edit',
             reference: 'editPatientButton',
             tooltip: i18n.patient_edit_tooltip,
-            disabled: true,
-            handler: 'onEdit'
+            iconCls: 'x-fa fa-edit',
+            handler: 'onEdit',
+            ui: 'soft-green',
+            bind: {
+                disabled: '{!selectedObject}'
+            }
         }, {
             text: i18n.destroy,
             reference: 'removePatientButton',
             tooltip: i18n.patient_destroy_tooltip,
             iconCls: 'x-fa fa-trash-o',
-            disabled: true,
-            handler: 'onRemove'
+            handler: 'erase',
+            ui: 'soft-red',
+            bind: {
+                disabled: '{!selectedObject}'
+            }
         },
         '->',
         {

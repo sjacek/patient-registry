@@ -33,8 +33,11 @@ public interface PatientRepository extends
         QueryDslPredicateExecutor<Patient>,
         PatientRepositoryCustom {
 
-    Patient findByPesel(String pesel);
+//    Patient findByPesel(String pesel);
 
-    @Query("{$or:[ {lastName: {$regex:?0,$options:'i'}}, {firstName: {$regex:?0,$options:'i'}}, {pesel: {$regex:?0,$options:'i'}} ] }")
-    List<Patient> findAllWithFilter(String filter);
+    @Query("{deleted:false}")
+    List<Patient> findAllNotDeleted();
+
+    @Query("{$and: [{ $or:[ {lastName: {$regex:?0,$options:'i'}}, {firstName: {$regex:?0,$options:'i'}}, {pesel: {$regex:?0,$options:'i'}} ]}, {deleted:false} ]}")
+    List<Patient> findAllWithFilterNotDeleted(String filter);
 }

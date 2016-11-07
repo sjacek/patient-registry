@@ -69,6 +69,7 @@ public class Patient extends AbstractPersistable {
 
 //    @Email(message = "{fieldrequired}")
 //    private String email;
+
     public Patient() {
     }
 

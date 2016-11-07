@@ -12,6 +12,10 @@ import java.lang.invoke.MethodHandles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ *
+ * @author jacek
+ */
 @Service
 public class LogService {
 
@@ -22,7 +26,6 @@ public class LogService {
     @ExtDirectMethod
     @Async
     public void logClientCrash(@RequestHeader(value = HttpHeaders.USER_AGENT, required = false) String userAgent, Map<String, Object> crashData) {
-
         StringBuilder sb = new StringBuilder();
         sb.append("JavaScript Error").append(LINE_SEPARATOR).append("User-Agent: ").append(userAgent);
 

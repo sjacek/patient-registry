@@ -32,7 +32,7 @@ Ext.define('Patients.view.user.Grid', {
         selection: '{selectedObject}'
     },
     listeners: {
-        itemclick: 'onItemclick',
+        itemdblclick: 'onItemdblclick',
         afterRender: 'onBaseAfterRender'
     },
     cls: 'shadow',

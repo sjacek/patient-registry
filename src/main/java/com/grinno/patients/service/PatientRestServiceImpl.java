@@ -34,7 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 @Service("patientRestService")
-public class PatientRestServiceImpl extends AbstractService implements PatientRestService {
+public class PatientRestServiceImpl implements PatientRestService {
 
     final protected Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 

@@ -64,9 +64,8 @@ public class PeselValidator {
     }
 
     public int getBirthMonth() {
-        int month;
-        month = 10 * PESEL[2];
-        month += PESEL[3];
+        int month = 10 * PESEL[2] + PESEL[3];
+
         if (month > 80 && month < 93) {
             month -= 80;
         } else if (month > 20 && month < 33) {

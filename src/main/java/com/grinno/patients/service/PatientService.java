@@ -22,8 +22,10 @@ import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.STORE_RE
 import ch.ralscha.extdirectspring.bean.ExtDirectStoreReadRequest;
 import ch.ralscha.extdirectspring.bean.ExtDirectStoreResult;
 import ch.ralscha.extdirectspring.filter.StringFilter;
+import com.grinno.patients.config.security.MongoUserDetails;
 import com.grinno.patients.config.security.RequireUserAuthority;
 import com.grinno.patients.dao.PatientRepository;
+import com.grinno.patients.dao.UserRepository;
 import com.grinno.patients.model.Patient;
 import com.grinno.patients.util.ValidationMessages;
 import com.grinno.patients.util.ValidationMessagesResult;
@@ -38,6 +40,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import static com.grinno.patients.util.PeselValidator.peselIsValid;
+import java.util.logging.Level;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 /**
  *
@@ -45,18 +49,27 @@ import static com.grinno.patients.util.PeselValidator.peselIsValid;
  */
 @Service
 @RequireUserAuthority
-public class PatientService {
+public class PatientService extends AbstractService {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    private final MessageSource messageSource;
+    private final PatientRepository patientRepository;
 
     private final Validator validator;
 
-    private final PatientRepository patientRepository;
+    private final MessageSource messageSource;
 
+    /**
+     *
+     * @param patientRepository
+     * @param userRepository
+     * @param validator
+     * @param messageSource
+     * @param mailService
+     */
     @Autowired
-    public PatientService(PatientRepository patientRepository, Validator validator, MessageSource messageSource, MailService mailService) {
+    public PatientService(PatientRepository patientRepository, UserRepository userRepository, Validator validator, MessageSource messageSource, MailService mailService) {
+        super(userRepository, messageSource);
         this.patientRepository = patientRepository;
         this.messageSource = messageSource;
         this.validator = validator;
@@ -67,9 +80,9 @@ public class PatientService {
 
         StringFilter filter = request.getFirstFilterForField("filter");
         List<Patient> list = (filter != null)
-                ? patientRepository.findAllWithFilter(filter.getValue())
+                ? patientRepository.findAllWithFilterNotDeleted(filter.getValue())
 //            patientRepository.findAllWithFilter(filter.getValue(), request.getStart(), request.getLimit())
-                : patientRepository.findAll();
+                : patientRepository.findAllNotDeleted();
 
         LOGGER.debug("read size:[" + list.size() + "]");
 
@@ -77,43 +90,30 @@ public class PatientService {
     }
 
     @ExtDirectMethod(STORE_MODIFY)
-    public ExtDirectStoreResult<Patient> destroy(Patient destroyPatient) {
+    public ExtDirectStoreResult<Patient> destroy(@AuthenticationPrincipal MongoUserDetails userDetails, Patient patient) {
         ExtDirectStoreResult<Patient> result = new ExtDirectStoreResult<>();
 
         LOGGER.debug("destroy 1");
-        patientRepository.delete(destroyPatient);
-//        mongoDb.getCollection(Patient.class).deleteOne(Filters.eq(CPatient.id, destroyPatient.getId()));
-        result.setSuccess(Boolean.TRUE);
-
+        setAttrsForDelete(patient, userDetails);
+        patientRepository.save(patient);
         LOGGER.debug("destroy end");
-        return result;
+        return result.setSuccess(true);
     }
 
     @ExtDirectMethod(STORE_MODIFY)
-    public ValidationMessagesResult<Patient> update(Patient patient, Locale locale) {
-        List<ValidationMessages> violations = validateEntity(patient, locale);
-
-        LOGGER.debug("update 1: " + patient.toString());
-        if (violations.isEmpty()) {
-            LOGGER.debug("update 2");
-//            patientRepository.updateFirst(patient);
-            patientRepository.save(patient);
-            /*            
-            LOGGER.debug("update 2");
-            List<Bson> updates = new ArrayList<>();
-//            updates.add(Updates.set(CPatient.email, patient.getEmail()));
-            updates.add(Updates.set(CPatient.firstName, patient.getFirstName()));
-            updates.add(Updates.set(CPatient.lastName, patient.getLastName()));
-            updates.add(Updates.set(CPatient.pesel, patient.getPesel()));
-
-            LOGGER.debug("update 3");
-            mongoDb.getCollection(Patient.class).updateOne(Filters.eq(CPatient.id, patient.getId()), Updates.combine(updates), new UpdateOptions().upsert(true));
-            LOGGER.debug("update 4");
-            return new ValidationMessagesResult<>(patient);
-             */        }
+    public ValidationMessagesResult<Patient> update(@AuthenticationPrincipal MongoUserDetails userDetails, Patient patient) {
+        List<ValidationMessages> violations = validateEntity(patient, userDetails.getLocale());
 
         ValidationMessagesResult<Patient> result = new ValidationMessagesResult<>(patient);
         result.setValidations(violations);
+
+        LOGGER.debug("update 1: " + patient.toString());
+        if (violations.isEmpty()) {
+            setAttrsForUpdate(patient, userDetails);
+            patientRepository.save(patient);
+            LOGGER.debug("update 2");
+        }
+
         LOGGER.debug("update end");
         return result;
     }
@@ -127,12 +127,6 @@ public class PatientService {
             validationError.setMessage(messageSource.getMessage("patient_pesel_not_valid", null, locale));
             validations.add(validationError);
         }
-//        if (!isEmailUnique(patient.getId(), patient.getEmail())) {
-//            ValidationMessages validationError = new ValidationMessages();
-//            validationError.setField(CPatient.email);
-//            validationError.setMessage(this.messageSource.getMessage("patient_emailtaken", null, locale));
-//            validations.add(validationError);
-//        }
         return validations;
     }
 

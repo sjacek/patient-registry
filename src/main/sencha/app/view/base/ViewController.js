@@ -58,8 +58,12 @@ Ext.define('Patients.view.base.ViewController', {
             store.removeFilter('filter');
         }
     },
-    onItemclick: function (store, record) {
+    onItemdblclick: function (store, record) {
         this.getViewModel().set(this.getSelectedObjectName(), record);
+        this.edit();
+    },
+    onEdit: function() {
+        this.getViewModel().set(this.getSelectedObjectName(), this.getSelectedObject());
         this.edit();
     },
     edit: function () {
@@ -125,10 +129,11 @@ Ext.define('Patients.view.base.ViewController', {
             if (choice === 'yes') {
                 selectedObject.erase({
                     success: function (record, operation) {
-                        this.onGridRefresh();
-                        Patients.Util.successToast(i18n.destroysuccessful);
                         if (successCallback) {
                             successCallback.call(scope);
+                        } else {
+                            this.onGridRefresh();
+                            Patients.Util.successToast(i18n.destroysuccessful);
                         }
                     },
                     failure: function (record, operation) {

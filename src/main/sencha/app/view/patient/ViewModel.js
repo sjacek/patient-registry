@@ -40,56 +40,6 @@ Ext.define('Patients.view.patient.ViewModel', {
             },
             pageSize: 100,
             leadingBufferZone: 200
-        },
-    formulas: {
-        isUserDisabled: {
-            bind: {
-                bindTo: '{selectedObject}',
-                deep: true
-            },
-            get: function (selectedObject) {
-                return !selectedObject || selectedObject.phantom || !selectedObject.get('enabled');
-            }
-        },
-        isPhantomObject: {
-            bind: {
-                bindTo: '{selectedObject}',
-                deep: true
-            },
-            get: function (selectedObject) {
-                return !selectedObject || selectedObject.phantom;
-            }
         }
-    }
-//        patients: {
-//            model: 'Patients.model.Patient',
-//            autoLoad: true,
-//            proxy: {
-//                type: 'ajax',
-//                url: 'patient/findAll.json',
-//                reader: {
-//                    type: 'json',
-//                    rootProperty: 'data'
-//                },
-//                writer: {
-//                    type: 'json'
-//                }
-//            }
-//        }
-//        patients: {
-//            model: 'Patients.model.PatientModel',
-////            autoLoad: true,
-//            remoteFilter: true //,
-////            filters: [{
-////                property: 'assigneeId',
-////                value: '{currentUser.id}'
-////            }, {
-////                property: 'projectId',
-////                value: '{projectId}'
-////            }, {
-////                property: 'status',
-////                value: 2
-////            }]
-//        }
     }
 });

@@ -23,11 +23,18 @@ import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
 import ch.rasc.extclassgenerator.ModelField;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import static com.grinno.patients.domain.Utils.checkNull;
+import com.grinno.patients.model.User;
 import java.io.Serializable;
+import java.util.Date;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
+import javax.persistence.Temporal;
+import static javax.persistence.TemporalType.DATE;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 @MappedSuperclass
 public abstract class AbstractPersistable implements JsonItem, Serializable {
@@ -37,6 +44,34 @@ public abstract class AbstractPersistable implements JsonItem, Serializable {
     @ModelField(useNull = true, convert = "null")
     private String id;
 
+    @Indexed
+    @Field("_version")
+    @JsonIgnore
+    private Integer version;
+    
+    @Field("_created_by")
+    @JsonIgnore
+    private User createdBy;
+    
+    @Field("_created_date")
+    @JsonIgnore
+    @Temporal(DATE)
+    private Date createdDate;
+    
+    @Indexed
+    @Field("_deleted")
+    @JsonIgnore
+    private boolean deleted;
+    
+    @Field("_deleted_by")
+    @JsonIgnore
+    private User deletedBy;
+    
+    @Field("_deleted_date")
+    @JsonIgnore
+    @Temporal(DATE)
+    private Date deletedDate;
+
     public String getId() {
         return id;
     }
@@ -45,6 +80,59 @@ public abstract class AbstractPersistable implements JsonItem, Serializable {
         this.id = id;
     }
 
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
+
+    public Integer incrementVersion() {
+        if (version == null) version = 0;
+        return ++version;
+    }
+
+    public User getCreatedBy() {
+        return createdBy;
+    }
+    
+    public void setCreatedBy(User user) {
+        this.createdBy = user;
+    }
+    
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+    
+    public void setCreatedDate(Date date) {
+        this.createdDate = date;
+    }
+    
+    public boolean isDeleted() {
+        return this.deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    public User getDeletedBy() {
+        return deletedBy;
+    }
+    
+    public void setDeletedBy(User user) {
+        this.deletedBy = user;
+    }
+    
+    public Date getDeletedDate() {
+        return deletedDate;
+    }
+    
+    public void setDeletedDate(Date date) {
+        this.deletedDate = date;
+    }
+        
     @Override
     public String toString() {
         return String.format("Entity of type %s with id: %s", this.getClass().getName(), getId());
