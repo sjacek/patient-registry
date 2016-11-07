@@ -92,6 +92,9 @@ Ext.define('Patients.view.base.ViewController', {
             this.getView().mask(i18n.saving);
 
             var selectedObject = this.getSelectedObject();
+            logService.debug("Saving patient:" + selectedObject.get('firstName'));
+            logService.debug("Saving patient:" + selectedObject.get('birthday'));
+            
             this.preSave(selectedObject);
             selectedObject.save({
                 scope: this,

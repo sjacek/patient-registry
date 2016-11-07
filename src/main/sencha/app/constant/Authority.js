@@ -21,6 +21,6 @@ Ext.define('Patients.constant.Authority', {
     singleton: true,
     ANY: 'ANY',
     ADMIN: 'ADMIN',
-    BUSINESS: 'BUSINESS',
+    EMPLOYEE: 'EMPLOYEE',
     USER: 'USER'
 });

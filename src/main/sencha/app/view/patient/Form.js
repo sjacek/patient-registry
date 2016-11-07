@@ -18,8 +18,7 @@
 
 Ext.define('Patients.view.patient.Form', {
     extend: 'Ext.form.Panel',
-    requires: ['Ext.form.field.ComboBox', 'Ext.form.field.Tag'],
-    defaultFocus: 'textfield[name=email]',
+    requires: ['Ext.form.field.Date'],
     reference: 'editPanel',
     cls: 'shadow',
     defaultType: 'textfield',
@@ -34,43 +33,43 @@ Ext.define('Patients.view.patient.Form', {
         items: [{
                 xtype: 'textfield',
                 name: 'id',
-                fieldLabel: 'Id',
+                fieldLabel: i18n.Id,
                 allowBlank: false,
                 bind: '{selectedObject.id}',
-                publishes: ['value'],
                 disabled: true
             }, {
                 xtype: 'textfield',
                 name: 'firstName',
-                fieldLabel: 'First Name',
+                fieldLabel: i18n.patient_firstname,
                 allowBlank: false,
-                bind: '{selectedObject.firstName}',
-                publishes: ['value']
+                bind: '{selectedObject.firstName}'
             }, {
                 xtype: 'textfield',
                 name: 'secondName',
-                fieldLabel: 'Second Name',
+                fieldLabel: i18n.patient_secondname,
                 allowBlank: true,
-                bind: '{selectedObject.secondName}',
-                publishes: ['value']
-
+                bind: '{selectedObject.secondName}'
             }, {
                 xtype: 'textfield',
                 name: 'lastName',
-                fieldLabel: 'Last Name',
+                fieldLabel: i18n.patient_lastname,
                 allowBlank: false,
-                bind: '{selectedObject.lastName}',
-                publishes: ['value']
-
+                bind: '{selectedObject.lastName}'
             }, {
                 xtype: 'textfield',
                 name: 'pesel',
-                fieldLabel: 'PESEL',
+                fieldLabel: i18n.patient_pesel,
                 allowBlank: false,
-                bind: '{selectedObject.pesel}',
-                publishes: ['value']
+                bind: '{selectedObject.pesel}'
 
-            }],
+            }, {
+                xtype: 'datefield',
+                name: 'birthday',
+                fieldLabel: i18n.patient_birthday,
+                allowBlank: false,
+                bind: '{selectedObject.birthday}'
+            }
+        ],
         tbar: [{
                 text: i18n.back,
                 handler: 'back',

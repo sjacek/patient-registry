@@ -17,17 +17,29 @@
 package com.grinno.patients.model;
 
 import ch.rasc.extclassgenerator.Model;
+import ch.rasc.extclassgenerator.ModelField;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import static com.fasterxml.jackson.annotation.JsonFormat.Shape.STRING;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 import com.grinno.patients.domain.AbstractPersistable;
-import static com.grinno.patients.model.Utils.checkNull;
+import java.lang.invoke.MethodHandles;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
+import javax.persistence.Temporal;
+import static javax.persistence.TemporalType.DATE;
+import javax.persistence.Transient;
+import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.NotBlank;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.index.CompoundIndexes;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 /**
  *
@@ -47,12 +59,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 )
 @JsonInclude(NON_NULL)
 public class Patient extends AbstractPersistable {
-//public class Patient {
 
-//    @ModelField(useNull = true, convert = "null")
-//    @Id(generator = UUIDStringGenerator.class)
-//    private String id;
-//
+    @Transient
+    public static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    
     @NotBlank(message = "{fieldrequired}")
     @Indexed
     private String firstName;
@@ -67,36 +77,46 @@ public class Patient extends AbstractPersistable {
     @Indexed
     private String pesel;
 
+    @NotNull(message = "{fieldrequired}")
+    @Indexed
+    @ModelField(dateFormat = "c")
+    @JsonFormat(shape=STRING)
+//    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone="GMT")
+    @Temporal(DATE)
+    private Date birthday;
+
 //    @Email(message = "{fieldrequired}")
 //    private String email;
 
     public Patient() {
     }
 
-    public Patient(JsonObject json) {
-        super.setId(json.getString("id", null));
-        this.firstName = json.getString("firstName", "");
-        this.secondName = json.getString("secondName", null);
-        this.lastName = json.getString("lastName", "");
-        this.pesel = json.getString("pesel", "");
-//        this.email = json.getString("email", "");
-    }
+//    public Patient(JsonObject json) {
+//        LOGGER.debug("Patient: " + json.toString());
+//        super.setId(json.getString("id", null));
+//        this.firstName = json.getString("firstName", "");
+//        this.secondName = json.getString("secondName", null);
+//        this.lastName = json.getString("lastName", "");
+//        this.pesel = json.getString("pesel", "");
+//        LOGGER.debug("Patient: " + json.getString("birthday", ""));
+//        
+//        try {
+//            this.birthday = new SimpleDateFormat().parse(json.getString("birthday", ""));
+////        this.birthday =  (LocalDateTime) DateTimeFormatter.ISO_DATE.parse(json.getString("birthday", ""));
+//        } catch (ParseException ex) {
+//            // TODO:
+//            LOGGER.error("", ex);
+//        }
+//    }
 
-    public Patient(String id, String firstName, String secondName, String lastName, String pesel) {
+    public Patient(String id, String firstName, String secondName, String lastName, String pesel, Date birthday) {
         super.setId(id);
         this.firstName = firstName;
         this.secondName = secondName;
         this.lastName = lastName;
         this.pesel = pesel;
+        this.birthday = birthday;
     }
-
-//    public String getId() {
-//        return id;
-//    }
-
-//    public void setId(String id) {
-//        this.id = id;
-//    }
 
     public String getFirstName() {
         return firstName;
@@ -130,6 +150,14 @@ public class Patient extends AbstractPersistable {
         this.pesel = pesel;
     }
 
+    public Date getBirthday() {
+        return birthday;
+    }
+    
+    public void setBirthday(Date birthday) {
+        this.birthday = birthday;
+    }
+    
 //    public String getEmail() {
 //        return email;
 //    }
@@ -140,18 +168,19 @@ public class Patient extends AbstractPersistable {
     
     @Override
     public String toString() {
-        return getId() + "[" + getFirstName() + ", " + getSecondName() + ", " + getLastName() + "]";
+        return getId() + "[" + getFirstName() + ", " + getLastName() + ", " + getPesel() + "]";
     }
 
-    @Override
-    public void addJson(JsonObjectBuilder builder) {
-        super.addJson(builder);
-        builder.add("firstName", checkNull(firstName))
-                .add("secondName", checkNull(secondName))
-                .add("lastName", checkNull(lastName))
-                .add("pesel", checkNull(pesel))
-//                .add("email", checkNull(email))
-                ;
-    }
+//    @Override
+//    public void addJson(JsonObjectBuilder builder) {
+//        super.addJson(builder);
+//        builder.add("firstName", checkNull(firstName))
+//                .add("secondName", checkNull(secondName))
+//                .add("lastName", checkNull(lastName))
+//                .add("pesel", checkNull(pesel))
+//                .add("birthday", DATE_FORMAT.format(birthday))
+////                .add("email", checkNull(email))
+//                ;
+//    }
 
 }

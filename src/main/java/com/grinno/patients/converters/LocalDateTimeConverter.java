@@ -14,20 +14,35 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.grinno.patients.service;
+package com.grinno.patients.converters;
 
-import com.grinno.patients.model.Patient;
-import com.grinno.patients.vo.Result;
-import java.util.Date;
-import java.util.List;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+
+import javax.persistence.AttributeConverter;
+import javax.persistence.Converter;
 
 /**
  *
  * @author jacek
  */
-public interface PatientRestService {
-    public Result<Patient> update(String idPatient, String firstName, String secondName, String lastName, String pesel, Date birthday);
-    public Result<Patient> destroy (String idPatient);
-    public Result<Patient> read(String idPatient);
-    public Result<List<Patient>> findAll();
+@Converter(autoApply = true)
+public class LocalDateTimeConverter implements AttributeConverter<LocalDateTime, Timestamp> {
+
+    @Override
+    public Timestamp convertToDatabaseColumn(LocalDateTime value) {
+        if (value != null) {
+            return Timestamp.valueOf(value);
+        }
+        return null;
+    }
+
+    @Override
+    public LocalDateTime convertToEntityAttribute(Timestamp value) {
+        if (value != null) {
+            return value.toLocalDateTime();
+        }
+        return null;
+    }
+
 }

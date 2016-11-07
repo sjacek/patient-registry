@@ -23,6 +23,7 @@ import com.grinno.patients.dao.PatientRepository;
 import com.grinno.patients.model.Patient;
 import com.grinno.patients.vo.Result;
 import com.grinno.patients.vo.ResultFactory;
+import java.util.Date;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,8 +45,8 @@ public class PatientRestServiceImpl implements PatientRestService {
     @ExtDirectMethod(STORE_MODIFY)
     @Transactional(readOnly = false, propagation = REQUIRED)
     @Override
-    public Result<Patient> update(String idPatient, String firstName, String secondName, String lastName, String pesel) {
-        Patient patient = new Patient(idPatient, firstName, secondName, lastName, pesel);
+    public Result<Patient> update(String idPatient, String firstName, String secondName, String lastName, String pesel, Date birthday) {
+        Patient patient = new Patient(idPatient, firstName, secondName, lastName, pesel, birthday);
         patientRepository.save(patient);
         return ResultFactory.getSuccessResult(patient);
     }
@@ -56,7 +57,9 @@ public class PatientRestServiceImpl implements PatientRestService {
     public Result<Patient> destroy(String idPatient) {
         Patient patient = patientRepository.findOne(idPatient);
         patientRepository.delete(idPatient);
-        String msg = "Patient PESEL=" + patient.getPesel() + " was deleted";
+        // TODO:
+//        String msg = "Patient PESEL=" + patient.getPesel() + " was deleted";
+        String msg = "Patient PESEL=... was deleted";
         LOGGER.debug(msg);
         return ResultFactory.getSuccessResultMsg(msg);
     }

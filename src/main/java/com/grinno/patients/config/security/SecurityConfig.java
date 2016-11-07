@@ -39,7 +39,7 @@ class SecurityConfig extends WebSecurityConfigurerAdapter {
         if (environment.acceptsProfiles("development")) {
             web.ignoring().antMatchers("/resources/**", "/build/**", "/ext/**", "/**/*.js", "/bootstrap.json", "/robots.txt");
         } else {
-            web.ignoring().antMatchers("/resources/**", "/app.js", "/app.json", "/locale-de.js", "/i18n-de.js", "/i18n-en.js", "/i18n-pl.js", "/robots.txt");
+            web.ignoring().antMatchers("/resources/**", "/app.js", "/app.json", "/i18n-de.js", "/i18n-en.js", "/i18n-pl.js", "/robots.txt");
         }
     }
 

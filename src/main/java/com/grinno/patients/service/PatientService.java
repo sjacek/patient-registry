@@ -40,7 +40,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import static com.grinno.patients.util.PeselValidator.peselIsValid;
-import java.util.logging.Level;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 /**

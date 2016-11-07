@@ -21,6 +21,7 @@ Ext.define('Patients.store.Authority', {
     storeId: 'authority',
     data: [
         {value: Patients.constant.Authority.ADMIN},
+        {value: Patients.constant.Authority.EMPLOYEE},
         {value: Patients.constant.Authority.USER}
     ]
 });

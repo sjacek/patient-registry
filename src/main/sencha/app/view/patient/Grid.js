@@ -61,6 +61,15 @@ Ext.define('Patients.view.patient.Grid', {
             dataIndex: 'pesel',
             flex: 1,
             stateId: 'view.patient.Grid.pesel'
+        }, {
+            xtype: 'datecolumn',
+            text: i18n.patient_birthday,
+            dataIndex: 'birthday',
+            flex: 1,
+            format: 'Y-m-d',
+//            format: Ext.Date.patterns.ISO8601Short,
+            stateId: 'view.patient.Grid.birthday',
+            hidden: true
         }],
     tbar: [{
             text: i18n.create,
