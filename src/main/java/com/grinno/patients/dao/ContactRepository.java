@@ -1,5 +1,5 @@
-/* 
- * Copyright (C) 2015 jsztajnke
+/*
+ * Copyright (C) 2016 Pivotal Software, Inc.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,21 +14,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package com.grinno.patients.dao;
 
-/* global Ext */
+import com.grinno.patients.model.Contact;
+import java.util.List;
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.Query;
 
-Ext.define('Patients.store.Patient', {
-    extend: 'Ext.data.Store',
-
-    alias: 'store.patient',
-
-    requires: ['Patients.model.Patient'],
-    pageSize: 25,
-    autoLoad: true,
-    autoSync: true,
-    model: 'Patients.model.Patient',
-    proxy: {
-        type: 'direct',
-        directFn: 'patientService.read'
-    }
-});
+/**
+ *
+ * @author Jacek Sztajnke
+ */
+public interface ContactRepository extends MongoRepository<Contact, String> /*, QueryDslPredicateExecutor<Contact>*/ {
+    
+    @Query("{deleted:false}")
+    List<Contact> findAllNotDeleted();
+}

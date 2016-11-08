@@ -1,4 +1,4 @@
-/*
+/* 
  * Copyright (C) 2016 Jacek Sztajnke
  *
  * This program is free software: you can redistribute it and/or modify
@@ -14,26 +14,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.grinno.patients.config.security;
+/* global Ext, i18n, securityService, userService */
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Inherited;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+Ext.define('Patients.view.contact.Controller', {
+    extend: 'Patients.view.base.ViewController',
+    config: {
+        formClassName: 'Patients.view.contact.Form',
+        objectName: i18n.contact,
+        objectNamePlural: i18n.contacts
+    },
+    erase: function () {
+        this.eraseObject(this.getSelectedObject().get('method'), function() {
+            this.getView().deselectAll();
+            this.onGridRefresh();
+            Patients.Util.successToast(i18n.destroysuccessful);
+        }, null, this);
+//        this.onGridRefresh();
+    },
+    onCancelClick: function() {
+        this.getView().destroy();        
+    }
 
-import org.springframework.security.access.prepost.PreAuthorize;
-
-/**
- *
- * @author jacek
- */
-@Target({ElementType.TYPE, ElementType.METHOD})
-@Retention(RetentionPolicy.RUNTIME)
-@Inherited
-@Documented
-@PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
-public @interface RequireAnyAuthority {
-    // nothing here
-}
+});

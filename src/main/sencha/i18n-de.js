@@ -106,5 +106,11 @@ var i18n = {
     patient_create_tooltip:"Create new patient card",
     patient_edit_tooltip:"Edit selected patient\'s data",
     patient_destroy_tooltip:"Remove selected patient",
+    contact_contact:"Contact",
+    contact_contacts:"Contacts",
+    contact_dictionary:"Contact Methods Dictionary",
+    contact_method:"Contact Method",
+    contact_description:"Description",
+
     "":""
 };

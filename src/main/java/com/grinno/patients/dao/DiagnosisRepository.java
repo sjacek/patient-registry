@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Jacek Sztajnke
+ * Copyright (C) 2016 Pivotal Software, Inc.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,14 +16,18 @@
  */
 package com.grinno.patients.dao;
 
-import com.grinno.patients.model.Dictionary;
+import com.grinno.patients.model.Diagnosis;
+import java.util.List;
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 
 /**
  *
- * @author jacek
+ * @author Jacek Sztajnke
  */
-public interface DictionaryRepository extends MongoRepository<Dictionary, String>, QueryDslPredicateExecutor<Dictionary> {
-    Dictionary findByName(String name);
+public interface DiagnosisRepository extends MongoRepository<Diagnosis, String>, QueryDslPredicateExecutor<Diagnosis> {
+    
+    @Query("{deleted:false}")
+    List<Diagnosis> findAllNotDeleted();
 }

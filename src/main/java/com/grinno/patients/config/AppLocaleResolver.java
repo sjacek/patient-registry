@@ -12,6 +12,10 @@ import org.springframework.web.servlet.i18n.AbstractLocaleResolver;
 
 import com.grinno.patients.config.security.MongoUserDetails;
 
+/**
+ *
+ * @author jacek
+ */
 public class AppLocaleResolver extends AbstractLocaleResolver {
 
     @Override

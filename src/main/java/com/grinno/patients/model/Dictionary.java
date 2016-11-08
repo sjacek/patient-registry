@@ -16,46 +16,11 @@
  */
 package com.grinno.patients.model;
 
-import ch.rasc.extclassgenerator.Model;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 import com.grinno.patients.domain.AbstractPersistable;
-import org.hibernate.validator.constraints.NotBlank;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  *
  * @author jacek
  */
-@Document
-@Model(value = "Patients.model.Dictionary",
-//        readMethod = "dictionaryService.read",
-//        createMethod = "dictionaryService.update",
-//        updateMethod = "dictionaryService.update",
-//        destroyMethod = "dictionaryService.destroy",
-        paging = true,
-        identifier = "uuid"
-)
-@JsonInclude(NON_NULL)
-public class Dictionary extends AbstractPersistable {
-    @NotBlank(message = "{fieldrequired}")
-    @Indexed(unique = true)
-    private String name;
-
-    public Dictionary() {
-    }
-    
-    public Dictionary(String id, String name) {
-        super.setId(id);
-        this.name = name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-    
-    public String getName(String name) {
-        return name;
-    }
+public abstract class Dictionary extends AbstractPersistable {
 }

@@ -24,10 +24,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 import com.grinno.patients.domain.AbstractPersistable;
 import java.lang.invoke.MethodHandles;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import javax.json.JsonObject;
 import javax.persistence.Temporal;
 import static javax.persistence.TemporalType.DATE;
 import javax.persistence.Transient;
@@ -39,7 +36,6 @@ import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.index.CompoundIndexes;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
 
 /**
  *
@@ -81,7 +77,6 @@ public class Patient extends AbstractPersistable {
     @Indexed
     @ModelField(dateFormat = "c")
     @JsonFormat(shape=STRING)
-//    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone="GMT")
     @Temporal(DATE)
     private Date birthday;
 

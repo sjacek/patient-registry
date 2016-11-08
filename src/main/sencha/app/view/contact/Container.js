@@ -1,4 +1,4 @@
-/*
+/* 
  * Copyright (C) 2016 Jacek Sztajnke
  *
  * This program is free software: you can redistribute it and/or modify
@@ -14,26 +14,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.grinno.patients.config.security;
+/* global Ext */
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Inherited;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
-import org.springframework.security.access.prepost.PreAuthorize;
-
-/**
- *
- * @author jacek
- */
-@Target({ElementType.TYPE, ElementType.METHOD})
-@Retention(RetentionPolicy.RUNTIME)
-@Inherited
-@Documented
-@PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
-public @interface RequireAnyAuthority {
-    // nothing here
-}
+Ext.define('Patients.view.contact.Container', {
+    extend: 'Ext.container.Container',
+    layout: {
+        type: 'card'
+    },
+    controller: {
+        xclass: 'Patients.view.contact.Controller'
+    },
+    viewModel: {
+        xclass: 'Patients.view.contact.ViewModel'
+    },
+    items: [{
+            xclass: 'Patients.view.contact.Grid'
+        }]
+});

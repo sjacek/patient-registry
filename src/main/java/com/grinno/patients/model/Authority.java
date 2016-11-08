@@ -21,5 +21,5 @@ package com.grinno.patients.model;
  * @author jacek
  */
 public enum Authority {
-    ANY, ADMIN, EMPLOYEE, USER
+    ADMIN, EMPLOYEE, USER
 }

@@ -30,14 +30,17 @@ public class NavigationService {
     public NavigationService(MessageSource messageSource) {
         this.messageSource = messageSource;
 
-        this.rootNodes.add(new NavigationNode("user_users", "user.Container", true, null,
-                "x-fa fa-users", "users", Authority.ADMIN));
+        rootNodes.add(new NavigationNode("user_users", "user.Container", true, null, "x-fa fa-users", "users",
+                Authority.ADMIN));
 
-        this.rootNodes.add(new NavigationNode("patient_patients", "patient.Container", true, null,
-                "x-fa fa-address-book", "patients", Authority.ADMIN, Authority.USER));
+        rootNodes.add(new NavigationNode("patient_patients", "patient.Container", true, null, "x-fa fa-address-book", "patients",
+                Authority.ADMIN, Authority.USER));
 
-        this.rootNodes.add(new NavigationNode("Blank", "main.BlankPage", true, null,
-                "x-fa fa-clock-o", "blank", Authority.USER));
+        rootNodes.add(new NavigationNode("contact_dictionary", "contact.Container", true, null, "x-fa fa-book", "contacts",
+                Authority.ADMIN, Authority.EMPLOYEE));
+
+        rootNodes.add(new NavigationNode("Blank", "main.BlankPage", true, null, "x-fa fa-clock-o", "blank",
+                Authority.USER));
     }
 
     @ExtDirectMethod(TREE_LOAD)

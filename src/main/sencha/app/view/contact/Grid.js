@@ -16,12 +16,12 @@
  */
 /* global Ext, i18n */
 
-Ext.define('Patients.view.patient.Grid', {
+Ext.define('Patients.view.contact.Grid', {
     extend: 'Ext.grid.Panel',
-    xtype: 'patientlist',
+    xtype: 'contactlist',
     requires: ['Patients.plugin.Clearable'],
     stateful: true,
-    stateId: 'view.patient.Grid',
+    stateId: 'view.contact.Grid',
     height: 100,
     beforeLayout: function () {
         this.height = Ext.Element.getViewportHeight() - 60;
@@ -44,43 +44,29 @@ Ext.define('Patients.view.patient.Grid', {
             text: i18n.id,
             dataIndex: 'id',
             flex: 0,
-            stateId: 'view.patient.Grid.id',
+            stateId: 'view.contact.Grid.id',
             hidden: true
         }, {
-            text: i18n.patient_firstname,
-            dataIndex: 'firstName',
+            text: i18n.contact_method,
+            dataIndex: 'method',
             flex: 1,
-            stateId: 'view.patient.Grid.firstName'
+            stateId: 'view.contact.Grid.method'
         }, {
-            text: i18n.patient_lastname,
-            dataIndex: 'lastName',
+            text: i18n.contact_description,
+            dataIndex: 'description',
             flex: 1,
-            stateId: 'view.patient.Grid.lastName'
-        }, {
-            text: i18n.patient_pesel,
-            dataIndex: 'pesel',
-            flex: 1,
-            stateId: 'view.patient.Grid.pesel'
-        }, {
-            xtype: 'datecolumn',
-            text: i18n.patient_birthday,
-            dataIndex: 'birthday',
-            flex: 1,
-            format: 'Y-m-d',
-//            format: Ext.Date.patterns.ISO8601Short,
-            stateId: 'view.patient.Grid.birthday',
-            hidden: true
+            stateId: 'view.contact.Grid.description'
         }],
     tbar: [{
             text: i18n.create,
-            tooltip: i18n.patient_create_tooltip,
+            tooltip: i18n.contact_create_tooltip,
             iconCls: 'x-fa fa-plus',
             ui: 'soft-green',
             handler: 'newObject'
         }, {
             text: 'Edit',
-            reference: 'editPatientButton',
-            tooltip: i18n.patient_edit_tooltip,
+            reference: 'editContactButton',
+            tooltip: i18n.contact_edit_tooltip,
             iconCls: 'x-fa fa-edit',
             handler: 'onEdit',
             ui: 'soft-green',
@@ -89,32 +75,16 @@ Ext.define('Patients.view.patient.Grid', {
             }
         }, {
             text: i18n.destroy,
-            reference: 'removePatientButton',
-            tooltip: i18n.patient_destroy_tooltip,
+            reference: 'removeContactButton',
+            tooltip: i18n.contact_destroy_tooltip,
             iconCls: 'x-fa fa-trash-o',
             handler: 'erase',
             ui: 'soft-red',
             bind: {
                 disabled: '{!selectedObject}'
             }
-        },
-        '->',
-        {
-            emptyText: i18n.filter,
-            xtype: 'textfield',
-            width: 250,
-            plugins: [{
-                    ptype: 'clearable'
-                }],
-            listeners: {
-                change: {
-                    fn: 'onFilter',
-                    buffer: 500
-                }
-            }
         }],
     dockedItems: [
-//        {xtype: 'pagingtoolbar', store: {type: 'patient'}, dock: 'bottom', displayInfo: true}
         {xtype: 'pagingtoolbar', bind: { store: '{objects}' }, dock: 'bottom', displayInfo: true}
     ]
 });
