@@ -38,15 +38,13 @@ public class QRCodeController {
 
     @RequireAnyAuthority
     @RequestMapping(value = "/qr", method = RequestMethod.GET)
-    public void qrcode(HttpServletResponse response,
-            @AuthenticationPrincipal MongoUserDetails userDetails)
+    public void qrcode(HttpServletResponse response, @AuthenticationPrincipal MongoUserDetails userDetails)
             throws WriterException, IOException {
 
         User user = userDetails.getUser(userRepository);
         if (user != null && StringUtils.hasText(user.getSecret())) {
             response.setContentType("image/png");
-            String contents = "otpauth://totp/" + user.getEmail() + "?secret="
-                    + user.getSecret() + "&issuer=" + this.appName;
+            String contents = "otpauth://totp/" + user.getEmail() + "?secret=" + user.getSecret() + "&issuer=" + this.appName;
 
             QRCodeWriter writer = new QRCodeWriter();
             BitMatrix matrix = writer.encode(contents, BarcodeFormat.QR_CODE, 200, 200);

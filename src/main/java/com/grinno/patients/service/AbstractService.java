@@ -16,12 +16,12 @@
  */
 package com.grinno.patients.service;
 
-import com.grinno.patients.config.security.MongoUserDetails;
 import com.grinno.patients.dao.UserRepository;
 import com.grinno.patients.domain.AbstractPersistable;
 import com.grinno.patients.model.User;
 import java.util.Date;
 import org.springframework.context.MessageSource;
+import org.springframework.security.core.userdetails.UserDetails;
 
 /**
  *
@@ -38,8 +38,8 @@ public abstract class AbstractService {
         this.messageSource = messageSource;
     }
     
-    public void setAttrsForCreate(AbstractPersistable persistable, MongoUserDetails userDetails) {
-        User user = slimDown(userDetails.getUser(userRepository));
+    public void setAttrsForCreate(AbstractPersistable persistable, UserDetails userDetails) {
+        User user = slimDown(userRepository.findByEmailNotDeleted(userDetails.getUsername()));
         
         persistable.setCreatedDate(new Date());
         persistable.setCreatedBy(user);
@@ -49,8 +49,8 @@ public abstract class AbstractService {
         persistable.setActive(true);
     }
 
-    public void setAttrsForUpdate(AbstractPersistable persistable, MongoUserDetails userDetails, AbstractPersistable old) {
-        User user = slimDown(userDetails.getUser(userRepository));
+    public void setAttrsForUpdate(AbstractPersistable persistable, UserDetails userDetails, AbstractPersistable old) {
+        User user = slimDown(userRepository.findByEmailNotDeleted(userDetails.getUsername()));
         
         persistable.setUpdatedDate(new Date());
         persistable.setUpdatedBy(user);
@@ -60,8 +60,8 @@ public abstract class AbstractService {
         persistable.setActive(true);
     }
 
-    public void setAttrsForDelete(AbstractPersistable persistable, MongoUserDetails userDetails, AbstractPersistable old) {
-        User user = slimDown(userDetails.getUser(userRepository));
+    public void setAttrsForDelete(AbstractPersistable persistable, UserDetails userDetails, AbstractPersistable old) {
+        User user = slimDown(userRepository.findByEmailNotDeleted(userDetails.getUsername()));
 
         persistable.setDeletedDate(new Date());
         persistable.setDeletedBy(user);

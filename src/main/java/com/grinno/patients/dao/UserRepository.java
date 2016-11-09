@@ -24,9 +24,11 @@ import org.springframework.data.mongodb.repository.Query;
  *
  * @author jacek
  */
-
 public interface UserRepository extends MongoRepository<User, String> /*, QueryDslPredicateExecutor<User> */ {
 
-    @Query("{ $and : [ { id: ?0 }, { deleted: { $eq: false } } ] }")    
+    @Query("{ $and : [ { id: ?0 }, { deleted: false } ] }")    
     User findOneNotDeleted(String id);
+
+    @Query("{ $and : [ { email: ?0 }, { deleted: false } ] }")    
+    User findByEmailNotDeleted(String email);
 }
