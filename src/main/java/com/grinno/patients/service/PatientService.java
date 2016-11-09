@@ -93,7 +93,14 @@ public class PatientService extends AbstractService {
         ExtDirectStoreResult<Patient> result = new ExtDirectStoreResult<>();
 
         LOGGER.debug("destroy 1");
-        setAttrsForDelete(patient, userDetails, null);
+        Patient old = patientRepository.findOne(patient.getId());
+
+        old.setId(null);
+        old.setActive(false);
+        patientRepository.save(old);
+        LOGGER.debug("destroy 2 " + old.getId());
+
+        setAttrsForDelete(patient, userDetails, old);
         patientRepository.save(patient);
         LOGGER.debug("destroy end");
         return result.setSuccess(true);
@@ -108,9 +115,18 @@ public class PatientService extends AbstractService {
 
         LOGGER.debug("update 1: " + patient.toString());
         if (violations.isEmpty()) {
-            setAttrsForUpdate(patient, userDetails, null);
+            Patient old = patientRepository.findOne(patient.getId());
+            if (old != null) {
+                old.setId(null);
+                old.setActive(false);
+                patientRepository.save(old);
+                setAttrsForUpdate(patient, userDetails, old);
+            }
+            else {
+                setAttrsForCreate(patient, userDetails);
+            }
+
             patientRepository.save(patient);
-            LOGGER.debug("update 2");
         }
 
         LOGGER.debug("update end");

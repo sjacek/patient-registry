@@ -1,4 +1,4 @@
-package com.grinno.patients.model;
+package com.grinno.patients.domain;
 
 import java.util.UUID;
 

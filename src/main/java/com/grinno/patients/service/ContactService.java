@@ -26,7 +26,6 @@ import com.grinno.patients.config.security.RequireEmpolyeeAuthority;
 import com.grinno.patients.dao.ContactRepository;
 import com.grinno.patients.dao.UserRepository;
 import com.grinno.patients.model.Contact;
-import com.grinno.patients.model.UUIDStringGenerator;
 import com.grinno.patients.util.ValidationMessages;
 import com.grinno.patients.util.ValidationMessagesResult;
 import com.grinno.patients.util.ValidationUtil;

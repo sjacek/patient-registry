@@ -52,9 +52,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @JsonInclude(NON_NULL)
 public class Patient extends AbstractPersistable {
 
-//    @Transient
-//    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    
     @NotBlank(message = "{fieldrequired}")
     @Indexed
     private String firstName;
@@ -81,24 +78,6 @@ public class Patient extends AbstractPersistable {
 
     public Patient() {
     }
-
-//    public Patient(JsonObject json) {
-//        LOGGER.debug("Patient: " + json.toString());
-//        super.setId(json.getString("id", null));
-//        this.firstName = json.getString("firstName", "");
-//        this.secondName = json.getString("secondName", null);
-//        this.lastName = json.getString("lastName", "");
-//        this.pesel = json.getString("pesel", "");
-//        LOGGER.debug("Patient: " + json.getString("birthday", ""));
-//        
-//        try {
-//            this.birthday = new SimpleDateFormat().parse(json.getString("birthday", ""));
-////        this.birthday =  (LocalDateTime) DateTimeFormatter.ISO_DATE.parse(json.getString("birthday", ""));
-//        } catch (ParseException ex) {
-//            // TODO:
-//            LOGGER.error("", ex);
-//        }
-//    }
 
     public Patient(String id, String firstName, String secondName, String lastName, String pesel, Date birthday) {
         super.setId(id);
@@ -161,17 +140,5 @@ public class Patient extends AbstractPersistable {
     public String toString() {
         return getId() + "[" + getFirstName() + ", " + getLastName() + ", " + getPesel() + "]";
     }
-
-//    @Override
-//    public void addJson(JsonObjectBuilder builder) {
-//        super.addJson(builder);
-//        builder.add("firstName", checkNull(firstName))
-//                .add("secondName", checkNull(secondName))
-//                .add("lastName", checkNull(lastName))
-//                .add("pesel", checkNull(pesel))
-//                .add("birthday", DATE_FORMAT.format(birthday))
-////                .add("email", checkNull(email))
-//                ;
-//    }
 
 }

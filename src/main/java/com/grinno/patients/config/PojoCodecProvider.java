@@ -6,7 +6,7 @@ import org.bson.codecs.configuration.CodecRegistry;
 
 import com.grinno.patients.model.PersistentLogin;
 import com.grinno.patients.model.PersistentLoginCodec;
-import com.grinno.patients.model.UUIDStringGenerator;
+import com.grinno.patients.domain.UUIDStringGenerator;
 import com.grinno.patients.model.User;
 import com.grinno.patients.model.UserCodec;
 

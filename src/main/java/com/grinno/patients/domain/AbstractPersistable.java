@@ -32,7 +32,6 @@ import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.persistence.Temporal;
 import static javax.persistence.TemporalType.DATE;
-import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -41,7 +40,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
  * @author jacek
  */
 @MappedSuperclass
-public abstract class AbstractPersistable implements JsonItem, Serializable {
+public abstract class AbstractPersistable implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -49,7 +48,6 @@ public abstract class AbstractPersistable implements JsonItem, Serializable {
     private String id;
 
     @Field("_version")
-    @JsonIgnore
     private Integer version;
 
     @Indexed
@@ -208,21 +206,7 @@ public abstract class AbstractPersistable implements JsonItem, Serializable {
 
     @Override
     public int hashCode() {
-        int hashCode = 17;
-        hashCode += null == getId() ? 0 : getId().hashCode() * 31;
-        return hashCode;
-    }
-
-    @Override
-    public JsonObject toJson() {
-        JsonObjectBuilder builder = Json.createObjectBuilder();
-        addJson(builder);
-        return builder.build();
-    }
-
-    @Override
-    public void addJson(JsonObjectBuilder builder) {
-        builder.add("id", checkNull(id));
+        return  17 + (null == getId() ? 0 : getId().hashCode() * 31);
     }
 
     public static final String checkNull(String s) {

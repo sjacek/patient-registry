@@ -1,5 +1,6 @@
 package com.grinno.patients.model;
 
+import com.grinno.patients.domain.UUIDStringGenerator;
 import java.util.Date;
 import java.util.List;
 
