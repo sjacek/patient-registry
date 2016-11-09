@@ -81,7 +81,7 @@ public class PatientService extends AbstractService {
         List<Patient> list = (filter != null)
                 ? patientRepository.findAllWithFilterNotDeleted(filter.getValue())
 //            patientRepository.findAllWithFilter(filter.getValue(), request.getStart(), request.getLimit())
-                : patientRepository.findAllNotDeleted();
+                : patientRepository.findAllActive();
 
         LOGGER.debug("read size:[" + list.size() + "]");
 
@@ -93,7 +93,7 @@ public class PatientService extends AbstractService {
         ExtDirectStoreResult<Patient> result = new ExtDirectStoreResult<>();
 
         LOGGER.debug("destroy 1");
-        setAttrsForDelete(patient, userDetails);
+        setAttrsForDelete(patient, userDetails, null);
         patientRepository.save(patient);
         LOGGER.debug("destroy end");
         return result.setSuccess(true);
@@ -108,7 +108,7 @@ public class PatientService extends AbstractService {
 
         LOGGER.debug("update 1: " + patient.toString());
         if (violations.isEmpty()) {
-            setAttrsForUpdate(patient, userDetails);
+            setAttrsForUpdate(patient, userDetails, null);
             patientRepository.save(patient);
             LOGGER.debug("update 2");
         }

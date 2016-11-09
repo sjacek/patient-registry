@@ -27,6 +27,6 @@ import org.springframework.data.mongodb.repository.Query;
  */
 public interface ContactRepository extends MongoRepository<Contact, String> /*, QueryDslPredicateExecutor<Contact>*/ {
     
-    @Query("{deleted:false}")
-    List<Contact> findAllNotDeleted();
+    @Query("{active:true}")
+    List<Contact> findAllActive();
 }

@@ -42,27 +42,22 @@ Ext.define('Patients.view.contact.Controller', {
 //        logService.debug("onEdit 2");
 //        var grid = this.lookup('gridPanel');
 //        logService.debug("onEdit 3");
-        logService.debug("onEdit 1");
-        var model = this.getStore(this.getObjectStoreName()).getModel();
-        logService.debug("onEdit 2");
-        var rec = model.create();
-        logService.debug("onEdit 3");
-        this.getViewModel().set(this.getSelectedObjectName(), rec);
-        logService.debug("onEdit 4");
         var rowedit = this.lookup('gridPanel').findPlugin('rowediting');
-        logService.debug("onEdit 5");
         if (!rowedit.editing) {
-//            logService.debug("onEdit 5 " + this.getObjectStoreName());
-////            var store = this.getStore(this.getObjectStoreName());
-//            var store = grid.getStore();
-//            logService.debug("onEdit 6 " + store);
-
-//            store.add(rec);
-            logService.debug("onEdit 7");
+            var store = this.getStore(this.getObjectStoreName());
+            logService.debug("onEdit 1");
+            var model = store.getModel();
+            logService.debug("onEdit 2 " + store.getTotalCount());
+            var rec = model.create();
+            this.getViewModel().set(this.getSelectedObjectName(), rec);
+            logService.debug("onEdit 3 " + store.getTotalCount());
+//            this.getStore(this.getObjectStoreName()).reload();
+            store.add(rec);
+            logService.debug("onEdit 4 " + store.getTotalCount());
             rowedit.startEdit(rec);
-            logService.debug("onEdit 8");
+            logService.debug("onEdit 5");
         }
-        logService.debug("onEdit 9");
+        logService.debug("onEdit 6");
 //        this.newObject();
     }
 });

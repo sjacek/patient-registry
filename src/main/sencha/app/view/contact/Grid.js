@@ -34,8 +34,7 @@ Ext.define('Patients.view.contact.Grid', {
         selection: '{selectedObject}'
     },
     listeners: {
-//        itemdblclick: 'onItemdblclick',
-        edit: 'save',
+        canceledit:'back',
         afterRender: 'onBaseAfterRender'
     },
     cls: 'shadow',
@@ -45,14 +44,6 @@ Ext.define('Patients.view.contact.Grid', {
     },
     viewConfig: {
         preserveScrollOnRefresh: true
-//        getRowClass: function(record, index) {
-//            var c = record.get('change');
-//            if (c < 0) {
-//                return 'price-fall';
-//            } else if (c > 0) {
-//                return 'price-rise';
-//            }
-//        }
     },
     selModel: 'rowmodel',
     columns: [{

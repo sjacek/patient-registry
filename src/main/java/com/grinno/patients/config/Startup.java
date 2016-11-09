@@ -82,28 +82,40 @@ class Startup {
                 contact.setMethod("telefon domowy");
                 contact.setDescription("Telefon domowy");
                 contact.setVersion(1);
-                contactRepository.insert(contact);
+                contact.setActive(true);
+                contact = contactRepository.insert(contact);
+                contact.setChainId(contact.getId());
+                contactRepository.save(contact);
             }
             {
                 Contact contact = new Contact();
                 contact.setMethod("telefon komórkowy");
                 contact.setDescription("Telefon komórkowy");
                 contact.setVersion(1);
-                contactRepository.insert(contact);
+                contact.setActive(true);
+                contact = contactRepository.insert(contact);
+                contact.setChainId(contact.getId());
+                contactRepository.save(contact);
             }
             {
                 Contact contact = new Contact();
                 contact.setMethod("telefon służbowy");
                 contact.setDescription("Telefon służbowy");
                 contact.setVersion(1);
-                contactRepository.insert(contact);
+                contact.setActive(true);
+                contact = contactRepository.insert(contact);
+                contact.setChainId(contact.getId());
+                contactRepository.save(contact);
             }
             {
                 Contact contact = new Contact();
                 contact.setMethod("e-mail");
                 contact.setDescription("Poczta elektroniczna");
                 contact.setVersion(1);
-                contactRepository.insert(contact);
+                contact.setActive(true);
+                contact = contactRepository.insert(contact);
+                contact.setChainId(contact.getId());
+                contactRepository.save(contact);
             }
         }
     }

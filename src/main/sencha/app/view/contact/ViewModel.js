@@ -25,22 +25,22 @@ Ext.define('Patients.view.contact.ViewModel', {
         totalCount: null
     },
     stores: {
-        objects: {
-            model: 'Patients.model.Contact',
-            autoLoad: false,
-//            autoSync: true,
-            buffered: true,
-            remoteSort: true,
-            remoteFilter: true,
-            sorters: [{
-                    property: 'method',
-                    direction: 'ASC'
-                }],
-            listeners: {
-                load: 'onObjectStoreLoad'
-            },
-            pageSize: 100,
-            leadingBufferZone: 200
-        }
+        objects: { type: 'contact' }
+//            model: 'Patients.model.Contact',
+//            autoLoad: false,
+////            autoSync: true,
+//            buffered: true,
+//            remoteSort: true,
+//            remoteFilter: true,
+//            sorters: [{
+//                    property: 'method',
+//                    direction: 'ASC'
+//                }],
+//            listeners: {
+//                load: 'onObjectStoreLoad'
+//            },
+//            pageSize: 100,
+//            leadingBufferZone: 200
+//        }
     }
 });

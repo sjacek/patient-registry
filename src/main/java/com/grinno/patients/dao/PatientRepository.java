@@ -35,9 +35,11 @@ public interface PatientRepository extends
 
 //    Patient findByPesel(String pesel);
 
-    @Query("{deleted:false}")
-    List<Patient> findAllNotDeleted();
+    @Query("{active:true}")
+    List<Patient> findAllActive();
 
-    @Query("{$and: [{ $or:[ {lastName: {$regex:?0,$options:'i'}}, {firstName: {$regex:?0,$options:'i'}}, {pesel: {$regex:?0,$options:'i'}} ]}, {deleted:false} ]}")
+    @Query("{$and: [{ $or:["
+            + " {lastName: {$regex:?0,$options:'i'}}, {firstName: {$regex:?0,$options:'i'}}, {pesel: {$regex:?0,$options:'i'}} ]},"
+            + " {active:true} ]}")
     List<Patient> findAllWithFilterNotDeleted(String filter);
 }

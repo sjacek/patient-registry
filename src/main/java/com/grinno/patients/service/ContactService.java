@@ -26,6 +26,7 @@ import com.grinno.patients.config.security.RequireEmpolyeeAuthority;
 import com.grinno.patients.dao.ContactRepository;
 import com.grinno.patients.dao.UserRepository;
 import com.grinno.patients.model.Contact;
+import com.grinno.patients.model.UUIDStringGenerator;
 import com.grinno.patients.util.ValidationMessages;
 import com.grinno.patients.util.ValidationMessagesResult;
 import com.grinno.patients.util.ValidationUtil;
@@ -64,7 +65,7 @@ public class ContactService extends AbstractService {
     
     @ExtDirectMethod(STORE_READ)
     public ExtDirectStoreResult<Contact> read(ExtDirectStoreReadRequest request) {
-        List<Contact> list = contactRepository.findAllNotDeleted();
+        List<Contact> list = contactRepository.findAllActive();
         LOGGER.debug("read size:[" + list.size() + "]");
         return new ExtDirectStoreResult<>(list);
     }
@@ -74,7 +75,14 @@ public class ContactService extends AbstractService {
         ExtDirectStoreResult<Contact> result = new ExtDirectStoreResult<>();
 
         LOGGER.debug("destroy 1");
-        setAttrsForDelete(contact, userDetails);
+        Contact old = contactRepository.findOne(contact.getId());
+
+        old.setId(null);
+        old.setActive(false);
+        contactRepository.save(old);
+        LOGGER.debug("destroy 2 " + old.getId());
+
+        setAttrsForDelete(contact, userDetails, old);
         contactRepository.save(contact);
         LOGGER.debug("destroy end");
         return result.setSuccess(true);
@@ -89,9 +97,20 @@ public class ContactService extends AbstractService {
 
         LOGGER.debug("update 1: " + contact.toString());
         if (violations.isEmpty()) {
-            setAttrsForUpdate(contact, userDetails);
+            Contact old = contactRepository.findOne(contact.getId());
+            if (old != null) {
+                old.setId(null);
+                old.setActive(false);
+                contactRepository.save(old);
+                LOGGER.debug("update 2 " + old.getId());
+                setAttrsForUpdate(contact, userDetails, old);
+            }
+            else {
+                setAttrsForCreate(contact, userDetails);
+            }
+
             contactRepository.save(contact);
-            LOGGER.debug("update 2");
+            LOGGER.debug("update 3");
         }
 
         LOGGER.debug("update end");

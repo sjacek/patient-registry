@@ -38,25 +38,37 @@ public abstract class AbstractService {
         this.messageSource = messageSource;
     }
     
-    public void setAttrsForUpdate(AbstractPersistable persistable, MongoUserDetails userDetails) {
+    public void setAttrsForCreate(AbstractPersistable persistable, MongoUserDetails userDetails) {
         User user = slimDown(userDetails.getUser(userRepository));
         
-        if (persistable.getCreatedDate() == null) {
-            persistable.setCreatedDate(new Date());
-        }
-        if (persistable.getCreatedBy() == null) {
-            persistable.setCreatedBy(user);
-        }
-        persistable.incrementVersion();
-        persistable.setDeleted(false);
+        persistable.setCreatedDate(new Date());
+        persistable.setCreatedBy(user);
+
+        persistable.setChainId(persistable.getId());
+        persistable.setVersion(1);
+        persistable.setActive(true);
     }
 
-    public void setAttrsForDelete(AbstractPersistable persistable, MongoUserDetails userDetails) {
+    public void setAttrsForUpdate(AbstractPersistable persistable, MongoUserDetails userDetails, AbstractPersistable old) {
+        User user = slimDown(userDetails.getUser(userRepository));
+        
+        persistable.setUpdatedDate(new Date());
+        persistable.setUpdatedBy(user);
+        persistable.setPrevId(old.getId());
+        persistable.setChainId(old.getChainId());
+        persistable.setVersion(old.getVersion() + 1);
+        persistable.setActive(true);
+    }
+
+    public void setAttrsForDelete(AbstractPersistable persistable, MongoUserDetails userDetails, AbstractPersistable old) {
         User user = slimDown(userDetails.getUser(userRepository));
 
-        persistable.setDeleted(true);
         persistable.setDeletedDate(new Date());
         persistable.setDeletedBy(user);
+        persistable.setPrevId(old.getId());
+        persistable.setChainId(old.getChainId());
+        persistable.setVersion(old.getVersion() + 1);
+        persistable.setActive(false);
     }
 
     private User slimDown(User user) {

@@ -18,21 +18,21 @@ import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 
-import com.grinno.patients.config.MongoDb;
 import com.grinno.patients.config.security.MongoUserDetails;
 import com.grinno.patients.config.security.RequireAnyAuthority;
+import com.grinno.patients.dao.UserRepository;
 import com.grinno.patients.model.User;
 
 @Controller
 public class QRCodeController {
 
-    private final MongoDb mongoDb;
-
+    private final UserRepository userRepository;
+    
     private final String appName;
 
     @Autowired
-    QRCodeController(MongoDb mongoDb, @Value("${info.app.name}") String appName) {
-        this.mongoDb = mongoDb;
+    QRCodeController(UserRepository userRepository, @Value("${info.app.name}") String appName) {
+        this.userRepository = userRepository;
         this.appName = appName;
     }
 
@@ -42,7 +42,7 @@ public class QRCodeController {
             @AuthenticationPrincipal MongoUserDetails userDetails)
             throws WriterException, IOException {
 
-        User user = userDetails.getUser(this.mongoDb);
+        User user = userDetails.getUser(userRepository);
         if (user != null && StringUtils.hasText(user.getSecret())) {
             response.setContentType("image/png");
             String contents = "otpauth://totp/" + user.getEmail() + "?secret="

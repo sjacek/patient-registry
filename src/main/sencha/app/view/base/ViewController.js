@@ -80,7 +80,7 @@ Ext.define('Patients.view.base.ViewController', {
         }
         else {
             var rowedit = this.lookup('gridPanel').findPlugin('rowediting');
-            logService.debug("edit: " + this.getSelectedObject());
+            logService.debug("edit: " + this.getSelectedObject().getName());
 //            var store = this.getStore(this.getObjectStoreName());
 //            logService.debug(store);
 //            if (!rowedit.editing) {
@@ -95,8 +95,11 @@ Ext.define('Patients.view.base.ViewController', {
             selectedObject.reject();
         }
 
-        this.getView().getLayout().prev();
-        this.getView().getLayout().getNext().destroy();
+        var editPanel = this.lookup('editPanel');
+        if (editPanel !== null) {
+            this.getView().getLayout().prev();
+            this.getView().getLayout().getNext().destroy();
+        }
     },
     save: function (callback) {
         var form = null;

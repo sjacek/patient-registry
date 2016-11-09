@@ -32,6 +32,7 @@ import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.persistence.Temporal;
 import static javax.persistence.TemporalType.DATE;
+import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -47,10 +48,14 @@ public abstract class AbstractPersistable implements JsonItem, Serializable {
     @ModelField(useNull = true, convert = "null")
     private String id;
 
-    @Indexed
     @Field("_version")
     @JsonIgnore
     private Integer version;
+
+    @Indexed
+    @Field("_active")
+    @JsonIgnore
+    private boolean active;
     
     @Field("_created_by")
     @JsonIgnore
@@ -61,11 +66,24 @@ public abstract class AbstractPersistable implements JsonItem, Serializable {
     @Temporal(DATE)
     private Date createdDate;
     
-    @Indexed
-    @Field("_deleted")
+    @Field("_updated_by")
     @JsonIgnore
-    private boolean deleted;
+    private User updatedBy;
     
+    @Field("_updated_date")
+    @JsonIgnore
+    @Temporal(DATE)
+    private Date updatedDate;
+    
+    @Field("_prev_id")
+    @JsonIgnore
+    private String prevId;
+    
+    @Indexed
+    @Field("_chain_id")
+    @JsonIgnore
+    private String chainId;
+
     @Field("_deleted_by")
     @JsonIgnore
     private User deletedBy;
@@ -87,13 +105,24 @@ public abstract class AbstractPersistable implements JsonItem, Serializable {
         return version;
     }
 
+    public String getChainId() {
+        return chainId;
+    }
+    
+    public void setChainId(String chainId) {
+        this.chainId = chainId;
+    }
+    
+    public String getPrevId() {
+        return prevId;
+    }
+    
+    public void setPrevId(String prevId) {
+        this.prevId = prevId;
+    }
+    
     public void setVersion(Integer version) {
         this.version = version;
-    }
-
-    public Integer incrementVersion() {
-        if (version == null) version = 0;
-        return ++version;
     }
 
     public User getCreatedBy() {
@@ -112,12 +141,28 @@ public abstract class AbstractPersistable implements JsonItem, Serializable {
         this.createdDate = date;
     }
     
-    public boolean isDeleted() {
-        return this.deleted;
+    public User getUpdatedBy() {
+        return updatedBy;
+    }
+    
+    public void setUpdatedBy(User user) {
+        this.updatedBy = user;
+    }
+    
+    public Date getUpdatedDate() {
+        return updatedDate;
+    }
+    
+    public void setUpdatedDate(Date date) {
+        this.updatedDate = date;
+    }
+    
+    public boolean isActive() {
+        return this.active;
     }
 
-    public void setDeleted(boolean deleted) {
-        this.deleted = deleted;
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     public User getDeletedBy() {
