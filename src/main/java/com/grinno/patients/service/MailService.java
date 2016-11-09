@@ -46,7 +46,7 @@ public class MailService {
 
     private final Mustache.Compiler mustacheCompiler;
 
-    public static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     @Autowired
     public MailService(JavaMailSender mailSender, MessageSource messageSource,

@@ -23,15 +23,11 @@ import static com.fasterxml.jackson.annotation.JsonFormat.Shape.STRING;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 import com.grinno.patients.domain.AbstractPersistable;
-import java.lang.invoke.MethodHandles;
 import java.util.Date;
 import javax.persistence.Temporal;
 import static javax.persistence.TemporalType.DATE;
-import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.NotBlank;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.index.CompoundIndexes;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -56,8 +52,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @JsonInclude(NON_NULL)
 public class Patient extends AbstractPersistable {
 
-    @Transient
-    public static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+//    @Transient
+//    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     
     @NotBlank(message = "{fieldrequired}")
     @Indexed

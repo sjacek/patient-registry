@@ -28,6 +28,7 @@ Ext.define('Patients.view.contact.ViewModel', {
         objects: {
             model: 'Patients.model.Contact',
             autoLoad: false,
+//            autoSync: true,
             buffered: true,
             remoteSort: true,
             remoteFilter: true,

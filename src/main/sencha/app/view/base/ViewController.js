@@ -67,15 +67,27 @@ Ext.define('Patients.view.base.ViewController', {
         this.edit();
     },
     edit: function () {
-        this.getView().add({
-            xclass: this.getFormClassName()
-        });
+        var formClassName = this.getFormClassName();
+        if (formClassName !== null) {
+            logService.debug(formClassName);
+            this.getView().add({ xclass: formClassName });
 
-        var formPanel = this.getView().getLayout().next();
+            var formPanel = this.getView().getLayout().next();
 
-        Ext.defer(function () {
-            formPanel.isValid();
-        }, 1);
+            Ext.defer(function () {
+                formPanel.isValid();
+            }, 1);
+        }
+        else {
+            var rowedit = this.lookup('gridPanel').findPlugin('rowediting');
+            logService.debug("edit: " + this.getSelectedObject());
+//            var store = this.getStore(this.getObjectStoreName());
+//            logService.debug(store);
+//            if (!rowedit.editing) {
+//                store.add(this.getSelectedObject());
+                rowedit.startEdit(this.getSelectedObject());
+//            }
+        }
     },
     back: function () {
         var selectedObject = this.getSelectedObject();
@@ -87,8 +99,14 @@ Ext.define('Patients.view.base.ViewController', {
         this.getView().getLayout().getNext().destroy();
     },
     save: function (callback) {
-        var form = this.lookup('editPanel').getForm();
-        if (form.isValid()) {
+        var form = null;
+        var editPanel = this.lookup('editPanel');
+        if (editPanel !== null) {
+            var form = editPanel.getForm();
+        }
+        var grid = this.lookup('gridPanel');
+
+        if (form !== null || grid !== null) {
             this.getView().mask(i18n.saving);
 
             var selectedObject = this.getSelectedObject();
@@ -99,7 +117,9 @@ Ext.define('Patients.view.base.ViewController', {
                 success: function (record, operation) {
                     this.afterSuccessfulSave();
                     Patients.Util.successToast(i18n.savesuccessful);
-                    this.back();
+                    if (form !== null) {
+                        this.back();
+                    }
                     if (Ext.isFunction(callback)) {
                         callback.call(this);
                     }
@@ -107,7 +127,9 @@ Ext.define('Patients.view.base.ViewController', {
                 failure: function (record, operation) {
                     Patients.Util.errorToast(i18n.inputcontainserrors);
                     var validations = operation.getResponse().result.validations;
-                    Patients.Util.markInvalidFields(form, validations);
+                    if (form !== null) {
+                        Patients.Util.markInvalidFields(form, validations);
+                    }
                 },
                 callback: function (record, operation, success) {
                     this.getView().unmask();
@@ -145,7 +167,10 @@ Ext.define('Patients.view.base.ViewController', {
                         }
                     },
                     callback: function (records, operation, success) {
-                        this.back();
+                        var editPanel = this.lookup('editPanel');
+                        if (editPanel !== null) {
+                            this.back();
+                        }
                     },
                     scope: this
                 });

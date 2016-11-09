@@ -31,7 +31,7 @@ public class UserAuthErrorHandler implements ApplicationListener<AuthenticationF
 
     private final Integer loginLockMinutes;
 
-    public static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     @Autowired
     public UserAuthErrorHandler(MongoDb mongoDb, AppProperties appProperties) {

@@ -84,6 +84,14 @@ Ext.define('Patients.Util', {
                 field.markInvalid(validation.messages);
             }
         });
+    },
+    markInvalidCells: function (grid, validations) {
+        validations.forEach(function (validation) {
+//            var field = form.findField(validation.field);
+//            if (field) {
+//                field.markInvalid(validation.messages);
+//            }
+        });
     }
 
 });

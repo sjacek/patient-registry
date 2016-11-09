@@ -51,6 +51,11 @@ Ext.define('Patients.view.user.Grid', {
             flex: 1,
             stateId: 'view.user.Grid.email'
         }, {
+//            text: i18n.user_fullname,
+//            dataIndex: '{fullName}',
+//            flex: 1,
+//            stateId: 'view.user.Grid.fullName'
+//        }, {
             text: i18n.user_lastname,
             dataIndex: 'lastName',
             flex: 1,

@@ -77,7 +77,7 @@ public class CustomPersistentRememberMeServices extends AbstractRememberMeServic
 
     private final int tokenValidInSeconds;
 
-    public static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     @Autowired
     public CustomPersistentRememberMeServices(MongoDb mongoDb, UserDetailsService userDetailsService, AppProperties appProperties) {

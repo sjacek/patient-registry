@@ -19,7 +19,8 @@
 Ext.define('Patients.view.contact.Grid', {
     extend: 'Ext.grid.Panel',
     xtype: 'contactlist',
-    requires: ['Patients.plugin.Clearable'],
+    reference: 'gridPanel',
+    requires: ['Patients.plugin.Clearable', 'Ext.grid.plugin.RowEditing' ],
     stateful: true,
     stateId: 'view.contact.Grid',
     height: 100,
@@ -33,13 +34,27 @@ Ext.define('Patients.view.contact.Grid', {
         selection: '{selectedObject}'
     },
     listeners: {
-        itemdblclick: 'onItemdblclick',
+//        itemdblclick: 'onItemdblclick',
+        edit: 'save',
         afterRender: 'onBaseAfterRender'
     },
     cls: 'shadow',
+    plugins: {
+        ptype: 'rowediting',
+        clicksToEdit: 2
+    },
     viewConfig: {
         preserveScrollOnRefresh: true
+//        getRowClass: function(record, index) {
+//            var c = record.get('change');
+//            if (c < 0) {
+//                return 'price-fall';
+//            } else if (c > 0) {
+//                return 'price-rise';
+//            }
+//        }
     },
+    selModel: 'rowmodel',
     columns: [{
             text: i18n.id,
             dataIndex: 'id',
@@ -49,11 +64,23 @@ Ext.define('Patients.view.contact.Grid', {
         }, {
             text: i18n.contact_method,
             dataIndex: 'method',
+            editor: {
+                completeOnEnter: false,
+
+                // If the editor config contains a field property, then
+                // the editor config is used to create the <a href='Ext.grid.CellEditor.html'>Ext.grid.CellEditor</a>
+                // and the field property is used to create the editing input field.
+                field: {
+                    xtype: 'textfield',
+                    allowBlank: false
+                }
+            },
             flex: 1,
             stateId: 'view.contact.Grid.method'
         }, {
             text: i18n.contact_description,
             dataIndex: 'description',
+            editor: 'textareafield',
             flex: 1,
             stateId: 'view.contact.Grid.description'
         }],
@@ -62,17 +89,7 @@ Ext.define('Patients.view.contact.Grid', {
             tooltip: i18n.contact_create_tooltip,
             iconCls: 'x-fa fa-plus',
             ui: 'soft-green',
-            handler: 'newObject'
-        }, {
-            text: 'Edit',
-            reference: 'editContactButton',
-            tooltip: i18n.contact_edit_tooltip,
-            iconCls: 'x-fa fa-edit',
-            handler: 'onEdit',
-            ui: 'soft-green',
-            bind: {
-                disabled: '{!selectedObject}'
-            }
+            handler: 'onEdit'
         }, {
             text: i18n.destroy,
             reference: 'removeContactButton',

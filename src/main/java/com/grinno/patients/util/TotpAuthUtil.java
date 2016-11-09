@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
 
 public class TotpAuthUtil {
 
-    public static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     public static boolean verifyCode(String secret, int code, int variance) {
         long timeIndex = System.currentTimeMillis() / 1000 / 30;

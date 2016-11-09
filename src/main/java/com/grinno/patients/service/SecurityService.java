@@ -64,7 +64,7 @@ public class SecurityService {
 
     private final ApplicationEventPublisher applicationEventPublisher;
 
-    public static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     @Autowired
     public SecurityService(MongoDb mongoDb, PasswordEncoder passwordEncoder, MailService mailService, ApplicationEventPublisher applicationEventPublisher) {

@@ -25,9 +25,8 @@ Ext.define('Patients.view.patient.Controller', {
     },
     erase: function () {
         this.eraseObject(this.getSelectedObject().get('firstName') + " " + this.getSelectedObject().get('lastName'), function() {
-            this.getView().deselectAll();
-            this.onGridRefresh();
             Patients.Util.successToast(i18n.destroysuccessful);
+            this.onGridRefresh();
         }, null, this);
 //        this.onGridRefresh();
     },

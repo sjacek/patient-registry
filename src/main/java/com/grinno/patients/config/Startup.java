@@ -81,24 +81,28 @@ class Startup {
                 Contact contact = new Contact();
                 contact.setMethod("telefon domowy");
                 contact.setDescription("Telefon domowy");
+                contact.setVersion(1);
                 contactRepository.insert(contact);
             }
             {
                 Contact contact = new Contact();
                 contact.setMethod("telefon komórkowy");
                 contact.setDescription("Telefon komórkowy");
+                contact.setVersion(1);
                 contactRepository.insert(contact);
             }
             {
                 Contact contact = new Contact();
                 contact.setMethod("telefon służbowy");
                 contact.setDescription("Telefon służbowy");
+                contact.setVersion(1);
                 contactRepository.insert(contact);
             }
             {
                 Contact contact = new Contact();
                 contact.setMethod("e-mail");
                 contact.setDescription("Poczta elektroniczna");
+                contact.setVersion(1);
                 contactRepository.insert(contact);
             }
         }

@@ -50,7 +50,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 @RequireUserAuthority
 public class PatientService extends AbstractService {
 
-    public static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final PatientRepository patientRepository;
 

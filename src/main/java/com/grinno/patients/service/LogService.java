@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
 @Service
 public class LogService {
 
-    public static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final static String LINE_SEPARATOR = System.getProperty("line.separator");
 

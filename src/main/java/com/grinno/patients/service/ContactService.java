@@ -26,13 +26,15 @@ import com.grinno.patients.config.security.RequireEmpolyeeAuthority;
 import com.grinno.patients.dao.ContactRepository;
 import com.grinno.patients.dao.UserRepository;
 import com.grinno.patients.model.Contact;
-import static com.grinno.patients.service.PatientService.LOGGER;
 import com.grinno.patients.util.ValidationMessages;
 import com.grinno.patients.util.ValidationMessagesResult;
 import com.grinno.patients.util.ValidationUtil;
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Locale;
 import javax.validation.Validator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
@@ -45,7 +47,10 @@ import org.springframework.stereotype.Service;
 @RequireEmpolyeeAuthority
 public class ContactService extends AbstractService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
     private final ContactRepository contactRepository;
+
     private final Validator validator;
 
     private final MessageSource messageSource;
