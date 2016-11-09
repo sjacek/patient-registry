@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-/* global Ext, i18n, securityService, userService */
+/* global Ext, i18n */
 
 Ext.define('Patients.view.patient.Controller', {
     extend: 'Patients.view.base.ViewController',
@@ -28,7 +28,6 @@ Ext.define('Patients.view.patient.Controller', {
             Patients.Util.successToast(i18n.destroysuccessful);
             this.onGridRefresh();
         }, null, this);
-//        this.onGridRefresh();
     },
     onCancelClick: function() {
         this.getView().destroy();        

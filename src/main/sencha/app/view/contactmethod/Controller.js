@@ -16,7 +16,7 @@
  */
 /* global Ext, i18n */
 
-Ext.define('Patients.view.contact.Controller', {
+Ext.define('Patients.view.contactmethod.Controller', {
     extend: 'Patients.view.base.ViewController',
     config: {
         objectName: i18n.contact,
@@ -33,31 +33,13 @@ Ext.define('Patients.view.contact.Controller', {
         this.getView().destroy();
     },
     onEdit: function () {
-//        this.newObject();
-//        logService.debug("onEdit 1");
-////        var rec = new Patients.model.Contact({
-////            method: '',
-////            description: ''
-////        });
-//        logService.debug("onEdit 2");
-//        var grid = this.lookup('gridPanel');
-//        logService.debug("onEdit 3");
         var rowedit = this.lookup('gridPanel').findPlugin('rowediting');
         if (!rowedit.editing) {
-            var store = this.getStore(this.getObjectStoreName());
-            logService.debug("onEdit 1");
-            var model = store.getModel();
-            logService.debug("onEdit 2 " + store.getTotalCount());
-            var rec = model.create();
-            this.getViewModel().set(this.getSelectedObjectName(), rec);
-            logService.debug("onEdit 3 " + store.getTotalCount());
-//            this.getStore(this.getObjectStoreName()).reload();
-            store.add(rec);
-            logService.debug("onEdit 4 " + store.getTotalCount());
-            rowedit.startEdit(rec);
-            logService.debug("onEdit 5");
+            var store = this.getStore(this.getObjectStoreName()),
+                record = store.getModel().create();
+            this.getViewModel().set(this.getSelectedObjectName(), record);
+            store.add(record);
+            rowedit.startEdit(record);
         }
-        logService.debug("onEdit 6");
-//        this.newObject();
     }
 });

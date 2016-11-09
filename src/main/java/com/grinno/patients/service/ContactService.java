@@ -25,7 +25,7 @@ import com.grinno.patients.config.security.MongoUserDetails;
 import com.grinno.patients.config.security.RequireEmpolyeeAuthority;
 import com.grinno.patients.dao.ContactRepository;
 import com.grinno.patients.dao.UserRepository;
-import com.grinno.patients.model.Contact;
+import com.grinno.patients.model.ContactMethod;
 import com.grinno.patients.util.ValidationMessages;
 import com.grinno.patients.util.ValidationMessagesResult;
 import com.grinno.patients.util.ValidationUtil;
@@ -63,18 +63,18 @@ public class ContactService extends AbstractService {
     }
     
     @ExtDirectMethod(STORE_READ)
-    public ExtDirectStoreResult<Contact> read(ExtDirectStoreReadRequest request) {
-        List<Contact> list = contactRepository.findAllActive();
+    public ExtDirectStoreResult<ContactMethod> read(ExtDirectStoreReadRequest request) {
+        List<ContactMethod> list = contactRepository.findAllActive();
         LOGGER.debug("read size:[" + list.size() + "]");
         return new ExtDirectStoreResult<>(list);
     }
 
     @ExtDirectMethod(STORE_MODIFY)
-    public ExtDirectStoreResult<Contact> destroy(@AuthenticationPrincipal MongoUserDetails userDetails, Contact contact) {
-        ExtDirectStoreResult<Contact> result = new ExtDirectStoreResult<>();
+    public ExtDirectStoreResult<ContactMethod> destroy(@AuthenticationPrincipal MongoUserDetails userDetails, ContactMethod contact) {
+        ExtDirectStoreResult<ContactMethod> result = new ExtDirectStoreResult<>();
 
         LOGGER.debug("destroy 1");
-        Contact old = contactRepository.findOne(contact.getId());
+        ContactMethod old = contactRepository.findOne(contact.getId());
 
         old.setId(null);
         old.setActive(false);
@@ -88,15 +88,15 @@ public class ContactService extends AbstractService {
     }
 
     @ExtDirectMethod(STORE_MODIFY)
-    public ValidationMessagesResult<Contact> update(@AuthenticationPrincipal MongoUserDetails userDetails, Contact contact) {
+    public ValidationMessagesResult<ContactMethod> update(@AuthenticationPrincipal MongoUserDetails userDetails, ContactMethod contact) {
         List<ValidationMessages> violations = validateEntity(contact, userDetails.getLocale());
 
-        ValidationMessagesResult<Contact> result = new ValidationMessagesResult<>(contact);
+        ValidationMessagesResult<ContactMethod> result = new ValidationMessagesResult<>(contact);
         result.setValidations(violations);
 
         LOGGER.debug("update 1: " + contact.toString());
         if (violations.isEmpty()) {
-            Contact old = contactRepository.findOne(contact.getId());
+            ContactMethod old = contactRepository.findOne(contact.getId());
             if (old != null) {
                 old.setId(null);
                 old.setActive(false);
@@ -116,7 +116,7 @@ public class ContactService extends AbstractService {
         return result;
     }
 
-    private List<ValidationMessages> validateEntity(Contact contact, Locale locale) {
+    private List<ValidationMessages> validateEntity(ContactMethod contact, Locale locale) {
         List<ValidationMessages> validations = ValidationUtil.validateEntity(validator, contact);
 
         // TODO:

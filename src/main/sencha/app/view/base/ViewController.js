@@ -69,7 +69,6 @@ Ext.define('Patients.view.base.ViewController', {
     edit: function () {
         var formClassName = this.getFormClassName();
         if (formClassName !== null) {
-            logService.debug(formClassName);
             this.getView().add({ xclass: formClassName });
 
             var formPanel = this.getView().getLayout().next();

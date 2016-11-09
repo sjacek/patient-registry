@@ -28,7 +28,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
  * @author Jacek Sztajnke
  */
 @Document(collection="dictionary")
-@Model(value = "Patients.model.Contact",
+@Model(value = "Patients.model.ContactMethod",
         readMethod = "contactService.read",
         createMethod = "contactService.update",
         updateMethod = "contactService.update",
@@ -37,7 +37,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
         identifier = "uuid"
 )
 @JsonInclude(NON_NULL)
-public class Contact extends Dictionary {
+public class ContactMethod extends Dictionary {
 
     @NotBlank(message = "{fieldrequired}")
     @Indexed

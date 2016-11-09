@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-/* global Ext, ifvisible, securityService, i18n, serverUrl, logService */
+/* global Ext, ifvisible, securityService, i18n, serverUrl */
 
 Ext.define('Patients.view.main.MainController', {
     extend: 'Ext.app.ViewController',

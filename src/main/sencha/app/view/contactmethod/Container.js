@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2015 jsztajnke
+ * Copyright (C) 2016 Jacek Sztajnke
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,23 +14,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 /* global Ext */
 
-Ext.define('Patients.store.Contact', {
-    extend: 'Ext.data.Store',
-    alias: 'store.contact',
-    requires: ['Patients.model.Contact'],
-    model: 'Patients.model.Contact',
-    autoLoad: false,
-    autoSync: true,
-    pageSize: 100,
-    buffered: true,
-    remoteSort: true,
-    remoteFilter: true,
-    sorters: [{
-            property: 'lastName',
-            direction: 'ASC'
-        }],
-    leadingBufferZone: 200
+Ext.define('Patients.view.contactmethod.Container', {
+    extend: 'Ext.container.Container',
+    layout: {
+        type: 'card'
+    },
+    controller: {
+        xclass: 'Patients.view.contactmethod.Controller'
+    },
+    viewModel: {
+        xclass: 'Patients.view.contactmethod.ViewModel'
+    },
+    items: [{
+            xclass: 'Patients.view.contactmethod.Grid'
+        }]
 });

@@ -153,8 +153,7 @@ public class UserService {
         if (dbUser != null && (!user.isEnabled() || user.getAuthorities() == null || !user.getAuthorities().contains(Authority.ADMIN.name()))) {
             if (isLastAdmin(user.getId())) {
 
-                ObjectDiffer objectDiffer = ObjectDifferBuilder.startBuilding()
-                        .filtering().returnNodesWithState(State.UNTOUCHED).and().build();
+                ObjectDiffer objectDiffer = ObjectDifferBuilder.startBuilding().filtering().returnNodesWithState(State.UNTOUCHED).and().build();
                 DiffNode diff = objectDiffer.compare(user, dbUser);
 
                 DiffNode diffNode = diff.getChild(CUser.enabled);

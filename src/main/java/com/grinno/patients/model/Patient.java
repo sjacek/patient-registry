@@ -24,9 +24,11 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 import com.grinno.patients.domain.AbstractPersistable;
 import java.util.Date;
+import java.util.Map;
 import javax.persistence.Temporal;
 import static javax.persistence.TemporalType.DATE;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.index.CompoundIndexes;
@@ -71,11 +73,12 @@ public class Patient extends AbstractPersistable {
     @ModelField(dateFormat = "c")
     @JsonFormat(shape=STRING)
     @Temporal(DATE)
+    @Past
     private Date birthday;
 
-//    @Email(message = "{fieldrequired}")
-//    private String email;
-
+    @ModelField
+    private Map<String,String> contacts;
+    
     public Patient() {
     }
 
@@ -127,14 +130,14 @@ public class Patient extends AbstractPersistable {
     public void setBirthday(Date birthday) {
         this.birthday = birthday;
     }
+
+    public Map<String,String> getContacts() {
+        return contacts;
+    }
     
-//    public String getEmail() {
-//        return email;
-//    }
-//
-//    public void setEmail(String email) {
-//        this.email = email;
-//    }
+    public void setContacts(Map<String,String> contacts) {
+        this.contacts = contacts;
+    }
     
     @Override
     public String toString() {

@@ -51,24 +51,15 @@ Ext.define('Patients.view.user.Grid', {
             flex: 1,
             stateId: 'view.user.Grid.email'
         }, {
-//            text: i18n.user_fullname,
-//            dataIndex: '{fullName}',
-//            flex: 1,
-//            stateId: 'view.user.Grid.fullName'
-//        }, {
-            text: i18n.user_lastname,
-            dataIndex: 'lastName',
+            text: i18n.user_fullname,
+            xtype: 'templatecolumn',
+            tpl: '{lastName} {firstName}',
             flex: 1,
-            stateId: 'view.user.Grid.lastName'
+            stateId: 'view.user.Grid.fullName'
         }, {
-            text: i18n.user_firstname,
-            dataIndex: 'firstName',
-            flex: 1,
-            stateId: 'view.user.Grid.firstName'
-        }, {
+            text: i18n.user_authorities,
             xtype: 'templatecolumn',
             tpl: '<tpl for="authorities"><span class="label label-info">{.}</span>&nbsp;</tpl>',
-            text: i18n.user_authorities,
             flex: 1,
             stateId: 'view.user.Grid.authorities'
         }, {

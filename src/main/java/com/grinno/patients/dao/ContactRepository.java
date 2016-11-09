@@ -16,7 +16,7 @@
  */
 package com.grinno.patients.dao;
 
-import com.grinno.patients.model.Contact;
+import com.grinno.patients.model.ContactMethod;
 import java.util.List;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
@@ -25,8 +25,8 @@ import org.springframework.data.mongodb.repository.Query;
  *
  * @author Jacek Sztajnke
  */
-public interface ContactRepository extends AbstractRepositoryCustom, MongoRepository<Contact, String> /*, QueryDslPredicateExecutor<Contact>*/ {
+public interface ContactRepository extends AbstractRepositoryCustom, MongoRepository<ContactMethod, String> /*, QueryDslPredicateExecutor<Contact>*/ {
     
     @Query("{active:true}")
-    List<Contact> findAllActive();
+    List<ContactMethod> findAllActive();
 }

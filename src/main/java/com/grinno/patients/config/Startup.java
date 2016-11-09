@@ -26,7 +26,7 @@ import org.springframework.stereotype.Component;
 import com.mongodb.client.MongoCollection;
 
 import com.grinno.patients.model.Authority;
-import com.grinno.patients.model.Contact;
+import com.grinno.patients.model.ContactMethod;
 import com.grinno.patients.model.User;
 
 @Component
@@ -78,7 +78,7 @@ class Startup {
 
         if (contactRepository.count() == 0) {
             {
-                Contact contact = new Contact();
+                ContactMethod contact = new ContactMethod();
                 contact.setMethod("telefon domowy");
                 contact.setDescription("Telefon domowy");
                 contact.setVersion(1);
@@ -88,7 +88,7 @@ class Startup {
                 contactRepository.save(contact);
             }
             {
-                Contact contact = new Contact();
+                ContactMethod contact = new ContactMethod();
                 contact.setMethod("telefon komórkowy");
                 contact.setDescription("Telefon komórkowy");
                 contact.setVersion(1);
@@ -98,7 +98,7 @@ class Startup {
                 contactRepository.save(contact);
             }
             {
-                Contact contact = new Contact();
+                ContactMethod contact = new ContactMethod();
                 contact.setMethod("telefon służbowy");
                 contact.setDescription("Telefon służbowy");
                 contact.setVersion(1);
@@ -108,7 +108,7 @@ class Startup {
                 contactRepository.save(contact);
             }
             {
-                Contact contact = new Contact();
+                ContactMethod contact = new ContactMethod();
                 contact.setMethod("e-mail");
                 contact.setDescription("Poczta elektroniczna");
                 contact.setVersion(1);

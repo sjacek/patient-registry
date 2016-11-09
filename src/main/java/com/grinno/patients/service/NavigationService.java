@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2016 Jacek Sztajnke
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.grinno.patients.service;
 
 import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.TREE_LOAD;
@@ -19,6 +35,10 @@ import com.grinno.patients.config.security.MongoUserDetails;
 import com.grinno.patients.dto.NavigationNode;
 import com.grinno.patients.model.Authority;
 
+/**
+ *
+ * @author jacek
+ */
 @Service
 public class NavigationService {
 
@@ -36,7 +56,7 @@ public class NavigationService {
         rootNodes.add(new NavigationNode("patient_patients", "patient.Container", true, null, "x-fa fa-address-book", "patients",
                 Authority.ADMIN, Authority.USER));
 
-        rootNodes.add(new NavigationNode("contact_dictionary", "contact.Container", true, null, "x-fa fa-book", "contacts",
+        rootNodes.add(new NavigationNode("contact_dictionary", "contactmethod.Container", true, null, "x-fa fa-book", "contacts",
                 Authority.ADMIN, Authority.EMPLOYEE));
 
         rootNodes.add(new NavigationNode("Blank", "main.BlankPage", true, null, "x-fa fa-clock-o", "blank",
@@ -47,8 +67,7 @@ public class NavigationService {
     public List<NavigationNode> getNavigation(Locale locale, @AuthenticationPrincipal MongoUserDetails userDetails) {
 
         if (userDetails != null && !userDetails.isPreAuth()) {
-            return this.rootNodes.stream()
-                    .map(n -> NavigationNode.copyOf(n, userDetails.getAuthorities(), locale, this.messageSource))
+            return rootNodes.stream().map(n -> NavigationNode.copyOf(n, userDetails.getAuthorities(), locale, messageSource))
                     .filter(Objects::nonNull).collect(Collectors.toList());
         }
 

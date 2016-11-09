@@ -16,13 +16,13 @@
  */
 /* global Ext, i18n */
 
-Ext.define('Patients.view.contact.Grid', {
+Ext.define('Patients.view.contactmethod.Grid', {
     extend: 'Ext.grid.Panel',
-    xtype: 'contactlist',
+    xtype: 'contactmethodlist',
     reference: 'gridPanel',
     requires: ['Patients.plugin.Clearable', 'Ext.grid.plugin.RowEditing' ],
     stateful: true,
-    stateId: 'view.contact.Grid',
+    stateId: 'view.contactmethod.Grid',
     height: 100,
     beforeLayout: function () {
         this.height = Ext.Element.getViewportHeight() - 60;
@@ -50,7 +50,7 @@ Ext.define('Patients.view.contact.Grid', {
             text: i18n.id,
             dataIndex: 'id',
             flex: 0,
-            stateId: 'view.contact.Grid.id',
+            stateId: 'view.contactmethod.Grid.id',
             hidden: true
         }, {
             text: i18n.contact_method,
@@ -67,13 +67,13 @@ Ext.define('Patients.view.contact.Grid', {
                 }
             },
             flex: 1,
-            stateId: 'view.contact.Grid.method'
+            stateId: 'view.contactmethod.Grid.method'
         }, {
             text: i18n.contact_description,
             dataIndex: 'description',
             editor: 'textareafield',
             flex: 1,
-            stateId: 'view.contact.Grid.description'
+            stateId: 'view.contactmethod.Grid.description'
         }],
     tbar: [{
             text: i18n.create,
