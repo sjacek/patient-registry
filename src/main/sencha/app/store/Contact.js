@@ -14,24 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-/* global Ext, i18n */
+/* global Ext */
 
-Ext.define('Patients.view.patient.Controller', {
-    extend: 'Patients.view.base.ViewController',
-    config: {
-//        formClassName: 'Patients.view.patient.Panel',
-        formClassName: 'Patients.view.patient.Form',
-        objectName: i18n.patient,
-        objectNamePlural: i18n.patients
-    },
-    erase: function () {
-        this.eraseObject(this.getSelectedObject().get('firstName') + " " + this.getSelectedObject().get('lastName'), function() {
-            Patients.Util.successToast(i18n.destroysuccessful);
-            this.onGridRefresh();
-        }, null, this);
-    },
-    onCancelClick: function() {
-        this.getView().destroy();        
-    }
-
+Ext.define('Patients.store.Contact', {
+    extend: 'Ext.data.ArrayStore',
+    alias: 'store.contact',
+//    fields: [
+//        'method', 'contact'
+//    ]
+    data: [
+        { method: 'telefon', contact: '123456' },
+        { method: 'email', contact: 'bla@bla.com' }
+    ]
 });

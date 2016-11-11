@@ -24,11 +24,10 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 import com.grinno.patients.domain.AbstractPersistable;
 import java.util.Date;
-import java.util.Map;
+import java.util.List;
 import javax.persistence.Temporal;
 import static javax.persistence.TemporalType.DATE;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Past;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.index.CompoundIndexes;
@@ -73,11 +72,12 @@ public class Patient extends AbstractPersistable {
     @ModelField(dateFormat = "c")
     @JsonFormat(shape=STRING)
     @Temporal(DATE)
-    @Past
+//    @Past
     private Date birthday;
 
     @ModelField
-    private Map<String,String> contacts;
+    private List<Contact> contacts;
+//    private Map<String,String> contacts;
     
     public Patient() {
     }
@@ -131,11 +131,11 @@ public class Patient extends AbstractPersistable {
         this.birthday = birthday;
     }
 
-    public Map<String,String> getContacts() {
+    public List<Contact> getContacts() {
         return contacts;
     }
     
-    public void setContacts(Map<String,String> contacts) {
+    public void setContacts(List<Contact> contacts) {
         this.contacts = contacts;
     }
     

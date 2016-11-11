@@ -40,11 +40,7 @@ Ext.define('Patients.view.patient.ViewModel', {
             },
             pageSize: 100,
             leadingBufferZone: 200
-        }
-    },
-    formulas: {
-        fullName: function(get) {
-            return get('firstName') + ' ' + get('lastName');
-        }
+        },
+        contacts: { type: 'contact' }
     }
 });

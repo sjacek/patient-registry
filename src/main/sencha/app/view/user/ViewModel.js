@@ -42,9 +42,6 @@ Ext.define('Patients.view.user.ViewModel', {
         }
     },
     formulas: {
-        fullName: function(get) {
-            return get('firstName') + ' ' + get('lastName');
-        },
         isUserDisabled: {
             bind: {
                 bindTo: '{selectedObject}',

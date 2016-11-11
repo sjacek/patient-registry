@@ -66,6 +66,11 @@ Ext.define('Patients.view.patient.Grid', {
 //            format: Ext.Date.patterns.ISO8601Short,
             stateId: 'view.patient.Grid.birthday',
             hidden: true
+        }, {
+            text: i18n.version,
+            dataIndex: 'version',
+            flex: 1,
+            stateId: 'view.patient.Grid.version'
         }],
     tbar: [{
             text: i18n.create,
@@ -110,7 +115,6 @@ Ext.define('Patients.view.patient.Grid', {
             }
         }],
     dockedItems: [
-//        {xtype: 'pagingtoolbar', store: {type: 'patient'}, dock: 'bottom', displayInfo: true}
         {xtype: 'pagingtoolbar', bind: { store: '{objects}' }, dock: 'bottom', displayInfo: true}
     ]
 });

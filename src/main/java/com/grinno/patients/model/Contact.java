@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2016 Jacek Sztajnke
  *
  * This program is free software: you can redistribute it and/or modify
@@ -14,24 +14,39 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-/* global Ext, i18n */
+package com.grinno.patients.model;
 
-Ext.define('Patients.view.patient.Controller', {
-    extend: 'Patients.view.base.ViewController',
-    config: {
-//        formClassName: 'Patients.view.patient.Panel',
-        formClassName: 'Patients.view.patient.Form',
-        objectName: i18n.patient,
-        objectNamePlural: i18n.patients
-    },
-    erase: function () {
-        this.eraseObject(this.getSelectedObject().get('firstName') + " " + this.getSelectedObject().get('lastName'), function() {
-            Patients.Util.successToast(i18n.destroysuccessful);
-            this.onGridRefresh();
-        }, null, this);
-    },
-    onCancelClick: function() {
-        this.getView().destroy();        
+/**
+ *
+ * @author Jacek Sztajnke
+ */
+public class Contact {
+
+    private String method;
+
+    private String contact;
+
+    public Contact() {
     }
 
-});
+    public Contact(String method, String contact) {
+        this.method = method;
+        this.contact = contact;
+    }
+    
+    public void setMethod(String method) {
+        this.method = method;
+    }
+
+    public String getMethod() {
+        return method;
+    }
+
+    public void setContact(String contact) {
+        this.contact = contact;
+    }
+
+    public String getContact() {
+        return contact;
+    }
+}

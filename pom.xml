@@ -35,6 +35,7 @@
         <org.slf4j-version>1.7.21</org.slf4j-version>
         <com.fasterxml.jackson.core-version>2.8.4</com.fasterxml.jackson.core-version>
         <com.querydsl-version>4.1.4</com.querydsl-version>
+        <activiti.version>5.21.0</activiti.version>
     </properties>
 
     <dependencies>
@@ -73,12 +74,12 @@
             <artifactId>jackson-datatype-jsr310</artifactId>
             <version>${com.fasterxml.jackson.core-version}</version>
         </dependency>
-<!--        <dependency>
+        <!--        <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-joda</artifactId>
             <version>${com.fasterxml.jackson.core-version}</version>
         </dependency>-->
-<!--        <dependency>
+        <!--        <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-xml</artifactId>
             <version>${com.fasterxml.jackson.core-version}</version>
@@ -207,6 +208,11 @@
             <artifactId>querydsl-mongodb</artifactId>
             <version>${querydsl.version}</version>
         </dependency>
+<!--        <dependency>
+            <groupId>org.activiti</groupId>
+            <artifactId>activiti-spring-boot-starter-basic</artifactId>
+            <version>${activiti.version}</version>
+        </dependency>-->
 
         <!-- for unit tests -->
         <dependency>
@@ -232,6 +238,20 @@
             <artifactId>de.flapdoodle.embed.mongo</artifactId>
             <scope>test</scope>
         </dependency>
+        <!--        <dependency>
+            <groupId>io.airlift</groupId>
+            <artifactId>testing-postgresql-server</artifactId>
+            <version>0.3</version>
+            <scope>test</scope>
+        </dependency>-->
+        <!-- https://mvnrepository.com/artifact/com.opentable.components/otj-pg-embedded -->
+<!--        <dependency>
+            <groupId>com.opentable.components</groupId>
+            <artifactId>otj-pg-embedded</artifactId>
+            <version>0.7.1</version>
+            <scope>test</scope>
+        </dependency>-->
+
     </dependencies>
 
     <build>

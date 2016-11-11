@@ -97,6 +97,8 @@ var i18n = {
     userconfig_wrongpassword:"Aktualne hasło jest błędne",
   
     id:"Id",
+    version:"Wersja",
+    patient_card:"Karta pacjenta",
     patient:"Pacjent",
     patient_patients:"Pacjenci",
     patient_firstname:"Imię",
@@ -105,6 +107,7 @@ var i18n = {
     patient_fullname:"Imię i nazwisko",
     patient_pesel:"PESEL",
     patient_birthday:"Data urodzenia",
+    patient_contacts:"Lista kontaktów",
     patient_create_tooltip:"Utwórz kartę nowego pacjenta",
     patient_edit_tooltip:"Edycja danych wybranego pacjenta",
     patient_destroy_tooltip:"Usuń wybranego pacjenta",

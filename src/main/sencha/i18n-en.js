@@ -97,7 +97,9 @@ var i18n = {
     userconfig_wrongpassword:"Current password is wrong",
   
     id:"Id",
+    version:"Version",
     patient:"Patient",
+    patient_card:"Patient Card",
     patient_patients:"Patients",
     patient_firstname:"First Name",
     patient_secondname:"Second Name",
@@ -105,6 +107,7 @@ var i18n = {
     patient_fullname:"Fullname",
     patient_pesel:"PESEL",
     patient_birthday:"Birthday",
+    patient_contacts:"Contacts list",
     patient_create_tooltip:"Create new patient card",
     patient_edit_tooltip:"Edit selected patient\'s data",
     patient_destroy_tooltip:"Remove selected patient",

@@ -26,6 +26,7 @@ import com.grinno.patients.config.security.MongoUserDetails;
 import com.grinno.patients.config.security.RequireUserAuthority;
 import com.grinno.patients.dao.PatientRepository;
 import com.grinno.patients.dao.UserRepository;
+import com.grinno.patients.model.Contact;
 import com.grinno.patients.model.Patient;
 import com.grinno.patients.util.ValidationMessages;
 import com.grinno.patients.util.ValidationMessagesResult;
@@ -40,6 +41,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import static com.grinno.patients.util.PeselValidator.peselIsValid;
+import java.util.ArrayList;
+import java.util.HashMap;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 /**
@@ -123,6 +126,10 @@ public class PatientService extends AbstractService {
                 setAttrsForUpdate(patient, userDetails, old);
             }
             else {
+                patient.setContacts(new ArrayList<Contact>() {{
+                    add(new Contact("telefon", "123"));
+                    add(new Contact("email", "bla@bla.com"));
+                }} );
                 setAttrsForCreate(patient, userDetails);
             }
 

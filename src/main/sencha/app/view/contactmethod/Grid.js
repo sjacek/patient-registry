@@ -74,6 +74,11 @@ Ext.define('Patients.view.contactmethod.Grid', {
             editor: 'textareafield',
             flex: 1,
             stateId: 'view.contactmethod.Grid.description'
+        }, {
+            text: i18n.version,
+            dataIndex: 'version',
+            flex: 1,
+            stateId: 'view.contactmethod.Grid.version'
         }],
     tbar: [{
             text: i18n.create,

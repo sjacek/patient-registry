@@ -18,9 +18,7 @@
 
 Ext.define('Patients.view.contactmethod.Container', {
     extend: 'Ext.container.Container',
-    layout: {
-        type: 'card'
-    },
+    layout: 'card',
     controller: {
         xclass: 'Patients.view.contactmethod.Controller'
     },

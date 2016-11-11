@@ -57,12 +57,10 @@ Ext.define('Patients.view.main.Main', {
                     iconCls: 'x-fa fa-cog',
                     href: '#userconfig',
                     hrefTarget: '_self',
-                    tooltip: i18n.userconfig
-                }, {
-                    xtype: 'tbtext',
                     bind: {
                         text: '{fullName}'
-                    }
+                    },
+                    tooltip: i18n.userconfig
                 }, {
                     cls: 'no-bg-button',
                     iconCls: 'x-fa fa-sign-out',
