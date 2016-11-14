@@ -30,7 +30,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ch.ralscha.extdirectspring.util.ExtDirectSpringUtil;
 import com.grinno.patients.model.Authority;
-import java.util.Iterator;
 import static java.util.Locale.ENGLISH;
 import static java.util.Locale.GERMAN;
 import static org.springframework.boot.autoconfigure.security.SecurityProperties.DEFAULT_FILTER_ORDER;
@@ -65,7 +64,7 @@ class DevelopmentConfig {
         Files.write(Paths.get(userDir, senchaDir, "api.js"), extDirectConfig.getBytes(StandardCharsets.UTF_8));
 
         Path clientDir = Paths.get(userDir, senchaDir);
-        writeI18n(clientDir);
+//        writeI18n(clientDir);
         writeEnums(clientDir);
     }
 
@@ -76,14 +75,11 @@ class DevelopmentConfig {
     private static void writeEnum(Path clientDir, String name, Enum<?>[] values,
             boolean writeStore) throws IOException {
         StringBuilder sb = new StringBuilder(200);
-        sb.append("Ext.define('Patients.constant.").append(name).append("', {\n");
-        sb.append("\tsingleton: true,\n");
+        sb.append("Ext.define('Patients.constant.").append(name).append("', {\n").append("\tsingleton: true,\n");
         String valuesString = Arrays.stream(values)
                 .map(e -> String.format("\t%s: '%s'", e.name(), e.name()))
                 .collect(Collectors.joining(",\n"));
-        sb.append(valuesString);
-        sb.append("\n");
-        sb.append("});");
+        sb.append(valuesString).append("\n});");
 
         Path constantDir = clientDir.resolve("app").resolve("constant");
         if (Files.notExists(constantDir)) {
@@ -96,16 +92,14 @@ class DevelopmentConfig {
         if (writeStore) {
             sb = new StringBuilder(200);
 
-            sb.append("Ext.define('Patients.store.").append(name).append("', {\n");
-            sb.append("\textend: 'Ext.data.Store',\n");
-            sb.append("\tstoreId: '").append(StringUtils.uncapitalize(name)).append("',\n");
-            sb.append("\tdata: [\n");
+            sb.append("Ext.define('Patients.store.").append(name).append("', {\n")
+                    .append("\textend: 'Ext.data.Store',\n")
+                    .append("\tstoreId: '").append(StringUtils.uncapitalize(name)).append("',\n")
+                    .append("\tdata: [\n");
 
             valuesString = Arrays.stream(values).map(e -> String.format("\t\t{ value: Patients.constant.%s.%s }", name, e.name()))
                     .collect(Collectors.joining(",\n"));
-            sb.append(valuesString);
-            sb.append("\n\t]\n");
-            sb.append("});");
+            sb.append(valuesString).append("\n\t]\n});");
 
             Files.write(clientDir.resolve("app").resolve("store").resolve(name + ".js"),
                     sb.toString().getBytes(StandardCharsets.UTF_8));
@@ -116,11 +110,8 @@ class DevelopmentConfig {
         List<Locale> locales = Arrays.asList(ENGLISH, GERMAN, new Locale("pl", "PL"));
         for (Locale locale : locales) {
             String tag = locale.toLanguageTag();
-            String output = "var i18n = "
-                    + new ObjectMapper().writeValueAsString(buildMessageMap(locale))
-                    + ";";
-            Files.write(clientDir.resolve("i18n-" + tag + ".js"),
-                    output.getBytes(StandardCharsets.UTF_8));
+            String output = "var i18n = " + new ObjectMapper().writeValueAsString(buildMessageMap(locale)) + ";";
+            Files.write(clientDir.resolve("i18n-" + tag + ".js"), output.getBytes(StandardCharsets.UTF_8));
         }
     }
 

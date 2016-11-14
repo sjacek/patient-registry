@@ -11,8 +11,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 import ch.ralscha.extdirectspring.ExtDirectSpring;
 import ch.ralscha.extdirectspring.controller.ApiController;
-import javax.security.auth.message.config.AuthConfigFactory;
-import org.apache.catalina.authenticator.jaspic.AuthConfigFactoryImpl;
 import static org.springframework.context.annotation.FilterType.ASSIGNABLE_TYPE;
 
 @Configuration
@@ -24,10 +22,11 @@ import static org.springframework.context.annotation.FilterType.ASSIGNABLE_TYPE;
 public class Application {
 
     public static void main(String[] args) {
-        if (AuthConfigFactory.getFactory() == null) {
-            AuthConfigFactory.setFactory(new AuthConfigFactoryImpl());
-        }
         // -Dspring.profiles.active=development
+//        if (AuthConfigFactory.getFactory() == null) {
+//            AuthConfigFactory.setFactory(new AuthConfigFactoryImpl());
+//        }
+
         SpringApplication.run(Application.class, args);
     }
 
