@@ -65,6 +65,7 @@ public class Patient extends AbstractPersistable {
 
     @NotBlank(message = "{fieldrequired}")
     @Indexed
+//    @ModelField(customType="pesel")
     private String pesel;
 
     @NotNull(message = "{fieldrequired}")

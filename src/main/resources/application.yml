@@ -6,7 +6,7 @@ info:
   build.time: "@build.timestamp@"
 
 app:
-  url: http://localhost:8085
+  url: http://localhost:8088
   rememberme-cookie-key: patients
   rememberme-cookie-valid-in-days: 31
   default-email-sender: no-reply@starter.com

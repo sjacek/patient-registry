@@ -28,6 +28,14 @@ Ext.define('Patients.view.user.Controller', {
             Patients.Util.errorToast(i18n.user_lastadmin_error);
         }, this);
     },
+    edit: function () {
+        this.getView().add({xclass: this.getFormClassName()});
+        var formPanel = this.getView().getLayout().next();
+
+        Ext.defer(function () {
+            formPanel.isValid();
+        }, 1);
+    },
     switchTo: function () {
         var selectedObject = this.getSelectedObject();
         if (selectedObject) {

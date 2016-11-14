@@ -16,7 +16,6 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -31,6 +30,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ch.ralscha.extdirectspring.util.ExtDirectSpringUtil;
 import com.grinno.patients.model.Authority;
+import java.util.Iterator;
+import static java.util.Locale.ENGLISH;
+import static java.util.Locale.GERMAN;
+import static org.springframework.boot.autoconfigure.security.SecurityProperties.DEFAULT_FILTER_ORDER;
+import static org.springframework.web.cors.CorsConfiguration.ALL;
 
 @Configuration
 @Profile("development")
@@ -43,13 +47,13 @@ class DevelopmentConfig {
     public FilterRegistrationBean corsFilter() {
         FilterRegistrationBean filter = new FilterRegistrationBean();
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(Collections.singletonList(CorsConfiguration.ALL));
-        config.setAllowedMethods(Collections.singletonList(CorsConfiguration.ALL));
-        config.setAllowedHeaders(Collections.singletonList(CorsConfiguration.ALL));
+        config.setAllowedOrigins(Collections.singletonList(ALL));
+        config.setAllowedMethods(Collections.singletonList(ALL));
+        config.setAllowedHeaders(Collections.singletonList(ALL));
         config.setAllowCredentials(true);
         filter.setFilter(new CorsFilter(r -> config));
         filter.setUrlPatterns(Collections.singleton("/*"));
-        filter.setOrder(SecurityProperties.DEFAULT_FILTER_ORDER - 1);
+        filter.setOrder(DEFAULT_FILTER_ORDER - 1);
         return filter;
     }
 
@@ -57,9 +61,10 @@ class DevelopmentConfig {
     public void handleContextRefresh(ApplicationReadyEvent event) throws IOException {
         String extDirectConfig = ExtDirectSpringUtil.generateApiString(event.getApplicationContext());
         String userDir = System.getProperty("user.dir");
-        Files.write(Paths.get(userDir, "client", "api.js"), extDirectConfig.getBytes(StandardCharsets.UTF_8));
+        String senchaDir = "../src/main/sencha";
+        Files.write(Paths.get(userDir, senchaDir, "api.js"), extDirectConfig.getBytes(StandardCharsets.UTF_8));
 
-        Path clientDir = Paths.get(userDir, "client");
+        Path clientDir = Paths.get(userDir, senchaDir);
         writeI18n(clientDir);
         writeEnums(clientDir);
     }
@@ -108,7 +113,7 @@ class DevelopmentConfig {
     }
 
     private void writeI18n(Path clientDir) throws IOException {
-        List<Locale> locales = Arrays.asList(Locale.ENGLISH, Locale.GERMAN, new Locale("pl", "PL"));
+        List<Locale> locales = Arrays.asList(ENGLISH, GERMAN, new Locale("pl", "PL"));
         for (Locale locale : locales) {
             String tag = locale.toLanguageTag();
             String output = "var i18n = "

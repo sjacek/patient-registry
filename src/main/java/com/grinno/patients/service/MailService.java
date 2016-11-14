@@ -24,7 +24,6 @@ import org.springframework.stereotype.Service;
 import com.samskivert.mustache.Mustache;
 import com.samskivert.mustache.Template;
 
-import com.grinno.patients.Application;
 import com.grinno.patients.config.AppProperties;
 import com.grinno.patients.model.User;
 import java.lang.invoke.MethodHandles;
@@ -49,8 +48,7 @@ public class MailService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     @Autowired
-    public MailService(JavaMailSender mailSender, MessageSource messageSource,
-            AppProperties appProperties, Mustache.Compiler mustacheCompiler,
+    public MailService(JavaMailSender mailSender, MessageSource messageSource, AppProperties appProperties, Mustache.Compiler mustacheCompiler,
             @Value("${info.app.name}") String appName) {
         this.mailSender = mailSender;
         this.defaultSender = appProperties.getDefaultEmailSender();
@@ -72,15 +70,11 @@ public class MailService {
 
     @Async
     public void sendPasswortResetEmail(User receiver) {
-        String link = this.appUrl + "?token=" + Base64.getUrlEncoder()
-                .encodeToString(receiver.getPasswordResetToken().getBytes());
+        String link = appUrl + "?token=" + Base64.getUrlEncoder().encodeToString(receiver.getPasswordResetToken().getBytes());
 
         try {
             Locale userLocale = new Locale(receiver.getLocale());
-            sendHtmlMessage(this.defaultSender, receiver.getEmail(),
-                    this.appName + ": "
-                    + this.messageSource.getMessage("user_pwreset_emailsubject",
-                            null, userLocale),
+            sendHtmlMessage(defaultSender, receiver.getEmail(), appName + ": " + messageSource.getMessage("user_pwreset_emailsubject", null, userLocale),
                     getEmailText(userLocale, receiver.getEmail(), link));
         } catch (MessagingException | IOException e) {
             LOGGER.error("sendPasswortResetEmail", e);

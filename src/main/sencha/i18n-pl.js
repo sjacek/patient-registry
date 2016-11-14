@@ -98,6 +98,7 @@ var i18n = {
   
     id:"Id",
     version:"Wersja",
+    new:"Nowy",
     patient_card:"Karta pacjenta",
     patient:"Pacjent",
     patient_patients:"Pacjenci",
@@ -111,10 +112,21 @@ var i18n = {
     patient_create_tooltip:"Utwórz kartę nowego pacjenta",
     patient_edit_tooltip:"Edycja danych wybranego pacjenta",
     patient_destroy_tooltip:"Usuń wybranego pacjenta",
+    patient_address: "Adres",
+    patient_correspondence_address: "Adres korespondencyjny",
+    address_street:"Ulica",
+    address_house_no:"Nr domu",
+    address_flat_no:"Nr mieszkania",
+    address_zipcode:"Kod pocztowy",
+    address_city:"Miejscowość",
+    address_county:"Powiat",
+    address_voivodship:"Województwo",
+    address_country:"Kraj",
     contact_contact:"Kontakt",
     contact_contacts:"Kontakty",
     contact_dictionary:"Słownik metod kontaktów",
     contact_method:"Metoda kontaktu",
     contact_description:"Opis",
+
     "":""
 };

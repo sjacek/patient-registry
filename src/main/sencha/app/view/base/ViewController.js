@@ -66,32 +66,6 @@ Ext.define('Patients.view.base.ViewController', {
         this.getViewModel().set(this.getSelectedObjectName(), this.getSelectedObject());
         this.edit();
     },
-    edit: function () {
-        var formClassName = this.getFormClassName();
-        if (formClassName !== null) {
-            this.getView().add({ xclass: formClassName });
-
-            var formPanel = this.getView().getLayout().next();
-        logService.debug('edit 4 ' + formPanel);
-
-            Ext.defer(function () {
-            logService.debug('edit 5');
-                formPanel.isValid();
-            logService.debug('edit 6');
-            }, 1);
-            logService.debug('edit 7');
-    }
-        else {
-            var rowedit = this.lookup('gridPanel').findPlugin('rowediting');
-            logService.debug("edit: " + this.getSelectedObject().getName());
-//            var store = this.getStore(this.getObjectStoreName());
-//            logService.debug(store);
-//            if (!rowedit.editing) {
-//                store.add(this.getSelectedObject());
-                rowedit.startEdit(this.getSelectedObject());
-//            }
-        }
-    },
     back: function () {
         var selectedObject = this.getSelectedObject();
         if (selectedObject) {

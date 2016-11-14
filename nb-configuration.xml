@@ -14,5 +14,11 @@ That way multiple projects can share the same settings (useful for formatting ru
 Any value defined here will override the pom.xml file value but is only applicable to the current project.
 -->
         <netbeans.hint.license>gpl30</netbeans.hint.license>
+        <org-netbeans-modules-whitelist.whitelist-oracle>false</org-netbeans-modules-whitelist.whitelist-oracle>
     </properties>
+    <config-data xmlns="http://www.netbeans.org/ns/maven-config-data/1">
+        <configurations>
+            <configuration id="development" profiles="development"/>
+        </configurations>
+    </config-data>
 </project-shared-configuration>

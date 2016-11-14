@@ -26,6 +26,10 @@ Ext.define('Patients.view.user.Form', {
     defaults: {
         anchor: '50%'
     },
+    fieldDefaults: {
+        labelAlign: 'right',
+        align: 'stretch'
+    },
     bodyPadding: 20,
     modelValidation: true,
     items: [{

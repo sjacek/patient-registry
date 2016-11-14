@@ -2,18 +2,58 @@ var REMOTING_API = {
   "url" : "router",
   "type" : "remoting",
   "actions" : {
+    "contactService" : [ {
+      "name" : "destroy",
+      "len" : 1
+    }, {
+      "name" : "read",
+      "len" : 1
+    }, {
+      "name" : "update",
+      "len" : 1
+    } ],
+    "diagnosisService" : [ {
+      "name" : "destroy",
+      "len" : 1
+    }, {
+      "name" : "read",
+      "len" : 1
+    }, {
+      "name" : "update",
+      "len" : 1
+    } ],
     "logService" : [ {
-      "name" : "logClientCrash",
+      "name" : "debug",
       "len" : 1
     }, {
       "name" : "info",
       "len" : 1
     }, {
-      "name" : "debug",
+      "name" : "logClientCrash",
       "len" : 1
-    }],
+    } ],
     "navigationService" : [ {
       "name" : "getNavigation",
+      "len" : 1
+    } ],
+    "patientRestService" : [ {
+      "name" : "destroy",
+      "len" : 1
+    }, {
+      "name" : "read",
+      "len" : 1
+    }, {
+      "name" : "update",
+      "len" : 1
+    } ],
+    "patientService" : [ {
+      "name" : "destroy",
+      "len" : 1
+    }, {
+      "name" : "read",
+      "len" : 1
+    }, {
+      "name" : "update",
       "len" : 1
     } ],
     "securityService" : [ {
@@ -75,26 +115,6 @@ var REMOTING_API = {
       "len" : 1
     }, {
       "name" : "unlock",
-      "len" : 1
-    }, {
-      "name" : "update",
-      "len" : 1
-    } ],
-    "patientService" : [ {
-      "name" : "destroy",
-      "len" : 1
-    }, {
-      "name" : "read",
-      "len" : 1
-    }, {
-      "name" : "update",
-      "len" : 1
-    } ],
-    "contactService" : [ {
-      "name" : "destroy",
-      "len" : 1
-    }, {
-      "name" : "read",
       "len" : 1
     }, {
       "name" : "update",

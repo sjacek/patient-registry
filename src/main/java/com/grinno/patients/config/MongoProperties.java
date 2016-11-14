@@ -5,7 +5,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "mongodb")
 public class MongoProperties {
 
-    private String uri = "mongodb://localhost/patients?w=1&wtimeoutMS=0&journal=true";
+    private String uri;
 
     public String getUri() {
         return this.uri;

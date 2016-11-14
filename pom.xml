@@ -208,7 +208,7 @@
             <artifactId>querydsl-mongodb</artifactId>
             <version>${querydsl.version}</version>
         </dependency>
-<!--        <dependency>
+        <!--        <dependency>
             <groupId>org.activiti</groupId>
             <artifactId>activiti-spring-boot-starter-basic</artifactId>
             <version>${activiti.version}</version>
@@ -245,7 +245,7 @@
             <scope>test</scope>
         </dependency>-->
         <!-- https://mvnrepository.com/artifact/com.opentable.components/otj-pg-embedded -->
-<!--        <dependency>
+        <!--        <dependency>
             <groupId>com.opentable.components</groupId>
             <artifactId>otj-pg-embedded</artifactId>
             <version>0.7.1</version>
@@ -420,6 +420,7 @@
                             <arguments>
                                 <argument>app</argument>
                                 <argument>build</argument>
+                                <!--<argument>- dev</argument>-->
                             </arguments>
                         </configuration>
                     </execution>
@@ -445,6 +446,7 @@
                                 <copy todir="${basedir}/target/classes/static"
                                       includeEmptyDirs="false">
                                     <fileset dir="${client.app.dir}/build/production/Patients">
+                                        <!--<fileset dir="${client.app.dir}/build/development/Patients">-->
                                         <exclude name="**/Readme.md" />
                                         <exclude name="resources/ext/" />
                                         <exclude name="resources/fonts/OpenSans*" />
@@ -456,7 +458,7 @@
                                 <checksum file="${basedir}/target/classes/static/i18n-pl.js" algorithm="SHA-1" property="i18n_pl_sha1" />
 
                                 <replace file="${basedir}/target/classes/static/index.html">
-                                    <replacefilter token="var serverUrl = 'http://localhost:8080/';"
+                                    <replacefilter token="var serverUrl = 'http://localhost:8088/';"
                                                    value="var serverUrl = '';" />
                                     <replacefilter token="var i18nEnUrl = 'i18n-en.js';"
                                                    value="var i18nEnUrl = 'i18n-en.js?_dc=${i18n_en_sha1}';" />
@@ -464,12 +466,10 @@
                                                    value="var i18nDeUrl = 'i18n-de.js?_dc=${i18n_de_sha1}';" />
                                     <replacefilter token="var i18nPlUrl = 'i18n-pl.js';"
                                                    value="var i18nPlUrl = 'i18n-pl.js?_dc=${i18n_pl_sha1}';" />
-
                                 </replace>
 
                                 <replaceregexp file="${basedir}/target/classes/static/index.html"
                                                match="&lt;!--.*--&gt;" replace="" />
-
                             </target>
                         </configuration>
                         <goals>
@@ -516,5 +516,15 @@
             </plugin-->
         </plugins>
     </build>
-
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <configuration>
+                    <configLocation>config/sun_checks.xml</configLocation>
+                </configuration>
+            </plugin>
+        </plugins>
+    </reporting>
 </project>

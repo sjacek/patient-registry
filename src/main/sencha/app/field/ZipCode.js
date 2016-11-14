@@ -1,4 +1,4 @@
-/*
+/* 
  * Copyright (C) 2016 Jacek Sztajnke
  *
  * This program is free software: you can redistribute it and/or modify
@@ -14,42 +14,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.grinno.patients.model;
+ /* global Ext */
 
-import ch.rasc.extclassgenerator.Model;
+Ext.define('App.field.ZipCode', {
+     extend: 'Ext.data.field.Field',
 
-/**
- *
- * @author Jacek Sztajnke
- */
-@Model(value = "Patients.model.Contact")
-public class Contact {
+     alias: 'data.field.zipcode',
 
-    private String method;
-
-    private String contact;
-
-    public Contact() {
-    }
-
-    public Contact(String method, String contact) {
-        this.method = method;
-        this.contact = contact;
-    }
-    
-    public void setMethod(String method) {
-        this.method = method;
-    }
-
-    public String getMethod() {
-        return method;
-    }
-
-    public void setContact(String contact) {
-        this.contact = contact;
-    }
-
-    public String getContact() {
-        return contact;
-    }
-}
+     validators: {
+         type: 'format',
+         matcher: '/\d{2}\-\d{3}/'
+     }
+ });
