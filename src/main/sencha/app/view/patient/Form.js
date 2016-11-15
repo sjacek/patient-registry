@@ -16,8 +16,8 @@
  */
 /* global Ext, i18n */
 
-Ext.define('Patients.view.patient.Panel', {
-    extend: 'Ext.panel.Panel',
+Ext.define('Patients.view.patient.Form', {
+    extend: 'Ext.form.Panel',
     requires: ['Ext.form.field.Date', 'Ext.grid.Panel'],
     reference: 'editPanel',
     header: {
@@ -29,12 +29,14 @@ Ext.define('Patients.view.patient.Panel', {
         items: [{
                 text: i18n.back,
                 handler: 'back',
-                iconCls: 'x-fa fa-arrow-left'
+                iconCls: 'x-fa fa-arrow-left',
+                ui: 'soft-green'
             }, {
                 text: 'Reset',
                 handler: function () {
                     this.up('form').getForm().reset();
-                }
+                },
+                ui: 'soft-red'
             }, {
                 text: Patients.Util.underline(i18n.save, 'S'),
                 accessKey: 's',
@@ -180,6 +182,61 @@ Ext.define('Patients.view.patient.Panel', {
 //                                        queryMode: 'local',
 //                                        bind: '{selectedObject.contacts}'
                         }]
+                }]
+        }, {
+            defaults: {
+                margin: 5,
+                flex: 1
+            },
+            layout: {
+                type: 'hbox',
+                align: 'stretch'
+            },
+            items: [{
+                    defaults: {
+                        flex: 1,
+                        margin: 5
+                    },
+                    layout: {
+                        type: 'vbox',
+                        align: 'stretch'
+                    },
+                    items: [{
+                            xtype: 'label',
+                            flex: 1,
+                            forId: 'address',
+                            text: i18n.patient_address
+                        }, {
+                            xtype: 'address',
+                            id: 'address',
+//                            bind: '{selectedObject.address}'
+                            bind: {
+                                address: '{selectedObject.address}'
+                            },
+                            name: 'address'
+//                            displayField: 'value',
+//                            valueField: 'value',
+//                            queryMode: 'local'
+                        }]
+                }, {
+//                    defaults: {
+//                        flex: 1,
+//                        margin: 5
+//                    },
+//                    layout: {
+//                        type: 'vbox',
+//                        align: 'stretch'
+//                    },
+//                    items: [{
+//                            xtype: 'label',
+//                            flex: 1,
+//                            forId: 'correspondence_address',
+//                            text: i18n.patient_correspondence_address
+//                        }, {
+//                            xtype: 'address',
+//                            id: 'correspondence_address',
+//                            bind: '{selectedObject.correspondence_address}'
+//                        }]
                 }]
         }]
 });

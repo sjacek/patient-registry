@@ -42,5 +42,16 @@ Ext.define('Patients.view.patient.ViewModel', {
             leadingBufferZone: 200
         },
         contacts: { type: 'contact' }
+    },
+    formulas: {
+        address: {
+            bind: {
+                bindTo: '{selectedObject.address}',
+                deep: true
+            },
+            get: function(address) {
+                return address;
+            }
+        }
     }
 });

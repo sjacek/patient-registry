@@ -46,8 +46,13 @@ public class PatientRestServiceImpl implements PatientRestService {
     @Transactional(readOnly = false, propagation = REQUIRED)
     @Override
     public Result<Patient> update(String idPatient, String firstName, String secondName, String lastName, String pesel, Date birthday) {
-        Patient patient = new Patient(idPatient, firstName, secondName, lastName, pesel, birthday);
-        patientRepository.save(patient);
+        Patient patient = patientRepository.save(new Patient() {{
+            setId(idPatient);
+            setFirstName(firstName);
+            setSecondName(secondName);
+            setPesel(pesel);
+            setBirthday(birthday);
+        }});
         return ResultFactory.getSuccessResult(patient);
     }
 

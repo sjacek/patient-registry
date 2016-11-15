@@ -34,6 +34,9 @@ import ch.ralscha.extdirectspring.annotation.ExtDirectMethod;
 import com.grinno.patients.config.security.MongoUserDetails;
 import com.grinno.patients.dto.NavigationNode;
 import com.grinno.patients.model.Authority;
+import static com.grinno.patients.model.Authority.ADMIN;
+import static com.grinno.patients.model.Authority.EMPLOYEE;
+import static com.grinno.patients.model.Authority.USER;
 
 /**
  *
@@ -50,17 +53,13 @@ public class NavigationService {
     public NavigationService(MessageSource messageSource) {
         this.messageSource = messageSource;
 
-        rootNodes.add(new NavigationNode("user_users", "user.Container", true, null, "x-fa fa-users", "users",
-                Authority.ADMIN));
-
-        rootNodes.add(new NavigationNode("patient_patients", "patient.Container", true, null, "x-fa fa-address-book", "patients",
-                Authority.ADMIN, Authority.USER));
-
-        rootNodes.add(new NavigationNode("contact_dictionary", "contactmethod.Container", true, null, "x-fa fa-book", "contacts",
-                Authority.ADMIN, Authority.EMPLOYEE));
-
-        rootNodes.add(new NavigationNode("Blank", "main.BlankPage", true, null, "x-fa fa-clock-o", "blank",
-                Authority.USER));
+        rootNodes.add(new NavigationNode("user_users", "user.Container", true, null, "x-fa fa-users", "users", ADMIN));
+        rootNodes.add(new NavigationNode("patient_patients", "patient.Container", true, null, "x-fa fa-address-book", "patients", ADMIN, USER));
+        rootNodes.add(new NavigationNode("contact_dictionary", "contactmethod.Container", true, null, "x-fa fa-book", "contacts", ADMIN, EMPLOYEE));
+        rootNodes.add(new NavigationNode("Blank", "main.BlankPage", true, null, "x-fa fa-clock-o", "blank", USER));
+        
+        if (rootNodes.isEmpty())
+            rootNodes.add(new NavigationNode("Blank", "main.BlankPage", true, null, "x-fa fa-clock-o", "blank"));
     }
 
     @ExtDirectMethod(TREE_LOAD)

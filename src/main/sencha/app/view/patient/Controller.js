@@ -19,32 +19,37 @@
 Ext.define('Patients.view.patient.Controller', {
     extend: 'Patients.view.base.ViewController',
     config: {
-        formClassName: 'Patients.view.patient.Panel',
+        formClassName: 'Patients.view.patient.Form',
         objectName: i18n.patient,
         objectNamePlural: i18n.patients
     },
     erase: function () {
-        this.eraseObject(this.getSelectedObject().get('firstName') + " " + this.getSelectedObject().get('lastName'), function() {
+        this.eraseObject(this.getSelectedObject().get('firstName') + " " + this.getSelectedObject().get('lastName'), function () {
             Patients.Util.successToast(i18n.destroysuccessful);
             this.onGridRefresh();
         }, null, this);
     },
+//    onObjectStoreLoad: function (store) {
+//        this.superclass.onObjectStoreLoad.call(this, store);
+//        this.getViewModel().set('address', this.getSelectedObject().get('address'));
+//        this.getViewModel().set('correspondenceAddress', this.getSelectedObject().get('correspondenceAddress'));
+//    },
     edit: function () {
-        logService.debug('Controller.js');
-        this.getView().add({ xclass: this.getFormClassName() });
-
+        this.getView().add({xclass: this.getFormClassName()});
         var formPanel = this.getView().getLayout().next();
-        logService.debug('edit 4 ' + formPanel.getXType());
 
         Ext.defer(function () {
-        logService.debug('edit 5');
-//                formPanel.isValid();
-        logService.debug('edit 6');
+            logService.debug('edit 5');
+            formPanel.isValid();
+            logService.debug('edit 6');
         }, 1);
         logService.debug('edit 7');
     },
-    onCancelClick: function() {
-        this.getView().destroy();        
+//    save: function (callback) {
+//        this.superclass.save.call(this, callback);
+//    },
+    onCancelClick: function () {
+        this.getView().destroy();
     }
 
 });
