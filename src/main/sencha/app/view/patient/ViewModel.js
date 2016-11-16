@@ -19,14 +19,13 @@
 Ext.define('Patients.view.patient.ViewModel', {
     extend: 'Ext.app.ViewModel',
     requires: ['Ext.data.BufferedStore'],
-
     data: {
         selectedObject: null,
         totalCount: null
     },
     stores: {
         objects: {
-            model: 'Patients.model.Patient',
+            model: 'Patients.model.PatientPlus',
             autoLoad: false,
             buffered: true,
             remoteSort: true,
@@ -40,8 +39,26 @@ Ext.define('Patients.view.patient.ViewModel', {
             },
             pageSize: 100,
             leadingBufferZone: 200
-        },
-        contacts: { type: 'contact' }
+        }
+//        ,
+//        contacts: {
+//            model: 'Patients.model.Contact',
+//            bind: {
+//                data: '{objects.contacts}'
+//            }
+//////            xtype: 'array',
+////            model: 'Patients.model.Contact',
+//////            fields: [
+//////                'method', 'contact'
+//////            ],
+////            data: [
+////                { method: 'telefon', contact: '123456' },
+////                { method: 'email', contact: 'bla@bla.com' }
+////            ]
+//        },
+//        addressChained: {
+//            source: '{objects.address}'
+//        }
     },
     formulas: {
         address: {
@@ -49,7 +66,7 @@ Ext.define('Patients.view.patient.ViewModel', {
                 bindTo: '{selectedObject.address}',
                 deep: true
             },
-            get: function(address) {
+            get: function (address) {
                 return address;
             }
         },
@@ -58,7 +75,7 @@ Ext.define('Patients.view.patient.ViewModel', {
                 bindTo: '{selectedObject.correspondenceAddress}',
                 deep: true
             },
-            get: function(correspondenceAddress) {
+            get: function (correspondenceAddress) {
                 return correspondenceAddress;
             }
         }

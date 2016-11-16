@@ -31,36 +31,36 @@ Ext.define('Patients.view.patient.Controller', {
             this.onGridRefresh();
         }, null, this);
     },
-//    onObjectStoreLoad: function (store) {
-//        this.superclass.onObjectStoreLoad.call(this, store);
-//        this.getViewModel().set('address', this.getSelectedObject().get('address'));
-//        this.getViewModel().set('correspondenceAddress', this.getSelectedObject().get('correspondenceAddress'));
-//    },
+    onObjectStoreLoad: function (store) {
+        this.superclass.onObjectStoreLoad.call(this, store);
+    },
     createSubobjects: function () {
         var selectedObject = this.getSelectedObject();
         if (!selectedObject.address) {
             selectedObject.address = Ext.create('Patients.model.Address');
         }
-
         this.correspondenceAddressEnabled = (selectedObject.correspondenceAddress !== undefined);
         if (!this.correspondenceAddressEnabled) {
             selectedObject.correspondenceAddress = Ext.create('Patients.model.Address');
         }
+        logService.debug('createSubobjects ' + selectedObject.contacts);
     },
     edit: function () {
         this.getView().add({xclass: this.getFormClassName()});
         var formPanel = this.getView().getLayout().next();
 
         Ext.defer(function () {
-            logService.debug('edit 5');
             formPanel.isValid();
-            logService.debug('edit 6');
         }, 1);
-        logService.debug('edit 7');
     },
-    save: function (callback) {
-        this.superclass.save.call(this, callback);
-    },
+//    save: function (callback) {
+//        logService.debug('save ' + typeof this.getSelectedObject().contacts);
+////        logService.debug('save ' + this.getSelectedObject().contacts[0]);
+////        logService.debug('save ' + this.getSelectedObject().contacts[1]);
+////        logService.debug('save ' + this.getSelectedObject().contacts[2]);
+//        
+////        this.superclass.save.call(this, callback);
+//    },
     onCancelClick: function () {
         this.getView().destroy();
     }

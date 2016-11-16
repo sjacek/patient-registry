@@ -4,4 +4,11 @@
 /bootstrap.json
 /bootstrap.jsonp
 /sencha-error-*.log
-/app/model/*.js
+/app/model/Address.js
+/app/model/Contact.js
+/app/model/ContactMethod.js
+/app/model/Diagnosis.js
+/app/model/Patient.js
+/app/model/PersistentLogin.js
+/app/model/User.js
+/app/model/UserSettings.js

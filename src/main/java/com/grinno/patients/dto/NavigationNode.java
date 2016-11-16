@@ -75,14 +75,11 @@ public class NavigationNode {
                     source.getIconCls(), source.getRouteId());
 
             List<NavigationNode> children = new ArrayList<>();
-            for (NavigationNode sourceChild : source.getChildren()) {
-                if (hasAuthority(sourceChild, authorities)) {
-                    NavigationNode copy = NavigationNode.copyOf(sourceChild, authorities, locale, messageSource);
-                    if (copy != null) {
-                        children.add(copy);
-                    }
-                }
-            }
+            source.getChildren().stream()
+                    .filter(sourceChild -> (hasAuthority(sourceChild, authorities)))
+                    .map(sourceChild -> NavigationNode.copyOf(sourceChild, authorities, locale, messageSource))
+                    .filter(copy -> (copy != null))
+                    .forEach(copy -> children.add(copy) );
 
             if (!children.isEmpty()) {
                 menuNode.children.addAll(children);
@@ -102,12 +99,7 @@ public class NavigationNode {
             return true;
         }
 
-        for (GrantedAuthority grantedAuthority : authorities) {
-            if (node.authorities.contains(Authority.valueOf(grantedAuthority.getAuthority()))) {
-                return true;
-            }
-        }
-        return false;
+        return authorities.stream().anyMatch((grantedAuthority) -> (node.authorities.contains(Authority.valueOf(grantedAuthority.getAuthority()))));
     }
 
     public String getText() {
@@ -140,7 +132,6 @@ public class NavigationNode {
 
     public void addChild(NavigationNode menuNode) {
         this.children.add(menuNode);
-
     }
 
 }

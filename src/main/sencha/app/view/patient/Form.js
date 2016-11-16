@@ -153,18 +153,12 @@ Ext.define('Patients.view.patient.Form', {
                                 }]
                         }, {
                             xtype: 'grid',
-                            id: 'contactsgrid',
-                            name: 'contacts',
-                            store: {
-                                fields: ['method', 'contact'],
-                                data: [
-                                    {method: 'telefon', contact: '123456'},
-                                    {method: 'email', contact: 'bla@bla.com'}
-                                ]
+                            bind: {
+                                store: '{selectedObject.contacts}'
                             },
                             columns: [
-                                {dataIndex: 'method', text: 'Telefon'},
-                                {dataIndex: 'contact', text: 'Kontakt'}
+                                { dataIndex: 'method', text: 'Telefon' },
+                                { dataIndex: 'contact', text: 'Kontakt' }
                             ],
                             validate: function () {
                                 return true;

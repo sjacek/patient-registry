@@ -157,7 +157,7 @@ Ext.define('Patients.view.main.MainController', {
             sessionStorage.removeItem(key);
             form.down('textfield[name=email]').setValue(val);
         }
-   },
+    },
     onPwReset: function (e, token) {
         var uri = window.location.toString();
         var cleanUri = uri.substring(0, uri.indexOf("?"));

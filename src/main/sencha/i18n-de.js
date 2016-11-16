@@ -122,10 +122,12 @@ var i18n = {
     address_county:"County",
     address_voivodship:"Voivodship",
     address_country:"Country",
+    dictionaries:"Dictionaries",
     contact_contact:"Contact",
     contact_contacts:"Contacts",
     contact_dictionary:"Contact Methods Dictionary",
     contact_method:"Contact Method",
+    contact_methods:"Contact Methods",
     contact_description:"Description",
 
     "":""

@@ -122,10 +122,12 @@ var i18n = {
     address_county:"Powiat",
     address_voivodship:"Województwo",
     address_country:"Kraj",
+    dictionaries:"Słowniki",
     contact_contact:"Kontakt",
     contact_contacts:"Kontakty",
     contact_dictionary:"Słownik metod kontaktów",
     contact_method:"Metoda kontaktu",
+    contact_methods:"Metody kontaktów",
     contact_description:"Opis",
 
     "":""

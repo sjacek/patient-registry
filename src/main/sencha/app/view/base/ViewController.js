@@ -43,7 +43,6 @@ Ext.define('Patients.view.base.ViewController', {
         this.getStore(this.getObjectStoreName()).reload();
     },
     createSubobjects: function() {
-        logService.debug('ViewController newSubobjects');
     },
     newObject: function () {
         var model = this.getStore(this.getObjectStoreName()).getModel();
