@@ -27,6 +27,9 @@ Ext.define('Patients.view.patient.AddressForm', {
         labelAlign: 'right',
         align: 'stretch'
     },
+    config: {
+        addressLocal: null
+    },
     items: [{
             xtype: 'form',
             layout: 'vbox',
@@ -35,7 +38,7 @@ Ext.define('Patients.view.patient.AddressForm', {
                     name: 'street',
                     fieldLabel: i18n.address_street,
                     allowBlank: false,
-                    bind: '{address.street}'
+                    bind: '{this.getAddressLocal().street}'
                 }, {
                     layout: 'hbox',
                     items: [{
@@ -58,13 +61,13 @@ Ext.define('Patients.view.patient.AddressForm', {
                             name: 'zipcode',
                             fieldLabel: i18n.address_zipcode,
                             allowBlank: false,
-                            bind: '{address.zipCode}'
+                            bind: '{this.addressLocal.zipCode}'
                         }, {
                             xtype: 'textfield',
                             name: 'city',
                             fieldLabel: i18n.address_city,
                             allowBlank: false,
-                            bind: '{address.city}'
+                            bind: '{addressLocal.city}'
                         }]
                 }, {
                     xtype: 'textfield',
@@ -85,8 +88,9 @@ Ext.define('Patients.view.patient.AddressForm', {
                     allowBlank: false,
                     bind: '{address.country}'
                 }]
-        }],
-    setAddress: function (address) {
-        this.address = address;
+        }]
+    ,
+    setAddressLocal: function (address) {
+        this.config.addressLocal = address;
     }
 });

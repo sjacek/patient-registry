@@ -20,6 +20,7 @@ Ext.define('Patients.view.patient.Form', {
     extend: 'Ext.form.Panel',
     requires: ['Ext.form.field.Date', 'Ext.grid.Panel'],
     reference: 'editPanel',
+    xtype: 'patient.form',
     header: {
         title: i18n.patient_card,
         defaults: {
@@ -149,13 +150,6 @@ Ext.define('Patients.view.patient.Form', {
                                     xtype: 'button',
                                     iconCls: 'x-fa fa-plus',
                                     text: i18n.new
-//                                    align: 'right',
-//                                    margin: '0 0 0 5'
-//                                }, {
-//                                    xtype: 'button',
-//                                    iconCls: 'x-fa fa-remove',
-////                                    align: 'right',
-//                                    margin: '0 0 0 5'
                                 }]
                         }, {
                             xtype: 'grid',
@@ -175,12 +169,6 @@ Ext.define('Patients.view.patient.Form', {
                             validate: function () {
                                 return true;
                             }
-//                                        bind: {
-//                                        bind: '{selectedObject.contacts}'
-//                                        },
-//                                        valueField: 'value',
-//                                        queryMode: 'local',
-//                                        bind: '{selectedObject.contacts}'
                         }]
                 }]
         }, {
@@ -207,36 +195,163 @@ Ext.define('Patients.view.patient.Form', {
                             forId: 'address',
                             text: i18n.patient_address
                         }, {
-                            xtype: 'address',
-                            id: 'address',
-//                            bind: '{selectedObject.address}'
-                            bind: {
-                                address: '{selectedObject.address}'
-                            },
-                            name: 'address'
-//                            displayField: 'value',
-//                            valueField: 'value',
-//                            queryMode: 'local'
+                            xtype: 'textfield',
+                            id: 'address_street',
+                            name: 'street',
+                            fieldLabel: i18n.address_street,
+                            allowBlank: false,
+                            bind: '{address.street}'
+                        }, {
+                            layout: 'hbox',
+                            items: [{
+                                    xtype: 'textfield',
+                                    name: 'house',
+                                    fieldLabel: i18n.address_house_no,
+                                    allowBlank: false,
+                                    bind: '{address.house}'
+                                }, {
+                                    xtype: 'textfield',
+                                    name: 'flat',
+                                    fieldLabel: i18n.address_flat_no,
+                                    allowBlank: true,
+                                    bind: '{address.flat}'
+                                }]
+                        }, {
+                            layout: 'hbox',
+                            items: [{
+                                    xtype: 'textfield',
+                                    name: 'zipcode',
+                                    fieldLabel: i18n.address_zipcode,
+                                    allowBlank: false,
+                                    bind: '{address.zipCode}'
+                                }, {
+                                    xtype: 'textfield',
+                                    name: 'city',
+                                    fieldLabel: i18n.address_city,
+                                    allowBlank: false,
+                                    bind: '{addressLocal.city}'
+                                }]
+                        }, {
+                            xtype: 'textfield',
+                            name: 'county',
+                            fieldLabel: i18n.address_county,
+                            allowBlank: false,
+                            bind: '{address.county}'
+                        }, {
+                            xtype: 'textfield',
+                            name: 'voivodship',
+                            fieldLabel: i18n.address_voivodship,
+                            allowBlank: false,
+                            bind: '{address.voivodship}'
+                        }, {
+                            xtype: 'textfield',
+                            name: 'country',
+                            fieldLabel: i18n.address_country,
+                            allowBlank: false,
+                            bind: '{address.country}'
                         }]
                 }, {
-//                    defaults: {
-//                        flex: 1,
-//                        margin: 5
-//                    },
-//                    layout: {
-//                        type: 'vbox',
-//                        align: 'stretch'
-//                    },
-//                    items: [{
-//                            xtype: 'label',
-//                            flex: 1,
-//                            forId: 'correspondence_address',
-//                            text: i18n.patient_correspondence_address
-//                        }, {
-//                            xtype: 'address',
-//                            id: 'correspondence_address',
-//                            bind: '{selectedObject.correspondence_address}'
-//                        }]
+                    defaults: {
+                        flex: 1,
+                        margin: 5
+                    },
+                    layout: {
+                        type: 'vbox',
+                        align: 'stretch'
+                    },
+                    items: [{
+                            id: 'correspondence_address_enabled',
+                            xtype: 'checkbox',
+                            flex: 1,
+                            fieldLabel: i18n.patient_correspondence_address,
+                            bind: '{correspondenceAddressEnabled}'
+                        }, {
+                            xtype: 'textfield',
+                            name: 'street',
+                            fieldLabel: i18n.address_street,
+                            allowBlank: false,
+                            bind: {
+                                value: '{correspondenceAddress.street}',
+                                disabled: '{!correspondenceAddressEnabled}'
+                            },
+                            disabled: '{!correspondenceAddressEnabled}'
+                        }, {
+                            layout: 'hbox',
+                            items: [{
+                                    xtype: 'textfield',
+                                    name: 'house',
+                                    fieldLabel: i18n.address_house_no,
+                                    allowBlank: false,
+                                    bind: {
+                                        value: '{correspondenceAddress.house}',
+                                        disabled: '{!correspondenceAddressEnabled}'
+                                    },
+                                    disabled: '{!correspondenceAddressEnabled}'
+                                }, {
+                                    xtype: 'textfield',
+                                    name: 'flat',
+                                    fieldLabel: i18n.address_flat_no,
+                                    allowBlank: true,
+                                    bind: {
+                                        value: '{correspondenceAddress.flat}',
+                                        disabled: '{!correspondenceAddressEnabled}'
+                                    },
+                                    disabled: '{!correspondenceAddressEnabled}'
+                                }]
+                        }, {
+                            layout: 'hbox',
+                            items: [{
+                                    xtype: 'textfield',
+                                    name: 'zipcode',
+                                    fieldLabel: i18n.address_zipcode,
+                                    allowBlank: false,
+                                    bind: {
+                                        value: '{correspondenceAddress.zipCode}',
+                                        disabled: '{!correspondenceAddressEnabled}'
+                                    },
+                                    disabled: '{!correspondenceAddressEnabled}'
+                                }, {
+                                    xtype: 'textfield',
+                                    name: 'city',
+                                    fieldLabel: i18n.address_city,
+                                    allowBlank: false,
+                                    bind: {
+                                        value: '{correspondenceAddress.city}',
+                                        disabled: '{!correspondenceAddressEnabled}'
+                                    },
+                                    disabled: '{!correspondenceAddressEnabled}'
+                                }]
+                        }, {
+                            xtype: 'textfield',
+                            name: 'county',
+                            fieldLabel: i18n.address_county,
+                            allowBlank: false,
+                            bind: {
+                                value: '{correspondenceAddress.county}',
+                                disabled: '{!correspondenceAddressEnabled}'
+                            },
+                            disabled: '{!correspondenceAddressEnabled}'
+                        }, {
+                            xtype: 'textfield',
+                            name: 'voivodship',
+                            fieldLabel: i18n.address_voivodship,
+                            allowBlank: false,
+                            bind: {
+                                value: '{correspondenceAddress.voivodship}',
+                                disabled: '{!correspondenceAddressEnabled}'
+                            },
+                            disabled: '{!correspondenceAddressEnabled}'
+                        }, {
+                            xtype: 'textfield',
+                            name: 'country',
+                            fieldLabel: i18n.address_country,
+                            allowBlank: false,
+                            bind: {
+                                value: '{correspondenceAddress.country}',
+                                disabled: '{!correspondenceAddressEnabled}'
+                            },
+                            disabled: '{!correspondenceAddressEnabled}'
+                        }]
                 }]
         }]
 });

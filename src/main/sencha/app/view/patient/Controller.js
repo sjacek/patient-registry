@@ -18,10 +18,12 @@
 
 Ext.define('Patients.view.patient.Controller', {
     extend: 'Patients.view.base.ViewController',
+    requires: 'Patients.model.Address',
     config: {
         formClassName: 'Patients.view.patient.Form',
         objectName: i18n.patient,
-        objectNamePlural: i18n.patients
+        objectNamePlural: i18n.patients,
+        correspondenceAddressEnabled: false
     },
     erase: function () {
         this.eraseObject(this.getSelectedObject().get('firstName') + " " + this.getSelectedObject().get('lastName'), function () {
@@ -34,6 +36,17 @@ Ext.define('Patients.view.patient.Controller', {
 //        this.getViewModel().set('address', this.getSelectedObject().get('address'));
 //        this.getViewModel().set('correspondenceAddress', this.getSelectedObject().get('correspondenceAddress'));
 //    },
+    createSubobjects: function () {
+        var selectedObject = this.getSelectedObject();
+        if (!selectedObject.address) {
+            selectedObject.address = Ext.create('Patients.model.Address');
+        }
+
+        this.correspondenceAddressEnabled = (selectedObject.correspondenceAddress !== undefined);
+        if (!this.correspondenceAddressEnabled) {
+            selectedObject.correspondenceAddress = Ext.create('Patients.model.Address');
+        }
+    },
     edit: function () {
         this.getView().add({xclass: this.getFormClassName()});
         var formPanel = this.getView().getLayout().next();
@@ -45,9 +58,9 @@ Ext.define('Patients.view.patient.Controller', {
         }, 1);
         logService.debug('edit 7');
     },
-//    save: function (callback) {
-//        this.superclass.save.call(this, callback);
-//    },
+    save: function (callback) {
+        this.superclass.save.call(this, callback);
+    },
     onCancelClick: function () {
         this.getView().destroy();
     }

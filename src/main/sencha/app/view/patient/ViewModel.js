@@ -52,6 +52,15 @@ Ext.define('Patients.view.patient.ViewModel', {
             get: function(address) {
                 return address;
             }
+        },
+        correspondenceAddress: {
+            bind: {
+                bindTo: '{selectedObject.correspondenceAddress}',
+                deep: true
+            },
+            get: function(correspondenceAddress) {
+                return correspondenceAddress;
+            }
         }
     }
 });

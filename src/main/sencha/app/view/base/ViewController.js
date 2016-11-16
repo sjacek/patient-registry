@@ -42,9 +42,13 @@ Ext.define('Patients.view.base.ViewController', {
         this.getViewModel().set(this.getSelectedObjectName(), null);
         this.getStore(this.getObjectStoreName()).reload();
     },
+    createSubobjects: function() {
+        logService.debug('ViewController newSubobjects');
+    },
     newObject: function () {
         var model = this.getStore(this.getObjectStoreName()).getModel();
         this.getViewModel().set(this.getSelectedObjectName(), model.create());
+        this.createSubobjects();
         this.edit();
     },
     onFilter: function (tf) {
@@ -60,10 +64,12 @@ Ext.define('Patients.view.base.ViewController', {
     },
     onItemdblclick: function (store, record) {
         this.getViewModel().set(this.getSelectedObjectName(), record);
+        this.createSubobjects();
         this.edit();
     },
     onEdit: function() {
         this.getViewModel().set(this.getSelectedObjectName(), this.getSelectedObject());
+        this.createSubobjects();
         this.edit();
     },
     back: function () {
