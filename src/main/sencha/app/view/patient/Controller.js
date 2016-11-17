@@ -49,20 +49,38 @@ Ext.define('Patients.view.patient.Controller', {
         this.getView().add({xclass: this.getFormClassName()});
         var formPanel = this.getView().getLayout().next();
 
+        var selectedObject = this.getSelectedObject(),
+                store = selectedObject.contacts();
+        logService.debug('edit 1 ' + typeof selectedObject.contacts);
+        logService.debug('edit 2 ' + typeof selectedObject.contacts());
+        logService.debug('edit 3 ' + store.getCount());
+
         Ext.defer(function () {
             formPanel.isValid();
         }, 1);
     },
-//    save: function (callback) {
-//        logService.debug('save ' + typeof this.getSelectedObject().contacts);
+    save: function (callback) {
+        var selectedObject = this.getSelectedObject(),
+                store = selectedObject.contacts();
+        logService.debug('save ' + store.getCount());
 ////        logService.debug('save ' + this.getSelectedObject().contacts[0]);
 ////        logService.debug('save ' + this.getSelectedObject().contacts[1]);
 ////        logService.debug('save ' + this.getSelectedObject().contacts[2]);
 //        
-////        this.superclass.save.call(this, callback);
-//    },
+        this.superclass.save.call(this, callback);
+    },
     onCancelClick: function () {
         this.getView().destroy();
+    },
+    onContactsNewClick: function () {
+        var store = this.getSelectedObject().contacts();
+        logService.debug('save ' + store.getCount());
+        store.insert(0, {method: 'xxx', contact: 'zzz'})[0];
+        logService.debug('save ' + store.getCount());
+    },
+    onContactDeleteClick: function (view, row, col, action, ev, record) {
+        var store = record.store;
+        store.remove(record);
     }
 
 });

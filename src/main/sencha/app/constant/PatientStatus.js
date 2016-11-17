@@ -1,6 +1,9 @@
 Ext.define('Patients.constant.PatientStatus', {
 	singleton: true,
-	ADMIN: 'ADMIN',
-	EMPLOYEE: 'EMPLOYEE',
-	USER: 'USER'
+	NEW: 'NEW',
+	DECLARED: 'DECLARED',
+	CONFIRMED: 'CONFIRMED',
+	REGISTERED: 'REGISTERED',
+	UNREGISTERED: 'UNREGISTERED',
+	DEAD: 'DEAD'
 });

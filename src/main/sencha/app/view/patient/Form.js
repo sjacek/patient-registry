@@ -18,7 +18,7 @@
 
 Ext.define('Patients.view.patient.Form', {
     extend: 'Ext.form.Panel',
-    requires: ['Ext.form.field.Date', 'Ext.grid.Panel'],
+    requires: ['Ext.form.field.Date', 'Ext.form.field.ComboBox', 'Ext.grid.Panel'],
     reference: 'editPanel',
     xtype: 'patient.form',
     header: {
@@ -134,6 +134,20 @@ Ext.define('Patients.view.patient.Form', {
                         border: true
                     },
                     items: [{
+                            xtype: 'combobox',
+                            fieldLabel: i18n.patient_status,
+                            store: 'patientStatus',
+                            bind: {
+                                value: '{selectedObject.status}'
+                            },
+                            name: 'status',
+                            valueField: 'value',
+                            displayField: 'text',
+                            queryMode: 'local',
+                            emptyText: i18n.patient_status_choose,
+                            forceSelection: true,
+                            editable: false
+                        }, {
                             defaults: {
                                 flex: 0
                             },
@@ -149,7 +163,8 @@ Ext.define('Patients.view.patient.Form', {
                                 }, {
                                     xtype: 'button',
                                     iconCls: 'x-fa fa-plus',
-                                    text: i18n.new
+                                    text: i18n.new,
+                                    handler: 'onContactsNewClick'
                                 }]
                         }, {
                             xtype: 'grid',
@@ -157,8 +172,17 @@ Ext.define('Patients.view.patient.Form', {
                                 store: '{selectedObject.contacts}'
                             },
                             columns: [
-                                { dataIndex: 'method', text: 'Telefon' },
-                                { dataIndex: 'contact', text: 'Kontakt' }
+                                {dataIndex: 'method', text: 'Telefon'},
+                                {dataIndex: 'contact', text: 'Kontakt'},
+                                {
+                                    xtype: 'actioncolumn',
+                                    width: 30,
+//                                    items: [{
+                                    iconCls: 'x-fa fa-times',
+                                    tooltip: i18n.patient_delete_contact,
+                                    handler: 'onContactDeleteClick'
+//                                        }]
+                                }
                             ],
                             validate: function () {
                                 return true;

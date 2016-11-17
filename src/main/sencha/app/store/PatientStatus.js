@@ -1,4 +1,4 @@
-/*
+/* 
  * Copyright (C) 2016 Jacek Sztajnke
  *
  * This program is free software: you can redistribute it and/or modify
@@ -14,17 +14,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-/* global Ext */
+/* global Ext, i18n */
 
 Ext.define('Patients.store.PatientStatus', {
     extend: 'Ext.data.Store',
-    storeId: 'authority',
-    data: [
-        {value: Patients.constant.PatientStatus.NONE},
-        {value: Patients.constant.PatientStatus.DECLARED},
-        {value: Patients.constant.PatientStatus.CONFIRMED},
-        {value: Patients.constant.PatientStatus.REGISTERED},
-        {value: Patients.constant.PatientStatus.UNREGISTERED},
-        {value: Patients.constant.PatientStatus.DEAD}
-    ]
+    storeId: 'patientStatus',
+    fields: ['value', 'text'],
+    data: [{
+            value: Patients.constant.PatientStatus.NEW,
+            text: i18n.patient_status_new
+        }, {
+            value: Patients.constant.PatientStatus.DECLARED,
+            text: i18n.patient_status_declared
+        }, {
+            value: Patients.constant.PatientStatus.CONFIRMED,
+            text: i18n.patient_status_confirmed
+        }, {
+            value: Patients.constant.PatientStatus.REGISTERED,
+            text: i18n.patient_status_registered
+        }, {
+            value: Patients.constant.PatientStatus.UNREGISTERED,
+            text: i18n.patient_status_unregistered
+        }, {
+            value: Patients.constant.PatientStatus.DEAD,
+            text: i18n.patient_status_dead
+        }]
 });

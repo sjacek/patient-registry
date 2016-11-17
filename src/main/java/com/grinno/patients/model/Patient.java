@@ -17,10 +17,7 @@
 package com.grinno.patients.model;
 
 import ch.rasc.extclassgenerator.Model;
-import ch.rasc.extclassgenerator.ModelAssociation;
-import static ch.rasc.extclassgenerator.ModelAssociationType.HAS_MANY;
 import ch.rasc.extclassgenerator.ModelField;
-import ch.rasc.extclassgenerator.ModelType;
 import ch.rasc.extclassgenerator.ReferenceConfig;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import static com.fasterxml.jackson.annotation.JsonFormat.Shape.STRING;
@@ -47,13 +44,12 @@ import org.springframework.data.mongodb.core.mapping.Document;
     @CompoundIndex(name = "lastName_firstName", def = "{'lastName': 1, 'firstName': 1}")
 })
 @Model(value = "Patients.model.Patient",
-        readMethod = "patientService.read",
         createMethod = "patientService.update",
+        readMethod = "patientService.read",
         updateMethod = "patientService.update",
         destroyMethod = "patientService.destroy",
         paging = true,
-        identifier = "uuid"
-)
+        identifier = "uuid")
 @JsonInclude(NON_NULL)
 public class Patient extends AbstractPersistable {
 
@@ -67,6 +63,10 @@ public class Patient extends AbstractPersistable {
     @Indexed
     private String lastName;
 
+    @NotNull(message = "{fieldrequired}")
+    @ModelField(defaultValue="NEW")
+    private PatientStatus status;
+    
     @NotBlank(message = "{fieldrequired}")
     @Indexed
 //    @ModelField(customType="pesel")
@@ -131,6 +131,14 @@ public class Patient extends AbstractPersistable {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public PatientStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(PatientStatus status) {
+        this.status = status;
     }
 
     public String getPesel() {

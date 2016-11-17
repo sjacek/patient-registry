@@ -16,9 +16,11 @@ import ch.rasc.extclassgenerator.Model;
 import ch.rasc.extclassgenerator.ModelField;
 
 @BsonDocument
-@Model(value = "Patients.model.PersistentLogin", idProperty = "series",
-        readMethod = "userConfigService.readPersistentLogins", writeAllFields = false,
-        destroyMethod = "userConfigService.destroyPersistentLogin")
+@Model(value = "Patients.model.PersistentLogin",
+        idProperty = "series",
+        readMethod = "userConfigService.readPersistentLogins",
+        destroyMethod = "userConfigService.destroyPersistentLogin",
+        writeAllFields = false)
 @JsonInclude(Include.NON_NULL)
 public class PersistentLogin {
 

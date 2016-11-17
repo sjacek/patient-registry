@@ -30,6 +30,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ch.ralscha.extdirectspring.util.ExtDirectSpringUtil;
 import com.grinno.patients.model.Authority;
+import com.grinno.patients.model.PatientStatus;
 import static java.util.Locale.ENGLISH;
 import static java.util.Locale.GERMAN;
 import static org.springframework.boot.autoconfigure.security.SecurityProperties.DEFAULT_FILTER_ORDER;
@@ -70,11 +71,10 @@ class DevelopmentConfig {
 
     private static void writeEnums(Path clientDir) throws IOException {
         writeEnum(clientDir, "Authority", Authority.values(), true);
-        writeEnum(clientDir, "PatientStatus", Authority.values(), true);
+        writeEnum(clientDir, "PatientStatus", PatientStatus.values(), false);
     }
 
-    private static void writeEnum(Path clientDir, String name, Enum<?>[] values,
-            boolean writeStore) throws IOException {
+    private static void writeEnum(Path clientDir, String name, Enum<?>[] values, boolean writeStore) throws IOException {
         StringBuilder sb = new StringBuilder(200);
         sb.append("Ext.define('Patients.constant.").append(name).append("', {\n").append("\tsingleton: true,\n");
         String valuesString = Arrays.stream(values)

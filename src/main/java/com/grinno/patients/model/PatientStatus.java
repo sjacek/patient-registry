@@ -21,5 +21,34 @@ package com.grinno.patients.model;
  * @author jacek
  */
 public enum PatientStatus {
-    NONE, DECLARED, CONFIRMED, REGISTERED, UNREGISTERED, DEAD
+
+    /**
+     *
+     */
+    NEW,
+
+    /**
+     *
+     */
+    DECLARED,
+
+    /**
+     *
+     */
+    CONFIRMED,
+
+    /**
+     *
+     */
+    REGISTERED,
+
+    /**
+     *
+     */
+    UNREGISTERED,
+
+    /**
+     *
+     */
+    DEAD
 }

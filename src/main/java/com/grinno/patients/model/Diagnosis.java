@@ -29,13 +29,12 @@ import org.springframework.data.mongodb.core.mapping.Document;
  */
 @Document(collection="dictionary")
 @Model(value = "Patients.model.Diagnosis",
-        readMethod = "diagnosisService.read",
         createMethod = "diagnosisService.update",
+        readMethod = "diagnosisService.read",
         updateMethod = "diagnosisService.update",
         destroyMethod = "diagnosisService.destroy",
         paging = true,
-        identifier = "uuid"
-)
+        identifier = "uuid")
 @JsonInclude(NON_NULL)
 public class Diagnosis extends Dictionary {
 

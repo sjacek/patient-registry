@@ -20,8 +20,8 @@ import ch.rasc.extclassgenerator.ModelType;
 
 @BsonDocument
 @Model(value = "Patients.model.User",
-        readMethod = "userService.read",
         createMethod = "userService.update",
+        readMethod = "userService.read",
         updateMethod = "userService.update",
         destroyMethod = "userService.destroy",
         rootProperty = "records",
