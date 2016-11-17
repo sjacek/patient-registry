@@ -144,7 +144,6 @@ Ext.define('Patients.view.patient.Form', {
                             valueField: 'value',
                             displayField: 'text',
                             queryMode: 'local',
-                            emptyText: i18n.patient_status_choose,
                             forceSelection: true,
                             editable: false
                         }, {

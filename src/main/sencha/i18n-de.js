@@ -116,7 +116,6 @@ var i18n = {
     patient_correspondence_address: "Correspondence Address",
     patient_delete_contact: "Delete contact",
     patient_status: 'Status',
-    patient_status_choose: 'Choose one',
     patient_status_new: 'New',
     patient_status_declared: 'Declared',
     patient_status_confirmed: 'Confirmed',
