@@ -14,14 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-/* global Ext */
+package com.grinno.patients.model;
 
-Ext.define('Patients.store.Authority', {
-    extend: 'Ext.data.Store',
-    storeId: 'authority',
-    data: [
-        {value: Patients.constant.Authority.ADMIN},
-        {value: Patients.constant.Authority.EMPLOYEE},
-        {value: Patients.constant.Authority.USER}
-    ]
-});
+/**
+ *
+ * @author jacek
+ */
+public enum PatientStatus {
+    NONE, DECLARED, CONFIRMED, REGISTERED, UNREGISTERED, DEAD
+}

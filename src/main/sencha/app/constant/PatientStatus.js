@@ -16,12 +16,12 @@
  */
 /* global Ext */
 
-Ext.define('Patients.store.Authority', {
-    extend: 'Ext.data.Store',
-    storeId: 'authority',
-    data: [
-        {value: Patients.constant.Authority.ADMIN},
-        {value: Patients.constant.Authority.EMPLOYEE},
-        {value: Patients.constant.Authority.USER}
-    ]
+Ext.define('Patients.constant.PatientStatus', {
+    singleton: true,
+    NONE: 'NONE',
+    DECLARED: 'DECLARED',
+    CONFIRMED: 'CONFIRMED',
+    REGISTERED: 'REGISTERED',
+    UNREGISTERED: 'UNREGISTERED',
+    DEAD: 'DEAD'
 });

@@ -70,6 +70,7 @@ class DevelopmentConfig {
 
     private static void writeEnums(Path clientDir) throws IOException {
         writeEnum(clientDir, "Authority", Authority.values(), true);
+        writeEnum(clientDir, "PatientStatus", Authority.values(), true);
     }
 
     private static void writeEnum(Path clientDir, String name, Enum<?>[] values,

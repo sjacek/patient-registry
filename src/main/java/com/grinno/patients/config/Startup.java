@@ -25,7 +25,9 @@ import org.springframework.stereotype.Component;
 
 import com.mongodb.client.MongoCollection;
 
-import com.grinno.patients.model.Authority;
+import static com.grinno.patients.model.Authority.ADMIN;
+import static com.grinno.patients.model.Authority.EMPLOYEE;
+import static com.grinno.patients.model.Authority.USER;
 import com.grinno.patients.model.ContactMethod;
 import com.grinno.patients.model.User;
 
@@ -60,7 +62,7 @@ class Startup {
             adminUser.setPasswordHash(this.passwordEncoder.encode("admin"));
             adminUser.setEnabled(true);
             adminUser.setDeleted(false);
-            adminUser.setAuthorities(Arrays.asList(Authority.ADMIN.name()));
+            adminUser.setAuthorities(Arrays.asList(ADMIN.name()));
             userCollection.insertOne(adminUser);
 
             // normal user
@@ -72,7 +74,7 @@ class Startup {
             normalUser.setPasswordHash(this.passwordEncoder.encode("user"));
             normalUser.setEnabled(true);
             adminUser.setDeleted(false);
-            normalUser.setAuthorities(Arrays.asList(Authority.USER.name(), Authority.EMPLOYEE.name()));
+            normalUser.setAuthorities(Arrays.asList(USER.name(), EMPLOYEE.name()));
             userCollection.insertOne(normalUser);
         }
 
