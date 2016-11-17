@@ -16,7 +16,7 @@
  */
 Ext.define('Patients.view.auth.PwResetConfirm', {
     extend: 'Patients.view.base.LockingWindow',
-    title: '<i class="x-fa fa-rocket"></i> ' + i18n.app_name + ': ' + i18n.auth_pwresetreq,
+    title: '<img src="resources/images/logo.png"/> ' + i18n.app_name + ': ' + i18n.auth_pwresetreq,
     cls: 'signout-page-container',
     items: [{
             xtype: 'container',

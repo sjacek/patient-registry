@@ -19,7 +19,7 @@
 Ext.define('Patients.view.main.Error404Window', {
     extend: 'Patients.view.base.LockingWindow',
     cls: 'error-page-container',
-    title: '<i class="x-fa fa-rocket"></i> ' + i18n.app_name + ': 404',
+    title: '<img src="resources/images/logo.png"/> ' + i18n.app_name + ': 404',
     items: [{
             xtype: 'container',
             cls: 'error-page-inner-container',

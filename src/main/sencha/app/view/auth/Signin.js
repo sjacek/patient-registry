@@ -19,7 +19,7 @@
 Ext.define('Patients.view.auth.Signin', {
     extend: 'Patients.view.base.LockingWindow',
     requires: ['Ext.toolbar.Spacer', 'Ext.form.Label', 'Ext.form.field.Text', 'Ext.form.field.Checkbox', 'Ext.button.Button'],
-    title: '<i class="x-fa fa-rocket"></i> ' + i18n.app_name + ': ' + i18n.auth_signin,
+    title: '<img src="resources/images/logo.png"/> ' + i18n.app_name + ': ' + i18n.auth_signin,
     defaultFocus: 'form',
     items: [{
             xclass: 'Patients.view.auth.Dialog',

@@ -37,7 +37,7 @@ Ext.define('Patients.view.main.Main', {
                     xtype: 'component',
                     reference: 'appLogo',
                     cls: 'app-logo',
-                    html: '<div><i class="x-fa fa-rocket"></i><span>' + i18n.app_name + '</span></div>',
+                    html: '<div><img src="resources/images/logo.png"/><span>' + i18n.app_name + '</span></div>',
                     width: 250
                 }, {
                     cls: 'no-bg-button',

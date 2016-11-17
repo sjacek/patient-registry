@@ -18,7 +18,7 @@
 
 Ext.define('Patients.view.auth.Signout', {
     extend: 'Patients.view.base.LockingWindow',
-    title: '<i class="x-fa fa-rocket"></i> ' + i18n.app_name + ': ' + i18n.auth_signout,
+    title: '<img src="resources/images/logo.png"/> ' + i18n.app_name + ': ' + i18n.auth_signout,
     cls: 'signout-page-container',
     items: [{
             xtype: 'container',

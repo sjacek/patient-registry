@@ -53,11 +53,23 @@ public class NavigationService {
         this.messageSource = messageSource;
 
         rootNodes.add(new NavigationNode("user_users", "user.Container", true, null, "x-fa fa-users", "users", ADMIN));
-        rootNodes.add(new NavigationNode("patient_patients", "patient.Container", true, null, "x-fa fa-address-book", "patients", ADMIN, USER));
+        rootNodes.add(new NavigationNode("patient_patients", "patient.Container", true, null, "x-fa fa-user-plus", "patients", ADMIN, USER));
 
-        NavigationNode node = new NavigationNode("dictionaries", null, false, null, "x-fa fa-book", null, ADMIN, EMPLOYEE);
-        node.addChild(new NavigationNode("contact_methods", "contactmethod.Container", true, null, "x-fa fa-book", "contacts", ADMIN, EMPLOYEE));
-        rootNodes.add(node);
+        {
+            NavigationNode node = new NavigationNode("projects", null, false, null, "x-fa fa-space-shuttle", null, ADMIN, EMPLOYEE);
+            node.addChild(new NavigationNode("conference_2016", "conference.Container", true, null, "x-fa fa-star-half-o", "conference", ADMIN, EMPLOYEE));
+            node.addChild(new NavigationNode("personal_assistant", "personalassistant.Container", true, null, "x-fa fa-wheelchair-alt", "diagnosis", ADMIN, EMPLOYEE));
+            rootNodes.add(node);
+        }
+
+        rootNodes.add(new NavigationNode("statistics", "statistic.Container", true, null, "x-fa fa-pie-chart", "statistic", ADMIN, USER));
+        
+        {
+            NavigationNode node = new NavigationNode("dictionaries", null, false, null, "x-fa fa-book", null, ADMIN, EMPLOYEE);
+            node.addChild(new NavigationNode("contact_methods", "contactmethod.Container", true, null, "x-fa fa-book", "contacts", ADMIN, EMPLOYEE));
+            node.addChild(new NavigationNode("diagnosis", "diagnosis.Container", true, null, "x-fa fa-book", "diagnosis", ADMIN, EMPLOYEE));
+            rootNodes.add(node);
+        }
 
         rootNodes.add(new NavigationNode("Blank", "main.BlankPage", true, null, "x-fa fa-clock-o", "blank", USER));
     }

@@ -18,7 +18,7 @@
 
 Ext.define('Patients.view.auth.LockScreen', {
     extend: 'Patients.view.base.LockingWindow',
-    title: '<i class="x-fa fa-rocket"></i> ' + i18n.app_name + ': ' + i18n.auth_locked,
+    title: '<img src="resources/images/logo.png"/> ' + i18n.app_name + ': ' + i18n.auth_locked,
     defaultFocus: 'form',
     items: [{
             xclass: 'Patients.view.auth.Dialog',
