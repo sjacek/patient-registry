@@ -18,7 +18,7 @@
 
 Ext.define('Patients.view.patient.Form', {
     extend: 'Ext.form.Panel',
-    requires: ['Ext.form.field.Date', 'Ext.form.field.ComboBox', 'Ext.grid.Panel'],
+    requires: ['Ext.form.field.Date', 'Ext.form.field.ComboBox', 'Ext.grid.Panel', 'Ext.grid.plugin.RowEditing', 'Patients.store.ContactMethod'],
     reference: 'editPanel',
     xtype: 'patient.form',
     header: {
@@ -170,10 +170,38 @@ Ext.define('Patients.view.patient.Form', {
                             bind: {
                                 store: '{selectedObject.contacts}'
                             },
-                            columns: [
-                                {dataIndex: 'method', text: 'Telefon'},
-                                {dataIndex: 'contact', text: 'Kontakt'},
-                                {
+                            plugins: {
+                                ptype: 'rowediting',
+                                clicksToEdit: 2
+                            },
+                            selModel: 'rowmodel',
+                            columns: [{
+                                    dataIndex: 'method',
+                                    text: 'Telefon',
+                                    editor: {
+                                        completeOnEnter: false,
+                                        xtype: 'combo',
+                                        store: Ext.create('Patients.store.ContactMethod'),
+                                        valueField: 'method',
+                                        displayField: 'method',
+                                        listConfig: {
+                                            minWidth: 200
+                                        }
+                                    }
+                                }, {
+                                    dataIndex: 'contact',
+                                    text: 'Kontakt',
+                                    editor: {
+                                        completeOnEnter: false,
+                                        // If the editor config contains a field property, then
+                                        // the editor config is used to create the <a href='Ext.grid.CellEditor.html'>Ext.grid.CellEditor</a>
+                                        // and the field property is used to create the editing input field.
+                                        field: {
+                                            xtype: 'textfield',
+                                            allowBlank: false
+                                        }
+                                    }
+                                }, {
                                     xtype: 'actioncolumn',
                                     width: 30,
 //                                    items: [{
@@ -181,8 +209,7 @@ Ext.define('Patients.view.patient.Form', {
                                     tooltip: i18n.patient_delete_contact,
                                     handler: 'onContactDeleteClick'
 //                                        }]
-                                }
-                            ],
+                                }],
                             validate: function () {
                                 return true;
                             }
@@ -246,7 +273,7 @@ Ext.define('Patients.view.patient.Form', {
                                     name: 'city',
                                     fieldLabel: i18n.address_city,
                                     allowBlank: false,
-                                    bind: '{addressLocal.city}'
+                                    bind: '{address.city}'
                                 }]
                         }, {
                             xtype: 'textfield',

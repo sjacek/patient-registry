@@ -18,15 +18,25 @@
 
 Ext.define("Patients.model.PatientPlus", {
     extend: "Patients.model.Patient",
-    uses: ['Patients.model.Contact'],
+    requires: ['Patients.model.Contact', 'Patients.model.Address'],
+
+    hasOne: [{
+            model: 'Patients.model.Address',
+            name: 'address'
+        }, {
+            model: 'Patients.model.Address',
+            name: 'correspondenceAddress'
+        }],
 
     hasMany: {
         model: 'Patients.model.Contact',
         name: 'contacts'
     },
-    
-    save: function(failure, success, callback) {
-        logService.debug('PatientPlus.save ' + this.contacts().getCount());
+
+    save: function (failure, success, callback) {
+        logService.debug('PatientPlus.save contacts:' + this.contacts().getCount());
+        logService.debug('PatientPlus.save address:' + this.address !== undefined);
+        logService.debug('PatientPlus.save correspondenceAddress:' + this.correspondenceAddress !== undefined);
 
         this.superclass.save.call(this, failure, success, callback);
     }

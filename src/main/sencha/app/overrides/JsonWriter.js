@@ -1,5 +1,5 @@
-/* 
- * Copyright (C) 2015 jsztajnke
+/*
+ * Copyright (C) 2016 Jacek Sztajnke
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,23 +14,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 /* global Ext */
 
-Ext.define('Patients.store.ContactMethod', {
-    extend: 'Ext.data.Store',
-    alias: 'store.contactMethod',
-    requires: ['Patients.model.ContactMethod'],
-    model: 'Patients.model.ContactMethod',
-    autoLoad: false,
-    autoSync: true,
-    pageSize: 100,
-    buffered: true,
-    remoteSort: true,
-    remoteFilter: true,
-    sorters: [{
-            property: 'lastName',
-            direction: 'ASC'
-        }],
-    leadingBufferZone: 200
+Ext.define('Patients.overrides.JsonWriter', {
+    override: 'Ext.data.writer.Json',
+
+    getRecordData: function (record, operation) {
+        record.data = this.callParent(arguments);
+        record.getAssociatedData(record.data, {
+            serialize: true
+        });
+        
+        return record.data;
+    }
 });

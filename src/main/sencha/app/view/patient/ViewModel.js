@@ -40,25 +40,6 @@ Ext.define('Patients.view.patient.ViewModel', {
             pageSize: 100,
             leadingBufferZone: 200
         }
-//        ,
-//        contacts: {
-//            model: 'Patients.model.Contact',
-//            bind: {
-//                data: '{objects.contacts}'
-//            }
-//////            xtype: 'array',
-////            model: 'Patients.model.Contact',
-//////            fields: [
-//////                'method', 'contact'
-//////            ],
-////            data: [
-////                { method: 'telefon', contact: '123456' },
-////                { method: 'email', contact: 'bla@bla.com' }
-////            ]
-//        },
-//        addressChained: {
-//            source: '{objects.address}'
-//        }
     },
     formulas: {
         address: {

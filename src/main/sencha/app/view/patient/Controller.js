@@ -18,7 +18,7 @@
 
 Ext.define('Patients.view.patient.Controller', {
     extend: 'Patients.view.base.ViewController',
-    requires: 'Patients.model.Address',
+    requires: ['Patients.model.Address'],
     config: {
         formClassName: 'Patients.view.patient.Form',
         objectName: i18n.patient,
@@ -43,7 +43,7 @@ Ext.define('Patients.view.patient.Controller', {
         if (!this.correspondenceAddressEnabled) {
             selectedObject.correspondenceAddress = Ext.create('Patients.model.Address');
         }
-        logService.debug('createSubobjects ' + selectedObject.contacts);
+        logService.debug('createSubobjects ' + selectedObject.contacts());
     },
     edit: function () {
         this.getView().add({xclass: this.getFormClassName()});
@@ -51,8 +51,6 @@ Ext.define('Patients.view.patient.Controller', {
 
         var selectedObject = this.getSelectedObject(),
                 store = selectedObject.contacts();
-        logService.debug('edit 1 ' + typeof selectedObject.contacts);
-        logService.debug('edit 2 ' + typeof selectedObject.contacts());
         logService.debug('edit 3 ' + store.getCount());
 
         Ext.defer(function () {
