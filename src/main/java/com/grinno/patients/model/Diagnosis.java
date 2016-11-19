@@ -19,6 +19,7 @@ package com.grinno.patients.model;
 import ch.rasc.extclassgenerator.Model;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
+import java.util.List;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -27,7 +28,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
  *
  * @author Jacek Sztajnke
  */
-@Document(collection="dictionary")
+//@Document(collection="dictionary")
+@Document
 @Model(value = "Patients.model.Diagnosis",
         createMethod = "diagnosisService.update",
         readMethod = "diagnosisService.read",
@@ -41,6 +43,8 @@ public class Diagnosis extends Dictionary {
     @NotBlank(message = "{fieldrequired}")
     @Indexed
     private String diagnosisName;
+
+    private List<String> otherNames;
 
     @NotBlank(message = "{fieldrequired}")
     private String diagnosisEnglishName;
@@ -56,6 +60,14 @@ public class Diagnosis extends Dictionary {
     
     public void setDiagnosisName(String diagnosisName) {
         this.diagnosisName = diagnosisName;
+    }
+
+    public List<String> getOtherNames() {
+        return otherNames;
+    }
+    
+    public void setOtherNames(List<String> otherName) {
+        this.otherNames = otherName;
     }
 
     public String getDiagnosisEnglishName() {
@@ -80,5 +92,10 @@ public class Diagnosis extends Dictionary {
     
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @Override
+    public String toString() {
+        return getId() + "[" + getDiagnosisName() + "]";
     }
 }

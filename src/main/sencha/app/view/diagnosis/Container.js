@@ -16,15 +16,16 @@
  */
 /* global Ext */
 
-Ext.define('Patients.view.contactmethod.ViewModel', {
-    extend: 'Ext.app.ViewModel',
-    requires: ['Ext.data.BufferedStore'],
-
-    data: {
-        selectedObject: null,
-        totalCount: null
+Ext.define('Patients.view.diagnosis.Container', {
+    extend: 'Ext.container.Container',
+    layout: 'card',
+    controller: {
+        xclass: 'Patients.view.diagnosis.Controller'
     },
-    stores: {
-        objects: { type: 'contactMethod' }
-    }
+    viewModel: {
+        xclass: 'Patients.view.diagnosis.ViewModel'
+    },
+    items: [{
+            xclass: 'Patients.view.diagnosis.Grid'
+        }]
 });

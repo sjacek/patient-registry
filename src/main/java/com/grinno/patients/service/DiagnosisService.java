@@ -23,14 +23,18 @@ import ch.ralscha.extdirectspring.bean.ExtDirectStoreReadRequest;
 import ch.ralscha.extdirectspring.bean.ExtDirectStoreResult;
 import com.grinno.patients.config.security.MongoUserDetails;
 import com.grinno.patients.config.security.RequireUserAuthority;
+import com.grinno.patients.dao.DiagnosisRepository;
 import com.grinno.patients.dao.UserRepository;
 import com.grinno.patients.model.Diagnosis;
 import com.grinno.patients.util.ValidationMessages;
 import com.grinno.patients.util.ValidationMessagesResult;
 import com.grinno.patients.util.ValidationUtil;
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Locale;
 import javax.validation.Validator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
@@ -43,25 +47,47 @@ import org.springframework.stereotype.Service;
 @RequireUserAuthority
 public class DiagnosisService extends AbstractService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
+    private final DiagnosisRepository diagnosisRepository;
+    
+    private final UserRepository userRepository;
+        
     private final Validator validator;
 
     private final MessageSource messageSource;
     
-    public DiagnosisService(UserRepository userRepository, Validator validator, MessageSource messageSource) {
+    public DiagnosisService(DiagnosisRepository diagnosisRepository, UserRepository userRepository, Validator validator, MessageSource messageSource) {
         super(userRepository, messageSource);
+        this.diagnosisRepository = diagnosisRepository;
+        this.userRepository = userRepository;
         this.validator = validator;
         this.messageSource = messageSource;
     }
     
     @ExtDirectMethod(STORE_READ)
     public ExtDirectStoreResult<Diagnosis> read(ExtDirectStoreReadRequest request) {
-        // TODO:
-        return new ExtDirectStoreResult<>();
+        List<Diagnosis> list = diagnosisRepository.findAllActive();
+        LOGGER.debug("read size:[" + list.size() + "]");
+        return new ExtDirectStoreResult<>(list);
     }
 
     @ExtDirectMethod(STORE_MODIFY)
     public ExtDirectStoreResult<Diagnosis> destroy(@AuthenticationPrincipal MongoUserDetails userDetails, Diagnosis diagnosis) {
-        return new ExtDirectStoreResult<>();
+        ExtDirectStoreResult<Diagnosis> result = new ExtDirectStoreResult<>();
+
+        LOGGER.debug("destroy 1");
+        Diagnosis old = diagnosisRepository.findOne(diagnosis.getId());
+
+        old.setId(null);
+        old.setActive(false);
+        diagnosisRepository.save(old);
+        LOGGER.debug("destroy 2 " + old.getId());
+
+        setAttrsForDelete(diagnosis, userDetails, old);
+        diagnosisRepository.save(diagnosis);
+        LOGGER.debug("destroy end");
+        return result.setSuccess(true);
     }
 
     @ExtDirectMethod(STORE_MODIFY)
@@ -71,14 +97,26 @@ public class DiagnosisService extends AbstractService {
         ValidationMessagesResult<Diagnosis> result = new ValidationMessagesResult<>(diagnosis);
         result.setValidations(violations);
 //
-//        LOGGER.debug("update 1: " + patient.toString());
-//        if (violations.isEmpty()) {
-//            setAttrsForUpdate(patient, userDetails);
-//            patientRepository.save(patient);
-//            LOGGER.debug("update 2");
-//        }
-//
-//        LOGGER.debug("update end");
+
+        LOGGER.debug("update 1: " + diagnosis.toString());
+        if (violations.isEmpty()) {
+            Diagnosis old = diagnosisRepository.findOne(diagnosis.getId());
+            if (old != null) {
+                old.setId(null);
+                old.setActive(false);
+                diagnosisRepository.save(old);
+                LOGGER.debug("update 2 " + old.getId());
+                setAttrsForUpdate(diagnosis, userDetails, old);
+            }
+            else {
+                setAttrsForCreate(diagnosis, userDetails);
+            }
+
+            diagnosisRepository.save(diagnosis);
+            LOGGER.debug("update 3");
+        }
+        
+        LOGGER.debug("update end");
         return result;
     }
 

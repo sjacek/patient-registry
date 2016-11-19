@@ -58,7 +58,7 @@ public class NavigationService {
         {
             NavigationNode node = new NavigationNode("projects", null, false, null, "x-fa fa-space-shuttle", null, ADMIN, EMPLOYEE);
             node.addChild(new NavigationNode("conference_2016", "conference.Container", true, null, "x-fa fa-star-half-o", "conference", ADMIN, EMPLOYEE));
-            node.addChild(new NavigationNode("personal_assistant", "personalassistant.Container", true, null, "x-fa fa-wheelchair-alt", "diagnosis", ADMIN, EMPLOYEE));
+//            node.addChild(new NavigationNode("personal_assistant", "personalassistant.Container", true, null, "x-fa fa-wheelchair-alt", "diagnosis", ADMIN, EMPLOYEE));
             rootNodes.add(node);
         }
 
@@ -67,7 +67,7 @@ public class NavigationService {
         {
             NavigationNode node = new NavigationNode("dictionaries", null, false, null, "x-fa fa-book", null, ADMIN, EMPLOYEE);
             node.addChild(new NavigationNode("contact_methods", "contactmethod.Container", true, null, "x-fa fa-book", "contacts", ADMIN, EMPLOYEE));
-            node.addChild(new NavigationNode("diagnosis", "diagnosis.Container", true, null, "x-fa fa-book", "diagnosis", ADMIN, EMPLOYEE));
+            node.addChild(new NavigationNode("diagnosis_templates", "diagnosis.Container", true, null, "x-fa fa-book", "diagnosis", ADMIN, EMPLOYEE));
             rootNodes.add(node);
         }
 

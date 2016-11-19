@@ -104,6 +104,8 @@ var i18n = {
     expiration_date: "Data ważności",
     patient_card:"Karta pacjenta",
     patient_patients:"Pacjenci",
+    patient_personal_data: 'Dane osobowe',
+    patient_personal_data_tooltip: 'Zakładka dla danych osobowych',
     patient_firstname:"Imię",
     patient_secondname:"Drugie Imię",
     patient_lastname:"Nazwisko",
@@ -148,6 +150,17 @@ var i18n = {
     contact_method:"Metoda kontaktu",
     contact_methods:"Metody kontaktów",
     contact_description:"Opis",
+
+    diagnosis: "Diagnoza",
+    diagnosis_dictionary: "Słownik szablonów diagnoz",
+    diagnosis_template: "Szablon diagnozy",
+    diagnosis_templates: "Szablony diagnoz",
+    diagnosis_name: "Nazwa",
+    diagnosis_create_tooltip: "Utwórz nowy szablon diagnozy",
+    diagnosis_edit_tooltip: "Edytuj szablon diagnozy",
+    diagnosis_delete_tooltip: "Usuń szablon diagnozy",
+    diagnosis_english_name: "Angielska nazwa",
+    diagnosis_icd10: "ICD-10",
 
     "":""
 };

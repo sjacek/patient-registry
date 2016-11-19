@@ -103,6 +103,8 @@ var i18n = {
     expiration_date: "Date of Expiration",
     patient:"Patient",
     patient_patients:"Patients",
+    patient_personal_data: 'Personal data',
+    patient_personal_data_tooltip: 'The tab with personal data',
     patient_card:"Patient Card",
     patient_secondname:"Second Name",
     patient_firstname:"First Name",
@@ -149,5 +151,16 @@ var i18n = {
     contact_methods:"Contact Methods",
     contact_description:"Description",
 
+    diagnosis: "Diagnosis",
+    diagnosis_dictionary: "Diagnosis Templates Dictionary",
+    diagnosis_template: "Diagnosis Template",
+    diagnosis_templates: "Diagnosis Templates",
+    diagnosis_name: "Name",
+    diagnosis_create_tooltip: "Creae new diagnosis template",
+    diagnosis_edit_tooltip: "Edit diagnosis template",
+    diagnosis_delete_tooltip: "Delete diagnosis template",
+    diagnosis_english_name: "English Name",
+    diagnosis_icd10: "ICD-10",
+    
     "":""
 };

@@ -16,15 +16,29 @@
  */
 /* global Ext */
 
-Ext.define('Patients.view.contactmethod.ViewModel', {
+Ext.define('Patients.view.diagnosis.ViewModel', {
     extend: 'Ext.app.ViewModel',
     requires: ['Ext.data.BufferedStore'],
-
     data: {
         selectedObject: null,
         totalCount: null
     },
     stores: {
-        objects: { type: 'contactMethod' }
+        objects: {
+            model: 'Patients.model.Diagnosis',
+            autoLoad: false,
+            buffered: true,
+            remoteSort: true,
+            remoteFilter: true,
+            sorters: [{
+                    property: 'lastName',
+                    direction: 'ASC'
+                }],
+            listeners: {
+                load: 'onObjectStoreLoad'
+            },
+            pageSize: 100,
+            leadingBufferZone: 200
+        }
     }
 });
