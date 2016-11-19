@@ -22,8 +22,7 @@ Ext.define('Patients.view.patient.Controller', {
     config: {
         formClassName: 'Patients.view.patient.Form',
         objectName: i18n.patient,
-        objectNamePlural: i18n.patients,
-        correspondenceAddressEnabled: false
+        objectNamePlural: i18n.patients
     },
     erase: function () {
         this.eraseObject(this.getSelectedObject().get('firstName') + " " + this.getSelectedObject().get('lastName'), function () {
@@ -36,35 +35,31 @@ Ext.define('Patients.view.patient.Controller', {
     },
     createSubobjects: function () {
         var selectedObject = this.getSelectedObject();
-        if (!selectedObject.address) {
-            selectedObject.address = Ext.create('Patients.model.Address');
+        if (!selectedObject.getAddress()) {
+            selectedObject.setAddress(Ext.create('Patients.model.Address'));
         }
-        this.correspondenceAddressEnabled = (selectedObject.correspondenceAddress !== undefined);
-        if (!this.correspondenceAddressEnabled) {
-            selectedObject.correspondenceAddress = Ext.create('Patients.model.Address');
+
+        var correspondenceAddress = selectedObject.getCorrespondenceAddress(),
+                correspondenceAddressEnabled = (correspondenceAddress !== null);
+        if (!correspondenceAddressEnabled) {
+            selectedObject.setCorrespondenceAddress(Ext.create('Patients.model.Address'));
         }
-        logService.debug('createSubobjects ' + selectedObject.contacts());
+        this.getViewModel().set('correspondenceAddressEnabled', correspondenceAddressEnabled);
     },
     edit: function () {
         this.getView().add({xclass: this.getFormClassName()});
         var formPanel = this.getView().getLayout().next();
-
-        var selectedObject = this.getSelectedObject(),
-                store = selectedObject.contacts();
-        logService.debug('edit 3 ' + store.getCount());
 
         Ext.defer(function () {
             formPanel.isValid();
         }, 1);
     },
     save: function (callback) {
-        var selectedObject = this.getSelectedObject(),
-                store = selectedObject.contacts();
-        logService.debug('save ' + store.getCount());
-////        logService.debug('save ' + this.getSelectedObject().contacts[0]);
-////        logService.debug('save ' + this.getSelectedObject().contacts[1]);
-////        logService.debug('save ' + this.getSelectedObject().contacts[2]);
-//        
+        if (!this.getViewModel().get('correspondenceAddressEnabled')) {
+            this.getSelectedObject().getCorrespondenceAddress().destroy();
+            delete this.getSelectedObject().getCorrespondenceAddress();
+        }
+
         this.superclass.save.call(this, callback);
     },
     onCancelClick: function () {
@@ -72,9 +67,7 @@ Ext.define('Patients.view.patient.Controller', {
     },
     onContactsNewClick: function () {
         var store = this.getSelectedObject().contacts();
-        logService.debug('save ' + store.getCount());
-        store.insert(0, {method: 'xxx', contact: 'zzz'})[0];
-        logService.debug('save ' + store.getCount());
+        store.insert(0, {method: '', contact: ''})[0];
     },
     onContactDeleteClick: function (view, row, col, action, ev, record) {
         var store = record.store;

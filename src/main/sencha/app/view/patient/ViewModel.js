@@ -21,7 +21,8 @@ Ext.define('Patients.view.patient.ViewModel', {
     requires: ['Ext.data.BufferedStore'],
     data: {
         selectedObject: null,
-        totalCount: null
+        totalCount: null,
+        correspondenceAddressEnabled: false
     },
     stores: {
         objects: {

@@ -18,6 +18,7 @@ package com.grinno.patients.model;
 
 import ch.rasc.extclassgenerator.Model;
 import ch.rasc.extclassgenerator.ModelField;
+//import ch.rasc.extclassgenerator.ModelHasMany;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import static com.fasterxml.jackson.annotation.JsonFormat.Shape.STRING;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -80,9 +81,13 @@ public class Patient extends AbstractPersistable {
     private Date birthday;
 
 //    @ModelHasOne
+//    @ModelField(reference=@ReferenceConfig(type="Patients.model.Address"))
+    @ModelField()
     private Address address;
 
 //    @ModelHasOne
+//    @ModelField(reference=@ReferenceConfig(type="Patients.model.Address"))
+    @ModelField()
     private Address correspondenceAddress;
     
 //    @ModelHasMany

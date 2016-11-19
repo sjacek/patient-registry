@@ -24,7 +24,14 @@ Ext.define('Patients.overrides.JsonWriter', {
         record.getAssociatedData(record.data, {
             serialize: true
         });
-        
+        Object.keys(record.data).forEach(function(key, index, mapObj) {
+            var data = record.data[key];
+            if (typeof data === 'object') {
+                if (Object.keys(data).length === 0) {
+                    delete record.data[key];
+                }
+            }
+        });
         return record.data;
-    }
+    },
 });

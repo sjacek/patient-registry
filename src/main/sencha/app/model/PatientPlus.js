@@ -22,22 +22,16 @@ Ext.define("Patients.model.PatientPlus", {
 
     hasOne: [{
             model: 'Patients.model.Address',
-            name: 'address'
+            name: 'address',
+            nullable: false
         }, {
             model: 'Patients.model.Address',
-            name: 'correspondenceAddress'
+            name: 'correspondenceAddress',
+            nullable: true
         }],
 
     hasMany: {
         model: 'Patients.model.Contact',
         name: 'contacts'
-    },
-
-    save: function (failure, success, callback) {
-        logService.debug('PatientPlus.save contacts:' + this.contacts().getCount());
-        logService.debug('PatientPlus.save address:' + this.address !== undefined);
-        logService.debug('PatientPlus.save correspondenceAddress:' + this.correspondenceAddress !== undefined);
-
-        this.superclass.save.call(this, failure, success, callback);
     }
 });
