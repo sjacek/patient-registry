@@ -69,6 +69,15 @@ Ext.define('Patients.view.patient.Grid', {
         }, {
             text: i18n.patient_status,
             dataIndex: 'status',
+            renderer: function (value) {
+                if (value === undefined || value === null)
+                    return 'undefined';
+                var store = Ext.create('Patients.store.PatientStatus');
+                var record = store.findRecord('value', value);
+                if (record === undefined || record === null)
+                    return 'not found';
+                return record.get('text');
+            },
             flex: 1,
             stateId: 'view.patient.Grid.status'
         }, {
@@ -120,6 +129,6 @@ Ext.define('Patients.view.patient.Grid', {
             }
         }],
     dockedItems: [
-        {xtype: 'pagingtoolbar', bind: { store: '{objects}' }, dock: 'bottom', displayInfo: true}
+        {xtype: 'pagingtoolbar', bind: {store: '{objects}'}, dock: 'bottom', displayInfo: true}
     ]
 });

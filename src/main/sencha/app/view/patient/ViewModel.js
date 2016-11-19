@@ -22,7 +22,9 @@ Ext.define('Patients.view.patient.ViewModel', {
     data: {
         selectedObject: null,
         totalCount: null,
-        correspondenceAddressEnabled: false
+        correspondenceAddressEnabled: false,
+        certificateOfDisabilityEnabled: false,
+        certificateOfDisabilityExpirationEnabled: false
     },
     stores: {
         objects: {
@@ -61,5 +63,17 @@ Ext.define('Patients.view.patient.ViewModel', {
                 return correspondenceAddress;
             }
         }
+//        certificateOfDisabilityEnabled: function(get) {
+//            var selectedObject = get('selectedObject');
+//            if (selectedObject === null) {
+//                return false;
+//            }
+//            return selectedObject.get('disabilityLevel') !== 'NO_CERTIFICATE';
+//        },
+//        certificateOfDisabilityExpirationEnabled: function (get) {
+//            var a = !get('certificateOfDisability');
+//            var ret = !get('certificateOfDisability') && this.certificateOfDisabilityExpiration;
+//            return ret;
+//        },
     }
 });

@@ -92,6 +92,16 @@ public class Patient extends AbstractPersistable {
     
 //    @ModelHasMany
     private List<Contact> contacts;
+
+    @ModelField
+    @NotNull(message = "{fieldrequired}")
+    private DisabilityLevel disabilityLevel;
+    
+    @Indexed
+    @ModelField(dateFormat = "c")
+    @JsonFormat(shape=STRING)
+    @Temporal(DATE)
+    private Date certificateOfDisabilityExpiration;
     
     public Patient() {
     }
@@ -144,10 +154,6 @@ public class Patient extends AbstractPersistable {
         this.birthday = birthday;
     }
 
-    public List<Contact> getContacts() {
-        return contacts;
-    }
-    
     public Address getAddress() {
         return address;
     }
@@ -164,10 +170,30 @@ public class Patient extends AbstractPersistable {
         this.correspondenceAddress = correspondenceAddress;
     }
 
+    public List<Contact> getContacts() {
+        return contacts;
+    }
+    
     public void setContacts(List<Contact> contacts) {
         this.contacts = contacts;
     }
     
+    public DisabilityLevel getDisabilityLevel() {
+        return disabilityLevel;
+    }
+    
+    public void setDisabilityLevel(DisabilityLevel disabilityLevel) {
+        this.disabilityLevel = disabilityLevel;
+    }
+
+    public Date getCertificateOfDisabilityExpiration() {
+        return certificateOfDisabilityExpiration;
+    }
+    
+    public void setCertificateOfDisabilityExpiration(Date certificateOfDisabilityExpiration) {
+        this.certificateOfDisabilityExpiration = certificateOfDisabilityExpiration;
+    }
+
     @Override
     public String toString() {
         return getId() + "[" + getFirstName() + ", " + getLastName() + ", " + getPesel() + "]";

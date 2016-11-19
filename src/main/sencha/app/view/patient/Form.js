@@ -18,7 +18,7 @@
 
 Ext.define('Patients.view.patient.Form', {
     extend: 'Ext.form.Panel',
-    requires: ['Ext.form.field.Date', 'Ext.form.field.ComboBox', 'Ext.grid.Panel', 'Ext.grid.plugin.RowEditing', 'Patients.store.ContactMethod'],
+    requires: ['Ext.form.field.Date', 'Ext.form.field.ComboBox', 'Ext.grid.Panel', 'Ext.grid.plugin.CellEditing', 'Patients.store.ContactMethod'],
     reference: 'editPanel',
     xtype: 'patient.form',
     header: {
@@ -171,13 +171,13 @@ Ext.define('Patients.view.patient.Form', {
                                 store: '{selectedObject.contacts}'
                             },
                             plugins: {
-                                ptype: 'rowediting',
+                                ptype: 'cellediting',
                                 clicksToEdit: 2
                             },
-                            selModel: 'rowmodel',
+                            selModel: 'cellmodel',
                             columns: [{
                                     dataIndex: 'method',
-                                    text: 'Telefon',
+                                    text: i18n.patient_contact_method,
                                     editor: {
                                         completeOnEnter: false,
                                         xtype: 'combo',
@@ -190,7 +190,7 @@ Ext.define('Patients.view.patient.Form', {
                                     }
                                 }, {
                                     dataIndex: 'contact',
-                                    text: 'Kontakt',
+                                    text: i18n.patient_contact,
                                     editor: {
                                         completeOnEnter: false,
                                         // If the editor config contains a field property, then
@@ -236,7 +236,7 @@ Ext.define('Patients.view.patient.Form', {
                     items: [{
                             xtype: 'label',
                             flex: 1,
-                            forId: 'address',
+                            forId: 'address_street',
                             text: i18n.patient_address
                         }, {
                             xtype: 'textfield',
@@ -304,7 +304,6 @@ Ext.define('Patients.view.patient.Form', {
                         align: 'stretch'
                     },
                     items: [{
-                            id: 'correspondence_address_enabled',
                             xtype: 'checkbox',
                             flex: 1,
                             fieldLabel: i18n.patient_correspondence_address,
@@ -317,8 +316,7 @@ Ext.define('Patients.view.patient.Form', {
                             bind: {
                                 value: '{correspondenceAddress.street}',
                                 disabled: '{!correspondenceAddressEnabled}'
-                            },
-                            disabled: '{!correspondenceAddressEnabled}'
+                            }
                         }, {
                             layout: 'hbox',
                             items: [{
@@ -329,8 +327,7 @@ Ext.define('Patients.view.patient.Form', {
                                     bind: {
                                         value: '{correspondenceAddress.house}',
                                         disabled: '{!correspondenceAddressEnabled}'
-                                    },
-                                    disabled: '{!correspondenceAddressEnabled}'
+                                    }
                                 }, {
                                     xtype: 'textfield',
                                     name: 'flat',
@@ -339,8 +336,7 @@ Ext.define('Patients.view.patient.Form', {
                                     bind: {
                                         value: '{correspondenceAddress.flat}',
                                         disabled: '{!correspondenceAddressEnabled}'
-                                    },
-                                    disabled: '{!correspondenceAddressEnabled}'
+                                    }
                                 }]
                         }, {
                             layout: 'hbox',
@@ -352,8 +348,7 @@ Ext.define('Patients.view.patient.Form', {
                                     bind: {
                                         value: '{correspondenceAddress.zipCode}',
                                         disabled: '{!correspondenceAddressEnabled}'
-                                    },
-                                    disabled: '{!correspondenceAddressEnabled}'
+                                    }
                                 }, {
                                     xtype: 'textfield',
                                     name: 'city',
@@ -362,8 +357,7 @@ Ext.define('Patients.view.patient.Form', {
                                     bind: {
                                         value: '{correspondenceAddress.city}',
                                         disabled: '{!correspondenceAddressEnabled}'
-                                    },
-                                    disabled: '{!correspondenceAddressEnabled}'
+                                    }
                                 }]
                         }, {
                             xtype: 'textfield',
@@ -373,8 +367,7 @@ Ext.define('Patients.view.patient.Form', {
                             bind: {
                                 value: '{correspondenceAddress.county}',
                                 disabled: '{!correspondenceAddressEnabled}'
-                            },
-                            disabled: '{!correspondenceAddressEnabled}'
+                            }
                         }, {
                             xtype: 'textfield',
                             name: 'voivodship',
@@ -383,8 +376,7 @@ Ext.define('Patients.view.patient.Form', {
                             bind: {
                                 value: '{correspondenceAddress.voivodship}',
                                 disabled: '{!correspondenceAddressEnabled}'
-                            },
-                            disabled: '{!correspondenceAddressEnabled}'
+                            }
                         }, {
                             xtype: 'textfield',
                             name: 'country',
@@ -393,9 +385,50 @@ Ext.define('Patients.view.patient.Form', {
                             bind: {
                                 value: '{correspondenceAddress.country}',
                                 disabled: '{!correspondenceAddressEnabled}'
-                            },
-                            disabled: '{!correspondenceAddressEnabled}'
+                            }
                         }]
+                }]
+        }, {
+            layout: 'hbox',
+            items: [{
+                    xtype: 'combobox',
+                    fieldLabel: i18n.patient_disabilitylevel,
+                    store: 'disabilityLevel',
+                    bind: '{selectedObject.disabilityLevel}',
+                    name: 'disabilityLevel',
+                    valueField: 'value',
+                    displayField: 'text',
+                    queryMode: 'local',
+                    forceSelection: false,
+                    editable: false,
+                    listeners: {
+                        select: 'onDisabilityLevelSelect'
+                    }
+                }, {
+                    xtype: 'checkbox',
+                    fieldLabel: i18n.expiration_date,
+                    bind: {
+                        value: '{certificateOfDisabilityExpirationEnabled}',
+                        disabled: '{!certificateOfDisabilityEnabled}'
+                    },
+                    handler: 'onExpirationDateChange'
+                }, {
+                    xtype: 'datefield',
+                    name: 'certificateOfDisabilityExpiration',
+                    allowBlank: false,
+                    bind: {
+                        value: '{selectedObject.certificateOfDisabilityExpiration}',
+                        hidden: '{!certificateOfDisabilityExpirationEnabled}'
+                    }
+                }, {
+                    xtype: 'textfield',
+                    flex: 1,
+                    value: i18n.patient_certificateofdisability_indefinitely,
+                    editable: false,
+                    bind: {
+                        disabled: '{!certificateOfDisabilityEnabled}',
+                        hidden: '{certificateOfDisabilityExpirationEnabled}'
+                    }
                 }]
         }]
 });

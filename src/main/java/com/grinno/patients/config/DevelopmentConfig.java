@@ -30,6 +30,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ch.ralscha.extdirectspring.util.ExtDirectSpringUtil;
 import com.grinno.patients.model.Authority;
+import com.grinno.patients.model.DisabilityLevel;
 import com.grinno.patients.model.PatientStatus;
 import static java.util.Locale.ENGLISH;
 import static java.util.Locale.GERMAN;
@@ -72,6 +73,7 @@ class DevelopmentConfig {
     private static void writeEnums(Path clientDir) throws IOException {
         writeEnum(clientDir, "Authority", Authority.values(), true);
         writeEnum(clientDir, "PatientStatus", PatientStatus.values(), false);
+        writeEnum(clientDir, "DisabilityLevel", DisabilityLevel.values(), false);
     }
 
     private static void writeEnum(Path clientDir, String name, Enum<?>[] values, boolean writeStore) throws IOException {

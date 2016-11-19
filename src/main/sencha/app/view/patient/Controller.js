@@ -40,11 +40,18 @@ Ext.define('Patients.view.patient.Controller', {
         }
 
         var correspondenceAddress = selectedObject.getCorrespondenceAddress(),
-                correspondenceAddressEnabled = (correspondenceAddress !== null);
-        if (!correspondenceAddressEnabled) {
+                correspondenceAddressEnabled = (correspondenceAddress !== null && correspondenceAddress.phantom === false);
+        if (!correspondenceAddress) {
             selectedObject.setCorrespondenceAddress(Ext.create('Patients.model.Address'));
         }
         this.getViewModel().set('correspondenceAddressEnabled', correspondenceAddressEnabled);
+
+        var certificateOfDisabilityEnabled = (selectedObject.get('disabilityLevel') !== 'NO_CERTIFICATE');
+        this.getViewModel().set('certificateOfDisabilityEnabled', certificateOfDisabilityEnabled);
+
+        var expirationData = selectedObject.get('certificateOfDisabilityExpiration');
+        var enabled = expirationData !== undefined && expirationData !== null;
+        this.getViewModel().set('certificateOfDisabilityExpirationEnabled', this.getViewModel().get('certificateOfDisabilityEnabled') && enabled);
     },
     edit: function () {
         this.getView().add({xclass: this.getFormClassName()});
@@ -59,6 +66,10 @@ Ext.define('Patients.view.patient.Controller', {
             this.getSelectedObject().getCorrespondenceAddress().destroy();
             delete this.getSelectedObject().getCorrespondenceAddress();
         }
+        if (!this.getViewModel().get('certificateOfDisabilityExpirationEnabled')) {
+            delete this.getSelectedObject().get('certificateOfDisabilityExpiration');
+            this.getSelectedObject().set('certificateOfDisabilityExpiration', null);
+        }
 
         this.superclass.save.call(this, callback);
     },
@@ -72,6 +83,16 @@ Ext.define('Patients.view.patient.Controller', {
     onContactDeleteClick: function (view, row, col, action, ev, record) {
         var store = record.store;
         store.remove(record);
+    },
+    onDisabilityLevelSelect: function (combo, value, opts) {
+        var certificateOfDisabilityEnabled = value.data.value.localeCompare('NO_CERTIFICATE') !== 0;
+        this.getViewModel().set('certificateOfDisabilityEnabled', certificateOfDisabilityEnabled);
+        this.getViewModel().set('certificateOfDisabilityExpirationEnabled', certificateOfDisabilityEnabled && this.getViewModel().get('certificateOfDisabilityExpirationEnabled'));
+        this.lookup('editPanel').isValid();
+    },
+    onExpirationDateChange: function(newValue) {
+        this.getViewModel().set('certificateOfDisabilityExpirationEnabled', this.getViewModel().get('certificateOfDisabilityEnabled') && newValue.value);
+        this.lookup('editPanel').isValid();
     }
 
 });
