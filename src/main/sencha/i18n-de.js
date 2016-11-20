@@ -139,6 +139,7 @@ var i18n = {
     patient_disabilitylevel_severe: 'Severe',
     patient_certificateofdisability_indefinitely: "Indefinitely",
     patient_diagnosis_copy_template: "Copy from diagnosis template",
+    patient_change_diagnosis_confirm_msg: "Change diagnosis to '{0}'?",
     patient_notes: "Notes",
     address_street:"Street",
     address_house_no:"House no.",

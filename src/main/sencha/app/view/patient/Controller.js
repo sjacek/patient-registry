@@ -18,7 +18,7 @@
 
 Ext.define('Patients.view.patient.Controller', {
     extend: 'Patients.view.base.ViewController',
-    requires: ['Patients.model.Address'],
+//    requires: ['Patients.model.Address'],
     config: {
         formClassName: 'Patients.view.patient.Form',
         objectName: i18n.patient,
@@ -45,7 +45,11 @@ Ext.define('Patients.view.patient.Controller', {
             menu.add({
                 text: record.get('diagnosisName'),
                 handler: function () {
-                    me.getSelectedObject().setDiagnosis(record);
+                    Ext.Msg.confirm(i18n.attention, Ext.String.format(i18n.patient_change_diagnosis_confirm_msg, record.get('diagnosisName')), function (choice) {
+                        if (choice === 'yes') {
+                            me.getSelectedObject().setDiagnosis(record);
+                        }
+                    });
                 }
             });
         });
@@ -70,6 +74,10 @@ Ext.define('Patients.view.patient.Controller', {
 
         var certificateOfDisabilityEnabled = (selectedObject.get('disabilityLevel') !== 'NO_CERTIFICATE');
         this.getViewModel().set('certificateOfDisabilityEnabled', certificateOfDisabilityEnabled);
+
+        if (!selectedObject.getDiagnosis()) {
+            selectedObject.setDiagnosis(Ext.create('Patients.model.Diagnosis'));
+        }
 
         var expirationData = selectedObject.get('certificateOfDisabilityExpiration');
         var enabled = expirationData !== undefined && expirationData !== null;

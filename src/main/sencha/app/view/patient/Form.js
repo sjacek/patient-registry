@@ -504,11 +504,14 @@ Ext.define('Patients.view.patient.Form', {
                                 text: i18n.patient_diagnosis_copy_template
                             }]
                     }, {
-                        xtype: 'textfield',
-                        name: 'diagnosisName',
-                        fieldLabel: i18n.diagnosis_name,
-                        allowBlank: false,
-                        bind: '{selectedObject.diagnosis.diagnosisName}'
+                        layout: 'hbox',
+                        items: [{
+                                xtype: 'textfield',
+                                name: 'diagnosisName',
+                                fieldLabel: i18n.diagnosis_name,
+                                allowBlank: false,
+                                bind: '{selectedObject.diagnosis.diagnosisName}'
+                            }]
                     }, {
                         xtype: 'textfield',
                         name: 'diagnosisEnglishName',

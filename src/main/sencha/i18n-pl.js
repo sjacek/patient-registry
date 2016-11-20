@@ -139,6 +139,7 @@ var i18n = {
     patient_disabilitylevel_severe: 'Ciężki',
     patient_certificateofdisability_indefinitely: "Bezterminowo",
     patient_diagnosis_copy_template: "Kopiuj z szablonu diagnoz",
+    patient_change_diagnosis_confirm_msg: "Czy zmienić diagnozę na '{0}'?",
     patient_notes: "Notatki",
     address_street:"Ulica",
     address_house_no:"Nr domu",
