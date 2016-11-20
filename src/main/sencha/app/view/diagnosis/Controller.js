@@ -23,21 +23,15 @@ Ext.define('Patients.view.diagnosis.Controller', {
         objectName: i18n.diagnosis,
         objectNamePlural: i18n.diagnosises
     },
-    onDelete: function (view, row, col, action, ev, record) {
-        var store = record.store;
-        store.remove(record);
-    },
-    erase: function () {
+    onDelete: function(grid, rowIndex, colIndex) {
+        this.setSelectedObject(grid.getStore().getAt(rowIndex));
         this.eraseObject(this.getSelectedObject().get('diagnosisName'), function () {
             Patients.Util.successToast(i18n.destroysuccessful);
             this.onGridRefresh();
         }, null, this);
     },
-    onObjectStoreLoad: function (store) {
-        this.superclass.onObjectStoreLoad.call(this, store);
-    },
     onEdit: function(view, row, col, action, ev, record) {
-        this.getViewModel().set(this.getSelectedObjectName(), record);
+        this.setSelectedObject(record);
         this.createSubobjects();
         this.edit();
     },

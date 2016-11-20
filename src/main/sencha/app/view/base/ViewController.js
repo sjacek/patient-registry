@@ -38,6 +38,9 @@ Ext.define('Patients.view.base.ViewController', {
     getSelectedObject: function () {
         return this.getViewModel().get(this.getSelectedObjectName());
     },
+    setSelectedObject: function (record) {
+        return this.getViewModel().set(this.getSelectedObjectName(), record);
+    },
     onGridRefresh: function () {
         this.getViewModel().set(this.getSelectedObjectName(), null);
         this.getStore(this.getObjectStoreName()).reload();

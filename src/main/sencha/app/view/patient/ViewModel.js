@@ -42,7 +42,8 @@ Ext.define('Patients.view.patient.ViewModel', {
             },
             pageSize: 100,
             leadingBufferZone: 200
-        }
+        },
+        diagnosis: { type: 'diagnosis' }
     },
     formulas: {
         address: {

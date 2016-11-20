@@ -102,6 +102,9 @@ public class Patient extends AbstractPersistable {
     @JsonFormat(shape=STRING)
     @Temporal(DATE)
     private Date certificateOfDisabilityExpiration;
+
+    @ModelField
+    private Diagnosis diagnosis;
     
     public Patient() {
     }
@@ -192,6 +195,14 @@ public class Patient extends AbstractPersistable {
     
     public void setCertificateOfDisabilityExpiration(Date certificateOfDisabilityExpiration) {
         this.certificateOfDisabilityExpiration = certificateOfDisabilityExpiration;
+    }
+
+    public Diagnosis getDiagnosis() {
+        return diagnosis;
+    }
+    
+    public void setDiagnosis(Diagnosis diagnosis) {
+        this.diagnosis = diagnosis;
     }
 
     @Override

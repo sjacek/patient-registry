@@ -44,12 +44,12 @@ Ext.define('Patients.view.main.Main', {
                     iconCls: 'x-fa fa-navicon',
                     handler: 'onToggleNavigationSize'
                 }, {
-                    xtype: 'tbtext',
-                    cls: 'navigation-title',
-                    bind: {
-                        text: '{navigationTitle}'
-                    }
-                }, {
+//                    xtype: 'tbtext',
+//                    cls: 'navigation-title',
+//                    bind: {
+//                        text: '{navigationTitle}'
+//                    }
+//                }, {
                     xtype: 'tbspacer',
                     flex: 1
                 }, {

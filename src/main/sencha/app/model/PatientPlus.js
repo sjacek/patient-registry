@@ -18,7 +18,7 @@
 
 Ext.define("Patients.model.PatientPlus", {
     extend: "Patients.model.Patient",
-    requires: ['Patients.model.Contact', 'Patients.model.Address'],
+    requires: ['Patients.model.Contact', 'Patients.model.Address', 'Patients.model.Diagnosis'],
 
     hasOne: [{
             model: 'Patients.model.Address',
@@ -27,6 +27,10 @@ Ext.define("Patients.model.PatientPlus", {
         }, {
             model: 'Patients.model.Address',
             name: 'correspondenceAddress',
+            nullable: true
+        }, {
+            model: 'Patients.model.Diagnosis',
+            name: 'diagnosis',
             nullable: true
         }],
 

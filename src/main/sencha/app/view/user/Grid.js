@@ -31,6 +31,33 @@ Ext.define('Patients.view.user.Grid', {
         store: '{objects}',
         selection: '{selectedObject}'
     },
+    header: {
+        title: i18n.user_users,
+        defaults: {
+            xtype: 'button',
+            margin: '0 0 0 2'
+        },
+        items: [{
+                emptyText: i18n.filter,
+                xtype: 'textfield',
+                width: 250,
+                plugins: [{
+                        ptype: 'clearable'
+                    }],
+                listeners: {
+                    change: {
+                        fn: 'onFilter',
+                        buffer: 500
+                    }
+                }
+            }, {
+                text: i18n.create,
+                tooltip: i18n.user_create_tooltip,
+                iconCls: 'x-fa fa-plus',
+                ui: 'soft-green',
+                handler: 'newObject'
+            }]
+    },
     listeners: {
         itemdblclick: 'onItemdblclick',
         afterRender: 'onBaseAfterRender'
@@ -93,43 +120,20 @@ Ext.define('Patients.view.user.Grid', {
                 return '<span class="label label-success">' + i18n.no + '</span>';
             },
             stateId: 'view.user.Grid.lockedOutUntil'
-        }],
-    dockedItems: [{
-            xtype: 'toolbar',
-            dock: 'top',
-            items: [{
-                    text: i18n.create,
-                    iconCls: 'x-fa fa-plus',
-                    handler: 'newObject'
-                }, {
-                    emptyText: i18n.filter,
-                    xtype: 'textfield',
-                    width: 250,
-                    plugins: [{
-                            ptype: 'clearable'
-                        }],
-                    listeners: {
-                        change: {
-                            fn: 'onFilter',
-                            buffer: 500
-                        }
-                    }
-                }]
         }, {
-            xtype: 'toolbar',
-            dock: 'bottom',
-            padding: 0,
+            xtype: 'actioncolumn',
+            width: 50,
             items: [{
-                    iconCls: 'x-fa fa-refresh',
-                    handler: 'onGridRefresh',
-                    cls: 'no-bg-button',
-                    tooltip: i18n.refresh
+                    iconCls: 'x-fa fa-edit',
+                    tooltip: i18n.user_edit_tooltip,
+                    handler: 'onEdit'
                 }, {
-                    xtype: 'tbtext',
-                    bind: {
-                        text: '{totalCount}'
-                    }
+                    iconCls: 'x-fa fa-times',
+                    tooltip: i18n.user_delete_tooltip,
+                    handler: 'onDelete'
                 }]
-        }]
-
+        }],
+    dockedItems: [
+        {xtype: 'pagingtoolbar', bind: {store: '{objects}'}, dock: 'bottom', displayInfo: true}
+    ]
 });

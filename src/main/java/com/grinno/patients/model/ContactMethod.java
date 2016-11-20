@@ -19,6 +19,7 @@ package com.grinno.patients.model;
 import ch.rasc.extclassgenerator.Model;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
+import com.grinno.patients.domain.AbstractPersistable;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -27,7 +28,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
  *
  * @author Jacek Sztajnke
  */
-@Document(collection="dictionary")
+@Document(collection="dic_contactmethod")
 @Model(value = "Patients.model.ContactMethod",
         createMethod = "contactService.update",
         readMethod = "contactService.read",
@@ -36,7 +37,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
         paging = true,
         identifier = "uuid")
 @JsonInclude(NON_NULL)
-public class ContactMethod extends Dictionary {
+public class ContactMethod extends AbstractPersistable {
 
     @NotBlank(message = "{fieldrequired}")
     @Indexed

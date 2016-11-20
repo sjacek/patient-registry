@@ -59,13 +59,21 @@ Ext.define('Patients.view.diagnosis.Form', {
         border: true
     },
     items: [{
-            xtype: 'textfield',
-            name: 'id',
-            fieldLabel: i18n.id,
-            labelAlign: 'right',
-            allowBlank: false,
-            bind: '{selectedObject.id}',
-            disabled: true
+            layout: 'hbox',
+            fieldDefaults: {
+            },
+            items: [{
+                    name: 'id',
+                    fieldLabel: i18n.id,
+                    bind: '{selectedObject.id}'
+                }, {
+                    xtype: 'textfield',
+                    name: 'version',
+                    fieldLabel: i18n.version,
+                    bind: '{selectedObject.version}',
+                    labelAlign: 'right',
+                    disabled: true
+                }]
         }, {
             defaults: {
                 margin: 5,

@@ -24,21 +24,6 @@ Ext.define('Patients.view.diagnosis.ViewModel', {
         totalCount: null
     },
     stores: {
-        objects: {
-            model: 'Patients.model.Diagnosis',
-            autoLoad: false,
-            buffered: true,
-            remoteSort: true,
-            remoteFilter: true,
-            sorters: [{
-                    property: 'lastName',
-                    direction: 'ASC'
-                }],
-            listeners: {
-                load: 'onObjectStoreLoad'
-            },
-            pageSize: 100,
-            leadingBufferZone: 200
-        }
+        objects: { type: 'diagnosis' }
     }
 });

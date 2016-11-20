@@ -32,6 +32,20 @@ Ext.define('Patients.view.diagnosis.Grid', {
         store: '{objects}',
         selection: '{selectedObject}'
     },
+    header: {
+        title: i18n.diagnosis_dictionary,
+        defaults: {
+            xtype: 'button',
+            margin: '0 0 0 5'
+        },
+        items: [{
+                text: i18n.create,
+                tooltip: i18n.diagnosis_create_tooltip,
+                iconCls: 'x-fa fa-plus',
+                ui: 'soft-green',
+                handler: 'newObject'
+            }]
+    },
     listeners: {
         itemdblclick: 'onItemdblclick',
         afterRender: 'onBaseAfterRender'
@@ -58,43 +72,16 @@ Ext.define('Patients.view.diagnosis.Grid', {
             stateId: 'view.diagnosis.Grid.version'
         }, {
             xtype: 'actioncolumn',
-            width: 30,
+            width: 50,
             items: [{
                     iconCls: 'x-fa fa-edit',
                     tooltip: i18n.diagnosis_edit_tooltip,
                     handler: 'onEdit'
                 }, {
                     iconCls: 'x-fa fa-times',
-                    tooltip: i18n.patient_delete_diagnosis,
+                    tooltip: i18n.diagnosis_delete_tooltip,
                     handler: 'onDelete'
                 }]
-        }],
-    tbar: [{
-            text: i18n.create,
-            tooltip: i18n.diagnosis_create_tooltip,
-            iconCls: 'x-fa fa-plus',
-            ui: 'soft-green',
-            handler: 'newObject'
-        }, {
-            text: 'Edit',
-            reference: 'editDiagnosisButton',
-            tooltip: i18n.diagnosis_edit_tooltip,
-            iconCls: 'x-fa fa-edit',
-            handler: 'onEdit',
-            ui: 'soft-green',
-            bind: {
-                disabled: '{!selectedObject}'
-            }
-        }, {
-            text: i18n.destroy,
-            reference: 'removeDiagnosisButton',
-            tooltip: i18n.diagnosis_destroy_tooltip,
-            iconCls: 'x-fa fa-trash-o',
-            handler: 'erase',
-            ui: 'soft-red',
-            bind: {
-                disabled: '{!selectedObject}'
-            }
         }],
     dockedItems: [
         {xtype: 'pagingtoolbar', bind: {store: '{objects}'}, dock: 'bottom', displayInfo: true}

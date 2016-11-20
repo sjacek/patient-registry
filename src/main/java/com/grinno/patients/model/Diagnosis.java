@@ -19,6 +19,7 @@ package com.grinno.patients.model;
 import ch.rasc.extclassgenerator.Model;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
+import com.grinno.patients.domain.AbstractPersistable;
 import java.util.List;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -28,8 +29,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
  *
  * @author Jacek Sztajnke
  */
-//@Document(collection="dictionary")
-@Document
+@Document(collection="dic_diagnosis")
 @Model(value = "Patients.model.Diagnosis",
         createMethod = "diagnosisService.update",
         readMethod = "diagnosisService.read",
@@ -38,7 +38,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
         paging = true,
         identifier = "uuid")
 @JsonInclude(NON_NULL)
-public class Diagnosis extends Dictionary {
+public class Diagnosis extends AbstractPersistable {
 
     @NotBlank(message = "{fieldrequired}")
     @Indexed

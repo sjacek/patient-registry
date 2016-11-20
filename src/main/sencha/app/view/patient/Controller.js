@@ -24,14 +24,36 @@ Ext.define('Patients.view.patient.Controller', {
         objectName: i18n.patient,
         objectNamePlural: i18n.patients
     },
-    erase: function () {
+    onDelete: function (grid, rowIndex, colIndex) {
+        this.setSelectedObject(grid.getStore().getAt(rowIndex));
         this.eraseObject(this.getSelectedObject().get('firstName') + " " + this.getSelectedObject().get('lastName'), function () {
             Patients.Util.successToast(i18n.destroysuccessful);
             this.onGridRefresh();
         }, null, this);
     },
-    onObjectStoreLoad: function (store) {
-        this.superclass.onObjectStoreLoad.call(this, store);
+    onEdit: function (view, row, col, action, ev, record) {
+        this.setSelectedObject(record);
+        this.createSubobjects();
+        this.edit();
+    },
+    createMenuDiagnosis: function () {
+        var menu = Ext.create('Ext.menu.Menu');
+        var me = this;
+
+        var store = Ext.getStore('diagnosis');
+        store.each(function (record) {
+            menu.add({
+                text: record.get('diagnosisName'),
+                handler: function () {
+                    me.getSelectedObject().setDiagnosis(record);
+                }
+            });
+        });
+
+        var copytemplate = this.lookup('copytemplate');
+        if (copytemplate !== null) {
+            copytemplate.setMenu(menu);
+        }
     },
     createSubobjects: function () {
         var selectedObject = this.getSelectedObject();
@@ -56,6 +78,7 @@ Ext.define('Patients.view.patient.Controller', {
     edit: function () {
         this.getView().add({xclass: this.getFormClassName()});
         var formPanel = this.getView().getLayout().next();
+        this.createMenuDiagnosis();
 
         Ext.defer(function () {
             formPanel.isValid();
@@ -90,7 +113,7 @@ Ext.define('Patients.view.patient.Controller', {
         this.getViewModel().set('certificateOfDisabilityExpirationEnabled', certificateOfDisabilityEnabled && this.getViewModel().get('certificateOfDisabilityExpirationEnabled'));
         this.lookup('editPanel').isValid();
     },
-    onExpirationDateChange: function(newValue) {
+    onExpirationDateChange: function (newValue) {
         this.getViewModel().set('certificateOfDisabilityExpirationEnabled', this.getViewModel().get('certificateOfDisabilityEnabled') && newValue.value);
         this.lookup('editPanel').isValid();
     }

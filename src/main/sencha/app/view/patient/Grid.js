@@ -32,6 +32,33 @@ Ext.define('Patients.view.patient.Grid', {
         store: '{objects}',
         selection: '{selectedObject}'
     },
+    header: {
+        title: i18n.patient_patients,
+        defaults: {
+            xtype: 'button',
+            margin: '0 0 0 2'
+        },
+        items: [{
+                emptyText: i18n.filter,
+                xtype: 'textfield',
+                width: 250,
+                plugins: [{
+                        ptype: 'clearable'
+                    }],
+                listeners: {
+                    change: {
+                        fn: 'onFilter',
+                        buffer: 500
+                    }
+                }
+            }, {
+                text: i18n.create,
+                tooltip: i18n.patient_create_tooltip,
+                iconCls: 'x-fa fa-plus',
+                ui: 'soft-green',
+                handler: 'newObject'
+            }]
+    },
     listeners: {
         itemdblclick: 'onItemdblclick',
         afterRender: 'onBaseAfterRender'
@@ -84,49 +111,20 @@ Ext.define('Patients.view.patient.Grid', {
             text: i18n.version,
             dataIndex: 'version',
             flex: 1,
-            stateId: 'view.patient.Grid.version'
-        }],
-    tbar: [{
-            text: i18n.create,
-            tooltip: i18n.patient_create_tooltip,
-            iconCls: 'x-fa fa-plus',
-            ui: 'soft-green',
-            handler: 'newObject'
+            stateId: 'view.patient.Grid.version',
+            hidden: true
         }, {
-            text: 'Edit',
-            reference: 'editPatientButton',
-            tooltip: i18n.patient_edit_tooltip,
-            iconCls: 'x-fa fa-edit',
-            handler: 'onEdit',
-            ui: 'soft-green',
-            bind: {
-                disabled: '{!selectedObject}'
-            }
-        }, {
-            text: i18n.destroy,
-            reference: 'removePatientButton',
-            tooltip: i18n.patient_destroy_tooltip,
-            iconCls: 'x-fa fa-trash-o',
-            handler: 'erase',
-            ui: 'soft-red',
-            bind: {
-                disabled: '{!selectedObject}'
-            }
-        },
-        '->',
-        {
-            emptyText: i18n.filter,
-            xtype: 'textfield',
-            width: 250,
-            plugins: [{
-                    ptype: 'clearable'
-                }],
-            listeners: {
-                change: {
-                    fn: 'onFilter',
-                    buffer: 500
-                }
-            }
+            xtype: 'actioncolumn',
+            width: 50,
+            items: [{
+                    iconCls: 'x-fa fa-edit',
+                    tooltip: i18n.patient_edit_tooltip,
+                    handler: 'onEdit'
+                }, {
+                    iconCls: 'x-fa fa-times',
+                    tooltip: i18n.patient_delete_tooltip,
+                    handler: 'onDelete'
+                }]
         }],
     dockedItems: [
         {xtype: 'pagingtoolbar', bind: {store: '{objects}'}, dock: 'bottom', displayInfo: true}
