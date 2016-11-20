@@ -18,7 +18,6 @@
 
 Ext.define('Patients.view.patient.Controller', {
     extend: 'Patients.view.base.ViewController',
-//    requires: ['Patients.model.Address'],
     config: {
         formClassName: 'Patients.view.patient.Form',
         objectName: i18n.patient,
@@ -54,7 +53,7 @@ Ext.define('Patients.view.patient.Controller', {
             });
         });
 
-        var copytemplate = this.lookup('copytemplate');
+        var copytemplate = this.lookup('copyDiagnosisTemplateBtn');
         if (copytemplate !== null) {
             copytemplate.setMenu(menu);
         }
@@ -86,7 +85,13 @@ Ext.define('Patients.view.patient.Controller', {
     edit: function () {
         this.getView().add({xclass: this.getFormClassName()});
         var formPanel = this.getView().getLayout().next();
+
         this.createMenuDiagnosis();
+        
+//        var certificateOfDisabilityExpirationEnabled = this.lookup('certificateOfDisabilityExpirationChBox').getValue();
+
+        var certificateOfDisabilityExpirationDate = this.lookup('certificateOfDisabilityExpirationDate');
+        Ext.apply(certificateOfDisabilityExpirationDate, { allowBlank: !this.getViewModel().get('certificateOfDisabilityExpirationEnabled') }, {});
 
         Ext.defer(function () {
             formPanel.isValid();
@@ -123,6 +128,8 @@ Ext.define('Patients.view.patient.Controller', {
     },
     onExpirationDateChange: function (newValue) {
         this.getViewModel().set('certificateOfDisabilityExpirationEnabled', this.getViewModel().get('certificateOfDisabilityEnabled') && newValue.value);
+        var certificateOfDisabilityExpirationDate = this.lookup('certificateOfDisabilityExpirationDate');
+        Ext.apply(certificateOfDisabilityExpirationDate, { allowBlank: !this.getViewModel().get('certificateOfDisabilityExpirationEnabled') }, {});
         this.lookup('editPanel').isValid();
     }
 

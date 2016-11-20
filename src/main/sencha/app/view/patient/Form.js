@@ -255,6 +255,7 @@ Ext.define('Patients.view.patient.Form', {
                             }, {
                                 xtype: 'checkbox',
                                 fieldLabel: i18n.expiration_date,
+//                                reference: 'certificateOfDisabilityExpirationChBox',
                                 bind: {
                                     value: '{certificateOfDisabilityExpirationEnabled}',
                                     disabled: '{!certificateOfDisabilityEnabled}'
@@ -262,8 +263,8 @@ Ext.define('Patients.view.patient.Form', {
                                 handler: 'onExpirationDateChange'
                             }, {
                                 xtype: 'datefield',
+                                reference: 'certificateOfDisabilityExpirationDate',
                                 name: 'certificateOfDisabilityExpiration',
-                                allowBlank: false,
                                 bind: {
                                     value: '{selectedObject.certificateOfDisabilityExpiration}',
                                     hidden: '{!certificateOfDisabilityExpirationEnabled}'
@@ -499,7 +500,7 @@ Ext.define('Patients.view.patient.Form', {
                             }, {
                                 xtype: 'splitbutton',
                                 name: 'copytemplate',
-                                reference: 'copytemplate',
+                                reference: 'copyDiagnosisTemplateBtn',
                                 align: 'right',
                                 text: i18n.patient_diagnosis_copy_template
                             }]
