@@ -16,37 +16,11 @@ import org.apache.catalina.Context;
 import org.apache.catalina.connector.Connector;
 import org.apache.tomcat.util.descriptor.web.SecurityCollection;
 import org.apache.tomcat.util.descriptor.web.SecurityConstraint;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.embedded.EmbeddedServletContainerFactory;
 import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-
-@ConfigurationProperties(prefix = "server")
-class ServerProperties {
-
-    private Integer port;
-    private Integer httpPort;
-
-    public Integer getPort() {
-        return this.port;
-    }
-
-    public void setPort(Integer port) {
-        this.port = port;
-    }
-
-    public Integer getHttpPort() {
-        return this.httpPort;
-    }
-
-    public void setHttpPort(Integer httpPort) {
-        this.httpPort = httpPort;
-    }
-}
 
 @Configuration
-@EnableConfigurationProperties(ServerProperties.class)
 public class WebConfig {
 
     @Bean
@@ -93,15 +67,18 @@ public class WebConfig {
         return tomcat;
     }
 
-    @Autowired
-    ServerProperties serverProperties;
+    @Value("${server.port}")
+    private int port;
 
+    @Value("${server.httpPort}")
+    private int httpPort;
+    
     private Connector initiateHttpConnector() {
         Connector connector = new Connector("org.apache.coyote.http11.Http11NioProtocol");
         connector.setScheme("http");
-        connector.setPort(serverProperties.getHttpPort());
+        connector.setPort(httpPort);
         connector.setSecure(false);
-        connector.setRedirectPort(serverProperties.getPort());
+        connector.setRedirectPort(port);
 
         return connector;
     }

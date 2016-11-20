@@ -6,7 +6,7 @@ info:
   build.time: "@build.timestamp@"
 
 app:
-  url: http://localhost:8088
+  url: https://localhost:8443
   rememberme-cookie-key: patients
   rememberme-cookie-valid-in-days: 31
   default-email-sender: no-reply@starter.com
@@ -73,6 +73,11 @@ endpoints:
     enabled: false
     filter:
       enabled: false
-
+#  health:
+#    sensitive: false
+    
 management:
   add-application-context-header: false
+#  security:
+#    enabled: true
+

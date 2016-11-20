@@ -11,6 +11,18 @@ server:
   compression:
     enabled: false
 
+endpoints:
+  metrics:
+    enabled: true
+    filter:
+      enabled: true
+#  health:
+#    sensitive: false
+#    
+#management:
+#  security:
+#    enabled: true
+
 logging:
   level:
     org.springframework.data.mongodb: INFO
