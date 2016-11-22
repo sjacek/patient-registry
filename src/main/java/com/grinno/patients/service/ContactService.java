@@ -22,9 +22,8 @@ import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.STORE_RE
 import ch.ralscha.extdirectspring.bean.ExtDirectStoreReadRequest;
 import ch.ralscha.extdirectspring.bean.ExtDirectStoreResult;
 import com.grinno.patients.config.security.MongoUserDetails;
-import com.grinno.patients.config.security.RequireEmpolyeeAuthority;
+import com.grinno.patients.dao.authorities.RequireEmpolyeeAuthority;
 import com.grinno.patients.dao.ContactRepository;
-import com.grinno.patients.dao.UserRepository;
 import com.grinno.patients.model.ContactMethod;
 import com.grinno.patients.util.ValidationMessages;
 import com.grinno.patients.util.ValidationMessagesResult;
@@ -35,7 +34,7 @@ import java.util.Locale;
 import javax.validation.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.MessageSource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 
@@ -49,18 +48,21 @@ public class ContactService extends AbstractService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    private final ContactRepository contactRepository;
+    @Autowired
+    private ContactRepository contactRepository;
 
-    private final Validator validator;
+    @Autowired
+    private Validator validator;
 
-    private final MessageSource messageSource;
+//    @Autowired
+//    private MessageSource messageSource;
     
-    public ContactService(ContactRepository contactRepository, UserRepository userRepository, Validator validator, MessageSource messageSource) {
-        super(userRepository, messageSource);
-        this.contactRepository = contactRepository;
-        this.validator = validator;
-        this.messageSource = messageSource;
-    }
+//    public ContactService(ContactRepository contactRepository, UserRepository userRepository, Validator validator, MessageSource messageSource) {
+//        super(userRepository, messageSource);
+//        this.contactRepository = contactRepository;
+//        this.validator = validator;
+//        this.messageSource = messageSource;
+//    }
     
     @ExtDirectMethod(STORE_READ)
     public ExtDirectStoreResult<ContactMethod> read(ExtDirectStoreReadRequest request) {

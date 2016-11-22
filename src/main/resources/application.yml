@@ -65,7 +65,7 @@ logging:
     org.springframework: INFO
     org.mongodb: INFO
     org.apache: INFO
-    com.grinno: DEBUG
+    com.grinno: INFO
   file: ./app.log
 
 endpoints:

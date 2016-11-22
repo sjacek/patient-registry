@@ -22,9 +22,8 @@ import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.STORE_RE
 import ch.ralscha.extdirectspring.bean.ExtDirectStoreReadRequest;
 import ch.ralscha.extdirectspring.bean.ExtDirectStoreResult;
 import com.grinno.patients.config.security.MongoUserDetails;
-import com.grinno.patients.config.security.RequireUserAuthority;
+import com.grinno.patients.dao.authorities.RequireEmpolyeeAuthority;
 import com.grinno.patients.dao.DiagnosisRepository;
-import com.grinno.patients.dao.UserRepository;
 import com.grinno.patients.model.Diagnosis;
 import com.grinno.patients.util.ValidationMessages;
 import com.grinno.patients.util.ValidationMessagesResult;
@@ -35,7 +34,7 @@ import java.util.Locale;
 import javax.validation.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.MessageSource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 
@@ -44,26 +43,30 @@ import org.springframework.stereotype.Service;
  * @author Jacek Sztajnke
  */
 @Service
-@RequireUserAuthority
+@RequireEmpolyeeAuthority
 public class DiagnosisService extends AbstractService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    private final DiagnosisRepository diagnosisRepository;
-    
-    private final UserRepository userRepository;
-        
-    private final Validator validator;
+    @Autowired
+    private DiagnosisRepository diagnosisRepository;
 
-    private final MessageSource messageSource;
+//    @Autowired    
+//    private UserRepository userRepository;
+
+    @Autowired
+    private Validator validator;
+
+//    @Autowired
+//    private MessageSource messageSource;
     
-    public DiagnosisService(DiagnosisRepository diagnosisRepository, UserRepository userRepository, Validator validator, MessageSource messageSource) {
-        super(userRepository, messageSource);
-        this.diagnosisRepository = diagnosisRepository;
-        this.userRepository = userRepository;
-        this.validator = validator;
-        this.messageSource = messageSource;
-    }
+//    public DiagnosisService(DiagnosisRepository diagnosisRepository, UserRepository userRepository, Validator validator, MessageSource messageSource) {
+//        super(userRepository, messageSource);
+//        this.diagnosisRepository = diagnosisRepository;
+//        this.userRepository = userRepository;
+//        this.validator = validator;
+//        this.messageSource = messageSource;
+//    }
     
     @ExtDirectMethod(STORE_READ)
     public ExtDirectStoreResult<Diagnosis> read(ExtDirectStoreReadRequest request) {
@@ -105,7 +108,7 @@ public class DiagnosisService extends AbstractService {
                 old.setId(null);
                 old.setActive(false);
                 diagnosisRepository.save(old);
-                LOGGER.debug("update 2 " + old.getId());
+                LOGGER.debug("update 2 " + old);
                 setAttrsForUpdate(diagnosis, userDetails, old);
             }
             else {

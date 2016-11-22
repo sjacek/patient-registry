@@ -16,16 +16,18 @@ endpoints:
     enabled: true
     filter:
       enabled: true
-#  health:
-#    sensitive: false
-#    
-#management:
-#  security:
-#    enabled: true
+  health:
+    sensitive: false
+    
+management:
+  security:
+    enabled: true
 
 logging:
   level:
-    org.springframework.data.mongodb: INFO
     org.springframework: INFO
     org.apache: INFO
     ch: INFO
+    org.springframework.data.mongodb: DEBUG
+    org.springframework.data.document: DEBUG
+    com.grinno: DEBUG

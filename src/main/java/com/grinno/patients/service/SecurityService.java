@@ -40,8 +40,8 @@ import ch.ralscha.extdirectspring.annotation.ExtDirectMethodType;
 import ch.ralscha.extdirectspring.bean.ExtDirectFormPostResult;
 import com.grinno.patients.config.MongoDb;
 import com.grinno.patients.config.security.MongoUserDetails;
-import com.grinno.patients.config.security.RequireAdminAuthority;
-import com.grinno.patients.config.security.RequireAnyAuthority;
+import com.grinno.patients.dao.authorities.RequireAdminAuthority;
+import com.grinno.patients.dao.authorities.RequireAnyAuthority;
 import com.grinno.patients.dto.UserDetailDto;
 import com.grinno.patients.model.CUser;
 import com.grinno.patients.model.User;
@@ -54,25 +54,29 @@ import org.slf4j.LoggerFactory;
 @Service
 public class SecurityService {
 
-    public static final String AUTH_USER = "authUser";
-
-    private final MongoDb mongoDb;
-
-    private final PasswordEncoder passwordEncoder;
-
-    private final MailService mailService;
-
-    private final ApplicationEventPublisher applicationEventPublisher;
-
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
+    public static final String AUTH_USER = "authUser";
+
     @Autowired
-    public SecurityService(MongoDb mongoDb, PasswordEncoder passwordEncoder, MailService mailService, ApplicationEventPublisher applicationEventPublisher) {
-        this.mongoDb = mongoDb;
-        this.passwordEncoder = passwordEncoder;
-        this.mailService = mailService;
-        this.applicationEventPublisher = applicationEventPublisher;
-    }
+    private MongoDb mongoDb;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private MailService mailService;
+
+    @Autowired
+    private ApplicationEventPublisher applicationEventPublisher;
+
+//    @Autowired
+//    public SecurityService(MongoDb mongoDb, PasswordEncoder passwordEncoder, MailService mailService, ApplicationEventPublisher applicationEventPublisher) {
+//        this.mongoDb = mongoDb;
+//        this.passwordEncoder = passwordEncoder;
+//        this.mailService = mailService;
+//        this.applicationEventPublisher = applicationEventPublisher;
+//    }
 
     @ExtDirectMethod
     public UserDetailDto getAuthUser(@AuthenticationPrincipal MongoUserDetails userDetails) {

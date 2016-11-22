@@ -19,7 +19,7 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 
 import com.grinno.patients.config.security.MongoUserDetails;
-import com.grinno.patients.config.security.RequireAnyAuthority;
+import com.grinno.patients.dao.authorities.RequireAnyAuthority;
 import com.grinno.patients.dao.UserRepository;
 import com.grinno.patients.model.User;
 

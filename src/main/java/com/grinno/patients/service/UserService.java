@@ -32,7 +32,7 @@ import ch.ralscha.extdirectspring.bean.ExtDirectStoreReadRequest;
 import ch.ralscha.extdirectspring.bean.ExtDirectStoreResult;
 import ch.ralscha.extdirectspring.filter.StringFilter;
 import com.grinno.patients.config.MongoDb;
-import com.grinno.patients.config.security.RequireAdminAuthority;
+import com.grinno.patients.dao.authorities.RequireAdminAuthority;
 import com.grinno.patients.model.Authority;
 import com.grinno.patients.model.CPersistentLogin;
 import com.grinno.patients.model.CUser;
@@ -52,21 +52,25 @@ import de.danielbechler.diff.node.DiffNode.State;
 @RequireAdminAuthority
 public class UserService {
 
-    private final MessageSource messageSource;
-
-    private final Validator validator;
-
-    private final MongoDb mongoDb;
-
-    private final MailService mailService;
+    @Autowired
+    private MessageSource messageSource;
 
     @Autowired
-    public UserService(MongoDb mongoDb, Validator validator, MessageSource messageSource, MailService mailService) {
-        this.mongoDb = mongoDb;
-        this.messageSource = messageSource;
-        this.validator = validator;
-        this.mailService = mailService;
-    }
+    private Validator validator;
+
+    @Autowired
+    private MongoDb mongoDb;
+
+    @Autowired
+    private MailService mailService;
+
+//    @Autowired
+//    public UserService(MongoDb mongoDb, Validator validator, MessageSource messageSource, MailService mailService) {
+//        this.mongoDb = mongoDb;
+//        this.messageSource = messageSource;
+//        this.validator = validator;
+//        this.mailService = mailService;
+//    }
 
     @ExtDirectMethod(STORE_READ)
     public ExtDirectStoreResult<User> read(ExtDirectStoreReadRequest request) {

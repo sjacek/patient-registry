@@ -137,6 +137,8 @@ var i18n = {
     patient_disabilitylevel_lightweight: 'Lekki',
     patient_disabilitylevel_moderate: 'Umiarkowany',
     patient_disabilitylevel_severe: 'Ciężki',
+    patient_issue_date: "Data wydania",
+    patient_issuing_unit: "Organ wydający",
     patient_certificateofdisability_indefinitely: "Bezterminowo",
     patient_diagnosis_copy_template: "Kopiuj z szablonu diagnoz",
     patient_change_diagnosis_confirm_msg: "Czy zmienić diagnozę na '{0}'?",

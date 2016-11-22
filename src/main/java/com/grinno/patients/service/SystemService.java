@@ -7,17 +7,18 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.grinno.patients.config.security.RequireAdminAuthority;
+import com.grinno.patients.dao.authorities.RequireAdminAuthority;
 
 @Controller
 public class SystemService {
 
-    private final MailService mailService;
-
     @Autowired
-    public SystemService(MailService mailService) {
-        this.mailService = mailService;
-    }
+    private MailService mailService;
+
+//    @Autowired
+//    public SystemService(MailService mailService) {
+//        this.mailService = mailService;
+//    }
 
     @RequestMapping(path = "/sendtestemail", method = RequestMethod.GET)
     @RequireAdminAuthority

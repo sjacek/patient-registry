@@ -137,6 +137,8 @@ var i18n = {
     patient_disabilitylevel_lightweight: 'Lightweight',
     patient_disabilitylevel_moderate: 'Moderate',
     patient_disabilitylevel_severe: 'Severe',
+    patient_issue_date: "Date of Issue",
+    patient_issuing_unit: "Unit Issuing",
     patient_certificateofdisability_indefinitely: "Indefinitely",
     patient_diagnosis_copy_template: "Copy from diagnosis template",
     patient_change_diagnosis_confirm_msg: "Change diagnosis to '{0}'?",

@@ -20,6 +20,7 @@ import com.grinno.patients.dao.UserRepository;
 import com.grinno.patients.domain.AbstractPersistable;
 import com.grinno.patients.model.User;
 import java.util.Date;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -29,14 +30,16 @@ import org.springframework.security.core.userdetails.UserDetails;
  */
 public abstract class AbstractService {
 
+    @Autowired
     UserRepository userRepository;
 
+    @Autowired
     MessageSource messageSource;
 
-    AbstractService(UserRepository userRepository, MessageSource messageSource) {
-        this.userRepository = userRepository;
-        this.messageSource = messageSource;
-    }
+//    AbstractService(UserRepository userRepository, MessageSource messageSource) {
+//        this.userRepository = userRepository;
+//        this.messageSource = messageSource;
+//    }
     
     public void setAttrsForCreate(AbstractPersistable persistable, UserDetails userDetails) {
         User user = slimDown(userRepository.findByEmailNotDeleted(userDetails.getUsername()));

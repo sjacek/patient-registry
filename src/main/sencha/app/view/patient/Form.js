@@ -18,7 +18,7 @@
 
 Ext.define('Patients.view.patient.Form', {
     extend: 'Ext.form.Panel',
-    requires: ['Ext.form.field.Date', 'Ext.form.field.ComboBox', 'Ext.grid.Panel', 'Ext.grid.plugin.CellEditing', 'Patients.store.ContactMethod'],
+    requires: ['Ext.form.field.Date', 'Ext.form.field.ComboBox', 'Ext.grid.Panel', 'Ext.grid.plugin.CellEditing', 'Patients.store.ContactMethod', 'Patients.ux.Line'],
     reference: 'editPanel',
     xtype: 'patient.form',
     header: {
@@ -54,15 +54,14 @@ Ext.define('Patients.view.patient.Form', {
         type: 'vbox',
         align: 'stretch'
     },
-    default: {
-        flex: 1,
-        margin: 5,
-        border: true
-    },
     items: {
         xtype: 'tabpanel',
-//        plain: true,
+        border: true,
         items: [{
+                xtype: 'form',
+                fieldDefaults: {
+                    labelAlign: 'right'
+                },
                 tabConfig: {
                     title: i18n.patient_personal_data,
                     tootip: i18n.patient_personal_data_tooltip
@@ -77,14 +76,12 @@ Ext.define('Patients.view.patient.Form', {
                                 xtype: 'textfield',
                                 name: 'id',
                                 fieldLabel: i18n.id,
-                                labelAlign: 'right',
                                 bind: '{selectedObject.id}',
                                 disabled: true
                             }, {
                                 xtype: 'textfield',
                                 name: 'version',
                                 fieldLabel: i18n.version,
-                                labelAlign: 'right',
                                 bind: '{selectedObject.version}',
                                 disabled: true
                             }]
@@ -103,10 +100,7 @@ Ext.define('Patients.view.patient.Form', {
                                     type: 'vbox',
                                     align: 'stretch'
                                 },
-                                fieldDefaults: {
-                                    labelAlign: 'right'
-                                },
-                                default: {
+                                defaults: {
                                     flex: 1,
                                     margin: 5,
                                     border: true
@@ -143,16 +137,10 @@ Ext.define('Patients.view.patient.Form', {
                                         bind: '{selectedObject.birthday}'
                                     }]
                             }, {
-                                xtype: 'container',
-                                border: true,
+//                                xtype: 'container',
                                 layout: {
                                     type: 'vbox',
                                     align: 'stretch'
-                                },
-                                default: {
-                                    flex: 1,
-                                    margin: 5,
-                                    border: true
                                 },
                                 items: [{
                                         xtype: 'combobox',
@@ -188,6 +176,7 @@ Ext.define('Patients.view.patient.Form', {
                                             }]
                                     }, {
                                         xtype: 'grid',
+                                        reference: 'contactsGrid',
                                         bind: {
                                             store: '{selectedObject.contacts}'
                                         },
@@ -205,6 +194,7 @@ Ext.define('Patients.view.patient.Form', {
                                                     store: Ext.create('Patients.store.ContactMethod'),
                                                     valueField: 'method',
                                                     displayField: 'method',
+                                                    allowBlank: false,
                                                     listConfig: {
                                                         minWidth: 200
                                                     }
@@ -214,6 +204,7 @@ Ext.define('Patients.view.patient.Form', {
                                                 text: i18n.patient_contact,
                                                 editor: {
                                                     completeOnEnter: false,
+                                                    allowBlank: false,
                                                     // If the editor config contains a field property, then
                                                     // the editor config is used to create the <a href='Ext.grid.CellEditor.html'>Ext.grid.CellEditor</a>
                                                     // and the field property is used to create the editing input field.
@@ -230,55 +221,102 @@ Ext.define('Patients.view.patient.Form', {
                                                 tooltip: i18n.patient_delete_contact,
                                                 handler: 'onContactDeleteClick'
 //                                        }]
-                                            }],
-                                        validate: function () {
-                                            return true;
+                                            }]
+//                                        validate: 'validateContacts'
+                                    }]
+                            }]
+                    }, {
+                        xtype: 'line'
+                    }, {
+                        defaults: {
+                            flex: 0,
+                            margin: 5
+                        },
+                        layout: 'vbox',
+                        items: [{
+                                xtype: 'label',
+                                gorId: 'disabilityLevel',
+                                text: i18n.patient_certificateofdisability
+                            }, {
+                                defaults: {
+                                    flex: 0,
+                                    margin: 5
+                                },
+                                layout: 'hbox',
+                                items: [{
+                                        xtype: 'combobox',
+                                        fieldLabel: i18n.patient_disabilitylevel,
+                                        store: 'disabilityLevel',
+                                        bind: '{selectedObject.disabilityLevel}',
+                                        name: 'disabilityLevel',
+                                        valueField: 'value',
+                                        displayField: 'text',
+                                        queryMode: 'local',
+                                        forceSelection: false,
+                                        editable: false,
+                                        listeners: {
+                                            select: 'onDisabilityLevelSelect'
+                                        }
+                                    }, {
+                                        xtype: 'datefield',
+                                        fieldLabel: i18n.patient_issue_date,
+                                        reference: 'certificateOfDisabilityIssueDate',
+                                        allowBlank: false,
+                                        bind: {
+                                            value: '{selectedObject.certificateOfDisabilityIssue}',
+                                            disabled: '{!certificateOfDisabilityEnabled}'
+                                        }
+                                    }, {
+                                        xtype: 'textfield',
+                                        flex: 1,
+                                        fieldLabel: i18n.patient_issuing_unit,
+                                        reference: 'certificateOfDisabilityIssuingUnit',
+                                        allowBlank: false,
+                                        bind: {
+                                            value: '{selectedObject.certificateOfDisabilityIssuingUnit}',
+                                            disabled: '{!certificateOfDisabilityEnabled}'
+                                        }
+                                    }]
+                            }, {
+                                defaults: {
+                                    flex: 0,
+                                    margin: 5
+                                },
+                                layout: {
+                                    type: 'hbox',
+                                    align: 'stretch',
+                                    pack: 'end'
+                                },
+                                items: [{
+                                        xtype: 'checkbox',
+                                        fieldLabel: i18n.expiration_date,
+                                        bind: {
+                                            value: '{certificateOfDisabilityExpirationEnabled}',
+                                            disabled: '{!certificateOfDisabilityEnabled}'
+                                        },
+                                        handler: 'onExpirationDateChange'
+                                    }, {
+                                        xtype: 'datefield',
+                                        flex: 1,
+                                        reference: 'certificateOfDisabilityExpirationDate',
+                                        name: 'certificateOfDisabilityExpiration',
+                                        bind: {
+                                            value: '{selectedObject.certificateOfDisabilityExpiration}',
+                                            hidden: '{!certificateOfDisabilityExpirationEnabled}'
+                                        }
+                                    }, {
+                                        xtype: 'textfield',
+                                        flex: 1,
+                                        value: i18n.patient_certificateofdisability_indefinitely,
+                                        editable: false,
+                                        bind: {
+                                            disabled: '{!certificateOfDisabilityEnabled}',
+                                            hidden: '{certificateOfDisabilityExpirationEnabled}'
                                         }
                                     }]
                             }]
                     }, {
-                        layout: 'hbox',
-                        items: [{
-                                xtype: 'combobox',
-                                fieldLabel: i18n.patient_disabilitylevel,
-                                store: 'disabilityLevel',
-                                bind: '{selectedObject.disabilityLevel}',
-                                name: 'disabilityLevel',
-                                valueField: 'value',
-                                displayField: 'text',
-                                queryMode: 'local',
-                                forceSelection: false,
-                                editable: false,
-                                listeners: {
-                                    select: 'onDisabilityLevelSelect'
-                                }
-                            }, {
-                                xtype: 'checkbox',
-                                fieldLabel: i18n.expiration_date,
-//                                reference: 'certificateOfDisabilityExpirationChBox',
-                                bind: {
-                                    value: '{certificateOfDisabilityExpirationEnabled}',
-                                    disabled: '{!certificateOfDisabilityEnabled}'
-                                },
-                                handler: 'onExpirationDateChange'
-                            }, {
-                                xtype: 'datefield',
-                                reference: 'certificateOfDisabilityExpirationDate',
-                                name: 'certificateOfDisabilityExpiration',
-                                bind: {
-                                    value: '{selectedObject.certificateOfDisabilityExpiration}',
-                                    hidden: '{!certificateOfDisabilityExpirationEnabled}'
-                                }
-                            }, {
-                                xtype: 'textfield',
-                                flex: 1,
-                                value: i18n.patient_certificateofdisability_indefinitely,
-                                editable: false,
-                                bind: {
-                                    disabled: '{!certificateOfDisabilityEnabled}',
-                                    hidden: '{certificateOfDisabilityExpirationEnabled}'
-                                }
-                            }]
+                        xtype: 'line'
                     }, {
                         defaults: {
                             margin: 5,
@@ -298,13 +336,44 @@ Ext.define('Patients.view.patient.Form', {
                                     align: 'stretch'
                                 },
                                 items: [{
-                                        xtype: 'label',
-                                        flex: 1,
-                                        forId: 'address_street',
-                                        text: i18n.patient_address
+                                        type: 'hbox',
+                                        items: [{
+                                                xtype: 'label',
+                                                flex: 1,
+                                                forId: 'country',
+                                                text: i18n.patient_address
+                                            }, {
+                                                xtype: 'textfield',
+                                                id: 'country',
+                                                name: 'country',
+                                                fieldLabel: i18n.address_country,
+                                                allowBlank: false,
+                                                bind: '{address.country}'
+                                            }]
+                                    }, {
+                                        defaults: {
+                                            margin: 5,
+                                            flex: 1
+                                        },
+                                        layout: {
+                                            type: 'hbox',
+                                            align: 'stretch'
+                                        },
+                                        items: [{
+                                                xtype: 'textfield',
+                                                name: 'zipcode',
+                                                fieldLabel: i18n.address_zipcode,
+                                                allowBlank: false,
+                                                bind: '{address.zipCode}'
+                                            }, {
+                                                xtype: 'textfield',
+                                                name: 'city',
+                                                fieldLabel: i18n.address_city,
+                                                allowBlank: false,
+                                                bind: '{address.city}'
+                                            }]
                                     }, {
                                         xtype: 'textfield',
-                                        id: 'address_street',
                                         name: 'street',
                                         fieldLabel: i18n.address_street,
                                         allowBlank: false,
@@ -332,6 +401,52 @@ Ext.define('Patients.view.patient.Form', {
                                                 bind: '{address.flat}'
                                             }]
                                     }, {
+                                        xtype: 'textfield',
+                                        name: 'voivodship',
+                                        fieldLabel: i18n.address_voivodship,
+                                        allowBlank: false,
+                                        bind: '{address.voivodship}'
+                                    }, {
+                                        xtype: 'textfield',
+                                        name: 'county',
+                                        fieldLabel: i18n.address_county,
+                                        allowBlank: false,
+                                        bind: '{address.county}'
+                                    }]
+                            }, {
+                                defaults: {
+                                    flex: 1,
+                                    margin: 5
+                                },
+                                layout: {
+                                    type: 'vbox',
+                                    align: 'stretch'
+                                },
+                                items: [{
+//                                        defaults: {
+//                                            margin: 5,
+//                                            flex: 1
+//                                        },
+                                        layout: {
+                                            type: 'hbox',
+                                            align: 'stretch'
+                                        },
+                                        items: [{
+                                                xtype: 'checkbox',
+                                                flex: 1,
+                                                fieldLabel: i18n.patient_correspondence_address,
+                                                bind: '{correspondenceAddressEnabled}'
+                                            }, {
+                                                xtype: 'textfield',
+                                                name: 'country',
+                                                fieldLabel: i18n.address_country,
+                                                allowBlank: false,
+                                                bind: {
+                                                    value: '{correspondenceAddress.country}',
+                                                    disabled: '{!correspondenceAddressEnabled}'
+                                                }
+                                            }]
+                                    }, {
                                         defaults: {
                                             margin: 5,
                                             flex: 1
@@ -345,47 +460,20 @@ Ext.define('Patients.view.patient.Form', {
                                                 name: 'zipcode',
                                                 fieldLabel: i18n.address_zipcode,
                                                 allowBlank: false,
-                                                bind: '{address.zipCode}'
+                                                bind: {
+                                                    value: '{correspondenceAddress.zipCode}',
+                                                    disabled: '{!correspondenceAddressEnabled}'
+                                                }
                                             }, {
                                                 xtype: 'textfield',
                                                 name: 'city',
                                                 fieldLabel: i18n.address_city,
                                                 allowBlank: false,
-                                                bind: '{address.city}'
+                                                bind: {
+                                                    value: '{correspondenceAddress.city}',
+                                                    disabled: '{!correspondenceAddressEnabled}'
+                                                }
                                             }]
-                                    }, {
-                                        xtype: 'textfield',
-                                        name: 'county',
-                                        fieldLabel: i18n.address_county,
-                                        allowBlank: false,
-                                        bind: '{address.county}'
-                                    }, {
-                                        xtype: 'textfield',
-                                        name: 'voivodship',
-                                        fieldLabel: i18n.address_voivodship,
-                                        allowBlank: false,
-                                        bind: '{address.voivodship}'
-                                    }, {
-                                        xtype: 'textfield',
-                                        name: 'country',
-                                        fieldLabel: i18n.address_country,
-                                        allowBlank: false,
-                                        bind: '{address.country}'
-                                    }]
-                            }, {
-                                defaults: {
-                                    flex: 1,
-                                    margin: 5
-                                },
-                                layout: {
-                                    type: 'vbox',
-                                    align: 'stretch'
-                                },
-                                items: [{
-                                        xtype: 'checkbox',
-                                        flex: 1,
-                                        fieldLabel: i18n.patient_correspondence_address,
-                                        bind: '{correspondenceAddressEnabled}'
                                     }, {
                                         xtype: 'textfield',
                                         name: 'street',
@@ -424,43 +512,6 @@ Ext.define('Patients.view.patient.Form', {
                                                 }
                                             }]
                                     }, {
-                                        defaults: {
-                                            margin: 5,
-                                            flex: 1
-                                        },
-                                        layout: {
-                                            type: 'hbox',
-                                            align: 'stretch'
-                                        },
-                                        items: [{
-                                                xtype: 'textfield',
-                                                name: 'zipcode',
-                                                fieldLabel: i18n.address_zipcode,
-                                                allowBlank: false,
-                                                bind: {
-                                                    value: '{correspondenceAddress.zipCode}',
-                                                    disabled: '{!correspondenceAddressEnabled}'
-                                                }
-                                            }, {
-                                                xtype: 'textfield',
-                                                name: 'city',
-                                                fieldLabel: i18n.address_city,
-                                                allowBlank: false,
-                                                bind: {
-                                                    value: '{correspondenceAddress.city}',
-                                                    disabled: '{!correspondenceAddressEnabled}'
-                                                }
-                                            }]
-                                    }, {
-                                        xtype: 'textfield',
-                                        name: 'county',
-                                        fieldLabel: i18n.address_county,
-                                        allowBlank: false,
-                                        bind: {
-                                            value: '{correspondenceAddress.county}',
-                                            disabled: '{!correspondenceAddressEnabled}'
-                                        }
-                                    }, {
                                         xtype: 'textfield',
                                         name: 'voivodship',
                                         fieldLabel: i18n.address_voivodship,
@@ -471,11 +522,11 @@ Ext.define('Patients.view.patient.Form', {
                                         }
                                     }, {
                                         xtype: 'textfield',
-                                        name: 'country',
-                                        fieldLabel: i18n.address_country,
+                                        name: 'county',
+                                        fieldLabel: i18n.address_county,
                                         allowBlank: false,
                                         bind: {
-                                            value: '{correspondenceAddress.country}',
+                                            value: '{correspondenceAddress.county}',
                                             disabled: '{!correspondenceAddressEnabled}'
                                         }
                                     }]
@@ -485,7 +536,7 @@ Ext.define('Patients.view.patient.Form', {
                 title: i18n.diagnosis,
                 defaults: {
                     margin: 5,
-                    flex: 1
+                    flex: 0
                 },
                 layout: {
                     type: 'vbox',
@@ -554,5 +605,8 @@ Ext.define('Patients.view.patient.Form', {
                             }]
                     }]
             }]
+    },
+    isDirty: function () {
+        return false;
     }
 });

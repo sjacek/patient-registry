@@ -14,22 +14,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.grinno.patients.service;
+package com.grinno.patients.dao.authorities;
 
-import com.grinno.patients.util.PatientException;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+import org.springframework.security.access.prepost.PreAuthorize;
 
 /**
  *
  * @author jacek
  */
-class ServiceException extends PatientException {
-
-    ServiceException(ReflectiveOperationException ex) {
-        super(ex);
-    }
-
-    ServiceException(String message, ReflectiveOperationException ex) {
-        super(message, ex);
-    }
-    
+@Target({ElementType.TYPE, ElementType.METHOD})
+@Retention(RetentionPolicy.RUNTIME)
+@Inherited
+@Documented
+@PreAuthorize("hasAnyAuthority('USER', 'EMPLOYEE')")
+public @interface RequireUserEmployeeAuthority {
+    // nothing here
 }

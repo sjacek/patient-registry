@@ -53,12 +53,12 @@ public class NavigationService {
         this.messageSource = messageSource;
 
         rootNodes.add(new NavigationNode("user_users", "user.Container", true, null, "x-fa fa-users", "users", ADMIN));
-        rootNodes.add(new NavigationNode("patient_patients", "patient.Container", true, null, "x-fa fa-user-plus", "patients", ADMIN, USER));
+        rootNodes.add(new NavigationNode("patient_patients", "patient.Container", true, null, "x-fa fa-user-plus", "patients", USER, EMPLOYEE));
 
         {
-            NavigationNode node = new NavigationNode("projects", null, false, null, "x-fa fa-space-shuttle", null, ADMIN, EMPLOYEE);
-            node.addChild(new NavigationNode("conference_2016", "conference.Container", true, null, "x-fa fa-star-half-o", "conference", ADMIN, EMPLOYEE));
-//            node.addChild(new NavigationNode("personal_assistant", "personalassistant.Container", true, null, "x-fa fa-wheelchair-alt", "diagnosis", ADMIN, EMPLOYEE));
+            NavigationNode node = new NavigationNode("projects", null, false, null, "x-fa fa-space-shuttle", "project", EMPLOYEE);
+            node.addChild(new NavigationNode("conference_2016", "conference.Container", true, null, "x-fa fa-star-half-o", "conference", EMPLOYEE));
+//            node.addChild(new NavigationNode("personal_assistant", "personalassistant.Container", true, null, "x-fa fa-wheelchair-alt", "personalassistant", EMPLOYEE));
             rootNodes.add(node);
         }
 

@@ -66,6 +66,8 @@ public class Patient extends AbstractPersistable {
     @NotNull(message = "{fieldrequired}")
     @ModelField(defaultValue="NEW")
     private PatientStatus status;
+
+    private boolean ward;
     
     @NotBlank(message = "{fieldrequired}")
     @Indexed
@@ -97,6 +99,13 @@ public class Patient extends AbstractPersistable {
     @NotNull(message = "{fieldrequired}")
     private DisabilityLevel disabilityLevel;
     
+    @ModelField(dateFormat = "c")
+    @JsonFormat(shape=STRING)
+    @Temporal(DATE)
+    private Date certificateOfDisabilityIssue;
+
+    private String certificateOfDisabilityIssuingUnit;
+
     @Indexed
     @ModelField(dateFormat = "c")
     @JsonFormat(shape=STRING)
@@ -141,6 +150,14 @@ public class Patient extends AbstractPersistable {
         this.status = status;
     }
 
+    public boolean IsWard() {
+        return ward;
+    }
+    
+    public void setWard(boolean ward) {
+        this.ward = ward;
+    }
+    
     public String getPesel() {
         return pesel;
     }
@@ -187,6 +204,22 @@ public class Patient extends AbstractPersistable {
     
     public void setDisabilityLevel(DisabilityLevel disabilityLevel) {
         this.disabilityLevel = disabilityLevel;
+    }
+
+    public Date getCertificateOfDisabilityIssue() {
+        return certificateOfDisabilityIssue;
+    }
+    
+    public void setCertificateOfDisabilityIssue(Date certificateOfDisabilityIssue) {
+        this.certificateOfDisabilityIssue = certificateOfDisabilityIssue;
+    }
+
+    public String getCertificateOfDisabilityIssuingUnit() {
+        return certificateOfDisabilityIssuingUnit;
+    }
+    
+    public void setCertificateOfDisabilityIssuingUnit(String certificateOfDisabilityIssuingUnit) {
+        this.certificateOfDisabilityIssuingUnit = certificateOfDisabilityIssuingUnit;
     }
 
     public Date getCertificateOfDisabilityExpiration() {

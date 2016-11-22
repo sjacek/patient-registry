@@ -17,6 +17,7 @@
 package com.grinno.patients.model;
 
 import ch.rasc.extclassgenerator.Model;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  *
@@ -25,8 +26,10 @@ import ch.rasc.extclassgenerator.Model;
 @Model(value = "Patients.model.Contact")
 public class Contact {
 
+    @NotBlank(message = "{fieldrequired}")
     private String method;
 
+    @NotBlank(message = "{fieldrequired}")
     private String contact;
 
     public Contact() {

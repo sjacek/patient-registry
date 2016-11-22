@@ -87,16 +87,21 @@ Ext.define('Patients.view.patient.Controller', {
         var formPanel = this.getView().getLayout().next();
 
         this.createMenuDiagnosis();
-        
-//        var certificateOfDisabilityExpirationEnabled = this.lookup('certificateOfDisabilityExpirationChBox').getValue();
 
-        var certificateOfDisabilityExpirationDate = this.lookup('certificateOfDisabilityExpirationDate');
-        Ext.apply(certificateOfDisabilityExpirationDate, { allowBlank: !this.getViewModel().get('certificateOfDisabilityExpirationEnabled') }, {});
+//        this.setControls();
 
         Ext.defer(function () {
             formPanel.isValid();
         }, 1);
     },
+//    setControls: function() {
+//        var certificateOfDisabilityIssueDate = this.lookup('certificateOfDisabilityIssueDate');
+//        Ext.apply(certificateOfDisabilityIssueDate, { allowBlank: !this.getViewModel().get('certificateOfDisabilityExpirationEnabled') }, {});
+//        var certificateOfDisabilityUnitIssuing = this.lookup('certificateOfDisabilityUnitIssuing');
+//        Ext.apply(certificateOfDisabilityUnitIssuing, { allowBlank: !this.getViewModel().get('certificateOfDisabilityExpirationEnabled') }, {});
+//        var certificateOfDisabilityExpirationDate = this.lookup('certificateOfDisabilityExpirationDate');
+//        Ext.apply(certificateOfDisabilityExpirationDate, { allowBlank: !this.getViewModel().get('certificateOfDisabilityExpirationEnabled') }, {});
+//    },
     save: function (callback) {
         if (!this.getViewModel().get('correspondenceAddressEnabled')) {
             this.getSelectedObject().getCorrespondenceAddress().destroy();
@@ -107,7 +112,8 @@ Ext.define('Patients.view.patient.Controller', {
             this.getSelectedObject().set('certificateOfDisabilityExpiration', null);
         }
 
-        this.superclass.save.call(this, callback);
+        this.callParent(arguments);
+//        this.superclass.save.call(this, callback);
     },
     onCancelClick: function () {
         this.getView().destroy();
@@ -129,8 +135,18 @@ Ext.define('Patients.view.patient.Controller', {
     onExpirationDateChange: function (newValue) {
         this.getViewModel().set('certificateOfDisabilityExpirationEnabled', this.getViewModel().get('certificateOfDisabilityEnabled') && newValue.value);
         var certificateOfDisabilityExpirationDate = this.lookup('certificateOfDisabilityExpirationDate');
-        Ext.apply(certificateOfDisabilityExpirationDate, { allowBlank: !this.getViewModel().get('certificateOfDisabilityExpirationEnabled') }, {});
+        Ext.apply(certificateOfDisabilityExpirationDate, {allowBlank: !this.getViewModel().get('certificateOfDisabilityExpirationEnabled')}, {});
         this.lookup('editPanel').isValid();
+    },
+    validateContacts: function () {
+        var grid = this.lookup('contactsGrid');
+        var ret = true;
+        grid.getStore().each(function (record) {
+            if (record.get('method').value.lenght === 0 || record.get('contact').value.lenght === 0) {
+                ret = false;
+            }
+        });
+        return ret;
     }
 
 });

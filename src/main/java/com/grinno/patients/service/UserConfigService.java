@@ -26,7 +26,7 @@ import ch.ralscha.extdirectspring.annotation.ExtDirectMethod;
 import ch.ralscha.extdirectspring.bean.ExtDirectStoreResult;
 import com.grinno.patients.config.MongoDb;
 import com.grinno.patients.config.security.MongoUserDetails;
-import com.grinno.patients.config.security.RequireAnyAuthority;
+import com.grinno.patients.dao.authorities.RequireAnyAuthority;
 import com.grinno.patients.dto.UserSettings;
 import com.grinno.patients.model.CPersistentLogin;
 import com.grinno.patients.model.CUser;
@@ -42,21 +42,25 @@ import eu.bitwalker.useragentutils.UserAgent;
 @RequireAnyAuthority
 public class UserConfigService {
 
-    private final PasswordEncoder passwordEncoder;
-
-    private final MongoDb mongoDb;
-
-    private final Validator validator;
-
-    private final MessageSource messageSource;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserConfigService(MongoDb mongoDb, Validator validator, PasswordEncoder passwordEncoder, MessageSource messageSource) {
-        this.mongoDb = mongoDb;
-        this.messageSource = messageSource;
-        this.validator = validator;
-        this.passwordEncoder = passwordEncoder;
-    }
+    private MongoDb mongoDb;
+
+    @Autowired
+    private Validator validator;
+
+    @Autowired
+    private MessageSource messageSource;
+
+//    @Autowired
+//    public UserConfigService(MongoDb mongoDb, Validator validator, PasswordEncoder passwordEncoder, MessageSource messageSource) {
+//        this.mongoDb = mongoDb;
+//        this.messageSource = messageSource;
+//        this.validator = validator;
+//        this.passwordEncoder = passwordEncoder;
+//    }
 
     @ExtDirectMethod(STORE_READ)
     public ExtDirectStoreResult<UserSettings> readSettings(@AuthenticationPrincipal MongoUserDetails userDetails) {
