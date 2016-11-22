@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Pivotal Software, Inc.
+ * Copyright (C) 2016 Jacek Sztajnke
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,20 +14,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.grinno.patients.dao;
+/* global Ext */
 
-import com.grinno.patients.model.ContactMethod;
-import java.util.List;
-import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.data.mongodb.repository.Query;
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+Ext.define("Patients.model.ProjectPlus", {
+    extend: "Patients.model.Project",
+    requires: ['Patients.model.User', 'Patients.model.Patient'],
 
-/**
- *
- * @author Jacek Sztajnke
- */
-public interface ContactRepository extends AbstractRepositoryCustom, MongoRepository<ContactMethod, String>, QueryDslPredicateExecutor<ContactMethod> {
-    
-    @Query("{active:true}")
-    List<ContactMethod> findAllActive();
-}
+    hasMany: [{
+            model: 'Patients.model.User',
+            name: 'coordinators'
+        }, {
+            model: 'Patients.model.User',
+            name: 'employees'
+        }, {
+            model: 'Patients.model.Patient',
+            name: 'participants'
+        }]
+});

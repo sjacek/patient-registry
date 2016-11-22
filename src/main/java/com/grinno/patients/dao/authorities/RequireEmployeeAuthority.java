@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Pivotal Software, Inc.
+ * Copyright (C) 2016 Jacek Sztajnke
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,20 +14,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.grinno.patients.dao;
+package com.grinno.patients.dao.authorities;
 
-import com.grinno.patients.model.ContactMethod;
-import java.util.List;
-import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.data.mongodb.repository.Query;
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+import org.springframework.security.access.prepost.PreAuthorize;
 
 /**
  *
- * @author Jacek Sztajnke
+ * @author jacek
  */
-public interface ContactRepository extends AbstractRepositoryCustom, MongoRepository<ContactMethod, String>, QueryDslPredicateExecutor<ContactMethod> {
-    
-    @Query("{active:true}")
-    List<ContactMethod> findAllActive();
+@Target({ElementType.TYPE, ElementType.METHOD})
+@Retention(RetentionPolicy.RUNTIME)
+@Inherited
+@Documented
+@PreAuthorize("hasAnyAuthority('EMPLOYEE')")
+public @interface RequireEmployeeAuthority {
+    // nothing here
 }

@@ -22,7 +22,6 @@ import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.STORE_RE
 import ch.ralscha.extdirectspring.bean.ExtDirectStoreReadRequest;
 import ch.ralscha.extdirectspring.bean.ExtDirectStoreResult;
 import com.grinno.patients.config.security.MongoUserDetails;
-import com.grinno.patients.dao.authorities.RequireEmpolyeeAuthority;
 import com.grinno.patients.dao.ContactRepository;
 import com.grinno.patients.model.ContactMethod;
 import com.grinno.patients.util.ValidationMessages;
@@ -37,13 +36,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
+import com.grinno.patients.dao.authorities.RequireEmployeeAuthority;
 
 /**
  *
  * @author Jacek Sztajnke
  */
 @Service
-@RequireEmpolyeeAuthority
+@RequireEmployeeAuthority
 public class ContactService extends AbstractService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -54,16 +54,6 @@ public class ContactService extends AbstractService {
     @Autowired
     private Validator validator;
 
-//    @Autowired
-//    private MessageSource messageSource;
-    
-//    public ContactService(ContactRepository contactRepository, UserRepository userRepository, Validator validator, MessageSource messageSource) {
-//        super(userRepository, messageSource);
-//        this.contactRepository = contactRepository;
-//        this.validator = validator;
-//        this.messageSource = messageSource;
-//    }
-    
     @ExtDirectMethod(STORE_READ)
     public ExtDirectStoreResult<ContactMethod> read(ExtDirectStoreReadRequest request) {
         List<ContactMethod> list = contactRepository.findAllActive();

@@ -64,14 +64,6 @@ public class UserService {
     @Autowired
     private MailService mailService;
 
-//    @Autowired
-//    public UserService(MongoDb mongoDb, Validator validator, MessageSource messageSource, MailService mailService) {
-//        this.mongoDb = mongoDb;
-//        this.messageSource = messageSource;
-//        this.validator = validator;
-//        this.mailService = mailService;
-//    }
-
     @ExtDirectMethod(STORE_READ)
     public ExtDirectStoreResult<User> read(ExtDirectStoreReadRequest request) {
 

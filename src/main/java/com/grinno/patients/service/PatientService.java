@@ -56,25 +56,6 @@ public class PatientService extends AbstractService {
     @Autowired
     private Validator validator;
 
-//    @Autowired
-//    private MessageSource messageSource;
-
-    /**
-     *
-     * @param patientRepository
-     * @param userRepository
-     * @param validator
-     * @param messageSource
-     * @param mailService
-     */
-//    @Autowired
-//    public PatientService(PatientRepository patientRepository, UserRepository userRepository, Validator validator, MessageSource messageSource, MailService mailService) {
-//        super(userRepository, messageSource);
-//        this.patientRepository = patientRepository;
-//        this.messageSource = messageSource;
-//        this.validator = validator;
-//    }
-
     @ExtDirectMethod(STORE_READ)
     public ExtDirectStoreResult<Patient> read(ExtDirectStoreReadRequest request) {
 

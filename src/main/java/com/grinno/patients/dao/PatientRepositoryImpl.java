@@ -17,8 +17,6 @@
 package com.grinno.patients.dao;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import java.lang.invoke.MethodHandles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,8 +30,4 @@ class PatientRepositoryImpl implements PatientRepositoryCustom {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     public static final String COLLECTION_NAME = "patient";
-
-    @Autowired
-    private MongoTemplate mongoTemplate;
-
 }

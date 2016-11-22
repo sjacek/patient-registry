@@ -70,14 +70,6 @@ public class SecurityService {
     @Autowired
     private ApplicationEventPublisher applicationEventPublisher;
 
-//    @Autowired
-//    public SecurityService(MongoDb mongoDb, PasswordEncoder passwordEncoder, MailService mailService, ApplicationEventPublisher applicationEventPublisher) {
-//        this.mongoDb = mongoDb;
-//        this.passwordEncoder = passwordEncoder;
-//        this.mailService = mailService;
-//        this.applicationEventPublisher = applicationEventPublisher;
-//    }
-
     @ExtDirectMethod
     public UserDetailDto getAuthUser(@AuthenticationPrincipal MongoUserDetails userDetails) {
 

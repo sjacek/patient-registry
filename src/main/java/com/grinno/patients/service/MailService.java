@@ -102,7 +102,7 @@ public class MailService {
     @Async
     public void sendHtmlMessage(String from, String to, String subject, String text)
             throws MessagingException {
-        MimeMessage message = this.mailSender.createMimeMessage();
+        MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);
         helper.setFrom(this.defaultSender);
         helper.setTo(to);
@@ -110,7 +110,7 @@ public class MailService {
         helper.setText(text, true);
         helper.setSubject(subject);
 
-        this.mailSender.send(message);
+        mailSender.send(message);
     }
 
 }

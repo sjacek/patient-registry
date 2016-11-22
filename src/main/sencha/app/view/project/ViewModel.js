@@ -16,33 +16,29 @@
  */
 /* global Ext */
 
-Ext.define('Patients.view.patient.ViewModel', {
+Ext.define('Patients.view.project.ViewModel', {
     extend: 'Ext.app.ViewModel',
     requires: ['Ext.data.BufferedStore'],
     data: {
         selectedObject: null,
-        totalCount: null,
-        correspondenceAddressEnabled: false,
-        certificateOfDisabilityEnabled: false,
-        certificateOfDisabilityExpirationEnabled: false
+        totalCount: null
     },
     stores: {
         objects: {
-            type: 'patient',
-//            model: 'Patients.model.PatientPlus',
-//            autoLoad: false,
-//            buffered: true,
-//            remoteSort: true,
-//            remoteFilter: true,
-//            sorters: [{
-//                    property: 'lastName',
-//                    direction: 'ASC'
-//                }],
+            model: 'Patients.model.ProjectPlus',
+            autoLoad: false,
+            buffered: true,
+            remoteSort: true,
+            remoteFilter: true,
+            sorters: [{
+                    property: 'lastName',
+                    direction: 'ASC'
+                }],
             listeners: {
                 load: 'onObjectStoreLoad'
-            }
-//            pageSize: 100,
-//            leadingBufferZone: 200
+            },
+            pageSize: 100,
+            leadingBufferZone: 200
         },
         diagnosis: { type: 'diagnosis' }
     },

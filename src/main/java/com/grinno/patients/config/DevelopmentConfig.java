@@ -32,6 +32,7 @@ import ch.ralscha.extdirectspring.util.ExtDirectSpringUtil;
 import com.grinno.patients.model.Authority;
 import com.grinno.patients.model.DisabilityLevel;
 import com.grinno.patients.model.PatientStatus;
+import com.grinno.patients.model.ProjectStatus;
 import static java.util.Locale.ENGLISH;
 import static java.util.Locale.GERMAN;
 import static org.springframework.boot.autoconfigure.security.SecurityProperties.DEFAULT_FILTER_ORDER;
@@ -74,6 +75,7 @@ class DevelopmentConfig {
         writeEnum(clientDir, "Authority", Authority.values(), true);
         writeEnum(clientDir, "PatientStatus", PatientStatus.values(), false);
         writeEnum(clientDir, "DisabilityLevel", DisabilityLevel.values(), false);
+        writeEnum(clientDir, "ProjectStatus", ProjectStatus.values(), false);
     }
 
     private static void writeEnum(Path clientDir, String name, Enum<?>[] values, boolean writeStore) throws IOException {

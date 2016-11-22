@@ -54,14 +54,6 @@ public class UserConfigService {
     @Autowired
     private MessageSource messageSource;
 
-//    @Autowired
-//    public UserConfigService(MongoDb mongoDb, Validator validator, PasswordEncoder passwordEncoder, MessageSource messageSource) {
-//        this.mongoDb = mongoDb;
-//        this.messageSource = messageSource;
-//        this.validator = validator;
-//        this.passwordEncoder = passwordEncoder;
-//    }
-
     @ExtDirectMethod(STORE_READ)
     public ExtDirectStoreResult<UserSettings> readSettings(@AuthenticationPrincipal MongoUserDetails userDetails) {
         UserSettings userSettings = new UserSettings(userDetails.getUser(this.mongoDb));

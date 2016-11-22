@@ -56,6 +56,16 @@ var REMOTING_API = {
       "name" : "update",
       "len" : 1
     } ],
+    "projectService" : [ {
+      "name" : "destroy",
+      "len" : 1
+    }, {
+      "name" : "read",
+      "len" : 1
+    }, {
+      "name" : "update",
+      "len" : 1
+    } ],
     "securityService" : [ {
       "name" : "disableScreenLock",
       "len" : 0,

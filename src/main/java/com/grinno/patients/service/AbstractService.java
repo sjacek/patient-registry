@@ -36,11 +36,6 @@ public abstract class AbstractService {
     @Autowired
     MessageSource messageSource;
 
-//    AbstractService(UserRepository userRepository, MessageSource messageSource) {
-//        this.userRepository = userRepository;
-//        this.messageSource = messageSource;
-//    }
-    
     public void setAttrsForCreate(AbstractPersistable persistable, UserDetails userDetails) {
         User user = slimDown(userRepository.findByEmailNotDeleted(userDetails.getUsername()));
         

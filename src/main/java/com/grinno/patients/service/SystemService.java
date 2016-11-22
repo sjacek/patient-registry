@@ -15,11 +15,6 @@ public class SystemService {
     @Autowired
     private MailService mailService;
 
-//    @Autowired
-//    public SystemService(MailService mailService) {
-//        this.mailService = mailService;
-//    }
-
     @RequestMapping(path = "/sendtestemail", method = RequestMethod.GET)
     @RequireAdminAuthority
     @ResponseBody

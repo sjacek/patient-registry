@@ -12,3 +12,4 @@
 /app/model/PersistentLogin.js
 /app/model/User.js
 /app/model/UserSettings.js
+/app/model/Project.js
