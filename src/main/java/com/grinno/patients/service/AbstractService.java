@@ -70,14 +70,15 @@ public abstract class AbstractService {
     }
 
     private User slimDown(User user) {
-        User slimUser = new User();
-        slimUser.setAuthorities(user.getAuthorities());
-        slimUser.setDeleted(user.isDeleted());
-        slimUser.setEmail(user.getEmail());
-        slimUser.setEnabled(user.isEnabled());
-        slimUser.setFirstName(user.getFirstName());
-        slimUser.setId(user.getId());
-        slimUser.setLastName(user.getLastName());
+        User slimUser = new User() {{
+            setAuthorities(user.getAuthorities());
+            setDeleted(user.isDeleted());
+            setEmail(user.getEmail());
+            setEnabled(user.isEnabled());
+            setFirstName(user.getFirstName());
+            setId(user.getId());
+            setLastName(user.getLastName());
+        }};
             
         return slimUser;
     }

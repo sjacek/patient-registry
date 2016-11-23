@@ -38,7 +38,6 @@ Ext.define('Patients.view.patient.Controller', {
     createMenuDiagnosis: function () {
         var menu = Ext.create('Ext.menu.Menu');
         var me = this;
-
         var store = Ext.getStore('diagnosis');
         store.each(function (record) {
             menu.add({
@@ -52,14 +51,14 @@ Ext.define('Patients.view.patient.Controller', {
                 }
             });
         });
-
         var copytemplate = this.lookup('copyDiagnosisTemplateBtn');
         if (copytemplate !== null) {
             copytemplate.setMenu(menu);
         }
     },
     createSubobjects: function () {
-        var selectedObject = this.getSelectedObject();
+        var viewModel = this.getViewModel(),
+                selectedObject = this.getSelectedObject();
         if (!selectedObject.getAddress()) {
             selectedObject.setAddress(Ext.create('Patients.model.Address'));
         }
@@ -69,25 +68,21 @@ Ext.define('Patients.view.patient.Controller', {
         if (!correspondenceAddress) {
             selectedObject.setCorrespondenceAddress(Ext.create('Patients.model.Address'));
         }
-        this.getViewModel().set('correspondenceAddressEnabled', correspondenceAddressEnabled);
-
+        viewModel.set('correspondenceAddressEnabled', correspondenceAddressEnabled);
         var certificateOfDisabilityEnabled = (selectedObject.get('disabilityLevel') !== 'NO_CERTIFICATE');
-        this.getViewModel().set('certificateOfDisabilityEnabled', certificateOfDisabilityEnabled);
-
+        viewModel.set('certificateOfDisabilityEnabled', certificateOfDisabilityEnabled);
         if (!selectedObject.getDiagnosis()) {
             selectedObject.setDiagnosis(Ext.create('Patients.model.Diagnosis'));
         }
 
         var expirationData = selectedObject.get('certificateOfDisabilityExpiration');
         var enabled = expirationData !== undefined && expirationData !== null;
-        this.getViewModel().set('certificateOfDisabilityExpirationEnabled', this.getViewModel().get('certificateOfDisabilityEnabled') && enabled);
+        viewModel.set('certificateOfDisabilityExpirationEnabled', viewModel.get('certificateOfDisabilityEnabled') && enabled);
     },
     edit: function () {
         this.getView().add({xclass: this.getFormClassName()});
         var formPanel = this.getView().getLayout().next();
-
         this.createMenuDiagnosis();
-
 //        this.setControls();
 
         Ext.defer(function () {
@@ -103,13 +98,14 @@ Ext.define('Patients.view.patient.Controller', {
 //        Ext.apply(certificateOfDisabilityExpirationDate, { allowBlank: !this.getViewModel().get('certificateOfDisabilityExpirationEnabled') }, {});
 //    },
     save: function (callback) {
-        if (!this.getViewModel().get('correspondenceAddressEnabled')) {
-            this.getSelectedObject().getCorrespondenceAddress().destroy();
-            delete this.getSelectedObject().getCorrespondenceAddress();
+        var viewModel = this.getViewModel(), selectedObject = this.getSelectedObject();
+        if (!viewModel.get('correspondenceAddressEnabled')) {
+            selectedObject.getCorrespondenceAddress().destroy();
+            delete selectedObject.getCorrespondenceAddress();
         }
-        if (!this.getViewModel().get('certificateOfDisabilityExpirationEnabled')) {
-            delete this.getSelectedObject().get('certificateOfDisabilityExpiration');
-            this.getSelectedObject().set('certificateOfDisabilityExpiration', null);
+        if (!viewModel.get('certificateOfDisabilityExpirationEnabled')) {
+            delete selectedObject.get('certificateOfDisabilityExpiration');
+            selectedObject.set('certificateOfDisabilityExpiration', null);
         }
 
         this.callParent(arguments);
@@ -127,16 +123,42 @@ Ext.define('Patients.view.patient.Controller', {
         store.remove(record);
     },
     onDisabilityLevelSelect: function (combo, value, opts) {
+        var viewModel = this.getViewModel();
         var certificateOfDisabilityEnabled = value.data.value.localeCompare('NO_CERTIFICATE') !== 0;
-        this.getViewModel().set('certificateOfDisabilityEnabled', certificateOfDisabilityEnabled);
-        this.getViewModel().set('certificateOfDisabilityExpirationEnabled', certificateOfDisabilityEnabled && this.getViewModel().get('certificateOfDisabilityExpirationEnabled'));
+        viewModel.set('certificateOfDisabilityEnabled', certificateOfDisabilityEnabled);
+        viewModel.set('certificateOfDisabilityExpirationEnabled', certificateOfDisabilityEnabled && viewModel.get('certificateOfDisabilityExpirationEnabled'));
         this.lookup('editPanel').isValid();
     },
     onExpirationDateChange: function (newValue) {
-        this.getViewModel().set('certificateOfDisabilityExpirationEnabled', this.getViewModel().get('certificateOfDisabilityEnabled') && newValue.value);
+        var viewModel = this.getViewModel();
+        viewModel.set('certificateOfDisabilityExpirationEnabled', viewModel.get('certificateOfDisabilityEnabled') && newValue.value);
         var certificateOfDisabilityExpirationDate = this.lookup('certificateOfDisabilityExpirationDate');
-        Ext.apply(certificateOfDisabilityExpirationDate, {allowBlank: !this.getViewModel().get('certificateOfDisabilityExpirationEnabled')}, {});
+        Ext.apply(certificateOfDisabilityExpirationDate, {allowBlank: !viewModel.get('certificateOfDisabilityExpirationEnabled')}, {});
         this.lookup('editPanel').isValid();
+    },
+    onCorrespondenceAddressCollapsed: function (fieldset) {
+        this.setCorrespondenceAddressEnabled(fieldset, false);
+    },
+    onCorrespondenceAddressExpanded: function (fieldset) {
+        this.setCorrespondenceAddressEnabled(fieldset, true);
+    },
+    setCorrespondenceAddressEnabled: function (fieldset, on) {
+        this.getViewModel().set('correspondenceAddressEnabled', on);
+        fieldset.items.each(function (item) {
+            if (item.xtype === 'form') {
+                item.items.each(function (item) {
+                    if (item.name !== 'flat') {
+                        Ext.apply(item, {allowBlank: !on}, {});
+                    }
+                });
+            } else {
+                Ext.apply(item, {allowBlank: !on}, {});
+            }
+        });
+        var formPanel = this.lookup('editPanel');
+        Ext.defer(function () {
+            formPanel.isValid();
+        }, 1);
     },
     validateContacts: function () {
         var grid = this.lookup('contactsGrid');

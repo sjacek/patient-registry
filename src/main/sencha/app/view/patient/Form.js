@@ -59,6 +59,7 @@ Ext.define('Patients.view.patient.Form', {
         border: true,
         items: [{
                 xtype: 'form',
+//                scrollable: true,
                 fieldDefaults: {
                     labelAlign: 'right'
                 },
@@ -86,7 +87,6 @@ Ext.define('Patients.view.patient.Form', {
                                 disabled: true
                             }]
                     }, {
-                        xtype: 'fieldset',
                         defaults: {
                             margin: 5,
                             flex: 1
@@ -96,15 +96,14 @@ Ext.define('Patients.view.patient.Form', {
                             align: 'stretch'
                         },
                         items: [{
-                                xtype: 'form',
+                                xtype: 'fieldset',
                                 layout: {
                                     type: 'vbox',
                                     align: 'stretch'
                                 },
                                 defaults: {
                                     flex: 1,
-                                    margin: 5,
-                                    border: true
+                                    margin: 5
                                 },
                                 items: [{
                                         xtype: 'textfield',
@@ -157,73 +156,68 @@ Ext.define('Patients.view.patient.Form', {
                                         forceSelection: true,
                                         editable: false
                                     }, {
-                                        defaults: {
-                                            flex: 0
-                                        },
-                                        layout: {
-                                            type: 'hbox',
-                                            align: 'stretch'
-                                        },
+                                        xtype: 'fieldset',
+                                        title: i18n.patient_contacts,
+                                        border: false,
+                                        margins: '0 0 0 0',
+//                                        defaults: {
+//                                            flex: 0
+//                                        },
                                         items: [{
-                                                xtype: 'label',
-                                                flex: 1,
-                                                forId: 'contactsgrid',
-                                                text: i18n.patient_contacts
-                                            }, {
                                                 xtype: 'button',
                                                 iconCls: 'x-fa fa-plus',
                                                 text: i18n.new,
-                                                handler: 'onContactsNewClick'
-                                            }]
-                                    }, {
-                                        xtype: 'grid',
-                                        reference: 'contactsGrid',
-                                        bind: {
-                                            store: '{selectedObject.contacts}'
-                                        },
-                                        plugins: {
-                                            ptype: 'cellediting',
-                                            clicksToEdit: 2
-                                        },
-                                        selModel: 'cellmodel',
-                                        columns: [{
-                                                dataIndex: 'method',
-                                                text: i18n.patient_contact_method,
-                                                editor: {
-                                                    completeOnEnter: false,
-                                                    xtype: 'combo',
-                                                    store: Ext.create('Patients.store.ContactMethod'),
-                                                    valueField: 'method',
-                                                    displayField: 'method',
-                                                    allowBlank: false,
-                                                    listConfig: {
-                                                        minWidth: 200
-                                                    }
-                                                }
+                                                handler: 'onContactsNewClick',
                                             }, {
-                                                dataIndex: 'contact',
-                                                text: i18n.patient_contact,
-                                                editor: {
-                                                    completeOnEnter: false,
-                                                    allowBlank: false,
-                                                    // If the editor config contains a field property, then
-                                                    // the editor config is used to create the <a href='Ext.grid.CellEditor.html'>Ext.grid.CellEditor</a>
-                                                    // and the field property is used to create the editing input field.
-                                                    field: {
-                                                        xtype: 'textfield',
-                                                        allowBlank: false
-                                                    }
-                                                }
-                                            }, {
-                                                xtype: 'actioncolumn',
-                                                width: 30,
-//                                    items: [{
-                                                iconCls: 'x-fa fa-times',
-                                                tooltip: i18n.patient_delete_contact,
-                                                handler: 'onContactDeleteClick'
-//                                        }]
-                                            }]
+                                                xtype: 'grid',
+                                                reference: 'contactsGrid',
+                                                bind: {
+                                                    store: '{selectedObject.contacts}'
+                                                },
+                                                plugins: {
+                                                    ptype: 'cellediting',
+                                                    clicksToEdit: 2
+                                                },
+                                                selModel: 'cellmodel',
+                                                columns: [{
+                                                        dataIndex: 'method',
+                                                        text: i18n.patient_contact_method,
+                                                        editor: {
+                                                            completeOnEnter: false,
+                                                            xtype: 'combo',
+                                                            store: Ext.create('Patients.store.ContactMethod'),
+                                                            valueField: 'method',
+                                                            displayField: 'method',
+                                                            allowBlank: false,
+                                                            listConfig: {
+                                                                minWidth: 200
+                                                            }
+                                                        }
+                                                    }, {
+                                                        dataIndex: 'contact',
+                                                        text: i18n.patient_contact,
+                                                        editor: {
+                                                            completeOnEnter: false,
+                                                            allowBlank: false,
+                                                            // If the editor config contains a field property, then
+                                                            // the editor config is used to create the <a href='Ext.grid.CellEditor.html'>Ext.grid.CellEditor</a>
+                                                            // and the field property is used to create the editing input field.
+                                                            field: {
+                                                                xtype: 'textfield',
+                                                                allowBlank: false
+                                                            }
+                                                        }
+                                                    }, {
+                                                        xtype: 'actioncolumn',
+                                                        width: 30,
+//                                                      items: [{
+                                                        iconCls: 'x-fa fa-times',
+                                                        tooltip: i18n.patient_delete_contact,
+                                                        handler: 'onContactDeleteClick'
+//                                                          }]
+                                                    }]
 //                                        validate: 'validateContacts'
+                                            }]
                                     }]
                             }]
                     }, {
@@ -417,15 +411,19 @@ Ext.define('Patients.view.patient.Form', {
                                     type: 'vbox',
                                     align: 'stretch'
                                 },
+                                listeners: {
+                                    collapse: 'onCorrespondenceAddressCollapsed',
+                                    expand: 'onCorrespondenceAddressExpanded'
+                                },
                                 items: [{
                                         xtype: 'textfield',
                                         name: 'country',
                                         fieldLabel: i18n.address_country,
-                                        allowBlank: false,
                                         bind: {
                                             value: '{correspondenceAddress.country}'
                                         }
                                     }, {
+                                        xtype: 'form',
                                         defaults: {
                                             margin: 5,
                                             flex: 1
@@ -438,7 +436,6 @@ Ext.define('Patients.view.patient.Form', {
                                                 xtype: 'textfield',
                                                 name: 'zipcode',
                                                 fieldLabel: i18n.address_zipcode,
-                                                allowBlank: false,
                                                 bind: {
                                                     value: '{correspondenceAddress.zipCode}'
                                                 }
@@ -446,7 +443,6 @@ Ext.define('Patients.view.patient.Form', {
                                                 xtype: 'textfield',
                                                 name: 'city',
                                                 fieldLabel: i18n.address_city,
-                                                allowBlank: false,
                                                 bind: {
                                                     value: '{correspondenceAddress.city}'
                                                 }
@@ -455,11 +451,11 @@ Ext.define('Patients.view.patient.Form', {
                                         xtype: 'textfield',
                                         name: 'street',
                                         fieldLabel: i18n.address_street,
-                                        allowBlank: false,
                                         bind: {
                                             value: '{correspondenceAddress.street}'
                                         }
                                     }, {
+                                        xtype: 'form',
                                         defaults: {
                                             margin: 5,
                                             flex: 1
@@ -472,7 +468,6 @@ Ext.define('Patients.view.patient.Form', {
                                                 xtype: 'textfield',
                                                 name: 'house',
                                                 fieldLabel: i18n.address_house_no,
-                                                allowBlank: false,
                                                 bind: {
                                                     value: '{correspondenceAddress.house}'
                                                 }
@@ -480,7 +475,6 @@ Ext.define('Patients.view.patient.Form', {
                                                 xtype: 'textfield',
                                                 name: 'flat',
                                                 fieldLabel: i18n.address_flat_no,
-                                                allowBlank: true,
                                                 bind: {
                                                     value: '{correspondenceAddress.flat}'
                                                 }
@@ -489,7 +483,6 @@ Ext.define('Patients.view.patient.Form', {
                                         xtype: 'textfield',
                                         name: 'voivodship',
                                         fieldLabel: i18n.address_voivodship,
-                                        allowBlank: false,
                                         bind: {
                                             value: '{correspondenceAddress.voivodship}'
                                         }
@@ -497,7 +490,6 @@ Ext.define('Patients.view.patient.Form', {
                                         xtype: 'textfield',
                                         name: 'county',
                                         fieldLabel: i18n.address_county,
-                                        allowBlank: false,
                                         bind: {
                                             value: '{correspondenceAddress.county}'
                                         }
@@ -528,26 +520,26 @@ Ext.define('Patients.view.patient.Form', {
                                 text: i18n.patient_diagnosis_copy_template
                             }]
                     }, {
-                        layout: 'hbox',
+                        xtype: 'fieldset',
                         items: [{
                                 xtype: 'textfield',
                                 name: 'diagnosisName',
                                 fieldLabel: i18n.diagnosis_name,
                                 allowBlank: false,
                                 bind: '{selectedObject.diagnosis.diagnosisName}'
+                            }, {
+                                xtype: 'textfield',
+                                name: 'diagnosisEnglishName',
+                                fieldLabel: i18n.diagnosis_english_name,
+                                allowBlank: false,
+                                bind: '{selectedObject.diagnosis.diagnosisEnglishName}'
+                            }, {
+                                xtype: 'textfield',
+                                name: 'icd10',
+                                fieldLabel: i18n.diagnosis_icd10,
+                                allowBlank: false,
+                                bind: '{selectedObject.diagnosis.icd10}'
                             }]
-                    }, {
-                        xtype: 'textfield',
-                        name: 'diagnosisEnglishName',
-                        fieldLabel: i18n.diagnosis_english_name,
-                        allowBlank: false,
-                        bind: '{selectedObject.diagnosis.diagnosisEnglishName}'
-                    }, {
-                        xtype: 'textfield',
-                        name: 'icd10',
-                        fieldLabel: i18n.diagnosis_icd10,
-                        allowBlank: false,
-                        bind: '{selectedObject.diagnosis.icd10}'
                     }]
 
             }, {
@@ -561,6 +553,7 @@ Ext.define('Patients.view.patient.Form', {
                     align: 'stretch'
                 },
                 items: [{
+                        xtype: 'fieldset',
                         layout: 'hbox',
                         items: [{
                                 xtype: 'splitter',
