@@ -18,7 +18,7 @@
 
 Ext.define('Patients.view.patient.Form', {
     extend: 'Ext.form.Panel',
-    requires: ['Ext.form.field.Date', 'Ext.form.field.ComboBox', 'Ext.grid.Panel', 'Ext.grid.plugin.CellEditing', 'Patients.store.ContactMethod', 'Patients.ux.Line'],
+    requires: ['Ext.form.field.Date', 'Ext.form.field.ComboBox', 'Ext.grid.Panel', 'Ext.grid.plugin.CellEditing', 'Patients.store.ContactMethod'],
     reference: 'editPanel',
     xtype: 'patient.form',
     header: {
@@ -86,6 +86,7 @@ Ext.define('Patients.view.patient.Form', {
                                 disabled: true
                             }]
                     }, {
+                        xtype: 'fieldset',
                         defaults: {
                             margin: 5,
                             flex: 1
@@ -137,7 +138,7 @@ Ext.define('Patients.view.patient.Form', {
                                         bind: '{selectedObject.birthday}'
                                     }]
                             }, {
-//                                xtype: 'container',
+                                xtype: 'fieldset',
                                 layout: {
                                     type: 'vbox',
                                     align: 'stretch'
@@ -226,18 +227,14 @@ Ext.define('Patients.view.patient.Form', {
                                     }]
                             }]
                     }, {
-                        xtype: 'line'
-                    }, {
+                        xtype: 'fieldset',
+                        title: i18n.patient_certificateofdisability,
                         defaults: {
                             flex: 0,
                             margin: 5
                         },
                         layout: 'vbox',
                         items: [{
-                                xtype: 'label',
-                                gorId: 'disabilityLevel',
-                                text: i18n.patient_certificateofdisability
-                            }, {
                                 defaults: {
                                     flex: 0,
                                     margin: 5
@@ -316,8 +313,6 @@ Ext.define('Patients.view.patient.Form', {
                                     }]
                             }]
                     }, {
-                        xtype: 'line'
-                    }, {
                         defaults: {
                             margin: 5,
                             flex: 1
@@ -327,6 +322,8 @@ Ext.define('Patients.view.patient.Form', {
                             align: 'stretch'
                         },
                         items: [{
+                                xtype: 'fieldset',
+                                title: i18n.patient_address,
                                 defaults: {
                                     flex: 1,
                                     margin: 5
@@ -336,20 +333,12 @@ Ext.define('Patients.view.patient.Form', {
                                     align: 'stretch'
                                 },
                                 items: [{
-                                        type: 'hbox',
-                                        items: [{
-                                                xtype: 'label',
-                                                flex: 1,
-                                                forId: 'country',
-                                                text: i18n.patient_address
-                                            }, {
-                                                xtype: 'textfield',
-                                                id: 'country',
-                                                name: 'country',
-                                                fieldLabel: i18n.address_country,
-                                                allowBlank: false,
-                                                bind: '{address.country}'
-                                            }]
+                                        xtype: 'textfield',
+                                        id: 'country',
+                                        name: 'country',
+                                        fieldLabel: i18n.address_country,
+                                        allowBlank: false,
+                                        bind: '{address.country}'
                                     }, {
                                         defaults: {
                                             margin: 5,
@@ -414,6 +403,12 @@ Ext.define('Patients.view.patient.Form', {
                                         bind: '{address.county}'
                                     }]
                             }, {
+                                xtype: 'fieldset',
+                                title: i18n.patient_correspondence_address,
+                                checkboxToggle: true,
+                                bind: {
+                                    collapsed: '{!correspondenceAddressEnabled}'
+                                },
                                 defaults: {
                                     flex: 1,
                                     margin: 5
@@ -423,29 +418,13 @@ Ext.define('Patients.view.patient.Form', {
                                     align: 'stretch'
                                 },
                                 items: [{
-//                                        defaults: {
-//                                            margin: 5,
-//                                            flex: 1
-//                                        },
-                                        layout: {
-                                            type: 'hbox',
-                                            align: 'stretch'
-                                        },
-                                        items: [{
-                                                xtype: 'checkbox',
-                                                flex: 1,
-                                                fieldLabel: i18n.patient_correspondence_address,
-                                                bind: '{correspondenceAddressEnabled}'
-                                            }, {
-                                                xtype: 'textfield',
-                                                name: 'country',
-                                                fieldLabel: i18n.address_country,
-                                                allowBlank: false,
-                                                bind: {
-                                                    value: '{correspondenceAddress.country}',
-                                                    disabled: '{!correspondenceAddressEnabled}'
-                                                }
-                                            }]
+                                        xtype: 'textfield',
+                                        name: 'country',
+                                        fieldLabel: i18n.address_country,
+                                        allowBlank: false,
+                                        bind: {
+                                            value: '{correspondenceAddress.country}'
+                                        }
                                     }, {
                                         defaults: {
                                             margin: 5,
@@ -461,8 +440,7 @@ Ext.define('Patients.view.patient.Form', {
                                                 fieldLabel: i18n.address_zipcode,
                                                 allowBlank: false,
                                                 bind: {
-                                                    value: '{correspondenceAddress.zipCode}',
-                                                    disabled: '{!correspondenceAddressEnabled}'
+                                                    value: '{correspondenceAddress.zipCode}'
                                                 }
                                             }, {
                                                 xtype: 'textfield',
@@ -470,8 +448,7 @@ Ext.define('Patients.view.patient.Form', {
                                                 fieldLabel: i18n.address_city,
                                                 allowBlank: false,
                                                 bind: {
-                                                    value: '{correspondenceAddress.city}',
-                                                    disabled: '{!correspondenceAddressEnabled}'
+                                                    value: '{correspondenceAddress.city}'
                                                 }
                                             }]
                                     }, {
@@ -480,8 +457,7 @@ Ext.define('Patients.view.patient.Form', {
                                         fieldLabel: i18n.address_street,
                                         allowBlank: false,
                                         bind: {
-                                            value: '{correspondenceAddress.street}',
-                                            disabled: '{!correspondenceAddressEnabled}'
+                                            value: '{correspondenceAddress.street}'
                                         }
                                     }, {
                                         defaults: {
@@ -498,8 +474,7 @@ Ext.define('Patients.view.patient.Form', {
                                                 fieldLabel: i18n.address_house_no,
                                                 allowBlank: false,
                                                 bind: {
-                                                    value: '{correspondenceAddress.house}',
-                                                    disabled: '{!correspondenceAddressEnabled}'
+                                                    value: '{correspondenceAddress.house}'
                                                 }
                                             }, {
                                                 xtype: 'textfield',
@@ -507,8 +482,7 @@ Ext.define('Patients.view.patient.Form', {
                                                 fieldLabel: i18n.address_flat_no,
                                                 allowBlank: true,
                                                 bind: {
-                                                    value: '{correspondenceAddress.flat}',
-                                                    disabled: '{!correspondenceAddressEnabled}'
+                                                    value: '{correspondenceAddress.flat}'
                                                 }
                                             }]
                                     }, {
@@ -517,8 +491,7 @@ Ext.define('Patients.view.patient.Form', {
                                         fieldLabel: i18n.address_voivodship,
                                         allowBlank: false,
                                         bind: {
-                                            value: '{correspondenceAddress.voivodship}',
-                                            disabled: '{!correspondenceAddressEnabled}'
+                                            value: '{correspondenceAddress.voivodship}'
                                         }
                                     }, {
                                         xtype: 'textfield',
@@ -526,8 +499,7 @@ Ext.define('Patients.view.patient.Form', {
                                         fieldLabel: i18n.address_county,
                                         allowBlank: false,
                                         bind: {
-                                            value: '{correspondenceAddress.county}',
-                                            disabled: '{!correspondenceAddressEnabled}'
+                                            value: '{correspondenceAddress.county}'
                                         }
                                     }]
                             }]
