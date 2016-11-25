@@ -36,9 +36,9 @@ Ext.define('Patients.view.patient.Controller', {
         this.edit();
     },
     createMenuDiagnosis: function () {
-        var menu = Ext.create('Ext.menu.Menu');
-        var me = this;
-        var store = Ext.getStore('diagnosis');
+        var menu = Ext.create('Ext.menu.Menu'),
+                me = this,
+                store = Ext.getStore('diagnosis');
         store.each(function (record) {
             menu.add({
                 text: record.get('diagnosisName'),
@@ -83,20 +83,11 @@ Ext.define('Patients.view.patient.Controller', {
         this.getView().add({xclass: this.getFormClassName()});
         var formPanel = this.getView().getLayout().next();
         this.createMenuDiagnosis();
-//        this.setControls();
 
         Ext.defer(function () {
             formPanel.isValid();
         }, 1);
     },
-//    setControls: function() {
-//        var certificateOfDisabilityIssueDate = this.lookup('certificateOfDisabilityIssueDate');
-//        Ext.apply(certificateOfDisabilityIssueDate, { allowBlank: !this.getViewModel().get('certificateOfDisabilityExpirationEnabled') }, {});
-//        var certificateOfDisabilityUnitIssuing = this.lookup('certificateOfDisabilityUnitIssuing');
-//        Ext.apply(certificateOfDisabilityUnitIssuing, { allowBlank: !this.getViewModel().get('certificateOfDisabilityExpirationEnabled') }, {});
-//        var certificateOfDisabilityExpirationDate = this.lookup('certificateOfDisabilityExpirationDate');
-//        Ext.apply(certificateOfDisabilityExpirationDate, { allowBlank: !this.getViewModel().get('certificateOfDisabilityExpirationEnabled') }, {});
-//    },
     save: function (callback) {
         var viewModel = this.getViewModel(), selectedObject = this.getSelectedObject();
         if (!viewModel.get('correspondenceAddressEnabled')) {
@@ -109,7 +100,6 @@ Ext.define('Patients.view.patient.Controller', {
         }
 
         this.callParent(arguments);
-//        this.superclass.save.call(this, callback);
     },
     onCancelClick: function () {
         this.getView().destroy();

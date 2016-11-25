@@ -47,24 +47,24 @@ Ext.define('Patients.view.patient.ViewModel', {
         diagnosis: { type: 'diagnosis' }
     },
     formulas: {
-        address: {
-            bind: {
-                bindTo: '{selectedObject.address}',
-                deep: true
-            },
-            get: function (address) {
-                return address;
-            }
-        },
-        correspondenceAddress: {
-            bind: {
-                bindTo: '{selectedObject.correspondenceAddress}',
-                deep: true
-            },
-            get: function (correspondenceAddress) {
-                return correspondenceAddress;
-            }
-        }
+//        address: {
+//            bind: {
+//                bindTo: '{selectedObject.address}',
+//                deep: true
+//            },
+//            get: function (address) {
+//                return address;
+//            }
+//        },
+//        correspondenceAddress: {
+//            bind: {
+//                bindTo: '{selectedObject.correspondenceAddress}',
+//                deep: true
+//            },
+//            get: function (correspondenceAddress) {
+//                return correspondenceAddress;
+//            }
+//        }
 //        certificateOfDisabilityEnabled: function(get) {
 //            var selectedObject = get('selectedObject');
 //            if (selectedObject === null) {
