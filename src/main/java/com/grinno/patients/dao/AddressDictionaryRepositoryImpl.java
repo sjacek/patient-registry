@@ -16,18 +16,29 @@
  */
 package com.grinno.patients.dao;
 
-import com.grinno.patients.model.ContactMethod;
+import com.grinno.patients.model.AddressDictionary;
+import java.lang.invoke.MethodHandles;
 import java.util.List;
-import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.data.mongodb.repository.Query;
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author Jacek Sztajnke
  */
-public interface ContactRepository extends MongoRepository<ContactMethod, String>, QueryDslPredicateExecutor<ContactMethod> {
-    
-    @Query("{active:true}")
-    List<ContactMethod> findAllActive();
+public class AddressDictionaryRepositoryImpl implements AddressDictionaryRepositoryCustom {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
+//
+//    public static final String COLLECTION_NAME = "patient";
+//
+//    @Autowired
+//    private MongoTemplate mongoTemplate;
+//    
+//    @Override
+//    public List<AddressDictionary> findAllCountriesActive() {
+////        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//        mongoTemplate.findAll(entityClass)
+//    }
 }

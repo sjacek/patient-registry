@@ -1,5 +1,5 @@
-/*
- * Copyright (C) 2016 Pivotal Software, Inc.
+/* 
+ * Copyright (C) 2015 jsztajnke
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,12 +14,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.grinno.patients.dao;
 
-/**
- *
- * @author Jacek Sztajnke
- */
-interface AbstractRepositoryCustom {
-    
-}
+/* global Ext */
+
+Ext.define('Patients.store.AddressDictionary', {
+    extend: 'Ext.data.Store',
+    alias: 'store.addressDictionary',
+    requires: ['Patients.model.AddressDictionary'],
+    model: 'Patients.model.AddressDictionary',
+    autoLoad: false,
+    autoSync: true,
+    pageSize: 100,
+    buffered: true,
+    remoteSort: true,
+    remoteFilter: true,
+    sorters: [{
+            property: 'country',
+            direction: 'ASC'
+        }],
+    leadingBufferZone: 200
+});

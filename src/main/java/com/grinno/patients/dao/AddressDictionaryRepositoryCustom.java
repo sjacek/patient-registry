@@ -1,5 +1,5 @@
-/* 
- * Copyright (C) 2015 jsztajnke
+/*
+ * Copyright (C) 2016 Pivotal Software, Inc.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,23 +14,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package com.grinno.patients.dao;
 
-/* global Ext */
+import com.grinno.patients.model.AddressDictionary;
+import java.util.List;
+import org.springframework.data.mongodb.repository.Query;
 
-Ext.define('Patients.store.User', {
-    extend: 'Ext.data.BufferedStore',
-    alias: 'store.user',
-    storeId: 'User',
-    model: 'Patients.model.User',
-    autoLoad: true,
-    autoSync: true,
-    pageSize: 100,
-    buffered: true,
-    remoteSort: true,
-    remoteFilter: true,
-    sorters: [{
-            property: 'lastName',
-            direction: 'ASC'
-        }],
-    leadingBufferZone: 200
-});
+/**
+ *
+ * @author Jacek Sztajnke
+ */
+interface AddressDictionaryRepositoryCustom {
+
+//    @Query("{active:true}")
+//    List<AddressDictionary> findAllCountriesActive();
+    
+}

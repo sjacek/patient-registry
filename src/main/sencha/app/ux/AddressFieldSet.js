@@ -18,7 +18,8 @@
 
 Ext.define('Patients.ux.AddressFieldSet', {
     extend: 'Ext.form.FieldSet',
-    requires: ['Patients.model.Address'],
+    requires: ['Patients.model.Address', 'Patients.store.AddressDictionary'],
+    store: ['Patients.store.AddressDictionary'],
     xtype: 'address',
     alias: 'widget.address',
     cls: 'shadow',
@@ -37,13 +38,20 @@ Ext.define('Patients.ux.AddressFieldSet', {
         flex: 1
     },
     margin: 0,
-    items: [
-        {
-            xtype: 'textfield',
+    items: [{
+            xtype: 'combo',
             name: 'country',
             fieldLabel: i18n.address_country,
+            store: 'addressDictionary',
             allowBlank: false,
-            bind: '{theAddress.country}'
+            bind: {
+                value: '{theAddress.country}'
+            },
+            valueField: 'id',
+            displayField: 'country',
+            queryMode: 'local',
+            forceSelection: true,
+            editable: false
         }, {
 //            defaults: {
 //                margin: 1,

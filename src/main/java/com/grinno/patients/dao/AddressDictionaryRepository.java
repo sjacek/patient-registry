@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Pivotal Software, Inc.
+ * Copyright (C) 2016 Jacek Sztajnke
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,18 +16,24 @@
  */
 package com.grinno.patients.dao;
 
-import com.grinno.patients.model.ContactMethod;
+import com.grinno.patients.model.AddressDictionary;
 import java.util.List;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.springframework.data.repository.PagingAndSortingRepository;
 
 /**
  *
- * @author Jacek Sztajnke
+ * @author jacek
  */
-public interface ContactRepository extends MongoRepository<ContactMethod, String>, QueryDslPredicateExecutor<ContactMethod> {
-    
+public interface AddressDictionaryRepository extends
+        AddressDictionaryRepositoryCustom,
+        MongoRepository<AddressDictionary, String>,
+        PagingAndSortingRepository<AddressDictionary, String>,
+        QueryDslPredicateExecutor<AddressDictionary> {
+
     @Query("{active:true}")
-    List<ContactMethod> findAllActive();
+    List<AddressDictionary> findAllCountriesActive();
+
 }

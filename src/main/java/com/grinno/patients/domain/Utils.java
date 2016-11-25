@@ -26,5 +26,4 @@ class Utils {
         if (s != null) return s;
         return "";
     }
-    
 }

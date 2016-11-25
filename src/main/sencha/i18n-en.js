@@ -188,6 +188,8 @@ var i18n = {
     project_status_new: "New",
     project_status_in_progress: "In Progress",
     project_status_finished: "Finished",
+    address_dictionary: "Address Dictionary",
+    address_dictionaries: "Address Dictionaries",
     
     "":""
 };

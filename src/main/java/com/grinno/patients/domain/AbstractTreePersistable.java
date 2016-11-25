@@ -14,12 +14,34 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.grinno.patients.dao;
+package com.grinno.patients.domain;
+
+import ch.rasc.extclassgenerator.ModelField;
 
 /**
  *
  * @author Jacek Sztajnke
  */
-public class AbstractRepositoryImpl {
-    
+public class AbstractTreePersistable extends AbstractPersistable {
+
+    private String _parentId;
+
+    @ModelField(defaultValue = "0")
+    private int _level;
+
+    public String getParentId() {
+        return _parentId;
+    }
+
+    public void setParentId(String _parentId) {
+        this._parentId = _parentId;
+    }
+
+    public int getLevel() {
+        return _level;
+    }
+
+    public void setLevel(int _level) {
+        this._level = _level;
+    }
 }

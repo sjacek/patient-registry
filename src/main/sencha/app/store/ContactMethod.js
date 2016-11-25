@@ -18,7 +18,7 @@
 /* global Ext */
 
 Ext.define('Patients.store.ContactMethod', {
-    extend: 'Ext.data.Store',
+    extend: 'Ext.data.BufferedStore',
     alias: 'store.contactMethod',
     requires: ['Patients.model.ContactMethod'],
     model: 'Patients.model.ContactMethod',
@@ -29,7 +29,7 @@ Ext.define('Patients.store.ContactMethod', {
     remoteSort: true,
     remoteFilter: true,
     sorters: [{
-            property: 'lastName',
+            property: 'method',
             direction: 'ASC'
         }],
     leadingBufferZone: 200

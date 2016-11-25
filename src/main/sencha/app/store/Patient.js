@@ -18,7 +18,7 @@
 /* global Ext */
 
 Ext.define('Patients.store.Patient', {
-    extend: 'Ext.data.Store',
+    extend: 'Ext.data.BufferedStore',
     alias: 'store.patient',
     storeId: 'Patient',
     model: 'Patients.model.PatientPlus',

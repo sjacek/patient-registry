@@ -30,7 +30,7 @@ Ext.define('Patients.store.Diagnosis', {
     remoteSort: true,
     remoteFilter: true,
     sorters: [{
-            property: 'lastName',
+            property: 'name',
             direction: 'ASC'
         }],
     leadingBufferZone: 200

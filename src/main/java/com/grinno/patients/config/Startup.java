@@ -16,7 +16,10 @@
  */
 package com.grinno.patients.config;
 
+import com.grinno.patients.dao.AddressDictionaryRepository;
 import com.grinno.patients.dao.ContactRepository;
+import com.grinno.patients.domain.AbstractPersistable;
+import com.grinno.patients.model.AddressDictionary;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,27 +33,43 @@ import static com.grinno.patients.model.Authority.EMPLOYEE;
 import static com.grinno.patients.model.Authority.USER;
 import com.grinno.patients.model.ContactMethod;
 import com.grinno.patients.model.User;
+import com.opencsv.CSVReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.lang.invoke.MethodHandles;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.io.ClassPathResource;
 
 @Component
 class Startup {
 
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    
     private final MongoDb mongoDb;
 
     private final PasswordEncoder passwordEncoder;
 
-    @Autowired
     private final ContactRepository contactRepository;
     
+    private final AddressDictionaryRepository addressDictionaryRepository;
+
     @Autowired
-    public Startup(MongoDb mongoDb, ContactRepository contactRepository, PasswordEncoder passwordEncoder) {
+    public Startup(MongoDb mongoDb, ContactRepository contactRepository, AddressDictionaryRepository addressDictionaryRepository, PasswordEncoder passwordEncoder) {
         this.mongoDb = mongoDb;
         this.contactRepository = contactRepository;
         this.passwordEncoder = passwordEncoder;
+        this.addressDictionaryRepository = addressDictionaryRepository;
         init();
     }
 
     private void init() {
-
+        initUsers();
+        initContactMethods();
+        initAddressDictionary();
+    }
+    
+    private void initUsers() {
         MongoCollection<User> userCollection = mongoDb.getCollection(User.class);
         if (userCollection.count() == 0) {
             // admin user
@@ -77,49 +96,78 @@ class Startup {
             normalUser.setAuthorities(Arrays.asList(USER.name(), EMPLOYEE.name()));
             userCollection.insertOne(normalUser);
         }
-
+    }
+    
+    private void initContactMethods() {
         if (contactRepository.count() == 0) {
-            {
-                ContactMethod contact = new ContactMethod();
-                contact.setMethod("telefon domowy");
-                contact.setDescription("Telefon domowy");
-                contact.setVersion(1);
-                contact.setActive(true);
-                contact = contactRepository.insert(contact);
-                contact.setChainId(contact.getId());
-                contactRepository.save(contact);
-            }
-            {
-                ContactMethod contact = new ContactMethod();
-                contact.setMethod("telefon komórkowy");
-                contact.setDescription("Telefon komórkowy");
-                contact.setVersion(1);
-                contact.setActive(true);
-                contact = contactRepository.insert(contact);
-                contact.setChainId(contact.getId());
-                contactRepository.save(contact);
-            }
-            {
-                ContactMethod contact = new ContactMethod();
-                contact.setMethod("telefon służbowy");
-                contact.setDescription("Telefon służbowy");
-                contact.setVersion(1);
-                contact.setActive(true);
-                contact = contactRepository.insert(contact);
-                contact.setChainId(contact.getId());
-                contactRepository.save(contact);
-            }
-            {
-                ContactMethod contact = new ContactMethod();
-                contact.setMethod("e-mail");
-                contact.setDescription("Poczta elektroniczna");
-                contact.setVersion(1);
-                contact.setActive(true);
-                contact = contactRepository.insert(contact);
-                contact.setChainId(contact.getId());
-                contactRepository.save(contact);
+            insert(new ContactMethod() {{
+                setMethod("telefon domowy");
+                setDescription("Telefon domowy");
+            }});
+            insert(new ContactMethod() {{
+                setMethod("telefon komórkowy");
+                setDescription("Telefon komórkowy");
+            }});
+            insert(new ContactMethod() {{
+                setMethod("telefon służbowy");
+                setDescription("Telefon służbowy");
+            }});
+            insert(new ContactMethod() {{
+                setMethod("e-mail");
+                setDescription("Poczta elektroniczna");
+            }});
+        }
+    }
+    
+    private void initAddressDictionary() {
+        final String CSV = "iso_panstwa.csv";
+
+        LOGGER.debug("initAddressDictionary start");
+        
+        if (addressDictionaryRepository.count() == 0) {
+            try {
+                CSVReader reader = new CSVReader(new FileReader(new ClassPathResource(CSV).getFile()), ';', '"', 1);
+
+//                ColumnPositionMappingStrategy strat = new ColumnPositionMappingStrategy();
+//                strat.setType(AddressDictionary.class);
+//                strat.setColumnMapping(new String[] {"nazwa"});
+//                new CsvToBean().parse(strat, reader).forEach(address -> insert((AbstractPersistable) address));
+
+//                HeaderColumnNameMappingStrategy<AddressDictionary> strategy = new HeaderColumnNameMappingStrategy<>();
+//                strategy.setType(AddressDictionary.class);
+//                
+//                CsvToBean<AddressDictionary> csvToBean = new CsvToBean<>();
+//                
+//                csvToBean.parse(strategy, reader).forEach(address -> insert(address));
+
+                String[] line;
+                while ((line = reader.readNext()) != null) {
+                    // line[] is an array of values from the line
+                    LOGGER.debug("initAddressDictionary: " + line[2]);
+                    insert(new AddressDictionary(line[2]));
+                }                
+            } catch (FileNotFoundException ex) {
+                LOGGER.error("File " + CSV + " not found", ex);
+            } catch (IOException ex) {
+                LOGGER.error("File " + CSV + " not found", ex);
             }
         }
     }
 
+    private void insert(AbstractPersistable record) {
+        record.setVersion(1);
+        record.setActive(true);
+
+        if (record instanceof ContactMethod) {
+            ContactMethod contact = contactRepository.insert((ContactMethod)record);
+            contact.setChainId(contact.getId());
+            contactRepository.save(contact);
+        }
+        else if (record instanceof AddressDictionary) {
+            AddressDictionary address = addressDictionaryRepository.insert((AddressDictionary)record);
+            address.setChainId(address.getId());
+            addressDictionaryRepository.save(address);
+        }
+    }
+    
 }
