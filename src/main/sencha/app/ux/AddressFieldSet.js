@@ -18,8 +18,6 @@
 
 Ext.define('Patients.ux.AddressFieldSet', {
     extend: 'Ext.form.FieldSet',
-    requires: ['Patients.model.Address', 'Patients.store.AddressDictionary'],
-    store: ['Patients.store.AddressDictionary'],
     xtype: 'address',
     alias: 'widget.address',
     cls: 'shadow',
@@ -33,6 +31,10 @@ Ext.define('Patients.ux.AddressFieldSet', {
         labelAlign: 'right',
         align: 'stretch'
     },
+    layout: {
+        type: 'vbox',
+        align: 'stretch'
+    },
     defaults: {
         margin: 1,
         flex: 1
@@ -42,21 +44,20 @@ Ext.define('Patients.ux.AddressFieldSet', {
             xtype: 'combo',
             name: 'country',
             fieldLabel: i18n.address_country,
-            store: 'addressDictionary',
+            store: { type: 'addressDictionary'},
             allowBlank: false,
             bind: {
                 value: '{theAddress.country}'
             },
-            valueField: 'id',
+            valueField: 'country',
             displayField: 'country',
-            queryMode: 'local',
             forceSelection: true,
             editable: false
         }, {
-//            defaults: {
-//                margin: 1,
-//                flex: 1
-//            },
+            defaults: {
+                margin: 1,
+                flex: 1
+            },
             layout: {
                 type: 'hbox',
                 align: 'stretch'
@@ -81,10 +82,10 @@ Ext.define('Patients.ux.AddressFieldSet', {
             allowBlank: false,
             bind: '{theAddress.street}'
         }, {
-//            defaults: {
-//                margin: 1,
-//                flex: 1
-//            },
+            defaults: {
+                margin: 1,
+                flex: 1
+            },
             layout: {
                 type: 'hbox',
                 align: 'stretch'
@@ -102,6 +103,11 @@ Ext.define('Patients.ux.AddressFieldSet', {
                     allowBlank: true,
                     bind: '{theAddress.flat}'
                 }]
+        }, {
+            xtype: 'textfield',
+            name: 'voivodship',
+            fieldLabel: i18n.address_postoffice,
+            bind: '{theAddress.postoffice}'
         }, {
             xtype: 'textfield',
             name: 'voivodship',

@@ -18,6 +18,7 @@ package com.grinno.patients.dao;
 
 import com.grinno.patients.model.Diagnosis;
 import java.util.List;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.querydsl.QueryDslPredicateExecutor;
@@ -29,5 +30,5 @@ import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 public interface DiagnosisRepository extends MongoRepository<Diagnosis, String>, QueryDslPredicateExecutor<Diagnosis> {
     
     @Query("{active:true}")
-    List<Diagnosis> findAllActive();
+    List<Diagnosis> findAllActive(Sort sort);
 }

@@ -148,6 +148,7 @@ var i18n = {
     address_flat_no:"Nr mieszkania",
     address_zipcode:"Kod pocztowy",
     address_city:"Miejscowość",
+    address_postoffice: "Poczta",
     address_county:"Powiat",
     address_voivodship:"Województwo",
     address_country:"Kraj",

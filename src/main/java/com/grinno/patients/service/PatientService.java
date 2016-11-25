@@ -38,6 +38,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import static com.grinno.patients.util.PeselValidator.peselIsValid;
+import static com.grinno.patients.util.QueryUtil.getSpringSort;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 /**
@@ -61,9 +62,9 @@ public class PatientService extends AbstractService {
 
         StringFilter filter = request.getFirstFilterForField("filter");
         List<Patient> list = (filter != null)
-                ? patientRepository.findAllWithFilterNotDeleted(filter.getValue())
+                ? patientRepository.findAllWithFilterNotDeleted(filter.getValue(), getSpringSort(request))
 //            patientRepository.findAllWithFilter(filter.getValue(), request.getStart(), request.getLimit())
-                : patientRepository.findAllActive();
+                : patientRepository.findAllActive(getSpringSort(request));
 
         LOGGER.debug("read size:[" + list.size() + "]");
 

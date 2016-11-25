@@ -148,6 +148,7 @@ var i18n = {
     address_flat_no:"Flat no.",
     address_zipcode:"Zip Code",
     address_city:"City",
+    address_postoffice: "Post Office",
     address_county:"County",
     address_voivodship:"Voivodship",
     address_country:"Country",

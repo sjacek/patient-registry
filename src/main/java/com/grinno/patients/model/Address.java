@@ -37,10 +37,13 @@ public class Address {
     
     private String city;
     
+    private String postOffice;
+    
     private String county;
 
     private String voivodship;
     
+    @ModelField(defaultValue = "Polska")
     private String country;
 
     public String getStreet() {
@@ -81,6 +84,14 @@ public class Address {
     
     public void setCity(String city) {
         this.city = city;
+    }
+
+    public String getPostOffice() {
+        return postOffice;
+    }
+    
+    public void setPostOffice(String postOffice) {
+        this.postOffice = postOffice;
     }
 
     public String getCounty() {

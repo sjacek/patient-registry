@@ -18,6 +18,7 @@ package com.grinno.patients.dao;
 
 import com.grinno.patients.model.Patient;
 import java.util.List;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.querydsl.QueryDslPredicateExecutor;
@@ -36,10 +37,10 @@ public interface PatientRepository extends
 //    Patient findByPesel(String pesel);
 
     @Query("{active:true}")
-    List<Patient> findAllActive();
+    List<Patient> findAllActive(Sort sort);
 
     @Query("{$and: [{ $or:["
             + " {lastName: {$regex:?0,$options:'i'}}, {firstName: {$regex:?0,$options:'i'}}, {pesel: {$regex:?0,$options:'i'}} ]},"
             + " {active:true} ]}")
-    List<Patient> findAllWithFilterNotDeleted(String filter);
+    List<Patient> findAllWithFilterNotDeleted(String filter, Sort sort);
 }

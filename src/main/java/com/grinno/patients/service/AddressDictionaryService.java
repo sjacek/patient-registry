@@ -23,6 +23,8 @@ import ch.ralscha.extdirectspring.bean.ExtDirectStoreReadRequest;
 import ch.ralscha.extdirectspring.bean.ExtDirectStoreResult;
 import com.grinno.patients.config.security.MongoUserDetails;
 import com.grinno.patients.dao.AddressDictionaryRepository;
+import com.grinno.patients.dao.authorities.RequireAnyAuthority;
+import com.grinno.patients.dao.authorities.RequireEmployeeAuthority;
 import com.grinno.patients.model.AddressDictionary;
 import com.grinno.patients.util.ValidationMessages;
 import com.grinno.patients.util.ValidationMessagesResult;
@@ -36,14 +38,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
-import com.grinno.patients.dao.authorities.RequireEmployeeAuthority;
+import static com.grinno.patients.util.QueryUtil.getSpringSort;
 
 /**
  *
  * @author Jacek Sztajnke
  */
 @Service
-@RequireEmployeeAuthority
+@RequireAnyAuthority
 public class AddressDictionaryService extends AbstractService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -57,12 +59,13 @@ public class AddressDictionaryService extends AbstractService {
     @ExtDirectMethod(STORE_READ)
     public ExtDirectStoreResult<AddressDictionary> read(ExtDirectStoreReadRequest request) {
         LOGGER.debug("read 1");
-        List<AddressDictionary> list = addressDictionaryRepository.findAllCountriesActive();
+        List<AddressDictionary> list = addressDictionaryRepository.findAllCountriesActive(getSpringSort(request));
         LOGGER.debug("read size:[" + list.size() + "]");
         return new ExtDirectStoreResult<>(list);
     }
 
     @ExtDirectMethod(STORE_MODIFY)
+    @RequireEmployeeAuthority
     public ExtDirectStoreResult<AddressDictionary> destroy(@AuthenticationPrincipal MongoUserDetails userDetails, AddressDictionary addressDictionary) {
         ExtDirectStoreResult<AddressDictionary> result = new ExtDirectStoreResult<>();
 
@@ -81,6 +84,7 @@ public class AddressDictionaryService extends AbstractService {
     }
 
     @ExtDirectMethod(STORE_MODIFY)
+    @RequireEmployeeAuthority
     public ValidationMessagesResult<AddressDictionary> update(@AuthenticationPrincipal MongoUserDetails userDetails, AddressDictionary addressDictionary) {
         List<ValidationMessages> violations = validateEntity(addressDictionary, userDetails.getLocale());
 

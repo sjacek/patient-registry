@@ -18,6 +18,7 @@ package com.grinno.patients.dao;
 
 import com.grinno.patients.model.AddressDictionary;
 import java.util.List;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.querydsl.QueryDslPredicateExecutor;
@@ -34,6 +35,6 @@ public interface AddressDictionaryRepository extends
         QueryDslPredicateExecutor<AddressDictionary> {
 
     @Query("{active:true}")
-    List<AddressDictionary> findAllCountriesActive();
+    List<AddressDictionary> findAllCountriesActive(Sort sort);
 
 }

@@ -38,6 +38,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import com.grinno.patients.dao.authorities.RequireEmployeeAuthority;
 import com.grinno.patients.model.Project;
+import static com.grinno.patients.util.QueryUtil.getSpringSort;
 
 /**
  *
@@ -59,7 +60,7 @@ public class ProjectService extends AbstractService {
     public ExtDirectStoreResult<Project> read(ExtDirectStoreReadRequest request) {
 
         StringFilter filter = request.getFirstFilterForField("filter");
-        List<Project> list = projectRepository.findAllActive();
+        List<Project> list = projectRepository.findAllActive(getSpringSort(request));
 
         LOGGER.debug("read size:[" + list.size() + "]");
 

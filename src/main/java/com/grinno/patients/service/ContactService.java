@@ -37,6 +37,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import com.grinno.patients.dao.authorities.RequireEmployeeAuthority;
+import static com.grinno.patients.util.QueryUtil.getSpringSort;
 
 /**
  *
@@ -56,7 +57,7 @@ public class ContactService extends AbstractService {
 
     @ExtDirectMethod(STORE_READ)
     public ExtDirectStoreResult<ContactMethod> read(ExtDirectStoreReadRequest request) {
-        List<ContactMethod> list = contactRepository.findAllActive();
+        List<ContactMethod> list = contactRepository.findAllActive(getSpringSort(request));
         LOGGER.debug("read size:[" + list.size() + "]");
         return new ExtDirectStoreResult<>(list);
     }

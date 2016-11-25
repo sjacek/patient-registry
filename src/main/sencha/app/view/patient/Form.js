@@ -18,7 +18,7 @@
 
 Ext.define('Patients.view.patient.Form', {
     extend: 'Ext.form.Panel',
-    requires: ['Ext.form.field.Date', 'Ext.form.field.ComboBox', 'Ext.grid.Panel', 'Ext.grid.plugin.CellEditing', 'Patients.store.ContactMethod', 'Patients.ux.AddressFieldSet'],
+    requires: ['Ext.form.field.Date', 'Ext.form.field.ComboBox', 'Ext.grid.Panel', 'Ext.grid.plugin.CellEditing', 'Patients.ux.AddressFieldSet'],
     reference: 'editPanel',
     xtype: 'patient.form',
     header: {
@@ -92,7 +92,8 @@ Ext.define('Patients.view.patient.Form', {
                             flex: 1
                         },
                         layout: {
-                            type: 'hbox'
+                            type: 'hbox',
+                            align: 'stretch'
                         },
                         items: [{
                                 xtype: 'fieldset',
@@ -101,7 +102,7 @@ Ext.define('Patients.view.patient.Form', {
                                     align: 'stretch'
                                 },
                                 defaults: {
-                                    flex: 1,
+                                    flex: 0,
                                     margin: 1
                                 },
                                 items: [{
@@ -134,14 +135,16 @@ Ext.define('Patients.view.patient.Form', {
                                         fieldLabel: i18n.patient_birthday,
                                         allowBlank: false,
                                         bind: '{selectedObject.birthday}'
-//                                    }, {
-//                                        xtype: 'splitter'
                                     }]
                             }, {
                                 xtype: 'fieldset',
                                 layout: {
                                     type: 'vbox',
                                     align: 'stretch'
+                                },
+                                defaults: {
+                                    flex: 0,
+                                    margin: 1
                                 },
                                 items: [{
                                         xtype: 'combobox',
@@ -182,7 +185,7 @@ Ext.define('Patients.view.patient.Form', {
                                                         editor: {
                                                             completeOnEnter: false,
                                                             xtype: 'combo',
-                                                            store: Ext.create('Patients.store.ContactMethod'),
+                                                            store: {type: 'contactMethod'},
                                                             valueField: 'method',
                                                             displayField: 'method',
                                                             allowBlank: false,
@@ -352,10 +355,12 @@ Ext.define('Patients.view.patient.Form', {
                 },
                 items: [{
                         layout: 'hbox',
+                        defaults: {
+                            margin: 1
+                        },
                         items: [{
                                 xtype: 'splitter',
-                                flex: 1,
-                                align: 'stretch'
+                                flex: 1
                             }, {
                                 xtype: 'splitbutton',
                                 name: 'copytemplate',
@@ -365,6 +370,14 @@ Ext.define('Patients.view.patient.Form', {
                             }]
                     }, {
                         xtype: 'fieldset',
+                        layout: {
+                            type: 'vbox',
+                            align: 'stretch'
+                        },
+                        defaults: {
+                            flex: 1,
+                            margin: 1
+                        },
                         items: [{
                                 xtype: 'textfield',
                                 name: 'diagnosisName',

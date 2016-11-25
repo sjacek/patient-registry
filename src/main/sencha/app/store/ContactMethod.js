@@ -18,7 +18,7 @@
 /* global Ext */
 
 Ext.define('Patients.store.ContactMethod', {
-    extend: 'Ext.data.BufferedStore',
+    extend: 'Ext.data.Store',
     alias: 'store.contactMethod',
     requires: ['Patients.model.ContactMethod'],
     model: 'Patients.model.ContactMethod',
