@@ -3,6 +3,7 @@
 /bootstrap.js
 /bootstrap.json
 /bootstrap.jsonp
+/i18n-*.js
 /sencha-error-*.log
 /app/model/Address.js
 /app/model/Contact.js

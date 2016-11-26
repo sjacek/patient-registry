@@ -189,7 +189,7 @@ class Startup {
                         insert(new ZipCodePoland(zipCode, postOffice, city, voivodship, street, county));
                     }
                     else {
-                        LOGGER.debug("****************** found, don't insert!");
+                        LOGGER.debug("****************** duplicate found, don't insert!");
                     }
                 }                
             } catch (FileNotFoundException ex) {

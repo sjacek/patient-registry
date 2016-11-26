@@ -68,7 +68,7 @@ class DevelopmentConfig {
         Files.write(Paths.get(userDir, senchaDir, "api.js"), extDirectConfig.getBytes(StandardCharsets.UTF_8));
 
         Path clientDir = Paths.get(userDir, senchaDir);
-//        writeI18n(clientDir);
+        writeI18n(clientDir);
         writeEnums(clientDir);
     }
 
@@ -114,7 +114,7 @@ class DevelopmentConfig {
     }
 
     private void writeI18n(Path clientDir) throws IOException {
-        List<Locale> locales = Arrays.asList(ENGLISH, GERMAN, new Locale("pl", "PL"));
+        List<Locale> locales = Arrays.asList(ENGLISH, GERMAN, new Locale("pl"));
         for (Locale locale : locales) {
             String tag = locale.toLanguageTag();
             String output = "var i18n = " + new ObjectMapper().writeValueAsString(buildMessageMap(locale)) + ";";
