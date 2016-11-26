@@ -70,6 +70,7 @@ public class NavigationService {
             node.addChild(new NavigationNode("contact_methods", "contactmethod.Container", true, null, "x-fa fa-book", "contacts", ADMIN, EMPLOYEE));
             node.addChild(new NavigationNode("diagnosis_templates", "diagnosis.Container", true, null, "x-fa fa-book", "diagnosis", ADMIN, EMPLOYEE));
             node.addChild(new NavigationNode("address_dictionary", "addressdictionary.Container", true, null, "x-fa fa-book", "address_dictionaries", ADMIN, EMPLOYEE));
+            node.addChild(new NavigationNode("zipcodepl_dictionary", "zipCodePl.Container", true, null, "x-fa fa-book", "zipcodepl_dictionary", ADMIN, EMPLOYEE));
             rootNodes.add(node);
         }
 

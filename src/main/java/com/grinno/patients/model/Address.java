@@ -32,7 +32,7 @@ public class Address {
     
     private String flat;
     
-//    @ModelField(customType="ZipCode")
+//    @ModelField(customType = "zipcode")
     private String zipCode;
     
     private String city;

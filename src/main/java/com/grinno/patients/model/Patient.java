@@ -64,14 +64,14 @@ public class Patient extends AbstractPersistable {
     private String lastName;
 
     @NotNull(message = "{fieldrequired}")
-    @ModelField(defaultValue="NEW")
+    @ModelField(defaultValue = "NEW")
     private PatientStatus status;
 
     private boolean ward;
     
     @NotBlank(message = "{fieldrequired}")
     @Indexed
-//    @ModelField(customType="pesel")
+//    @ModelField(customType = "pesel")
     private String pesel;
 
     @NotNull(message = "{fieldrequired}")

@@ -18,6 +18,7 @@ package com.grinno.patients.config;
 
 import com.grinno.patients.dao.AddressDictionaryRepository;
 import com.grinno.patients.dao.ContactRepository;
+import com.grinno.patients.dao.ZipCodePolandRepository;
 import com.grinno.patients.domain.AbstractPersistable;
 import com.grinno.patients.model.AddressDictionary;
 import java.util.Arrays;
@@ -33,6 +34,7 @@ import static com.grinno.patients.model.Authority.EMPLOYEE;
 import static com.grinno.patients.model.Authority.USER;
 import com.grinno.patients.model.ContactMethod;
 import com.grinno.patients.model.User;
+import com.grinno.patients.model.ZipCodePoland;
 import com.opencsv.CSVReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -53,13 +55,18 @@ class Startup {
     private final ContactRepository contactRepository;
     
     private final AddressDictionaryRepository addressDictionaryRepository;
+    
+    private final ZipCodePolandRepository zipCodePolandRepository;
 
     @Autowired
-    public Startup(MongoDb mongoDb, ContactRepository contactRepository, AddressDictionaryRepository addressDictionaryRepository, PasswordEncoder passwordEncoder) {
+    public Startup(MongoDb mongoDb,
+            ContactRepository contactRepository, AddressDictionaryRepository addressDictionaryRepository, ZipCodePolandRepository zipCodePolandRepository, 
+            PasswordEncoder passwordEncoder) {
         this.mongoDb = mongoDb;
         this.contactRepository = contactRepository;
         this.passwordEncoder = passwordEncoder;
         this.addressDictionaryRepository = addressDictionaryRepository;
+        this.zipCodePolandRepository = zipCodePolandRepository;
         init();
     }
 
@@ -67,6 +74,7 @@ class Startup {
         initUsers();
         initContactMethods();
         initAddressDictionary();
+        initZipCodePoland();
     }
     
     private void initUsers() {
@@ -154,6 +162,40 @@ class Startup {
         }
     }
 
+    private void initZipCodePoland() {
+        final String CSV = "kody-pocztowe_GUS.csv";
+
+        LOGGER.debug("initZipCodePoland start");
+        
+        if (zipCodePolandRepository.count() == 0) {
+            try {
+                CSVReader reader = new CSVReader(new FileReader(new ClassPathResource(CSV).getFile()), ';', '"', 1);
+
+//                ColumnPositionMappingStrategy strat = new ColumnPositionMappingStrategy();
+//                strat.setType(AddressDictionary.class);
+//                strat.setColumnMapping(new String[] {"nazwa"});
+//                new CsvToBean().parse(strat, reader).forEach(address -> insert((AbstractPersistable) address));
+
+//                HeaderColumnNameMappingStrategy<AddressDictionary> strategy = new HeaderColumnNameMappingStrategy<>();
+//                strategy.setType(AddressDictionary.class);
+//                
+//                CsvToBean<AddressDictionary> csvToBean = new CsvToBean<>();
+//                
+//                csvToBean.parse(strategy, reader).forEach(address -> insert(address));
+
+                String[] line;
+                while ((line = reader.readNext()) != null) {
+                    // line[] is an array of values from the line
+                    LOGGER.debug("initZipCodePoland: " + line[0]);
+                    insert(new ZipCodePoland(line[0], line[1], line[2], line[3], line[4], line[5]));
+                }                
+            } catch (FileNotFoundException ex) {
+                LOGGER.error("File " + CSV + " not found", ex);
+            } catch (IOException ex) {
+                LOGGER.error("File " + CSV + " not found", ex);
+            }
+        }
+    }
     private void insert(AbstractPersistable record) {
         record.setVersion(1);
         record.setActive(true);
@@ -167,6 +209,11 @@ class Startup {
             AddressDictionary address = addressDictionaryRepository.insert((AddressDictionary)record);
             address.setChainId(address.getId());
             addressDictionaryRepository.save(address);
+        }
+        else if (record instanceof ZipCodePoland) {
+            ZipCodePoland zipCode = zipCodePolandRepository.insert((ZipCodePoland)record);
+            zipCode.setChainId(zipCode.getId());
+            zipCodePolandRepository.save(zipCode);
         }
     }
     

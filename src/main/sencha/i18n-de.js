@@ -191,6 +191,14 @@ var i18n = {
     project_status_finished: "Finished",
     address_dictionary: "Address Dictionary",
     address_dictionaries: "Address Dictionaries",
+    zipcodepoland: "Zip Code",
+    zipcodespoland: "Zip Codes",
+    zipcodepl_zipCode: "Zip Code",
+    zipcodepl_postOffice: "Post Office",
+    zipcodepl_city: "City",
+    zipcodepl_voivodship: "Voivodship",
+    zipcodepl_street: "Street",
+    zipcodepl_county: "County",
     
     "":""
 };

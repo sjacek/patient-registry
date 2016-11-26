@@ -191,6 +191,14 @@ var i18n = {
     project_status_finished: "zakończony",
     address_dictionary: "Słownik adresowy",
     address_dictionaries: "Słowniki adresowe",
-
+    zipcodepoland: "Kod pocztowy",
+    zipcodespoland: "Kody pocztowe",
+    zipcodepl_zipCode: "Kod pocztowy",
+    zipcodepl_postOffice: "Poczta",
+    zipcodepl_city: "Miejscowość",
+    zipcodepl_voivodship: "Województwo",
+    zipcodepl_street: "Ulica",
+    zipcodepl_county: "Powiat",
+    
     "":""
 };
