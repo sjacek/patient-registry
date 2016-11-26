@@ -14,25 +14,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-/* global Ext */
+/* global Ext, i18n */
 
-Ext.define('Patients.view.patient.ViewModel', {
-    extend: 'Ext.app.ViewModel',
-    requires: ['Ext.data.BufferedStore'],
-    data: {
-        selectedObject: null,
-        totalCount: null,
-        correspondenceAddressEnabled: false,
-        certificateOfDisabilityEnabled: false,
-        certificateOfDisabilityExpirationEnabled: false
-    },
-    stores: {
-        objects: {
-            type: 'patient',
-            listeners: {
-                load: 'onObjectStoreLoad'
-            }
+Ext.define('Patients.store.Gender', {
+    extend: 'Ext.data.Store',
+    storeId: 'gender',
+    data: [{
+            value: Patients.constant.Gender.MALE,
+            text: i18n.patient_male
         },
-        diagnosis: { type: 'diagnosis' }
-    }
+        {
+            value: Patients.constant.Gender.FEMALE,
+            text: i18n.patient_female
+        }]
 });

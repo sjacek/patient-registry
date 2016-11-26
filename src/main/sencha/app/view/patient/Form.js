@@ -18,7 +18,7 @@
 
 Ext.define('Patients.view.patient.Form', {
     extend: 'Ext.form.Panel',
-    requires: ['Ext.form.field.Date', 'Ext.form.field.ComboBox', 'Ext.grid.Panel', 'Ext.grid.plugin.CellEditing', 'Patients.ux.AddressFieldSet'],
+    requires: ['Ext.form.field.Date', 'Ext.form.field.ComboBox', 'Ext.grid.Panel', 'Ext.grid.plugin.CellEditing', 'Patients.ux.address.FieldSet'],
     reference: 'editPanel',
     xtype: 'patient.form',
     header: {
@@ -124,17 +124,57 @@ Ext.define('Patients.view.patient.Form', {
                                         allowBlank: false,
                                         bind: '{selectedObject.lastName}'
                                     }, {
-                                        xtype: 'textfield',
-                                        name: 'pesel',
-                                        fieldLabel: i18n.patient_pesel,
-                                        allowBlank: false,
-                                        bind: '{selectedObject.pesel}'
-                                    }, {
-                                        xtype: 'datefield',
-                                        name: 'birthday',
-                                        fieldLabel: i18n.patient_birthday,
-                                        allowBlank: false,
-                                        bind: '{selectedObject.birthday}'
+                                        defaults: {
+                                            margin: 1,
+                                            flex: 1
+                                        },
+                                        layout: {
+                                            type: 'hbox',
+                                            align: 'stretch'
+                                        },
+                                        items: [{
+                                                defaults: {
+                                                    margin: 1,
+                                                    flex: 1
+                                                },
+                                                layout: {
+                                                    type: 'vbox',
+                                                    align: 'stretch'
+                                                },
+                                                items: [
+                                                    {
+                                                        xtype: 'textfield',
+                                                        name: 'pesel',
+                                                        fieldLabel: i18n.patient_pesel,
+                                                        allowBlank: false,
+                                                        bind: '{selectedObject.pesel}'
+                                                    }, {
+                                                        xtype: 'datefield',
+                                                        name: 'birthday',
+                                                        fieldLabel: i18n.patient_birthday,
+                                                        allowBlank: false,
+                                                        bind: '{selectedObject.birthday}'
+                                                    }]
+                                            }, {
+                                                xtype: 'radiogroup',
+                                                name: 'gender',
+                                                simpleValue: true,
+                                                flex: 0,
+                                                fieldLabel: i18n.patient_gender,
+                                                bind: '{selectedObject.gender}',
+                                                columns: 1,
+                                                vertical: true,
+                                                defaults: {
+                                                    flex: 0
+                                                },
+                                                items: [{
+                                                        boxLabel: i18n.patient_male,
+                                                        inputValue: Patients.constant.Gender.MALE
+                                                    }, {
+                                                        boxLabel: i18n.patient_female,
+                                                        inputValue: Patients.constant.Gender.FEMALE
+                                                    }]
+                                            }]
                                     }]
                             }, {
                                 xtype: 'fieldset',

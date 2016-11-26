@@ -31,7 +31,7 @@ Ext.define('Patients.view.project.ViewModel', {
             remoteSort: true,
             remoteFilter: true,
             sorters: [{
-                    property: 'lastName',
+                    property: 'name',
                     direction: 'ASC'
                 }],
             listeners: {
@@ -39,39 +39,6 @@ Ext.define('Patients.view.project.ViewModel', {
             },
             pageSize: 100,
             leadingBufferZone: 200
-        },
-        diagnosis: { type: 'diagnosis' }
-    },
-    formulas: {
-        address: {
-            bind: {
-                bindTo: '{selectedObject.address}',
-                deep: true
-            },
-            get: function (address) {
-                return address;
-            }
-        },
-        correspondenceAddress: {
-            bind: {
-                bindTo: '{selectedObject.correspondenceAddress}',
-                deep: true
-            },
-            get: function (correspondenceAddress) {
-                return correspondenceAddress;
-            }
         }
-//        certificateOfDisabilityEnabled: function(get) {
-//            var selectedObject = get('selectedObject');
-//            if (selectedObject === null) {
-//                return false;
-//            }
-//            return selectedObject.get('disabilityLevel') !== 'NO_CERTIFICATE';
-//        },
-//        certificateOfDisabilityExpirationEnabled: function (get) {
-//            var a = !get('certificateOfDisability');
-//            var ret = !get('certificateOfDisability') && this.certificateOfDisabilityExpiration;
-//            return ret;
-//        },
     }
 });

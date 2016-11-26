@@ -28,7 +28,7 @@ Ext.define('Patients.Application', {
     requires: ['Ext.direct.*', 'Ext.form.action.DirectSubmit', 'Patients.*', 'Ext.state.Manager', 'Ext.state.LocalStorageProvider', 'Ext.container.Container'],
     name: 'Patients',
 
-    stores: ['Navigation', 'Languages', 'Authority', 'PatientStatus', 'DisabilityLevel', 'ProjectStatus'],
+    stores: ['Navigation', 'Languages', 'Authority', 'PatientStatus', 'DisabilityLevel', 'ProjectStatus', 'Gender'],
 
     constructor: function () {
         // <debug>

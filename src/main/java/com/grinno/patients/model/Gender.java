@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2016 Jacek Sztajnke
  *
  * This program is free software: you can redistribute it and/or modify
@@ -14,25 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-/* global Ext */
+package com.grinno.patients.model;
 
-Ext.define('Patients.view.patient.ViewModel', {
-    extend: 'Ext.app.ViewModel',
-    requires: ['Ext.data.BufferedStore'],
-    data: {
-        selectedObject: null,
-        totalCount: null,
-        correspondenceAddressEnabled: false,
-        certificateOfDisabilityEnabled: false,
-        certificateOfDisabilityExpirationEnabled: false
-    },
-    stores: {
-        objects: {
-            type: 'patient',
-            listeners: {
-                load: 'onObjectStoreLoad'
-            }
-        },
-        diagnosis: { type: 'diagnosis' }
-    }
-});
+/**
+ *
+ * @author Jacek Sztajnke
+ */
+public enum Gender {
+    MALE, FEMALE
+}

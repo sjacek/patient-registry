@@ -105,19 +105,7 @@ public class PatientService extends AbstractService {
                 setAttrsForUpdate(patient, userDetails, old);
             }
             else {
-/*                patient.setContacts(new ArrayList<Contact>() {{
-                    add(new Contact("telefon", "123"));
-                    add(new Contact("email", "bla@bla.com"));
-                }} );
-                patient.setAddress(new Address() {{
-                    setStreet("Długa");
-                    setHouse("128");
-                    setZipCode("01-234");
-                    setCity("Warszawa");
-                    setVoivodship("mazowieckie");
-                    setCountry("Polska");
-                }});
-*/                setAttrsForCreate(patient, userDetails);
+                setAttrsForCreate(patient, userDetails);
             }
 
             patientRepository.save(patient);

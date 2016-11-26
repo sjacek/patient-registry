@@ -9,7 +9,7 @@ app:
   url: https://localhost:8443
   rememberme-cookie-key: patients
   rememberme-cookie-valid-in-days: 31
-  default-email-sender: no-reply@starter.com
+  default-email-sender: no-reply@parentproject.org.pl
   login-lock-attempts: 10
   login-lock-minutes: 30
 

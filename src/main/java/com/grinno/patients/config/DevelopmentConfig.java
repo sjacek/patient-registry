@@ -31,6 +31,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import ch.ralscha.extdirectspring.util.ExtDirectSpringUtil;
 import com.grinno.patients.model.Authority;
 import com.grinno.patients.model.DisabilityLevel;
+import com.grinno.patients.model.Gender;
 import com.grinno.patients.model.PatientStatus;
 import com.grinno.patients.model.ProjectStatus;
 import static java.util.Locale.ENGLISH;
@@ -76,6 +77,7 @@ class DevelopmentConfig {
         writeEnum(clientDir, "PatientStatus", PatientStatus.values(), false);
         writeEnum(clientDir, "DisabilityLevel", DisabilityLevel.values(), false);
         writeEnum(clientDir, "ProjectStatus", ProjectStatus.values(), false);
+        writeEnum(clientDir, "Gender", Gender.values(), false);
     }
 
     private static void writeEnum(Path clientDir, String name, Enum<?>[] values, boolean writeStore) throws IOException {

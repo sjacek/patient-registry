@@ -64,6 +64,10 @@ public class Patient extends AbstractPersistable {
     private String lastName;
 
     @NotNull(message = "{fieldrequired}")
+    @ModelField
+    private Gender gender;
+    
+    @NotNull(message = "{fieldrequired}")
     @ModelField(defaultValue = "NEW")
     private PatientStatus status;
 
@@ -142,6 +146,14 @@ public class Patient extends AbstractPersistable {
         this.lastName = lastName;
     }
 
+    public Gender getGender() {
+        return gender;
+    }
+    
+    public void setGender(Gender gender) {
+        this.gender = gender;
+    }
+    
     public PatientStatus getStatus() {
         return status;
     }

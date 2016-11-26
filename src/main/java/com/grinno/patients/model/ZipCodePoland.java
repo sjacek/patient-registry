@@ -55,6 +55,7 @@ public class ZipCodePoland extends AbstractPersistable {
     
     private String street;
     
+    @Indexed
     private String county;
 
     public ZipCodePoland(String zipCode, String postOffice, String city, String voivodship, String street, String county) {
