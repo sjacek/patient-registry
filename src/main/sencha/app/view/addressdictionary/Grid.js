@@ -20,7 +20,7 @@ Ext.define('Patients.view.addressdictionary.Grid', {
     extend: 'Ext.grid.Panel',
     xtype: 'addresslist',
     reference: 'gridPanel',
-    requires: ['Patients.plugin.Clearable', 'Ext.grid.plugin.RowEditing'],
+    requires: ['Ext.grid.plugin.RowEditing'],
     stateful: true,
     stateId: 'view.contactmethod.Grid',
     height: 100,

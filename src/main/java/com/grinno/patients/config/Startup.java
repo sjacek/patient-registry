@@ -21,7 +21,6 @@ import com.grinno.patients.dao.ContactRepository;
 import com.grinno.patients.dao.ZipCodePolandRepository;
 import com.grinno.patients.domain.AbstractPersistable;
 import com.grinno.patients.model.AddressDictionary;
-import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -40,6 +39,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
+import static java.util.Arrays.asList;
+import static org.apache.commons.lang3.text.WordUtils.capitalizeFully;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 
@@ -86,10 +87,10 @@ class Startup {
             adminUser.setFirstName("admin");
             adminUser.setLastName("admin");
             adminUser.setLocale("en");
-            adminUser.setPasswordHash(this.passwordEncoder.encode("admin"));
+            adminUser.setPasswordHash(passwordEncoder.encode("admin"));
             adminUser.setEnabled(true);
             adminUser.setDeleted(false);
-            adminUser.setAuthorities(Arrays.asList(ADMIN.name()));
+            adminUser.setAuthorities(asList(ADMIN.name()));
             userCollection.insertOne(adminUser);
 
             // normal user
@@ -98,10 +99,10 @@ class Startup {
             normalUser.setFirstName("user");
             normalUser.setLastName("user");
             normalUser.setLocale("de");
-            normalUser.setPasswordHash(this.passwordEncoder.encode("user"));
+            normalUser.setPasswordHash(passwordEncoder.encode("user"));
             normalUser.setEnabled(true);
             adminUser.setDeleted(false);
-            normalUser.setAuthorities(Arrays.asList(USER.name(), EMPLOYEE.name()));
+            normalUser.setAuthorities(asList(USER.name(), EMPLOYEE.name()));
             userCollection.insertOne(normalUser);
         }
     }
@@ -171,23 +172,25 @@ class Startup {
             try {
                 CSVReader reader = new CSVReader(new FileReader(new ClassPathResource(CSV).getFile()), ';', '"', 1);
 
-//                ColumnPositionMappingStrategy strat = new ColumnPositionMappingStrategy();
-//                strat.setType(AddressDictionary.class);
-//                strat.setColumnMapping(new String[] {"nazwa"});
-//                new CsvToBean().parse(strat, reader).forEach(address -> insert((AbstractPersistable) address));
-
-//                HeaderColumnNameMappingStrategy<AddressDictionary> strategy = new HeaderColumnNameMappingStrategy<>();
-//                strategy.setType(AddressDictionary.class);
-//                
-//                CsvToBean<AddressDictionary> csvToBean = new CsvToBean<>();
-//                
-//                csvToBean.parse(strategy, reader).forEach(address -> insert(address));
-
                 String[] line;
+                final char[] delimiters = {' ', ',','.','-','(',')'};
                 while ((line = reader.readNext()) != null) {
-                    // line[] is an array of values from the line
-                    LOGGER.debug("initZipCodePoland: " + line[0]);
-                    insert(new ZipCodePoland(line[0], line[1], line[2], line[3], line[4], line[5]));
+                    final String zipCode = line[0];
+                    final String postOffice = line[1];
+                    final String city = capitalizeFully(line[2], delimiters);
+                    final String voivodship = capitalizeFully(line[3], delimiters);
+                    final String street = line[4];
+                    final String county = capitalizeFully(line[5], delimiters);
+
+                    LOGGER.debug("initZipCodePoland: " + zipCode + ", " + postOffice + ", " + city + ", " + voivodship + ", " + street + ", " + county);
+
+                    int count = zipCodePolandRepository.CountByExample(zipCode, postOffice, city, voivodship, street, county);
+                    if (count == 0) {
+                        insert(new ZipCodePoland(zipCode, postOffice, city, voivodship, street, county));
+                    }
+                    else {
+                        LOGGER.debug("****************** found, don't insert!");
+                    }
                 }                
             } catch (FileNotFoundException ex) {
                 LOGGER.error("File " + CSV + " not found", ex);
@@ -196,6 +199,7 @@ class Startup {
             }
         }
     }
+    
     private void insert(AbstractPersistable record) {
         record.setVersion(1);
         record.setActive(true);

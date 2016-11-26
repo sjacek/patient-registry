@@ -21,13 +21,21 @@ import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.STORE_MO
 import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.STORE_READ;
 import ch.ralscha.extdirectspring.bean.ExtDirectStoreReadRequest;
 import ch.ralscha.extdirectspring.bean.ExtDirectStoreResult;
+import ch.ralscha.extdirectspring.filter.StringFilter;
 import com.grinno.patients.config.security.MongoUserDetails;
 import com.grinno.patients.dao.ZipCodePolandRepository;
+import com.grinno.patients.dao.authorities.RequireAnyAuthority;
+import com.grinno.patients.dao.authorities.RequireEmployeeAuthority;
+import com.grinno.patients.model.User;
 import com.grinno.patients.model.ZipCodePoland;
+import com.grinno.patients.util.QueryUtil;
 import static com.grinno.patients.util.QueryUtil.getSpringSort;
 import com.grinno.patients.util.ValidationMessages;
 import com.grinno.patients.util.ValidationMessagesResult;
 import com.grinno.patients.util.ValidationUtil;
+import com.mongodb.client.FindIterable;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Sorts;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Locale;
@@ -35,12 +43,17 @@ import javax.validation.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.stereotype.Service;
+import static com.grinno.patients.util.QueryUtil.getPageable;
 
 /**
  *
  * @author Jacek Sztajnke
  */
+@Service
+@RequireAnyAuthority
 public class ZipCodePolandService extends AbstractService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -53,12 +66,19 @@ public class ZipCodePolandService extends AbstractService {
 
     @ExtDirectMethod(STORE_READ)
     public ExtDirectStoreResult<ZipCodePoland> read(ExtDirectStoreReadRequest request) {
-        List<ZipCodePoland> list = zipCodePolandRepository.findAllActive(getSpringSort(request));
-        LOGGER.debug("read size:[" + list.size() + "]");
-        return new ExtDirectStoreResult<>(list);
+
+        StringFilter filter = request.getFirstFilterForField("filter");
+
+        Page<ZipCodePoland> page = (filter != null)
+                ? zipCodePolandRepository.findAllWithFilterActive(filter.getValue(), getPageable(request))
+                : zipCodePolandRepository.findAllActive(getPageable(request));
+
+        LOGGER.debug("read size:[" + page.getSize() + "]");
+        return new ExtDirectStoreResult<>(page.getTotalElements(), page.getContent());
     }
 
     @ExtDirectMethod(STORE_MODIFY)
+    @RequireEmployeeAuthority
     public ExtDirectStoreResult<ZipCodePoland> destroy(@AuthenticationPrincipal MongoUserDetails userDetails, ZipCodePoland zipCodePoland) {
         ExtDirectStoreResult<ZipCodePoland> result = new ExtDirectStoreResult<>();
 
@@ -77,6 +97,7 @@ public class ZipCodePolandService extends AbstractService {
     }
 
     @ExtDirectMethod(STORE_MODIFY)
+    @RequireEmployeeAuthority
     public ValidationMessagesResult<ZipCodePoland> update(@AuthenticationPrincipal MongoUserDetails userDetails, ZipCodePoland zipCodePoland) {
         List<ValidationMessages> violations = validateEntity(zipCodePoland, userDetails.getLocale());
 

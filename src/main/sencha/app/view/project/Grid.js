@@ -19,7 +19,6 @@
 Ext.define('Patients.view.project.Grid', {
     extend: 'Ext.grid.Panel',
     xtype: 'projectlist',
-    requires: ['Patients.plugin.Clearable'],
     stateful: true,
     stateId: 'view.project.Grid',
     height: 100,

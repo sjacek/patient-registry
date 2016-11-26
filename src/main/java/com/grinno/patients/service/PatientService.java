@@ -62,8 +62,7 @@ public class PatientService extends AbstractService {
 
         StringFilter filter = request.getFirstFilterForField("filter");
         List<Patient> list = (filter != null)
-                ? patientRepository.findAllWithFilterNotDeleted(filter.getValue(), getSpringSort(request))
-//            patientRepository.findAllWithFilter(filter.getValue(), request.getStart(), request.getLimit())
+                ? patientRepository.findAllWithFilterActive(filter.getValue(), getSpringSort(request))
                 : patientRepository.findAllActive(getSpringSort(request));
 
         LOGGER.debug("read size:[" + list.size() + "]");

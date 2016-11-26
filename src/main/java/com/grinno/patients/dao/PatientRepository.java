@@ -42,5 +42,5 @@ public interface PatientRepository extends
     @Query("{$and: [{ $or:["
             + " {lastName: {$regex:?0,$options:'i'}}, {firstName: {$regex:?0,$options:'i'}}, {pesel: {$regex:?0,$options:'i'}} ]},"
             + " {active:true} ]}")
-    List<Patient> findAllWithFilterNotDeleted(String filter, Sort sort);
+    List<Patient> findAllWithFilterActive(String filter, Sort sort);
 }

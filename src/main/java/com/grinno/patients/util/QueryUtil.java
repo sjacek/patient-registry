@@ -32,6 +32,9 @@ import ch.ralscha.extdirectspring.bean.SortDirection;
 import static ch.ralscha.extdirectspring.bean.SortDirection.ASCENDING;
 import ch.ralscha.extdirectspring.bean.SortInfo;
 import java.util.function.Consumer;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import static org.springframework.data.domain.Sort.Direction.ASC;
 import static org.springframework.data.domain.Sort.Direction.DESC;
@@ -73,5 +76,16 @@ public abstract class QueryUtil {
         });
         
         return new Sort(orders);
+    }
+
+    public static Pageable getPageable(ExtDirectStoreReadRequest request) {
+
+        List<Order> orders = new ArrayList<>();
+        
+        request.getSorters().stream().forEach(sortInfo -> {
+            orders.add(new Order(sortInfo.getDirection() == ASCENDING ? ASC : DESC, sortInfo.getProperty()));
+        });
+        
+        return new PageRequest(request.getPage() - 1, request.getLimit(), new Sort(orders));
     }
 }

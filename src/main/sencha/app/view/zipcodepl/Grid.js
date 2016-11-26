@@ -40,6 +40,19 @@ Ext.define('Patients.view.zipcodepl.Grid', {
             margin: '0 0 0 5'
         },
         items: [{
+                emptyText: i18n.filter,
+                xtype: 'textfield',
+                width: 250,
+                plugins: [{
+                        ptype: 'clearable'
+                    }],
+                listeners: {
+                    change: {
+                        fn: 'onFilter',
+                        buffer: 500
+                    }
+                }
+            }, {
                 text: i18n.create,
                 tooltip: i18n.zipcodepl_create_tooltip,
                 iconCls: 'x-fa fa-plus',
@@ -90,8 +103,7 @@ Ext.define('Patients.view.zipcodepl.Grid', {
                 // the editor config is used to create the <a href='Ext.grid.CellEditor.html'>Ext.grid.CellEditor</a>
                 // and the field property is used to create the editing input field.
                 field: {
-                    xtype: 'textfield',
-                    allowBlank: false
+                    xtype: 'textfield'
                 }
             },
             flex: 1,

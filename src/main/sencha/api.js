@@ -139,6 +139,16 @@ var REMOTING_API = {
     }, {
       "name" : "update",
       "len" : 1
+    } ],
+    "zipCodePolandService" : [ {
+      "name" : "destroy",
+      "len" : 1
+    }, {
+      "name" : "read",
+      "len" : 1
+    }, {
+      "name" : "update",
+      "len" : 1
     } ]
   }
 };

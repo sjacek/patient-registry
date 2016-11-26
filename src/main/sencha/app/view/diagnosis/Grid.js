@@ -19,7 +19,6 @@
 Ext.define('Patients.view.diagnosis.Grid', {
     extend: 'Ext.grid.Panel',
     xtype: 'diagnosislist',
-    requires: ['Patients.plugin.Clearable'],
     stateful: true,
     stateId: 'view.diagnosis.Grid',
     height: 100,

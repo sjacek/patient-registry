@@ -17,8 +17,8 @@
 package com.grinno.patients.dao;
 
 import com.grinno.patients.model.ZipCodePoland;
-import java.util.List;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.querydsl.QueryDslPredicateExecutor;
@@ -34,6 +34,13 @@ public interface ZipCodePolandRepository extends
         QueryDslPredicateExecutor<ZipCodePoland> {
 
     @Query("{active:true}")
-    List<ZipCodePoland> findAllActive(Sort sort);
+    Page<ZipCodePoland> findAllActive(Pageable pageable);
 
+    @Query("{$and: [{ $or:["
+            + " {zipCode: {$regex:?0,$options:'i'}}, {city: {$regex:?0,$options:'i'}}, {voivodship: {$regex:?0,$options:'i'}}, {county: {$regex:?0,$options:'i'}} ]},"
+            + " {active:true} ]}")
+    Page<ZipCodePoland> findAllWithFilterActive(String filter, Pageable pageable);
+
+    @Query(count = true, value = "{$and: [ {zipCode:?0}, {postOffice:?1}, {city:?2}, {voivodship:?3}, {street:?4}, {county:?5} ]}")
+    int CountByExample(String zipCode, String postOffice, String city, String voivodship, String street, String county);
 }
