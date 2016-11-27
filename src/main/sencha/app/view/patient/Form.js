@@ -375,8 +375,10 @@ Ext.define('Patients.view.patient.Form', {
                                 }
                             }, {
                                 xtype: 'address',
+                                reference: 'correspondence_address',
                                 checkboxToggle: true,
                                 title: i18n.patient_correspondence_address,
+                                parentForm: this,
                                 bind: {
                                     address: '{selectedObject.correspondenceAddress}',
                                     collapsed: '{!correspondenceAddressEnabled}'

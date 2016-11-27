@@ -24,7 +24,8 @@ Ext.define('Patients.ux.address.FieldSet', {
     modelValidation: true,
     viewModel: {
         data: {
-            theAddress: null
+            theAddress: null,
+            parentForm: null
         }
     },
     fieldDefaults: {
@@ -39,12 +40,15 @@ Ext.define('Patients.ux.address.FieldSet', {
         margin: 1,
         flex: 1
     },
+    bind: {
+        collapsed: '{correspondenceAddressAndDisabled}'
+    },
     margin: 0,
     items: [{
             xtype: 'combo',
             name: 'country',
             fieldLabel: i18n.address_country,
-            store: { type: 'addressDictionary' },
+            store: {type: 'addressDictionary'},
             allowBlank: false,
             bind: {
                 value: '{theAddress.country}'
@@ -115,7 +119,7 @@ Ext.define('Patients.ux.address.FieldSet', {
                         }]
                 }, {
                     xtype: 'textfield',
-                    name: 'voivodship',
+                    name: 'postOffice',
                     fieldLabel: i18n.address_postoffice,
                     bind: '{theAddress.postoffice}'
                 }, {
@@ -209,7 +213,48 @@ Ext.define('Patients.ux.address.FieldSet', {
 //                    bind: '{theAddress.county}'
 //                }]
         }],
+    listeners: {
+        collapse: function () {
+            this.allowBlank(this.items, true, this.allowBlank);
+            this.parentFormValid();
+        },
+        expand: function () {
+            this.allowBlank(this.items, false, this.allowBlank);
+            this.parentFormValid();
+        }
+    },
+    allowBlank: function (items, on, func) {
+        items.each(function (item) {
+            if (item.items !== undefined) {
+                func(item.items, on, func);
+            }
+            if (item.allowBlank !== undefined) {
+                if (item.name !== 'flat' && item.name !== 'postOffice') {
+                    Ext.apply(item, {allowBlank: on}, {});
+                    item.fireEvent('dirtychange'); // TODO: not working
+                }
+            }
+        });
+    },
+    parentFormValid: function () {
+        var viewModel = this.viewModel;
+        if (viewModel === undefined) {
+            return;
+        }
+        var parentForm = this.viewModel.get('parentForm');
+        if (parentForm === undefined || parentForm === null) {
+            return;
+        }
+        
+        Ext.defer(function () {
+            parentForm.isValid();
+        }, 1);        
+    },
     setAddress: function (address) {
         this.viewModel.set('theAddress', address);
+    },
+    setParentForm: function (form) {
+        this.viewModel.set('parentForm', form);
     }
+
 });

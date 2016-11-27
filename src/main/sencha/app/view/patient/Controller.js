@@ -63,12 +63,13 @@ Ext.define('Patients.view.patient.Controller', {
             selectedObject.setAddress(Ext.create('Patients.model.Address'));
         }
 
-        var correspondenceAddress = selectedObject.getCorrespondenceAddress(),
+        var correspondenceAddress = selectedObject.getCorrespondenceAddress();
                 correspondenceAddressEnabled = (correspondenceAddress !== null && correspondenceAddress.phantom === false);
         if (!correspondenceAddress) {
             selectedObject.setCorrespondenceAddress(Ext.create('Patients.model.Address'));
         }
         viewModel.set('correspondenceAddressEnabled', correspondenceAddressEnabled);
+        
         var certificateOfDisabilityEnabled = (selectedObject.get('disabilityLevel') !== 'NO_CERTIFICATE');
         viewModel.set('certificateOfDisabilityEnabled', certificateOfDisabilityEnabled);
         if (!selectedObject.getDiagnosis()) {
@@ -90,7 +91,9 @@ Ext.define('Patients.view.patient.Controller', {
     },
     save: function (callback) {
         var viewModel = this.getViewModel(), selectedObject = this.getSelectedObject();
-        if (!viewModel.get('correspondenceAddressEnabled')) {
+
+        var correspondence_address = this.lookup('correspondence_address');
+        if (correspondence_address.collapsed) {
             selectedObject.getCorrespondenceAddress().destroy();
             delete selectedObject.getCorrespondenceAddress();
         }
@@ -125,30 +128,6 @@ Ext.define('Patients.view.patient.Controller', {
         var certificateOfDisabilityExpirationDate = this.lookup('certificateOfDisabilityExpirationDate');
         Ext.apply(certificateOfDisabilityExpirationDate, {allowBlank: !viewModel.get('certificateOfDisabilityExpirationEnabled')}, {});
         this.lookup('editPanel').isValid();
-    },
-    onCorrespondenceAddressCollapsed: function (fieldset) {
-        this.setCorrespondenceAddressEnabled(fieldset, false);
-    },
-    onCorrespondenceAddressExpanded: function (fieldset) {
-        this.setCorrespondenceAddressEnabled(fieldset, true);
-    },
-    setCorrespondenceAddressEnabled: function (fieldset, on) {
-        this.getViewModel().set('correspondenceAddressEnabled', on);
-        fieldset.items.each(function (item) {
-            if (item.xtype === 'form') {
-                item.items.each(function (item) {
-                    if (item.name !== 'flat') {
-                        Ext.apply(item, {allowBlank: !on}, {});
-                    }
-                });
-            } else {
-                Ext.apply(item, {allowBlank: !on}, {});
-            }
-        });
-        var formPanel = this.lookup('editPanel');
-        Ext.defer(function () {
-            formPanel.isValid();
-        }, 1);
     },
     validateContacts: function () {
         var grid = this.lookup('contactsGrid');
