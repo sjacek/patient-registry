@@ -26,6 +26,8 @@ import ch.ralscha.extdirectspring.annotation.ExtDirectMethod;
 import ch.ralscha.extdirectspring.bean.ExtDirectStoreResult;
 import com.grinno.patients.config.MongoDb;
 import com.grinno.patients.config.security.MongoUserDetails;
+import com.grinno.patients.dao.PersistentLoginRepository;
+import com.grinno.patients.dao.UserRepository;
 import com.grinno.patients.dao.authorities.RequireAnyAuthority;
 import com.grinno.patients.dto.UserSettings;
 import com.grinno.patients.model.CPersistentLogin;
@@ -49,6 +51,12 @@ public class UserConfigService {
     private MongoDb mongoDb;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private PersistentLoginRepository persistentLoginRepository;
+
+    @Autowired
     private Validator validator;
 
     @Autowired
@@ -56,7 +64,7 @@ public class UserConfigService {
 
     @ExtDirectMethod(STORE_READ)
     public ExtDirectStoreResult<UserSettings> readSettings(@AuthenticationPrincipal MongoUserDetails userDetails) {
-        UserSettings userSettings = new UserSettings(userDetails.getUser(this.mongoDb));
+        UserSettings userSettings = new UserSettings(userDetails.getUser(userRepository));
         return new ExtDirectStoreResult<>(userSettings);
     }
 
@@ -64,7 +72,7 @@ public class UserConfigService {
     public String enable2f(@AuthenticationPrincipal MongoUserDetails userDetails) {
         String randomSecret = TotpAuthUtil.randomSecret();
 
-        this.mongoDb.getCollection(User.class).updateOne(
+        mongoDb.getCollection(User.class).updateOne(
                 Filters.eq(CUser.id, userDetails.getUserDbId()),
                 Updates.set(CUser.secret, randomSecret));
 
@@ -73,7 +81,7 @@ public class UserConfigService {
 
     @ExtDirectMethod
     public void disable2f(@AuthenticationPrincipal MongoUserDetails userDetails) {
-        this.mongoDb.getCollection(User.class).updateOne(
+        mongoDb.getCollection(User.class).updateOne(
                 Filters.eq(CUser.id, userDetails.getUserDbId()),
                 Updates.unset(CUser.secret));
     }
@@ -82,14 +90,14 @@ public class UserConfigService {
     public ValidationMessagesResult<UserSettings> updateSettings(UserSettings modifiedUserSettings,
             @AuthenticationPrincipal MongoUserDetails userDetails, Locale locale) {
 
-        List<ValidationMessages> validations = ValidationUtil.validateEntity(this.validator, modifiedUserSettings);
-        User user = userDetails.getUser(this.mongoDb);
+        List<ValidationMessages> validations = ValidationUtil.validateEntity(validator, modifiedUserSettings);
+        User user = userDetails.getUser(userRepository);
         List<Bson> updates = new ArrayList<>();
 
         if (StringUtils.hasText(modifiedUserSettings.getNewPassword()) && validations.isEmpty()) {
-            if (this.passwordEncoder.matches(modifiedUserSettings.getCurrentPassword(), user.getPasswordHash())) {
+            if (passwordEncoder.matches(modifiedUserSettings.getCurrentPassword(), user.getPasswordHash())) {
                 if (modifiedUserSettings.getNewPassword().equals(modifiedUserSettings.getNewPasswordRetype())) {
-                    user.setPasswordHash(this.passwordEncoder.encode(modifiedUserSettings.getNewPassword()));
+                    user.setPasswordHash(passwordEncoder.encode(modifiedUserSettings.getNewPassword()));
                     updates.add(Updates.set(CUser.passwordHash, user.getPasswordHash()));
                 } else {
                     for (String field : new String[]{"newPassword", "newPasswordRetype"}) {
@@ -127,23 +135,22 @@ public class UserConfigService {
         }
 
         if (!updates.isEmpty()) {
-            this.mongoDb.getCollection(User.class).updateOne(Filters.eq(CUser.id, user.getId()), Updates.combine(updates));
+            mongoDb.getCollection(User.class).updateOne(Filters.eq(CUser.id, user.getId()), Updates.combine(updates));
         }
 
         return new ValidationMessagesResult<>(modifiedUserSettings, validations);
     }
 
     private boolean isEmailUnique(String userId, String email) {
-        return this.mongoDb.getCollection(User.class)
-                .count(Filters.and(Filters.regex(CUser.email, "^" + email + "$", "i"),
-                        Filters.ne(CUser.id, userId))) == 0;
+        return userRepository.countByEmailRegexAndIdNot(email, userId) == 0;
     }
 
     @ExtDirectMethod(STORE_READ)
     public List<PersistentLogin> readPersistentLogins(@AuthenticationPrincipal MongoUserDetails userDetails) {
-
-        return StreamSupport.stream(this.mongoDb.getCollection(PersistentLogin.class).find(Filters.eq(CPersistentLogin.userId,
-                userDetails.getUserDbId())).spliterator(), false).peek(p -> {
+        return StreamSupport.stream(
+//                persistentLoginRepository.findByUserId(userDetails.getUserDbId()).spliterator(),
+                mongoDb.getCollection(PersistentLogin.class).find(Filters.eq(CPersistentLogin.userId, userDetails.getUserDbId())).spliterator(),
+                false).peek(p -> {
                     String ua = p.getUserAgent();
                     if (StringUtils.hasText(ua)) {
                         UserAgent userAgent = UserAgent.parseUserAgentString(ua);
@@ -152,13 +159,13 @@ public class UserConfigService {
                         p.setOperatingSystem(userAgent.getOperatingSystem().getName());
                     }
                 }).collect(Collectors.toList());
-
     }
 
     @ExtDirectMethod(STORE_MODIFY)
     public void destroyPersistentLogin(String series, @AuthenticationPrincipal MongoUserDetails userDetails) {
-        this.mongoDb.getCollection(PersistentLogin.class).deleteOne(
-                Filters.and(Filters.eq(CPersistentLogin.series, series),
+//        persistentLoginRepository.deletePersistentLoginBySeriesAndUserId(series, userDetails.getUserDbId());
+        mongoDb.getCollection(PersistentLogin.class).deleteOne(Filters.and(
+                Filters.eq(CPersistentLogin.series, series),
                 Filters.eq(CPersistentLogin.userId, userDetails.getUserDbId())));
     }
 

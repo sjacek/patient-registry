@@ -16,24 +16,17 @@
  */
 package com.grinno.patients.dao;
 
-import com.grinno.patients.model.User;
+import com.grinno.patients.model.PersistentLogin;
+import java.util.List;
 import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.data.mongodb.repository.Query;
 
 /**
  *
  * @author jacek
  */
-public interface UserRepository extends MongoRepository<User, String> /*, QueryDslPredicateExecutor<User> */ {
+public interface PersistentLoginRepository extends MongoRepository<PersistentLogin, String> /*, QueryDslPredicateExecutor<PersistentLogin> */ {
 
-    @Query("{ $and : [ { id: ?0 }, { deleted: false } ] }")    
-    User findOneNotDeleted(String id);
-
-    @Query("{ $and : [ { email: ?0 }, { deleted: false } ] }")    
-    User findByEmailNotDeleted(String email);
-
-    @Query("{ $and : [ { passwordResetToken: ?0 }, { deleted: false }, { enabled: true } ] }")    
-    User findByPasswordResetTokenNotDeletedAndEnabled(String passwordResetToken);
+    List<PersistentLogin> findByUserId(String userId);
     
-    Long countByEmailRegexAndIdNot(String email, String id);
+    int deletePersistentLoginBySeriesAndUserId(String series, String userId);
 }

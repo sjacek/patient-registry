@@ -26,16 +26,10 @@ import com.grinno.patients.config.security.MongoUserDetails;
 import com.grinno.patients.dao.ZipCodePolandRepository;
 import com.grinno.patients.dao.authorities.RequireAnyAuthority;
 import com.grinno.patients.dao.authorities.RequireEmployeeAuthority;
-import com.grinno.patients.model.User;
 import com.grinno.patients.model.ZipCodePoland;
-import com.grinno.patients.util.QueryUtil;
-import static com.grinno.patients.util.QueryUtil.getSpringSort;
 import com.grinno.patients.util.ValidationMessages;
 import com.grinno.patients.util.ValidationMessagesResult;
 import com.grinno.patients.util.ValidationUtil;
-import com.mongodb.client.FindIterable;
-import com.mongodb.client.model.Filters;
-import com.mongodb.client.model.Sorts;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Locale;
@@ -103,7 +97,6 @@ public class ZipCodePolandService extends AbstractService {
 
         ValidationMessagesResult<ZipCodePoland> result = new ValidationMessagesResult<>(zipCodePoland);
         result.setValidations(violations);
-//
 
         LOGGER.debug("update 1: " + zipCodePoland.toString());
         if (violations.isEmpty()) {

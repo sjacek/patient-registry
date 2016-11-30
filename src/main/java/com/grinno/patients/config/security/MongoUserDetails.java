@@ -13,11 +13,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.StringUtils;
 
-import com.mongodb.client.model.Filters;
-
-import com.grinno.patients.config.MongoDb;
 import com.grinno.patients.dao.UserRepository;
-import com.grinno.patients.model.CUser;
 import com.grinno.patients.model.User;
 
 public class MongoUserDetails implements UserDetails {
@@ -93,9 +89,9 @@ public class MongoUserDetails implements UserDetails {
         return this.email;
     }
 
-    public User getUser(MongoDb mongoDb) {
-        return mongoDb.getCollection(User.class).find(Filters.and(Filters.eq(CUser.id, getUserDbId()), Filters.eq(CUser.deleted, false))).first();
-    }
+//    public User getUser(MongoDb mongoDb) {
+//        return mongoDb.getCollection(User.class).find(Filters.and(Filters.eq(CUser.id, getUserDbId()), Filters.eq(CUser.deleted, false))).first();
+//    }
 
     public User getUser(UserRepository userRepository) {
         return userRepository.findOneNotDeleted(getUserDbId());
@@ -141,11 +137,10 @@ public class MongoUserDetails implements UserDetails {
         this.screenLocked = screenLocked;
     }
 
-    private static List<GrantedAuthority> createAuthorityList(
-            Collection<String> stringAuthorities) {
+    private static List<GrantedAuthority> createAuthorityList(Collection<String> stringAuthorities) {
         List<GrantedAuthority> authorities = new ArrayList<>(stringAuthorities.size());
 
-        stringAuthorities.stream().forEach((stringAuthority) -> {
+        stringAuthorities.stream().forEach(stringAuthority -> {
             authorities.add(new SimpleGrantedAuthority(stringAuthority));
         });
 

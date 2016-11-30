@@ -4,16 +4,13 @@ import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.POLL;
 
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.bson.conversions.Bson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -40,6 +37,7 @@ import ch.ralscha.extdirectspring.annotation.ExtDirectMethodType;
 import ch.ralscha.extdirectspring.bean.ExtDirectFormPostResult;
 import com.grinno.patients.config.MongoDb;
 import com.grinno.patients.config.security.MongoUserDetails;
+import com.grinno.patients.dao.UserRepository;
 import com.grinno.patients.dao.authorities.RequireAdminAuthority;
 import com.grinno.patients.dao.authorities.RequireAnyAuthority;
 import com.grinno.patients.dto.UserDetailDto;
@@ -62,6 +60,9 @@ public class SecurityService {
     private MongoDb mongoDb;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Autowired
@@ -73,34 +74,31 @@ public class SecurityService {
     @ExtDirectMethod
     public UserDetailDto getAuthUser(@AuthenticationPrincipal MongoUserDetails userDetails) {
 
-        if (userDetails != null) {
-            User user = userDetails.getUser(mongoDb);
-            UserDetailDto userDetailDto = new UserDetailDto(userDetails, user, null);
+        LOGGER.debug("getAuthUser");
+        if (userDetails == null) {
+            return null;
+        }
+                    
+        User user = userDetails.getUser(userRepository);
+        UserDetailDto userDetailDto = new UserDetailDto(userDetails, user, null);
 
-            if (!userDetails.isPreAuth()) {
-                mongoDb.getCollection(User.class).updateOne(
-                        Filters.eq(CUser.id, userDetails.getUserDbId()),
-                        Updates.set(CUser.lastAccess, new Date()));
-            }
-
-            return userDetailDto;
+        if (!userDetails.isPreAuth()) {
+            user.setLastAccess(new Date());
+            userRepository.save(user);
         }
 
-        return null;
+        return userDetailDto;
     }
 
     @ExtDirectMethod(ExtDirectMethodType.FORM_POST)
     @PreAuthorize("hasAuthority('PRE_AUTH')")
     public ExtDirectFormPostResult signin2fa(HttpServletRequest request, @AuthenticationPrincipal MongoUserDetails userDetails, @RequestParam("code") int code) {
 
-        User user = userDetails.getUser(mongoDb);
+        User user = userDetails.getUser(userRepository);
         if (user != null) {
             if (TotpAuthUtil.verifyCode(user.getSecret(), code, 3)) {
-
-                mongoDb.getCollection(User.class).updateOne(
-                        Filters.eq(CUser.id, userDetails.getUserDbId()),
-                        Updates.set(CUser.lastAccess, new Date()));
-
+                user.setLastAccess(new Date());
+                userRepository.save(user);
                 userDetails.grantAuthorities();
 
                 Authentication newAuth = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
@@ -116,7 +114,7 @@ public class SecurityService {
                     SecurityContextHolder.getContext().getAuthentication(), excp);
             applicationEventPublisher.publishEvent(event);
 
-            user = userDetails.getUser(mongoDb);
+            user = userDetails.getUser(userRepository);
             if (user.getLockedOutUntil() != null) {
                 HttpSession session = request.getSession(false);
                 if (session != null) {
@@ -181,22 +179,19 @@ public class SecurityService {
                 && StringUtils.hasText(newPasswordRetype)
                 && newPassword.equals(newPasswordRetype)) {
             String decodedToken = new String(Base64.getUrlDecoder().decode(token));
-            User user = this.mongoDb.getCollection(User.class)
-                    .find(Filters.and(Filters.eq(CUser.passwordResetToken, decodedToken),
-                            Filters.eq(CUser.deleted, false),
-                            Filters.eq(CUser.enabled, true)))
-                    .first();
+            
+            User user = userRepository.findByPasswordResetTokenNotDeletedAndEnabled(decodedToken);
 
             if (user != null && user.getPasswordResetTokenValidUntil() != null) {
 
                 ExtDirectFormPostResult result;
-                List<Bson> updates = new ArrayList<>();
+//                List<Bson> updates = new ArrayList<>();
 
                 if (user.getPasswordResetTokenValidUntil().after(new Date())) {
                     user.setPasswordHash(this.passwordEncoder.encode(newPassword));
                     user.setSecret(null);
-                    updates.add(Updates.unset(CUser.secret));
-                    updates.add(Updates.set(CUser.passwordHash, user.getPasswordHash()));
+//                    updates.add(Updates.unset(CUser.secret));
+//                    updates.add(Updates.set(CUser.passwordHash, user.getPasswordHash()));
 
                     MongoUserDetails principal = new MongoUserDetails(user);
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(principal, null, principal.getAuthorities());
@@ -209,10 +204,12 @@ public class SecurityService {
                 }
                 user.setPasswordResetToken(null);
                 user.setPasswordResetTokenValidUntil(null);
-                updates.add(Updates.unset(CUser.passwordResetToken));
-                updates.add(Updates.unset(CUser.passwordResetTokenValidUntil));
-
-                mongoDb.getCollection(User.class).updateOne(Filters.eq(CUser.id, user.getId()), Updates.combine(updates));
+                userRepository.save(user);
+                
+//                updates.add(Updates.unset(CUser.passwordResetToken));
+//                updates.add(Updates.unset(CUser.passwordResetTokenValidUntil));
+//
+//                mongoDb.getCollection(User.class).updateOne(Filters.eq(CUser.id, user.getId()), Updates.combine(updates));
 
                 return result;
             }
@@ -224,7 +221,7 @@ public class SecurityService {
     @ExtDirectMethod
     @RequireAdminAuthority
     public UserDetailDto switchUser(String userId) {
-        User switchToUser = mongoDb.getCollection(User.class).find(Filters.eq(CUser.id, userId)).first();
+        User switchToUser = userRepository.findOneNotDeleted(userId);
         if (switchToUser != null) {
 
             MongoUserDetails principal = new MongoUserDetails(switchToUser);
