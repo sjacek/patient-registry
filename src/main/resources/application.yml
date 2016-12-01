@@ -46,7 +46,7 @@ spring:
 
 
 server:
-  port: 8443
+  port: 8444
   httpPort: 8088
   ssl:
     key-store: keystore.p12
@@ -59,6 +59,12 @@ server:
      enabled: true
      mime-types: text/html,text/xml,text/plain,text/css,application/json,application/javascript,image/svg+xml,application/x-font-ttf,application/x-font-truetype,application/x-font-opentype,application/vnd.ms-fontobject,application/font-sfnt     
   use-forward-headers: true
+
+tomcat:
+  ajp:
+    port: 9090
+    remoteauthentication: false
+    enabled: true
 
 logging:
   level:

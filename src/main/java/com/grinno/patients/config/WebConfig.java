@@ -49,6 +49,15 @@ public class WebConfig {
         return Mustache.compiler();
     }
 
+    @Value("${tomcat.ajp.port}")
+    int ajpPort;
+
+    @Value("${tomcat.ajp.remoteauthentication}")
+    String remoteAuthentication;
+
+    @Value("${tomcat.ajp.enabled}")
+    boolean tomcatAjpEnabled;
+    
     @Bean
     public EmbeddedServletContainerFactory servletContainer() {
         TomcatEmbeddedServletContainerFactory tomcat = new TomcatEmbeddedServletContainerFactory() {
@@ -62,8 +71,20 @@ public class WebConfig {
                 context.addConstraint(securityConstraint);
             }
         };
-
+        
         tomcat.addAdditionalTomcatConnectors(initiateHttpConnector());
+
+        if (tomcatAjpEnabled)
+        {
+            Connector ajpConnector = new Connector("AJP/1.3");
+            ajpConnector.setProtocol("AJP/1.3");
+            ajpConnector.setPort(ajpPort);
+            ajpConnector.setSecure(false);
+            ajpConnector.setAllowTrace(false);
+            ajpConnector.setScheme("http");
+            tomcat.addAdditionalTomcatConnectors(ajpConnector);
+        }
+    
         return tomcat;
     }
 
@@ -82,4 +103,5 @@ public class WebConfig {
 
         return connector;
     }
+
 }
