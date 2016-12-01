@@ -36,8 +36,8 @@ import com.grinno.patients.model.User;
 import com.grinno.patients.model.ZipCodePoland;
 import com.opencsv.CSVReader;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.lang.invoke.MethodHandles;
 import static java.util.Arrays.asList;
 import static org.apache.commons.lang3.text.WordUtils.capitalizeFully;
@@ -135,7 +135,7 @@ class Startup {
         
         if (addressDictionaryRepository.count() == 0) {
             try {
-                CSVReader reader = new CSVReader(new FileReader(new ClassPathResource(CSV).getFile()), ';', '"', 1);
+                CSVReader reader = new CSVReader(new InputStreamReader(new ClassPathResource(CSV).getInputStream()), ';', '"', 1);
 
 //                ColumnPositionMappingStrategy strat = new ColumnPositionMappingStrategy();
 //                strat.setType(AddressDictionary.class);
@@ -170,7 +170,7 @@ class Startup {
         
         if (zipCodePolandRepository.count() == 0) {
             try {
-                CSVReader reader = new CSVReader(new FileReader(new ClassPathResource(CSV).getFile()), ';', '"', 1);
+                CSVReader reader = new CSVReader(new InputStreamReader(new ClassPathResource(CSV).getInputStream()), ';', '"', 1);
 
                 String[] line;
                 final char[] delimiters = {' ', ',','.','-','(',')'};
