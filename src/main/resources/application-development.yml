@@ -30,4 +30,4 @@ logging:
     ch: INFO
     org.springframework.data.mongodb: DEBUG
     org.springframework.data.document: DEBUG
-    com.grinno: DEBUG
+    com.grinnotech: DEBUG

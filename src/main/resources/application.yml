@@ -71,7 +71,7 @@ logging:
     org.springframework: INFO
     org.mongodb: INFO
     org.apache: INFO
-    com.grinno: INFO
+    com.grinnotech: INFO
   file: ./app.log
 
 endpoints:
