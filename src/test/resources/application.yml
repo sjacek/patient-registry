@@ -14,7 +14,7 @@ app:
   login-lock-minutes: 30
 
 mongodb:
-  uri: mongodb://localhost/patients?w=1&wtimeoutMS=0&journal=true
+  uri: mongodb://localhost/patients?w=1&wtimeoutMS=0
 
 security:
   ignored:
@@ -46,7 +46,7 @@ spring:
 
 
 server:
-  port: 8443
+  port: 8444
   httpPort: 8088
   ssl:
     key-store: keystore.p12

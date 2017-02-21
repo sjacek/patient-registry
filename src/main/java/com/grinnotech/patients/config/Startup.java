@@ -80,6 +80,7 @@ class Startup {
     }
     
     private void initUsers() {
+        LOGGER.debug("initUsers start");
         MongoCollection<User> userCollection = mongoDb.getCollection(User.class);
         if (userCollection.count() == 0) {
             // admin user
@@ -109,6 +110,7 @@ class Startup {
     }
     
     private void initContactMethods() {
+        LOGGER.debug("initContactMethods start");
         if (contactRepository.count() == 0) {
             insert(new ContactMethod() {{
                 setMethod("telefon domowy");
@@ -130,10 +132,10 @@ class Startup {
     }
     
     private void initAddressDictionary() {
-        final String CSV = "iso_panstwa.csv";
-
         LOGGER.debug("initAddressDictionary start");
         
+        final String CSV = "iso_panstwa.csv";
+
         if (addressDictionaryRepository.count() == 0) {
             try {
                 CSVReader reader = new CSVReader(new InputStreamReader(new ClassPathResource(CSV).getInputStream()), ';', '"', 1);
@@ -165,10 +167,10 @@ class Startup {
     }
 
     private void initZipCodePoland() {
-        final String CSV = "kody-pocztowe_GUS.csv";
-
         LOGGER.debug("initZipCodePoland start");
         
+        final String CSV = "kody-pocztowe_GUS.csv";
+
         if (zipCodePolandRepository.count() == 0) {
             try {
                 CSVReader reader = new CSVReader(new InputStreamReader(new ClassPathResource(CSV).getInputStream()), ';', '"', 1);

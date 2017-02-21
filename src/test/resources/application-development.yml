@@ -1,0 +1,33 @@
+spring:
+  resources:
+    cache-period: 0
+    static-locations: file:./src/main/sencha
+  jpa:
+    show-sql: true
+
+server:
+  port: 8443
+  httpPort: 8088
+  compression:
+    enabled: false
+
+endpoints:
+  metrics:
+    enabled: true
+    filter:
+      enabled: true
+  health:
+    sensitive: false
+    
+management:
+  security:
+    enabled: true
+
+logging:
+  level:
+    org.springframework: INFO
+    org.apache: INFO
+    ch: INFO
+    org.springframework.data.mongodb: DEBUG
+    org.springframework.data.document: DEBUG
+    com.grinnotech: DEBUG
