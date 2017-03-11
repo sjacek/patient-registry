@@ -39,8 +39,10 @@ import com.grinnotech.patients.util.ValidationMessages;
 import com.grinnotech.patients.util.ValidationMessagesResult;
 import com.grinnotech.patients.util.ValidationUtil;
 import eu.bitwalker.useragentutils.UserAgent;
+import org.springframework.cache.annotation.Cacheable;
 
 @Service
+@Cacheable
 @RequireAnyAuthority
 public class UserConfigService {
 

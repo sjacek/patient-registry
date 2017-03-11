@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-/* global Ext, ifvisible, securityService, i18n, serverUrl */
+/* global Ext, ifvisible, securityService, i18n, serverUrl, logService */
 
 Ext.define('Patients.view.main.MainController', {
     extend: 'Ext.app.ViewController',
@@ -45,6 +45,10 @@ Ext.define('Patients.view.main.MainController', {
                 ':node': '(pwreset|pwresetconfirm|pwresetreq|signout|signin2fa)'
             }
         },
+        'individual.:patient': {
+//            before: 'checkExistingSession',
+            action: 'routeToIndividual'
+        },
         ':node': {
             before: 'checkSession',
             action: 'routeTo',
@@ -54,6 +58,7 @@ Ext.define('Patients.view.main.MainController', {
         }
     },
     onSignedIn: function (event, user) {
+        logService.debug('onSignedIn');
         var me = this;
 
         if (user.preAuth) {
@@ -135,6 +140,7 @@ Ext.define('Patients.view.main.MainController', {
         Ext.direct.Manager.getProvider('heartbeat').disconnect();
     },
     onNotSignedIn: function () {
+        logService.debug('onNotSignedIn');
         delete Patients.app.authUser;
         this.appready = true;
         this.fireEvent('appready', this);
@@ -171,6 +177,10 @@ Ext.define('Patients.view.main.MainController', {
     routeToAuthSignin: function () {
         this.setCurrentView('auth.Signin', true);
     },
+    routeToIndividual: function (patient) {
+        logService.debug('routeToIndividual ' + patient);
+        this.setCurrentView('individual.Container', true);
+    },
     routeToAuth: function (node) {
         switch (node) {
             case 'pwreset':
@@ -197,7 +207,13 @@ Ext.define('Patients.view.main.MainController', {
             this.setCurrentView(node);
         }
     },
+//    getUrlParam: function (param) {
+//        var params = Ext.urlDecode(location.search.substring(1));
+//        return param ? params[param] : params;
+//    },
     checkExistingSession: function (action) {
+//        logService.debug("################### Location: " + location);
+//        logService.debug("################### user: " + this.getUrlParam('user'));
         if (!this.appready) {
             this.on('appready', Ext.Function.bind(this.checkExistingSession, this, arguments), this, {
                 single: true

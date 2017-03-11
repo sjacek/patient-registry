@@ -16,7 +16,7 @@
  */
 package com.grinnotech.patients.dao;
 
-import com.grinnotech.patients.model.AddressDictionary;
+import com.grinnotech.patients.model.CountryDictionary;
 import java.util.List;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -28,13 +28,13 @@ import org.springframework.data.repository.PagingAndSortingRepository;
  *
  * @author jacek
  */
-public interface AddressDictionaryRepository extends
-        AddressDictionaryRepositoryCustom,
-        MongoRepository<AddressDictionary, String>,
-        PagingAndSortingRepository<AddressDictionary, String>,
-        QueryDslPredicateExecutor<AddressDictionary> {
+public interface CountryDictionaryRepository extends
+        CountryDictionaryRepositoryCustom,
+        MongoRepository<CountryDictionary, String>, 
+        PagingAndSortingRepository<CountryDictionary, String>,
+        QueryDslPredicateExecutor<CountryDictionary> {
 
     @Query("{active:true}")
-    List<AddressDictionary> findAllCountriesActive(Sort sort);
+    List<CountryDictionary> findAllCountriesActive(Sort sort);
 
 }

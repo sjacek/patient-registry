@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Pivotal Software, Inc.
+ * Copyright (C) 2016 Jacek Sztajnke
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,10 +22,9 @@ import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.STORE_RE
 import ch.ralscha.extdirectspring.bean.ExtDirectStoreReadRequest;
 import ch.ralscha.extdirectspring.bean.ExtDirectStoreResult;
 import com.grinnotech.patients.config.security.MongoUserDetails;
-import com.grinnotech.patients.dao.AddressDictionaryRepository;
 import com.grinnotech.patients.dao.authorities.RequireAnyAuthority;
 import com.grinnotech.patients.dao.authorities.RequireEmployeeAuthority;
-import com.grinnotech.patients.model.AddressDictionary;
+import com.grinnotech.patients.model.CountryDictionary;
 import com.grinnotech.patients.util.ValidationMessages;
 import com.grinnotech.patients.util.ValidationMessagesResult;
 import com.grinnotech.patients.util.ValidationUtil;
@@ -39,38 +38,41 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import static com.grinnotech.patients.util.QueryUtil.getSpringSort;
+import com.grinnotech.patients.dao.CountryDictionaryRepository;
+import org.springframework.cache.annotation.Cacheable;
 
 /**
  *
  * @author Jacek Sztajnke
  */
 @Service
+@Cacheable
 @RequireAnyAuthority
-public class AddressDictionaryService extends AbstractService {
+public class CountryDictionaryService extends AbstractService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     @Autowired
-    private AddressDictionaryRepository addressDictionaryRepository;
+    private CountryDictionaryRepository addressDictionaryRepository;
 
     @Autowired
     private Validator validator;
 
     @ExtDirectMethod(STORE_READ)
-    public ExtDirectStoreResult<AddressDictionary> read(ExtDirectStoreReadRequest request) {
+    public ExtDirectStoreResult<CountryDictionary> read(ExtDirectStoreReadRequest request) {
         LOGGER.debug("read 1");
-        List<AddressDictionary> list = addressDictionaryRepository.findAllCountriesActive(getSpringSort(request));
+        List<CountryDictionary> list = addressDictionaryRepository.findAllCountriesActive(getSpringSort(request));
         LOGGER.debug("read size:[" + list.size() + "]");
         return new ExtDirectStoreResult<>(list);
     }
 
     @ExtDirectMethod(STORE_MODIFY)
     @RequireEmployeeAuthority
-    public ExtDirectStoreResult<AddressDictionary> destroy(@AuthenticationPrincipal MongoUserDetails userDetails, AddressDictionary addressDictionary) {
-        ExtDirectStoreResult<AddressDictionary> result = new ExtDirectStoreResult<>();
+    public ExtDirectStoreResult<CountryDictionary> destroy(@AuthenticationPrincipal MongoUserDetails userDetails, CountryDictionary addressDictionary) {
+        ExtDirectStoreResult<CountryDictionary> result = new ExtDirectStoreResult<>();
 
         LOGGER.debug("destroy 1");
-        AddressDictionary old = addressDictionaryRepository.findOne(addressDictionary.getId());
+        CountryDictionary old = addressDictionaryRepository.findOne(addressDictionary.getId());
 
         old.setId(null);
         old.setActive(false);
@@ -85,16 +87,16 @@ public class AddressDictionaryService extends AbstractService {
 
     @ExtDirectMethod(STORE_MODIFY)
     @RequireEmployeeAuthority
-    public ValidationMessagesResult<AddressDictionary> update(@AuthenticationPrincipal MongoUserDetails userDetails, AddressDictionary addressDictionary) {
+    public ValidationMessagesResult<CountryDictionary> update(@AuthenticationPrincipal MongoUserDetails userDetails, CountryDictionary addressDictionary) {
         List<ValidationMessages> violations = validateEntity(addressDictionary, userDetails.getLocale());
 
-        ValidationMessagesResult<AddressDictionary> result = new ValidationMessagesResult<>(addressDictionary);
+        ValidationMessagesResult<CountryDictionary> result = new ValidationMessagesResult<>(addressDictionary);
         result.setValidations(violations);
 //
 
         LOGGER.debug("update 1: " + addressDictionary.toString());
         if (violations.isEmpty()) {
-            AddressDictionary old = addressDictionaryRepository.findOne(addressDictionary.getId());
+            CountryDictionary old = addressDictionaryRepository.findOne(addressDictionary.getId());
             if (old != null) {
                 old.setId(null);
                 old.setActive(false);
@@ -114,7 +116,7 @@ public class AddressDictionaryService extends AbstractService {
         return result;
     }
 
-    private List<ValidationMessages> validateEntity(AddressDictionary addressDictionary, Locale locale) {
+    private List<ValidationMessages> validateEntity(CountryDictionary addressDictionary, Locale locale) {
         List<ValidationMessages> validations = ValidationUtil.validateEntity(validator, addressDictionary);
 
         // TODO:

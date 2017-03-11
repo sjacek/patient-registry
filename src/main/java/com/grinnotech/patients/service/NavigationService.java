@@ -36,12 +36,14 @@ import com.grinnotech.patients.dto.NavigationNode;
 import static com.grinnotech.patients.model.Authority.ADMIN;
 import static com.grinnotech.patients.model.Authority.EMPLOYEE;
 import static com.grinnotech.patients.model.Authority.USER;
+import org.springframework.cache.annotation.Cacheable;
 
 /**
  *
  * @author jacek
  */
 @Service
+@Cacheable
 public class NavigationService {
 
     private final MessageSource messageSource;

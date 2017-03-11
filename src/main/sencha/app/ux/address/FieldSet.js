@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2016 Jacek Sztajnke
+ * Copyright (C) 2017 Jacek Sztajnke
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,19 +14,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-/* global Ext, i18n */
+/* global Ext, i18n, logService */
 
 Ext.define('Patients.ux.address.FieldSet', {
     extend: 'Ext.form.FieldSet',
-    xtype: 'address',
+    xtype: 'address.form',
     alias: 'widget.address',
     cls: 'shadow',
     modelValidation: true,
+
+//    config: {
+//            correspondence: null
+//    },
     viewModel: {
         data: {
-            theAddress: null,
-            parentForm: null
+            correspondence: null
         }
+//        formulas: {
+//            address: {
+//                get: function (data) {
+//                    return (data.correspondence ? data.selectedObject.correspondence_address : data.selectedObject.address);
+//                }
+//            }
+//        }
     },
     fieldDefaults: {
         labelAlign: 'right',
@@ -40,187 +50,77 @@ Ext.define('Patients.ux.address.FieldSet', {
         margin: 1,
         flex: 1
     },
-    bind: {
-        collapsed: '{correspondenceAddressAndDisabled}'
-    },
+//    bind: {
+//            collapsed: '{correspondenceAddressAndDisabled}'
+//    },
     margin: 0,
     items: [{
             xtype: 'combo',
             name: 'country',
             fieldLabel: i18n.address_country,
-            store: {type: 'addressDictionary'},
+            store: {type: 'countryDictionary'},
             allowBlank: false,
             bind: {
                 value: '{theAddress.country}'
             },
-            valueField: 'country',
+            valueField: 'code',
             displayField: 'country',
             forceSelection: true,
-            editable: false
-        }, {
-            layout: {
-                type: 'vbox',
-                align: 'stretch'
-            },
-            defaults: {
-                margin: 1,
-                flex: 1
-            },
-            margin: 0,
-            items: [{
-                    defaults: {
-                        margin: 1,
-                        flex: 1
-                    },
-                    layout: {
-                        type: 'hbox',
-                        align: 'stretch'
-                    },
-                    items: [{
-                            xtype: 'textfield',
-                            name: 'zipcode',
-                            fieldLabel: i18n.address_zipcode,
-                            allowBlank: false,
-                            bind: '{theAddress.zipCode}'
-                        }, {
-                            xtype: 'textfield',
-                            name: 'city',
-                            fieldLabel: i18n.address_city,
-                            allowBlank: false,
-                            bind: '{theAddress.city}'
-                        }]
-                }, {
-                    xtype: 'textfield',
-                    name: 'street',
-                    fieldLabel: i18n.address_street,
-                    allowBlank: false,
-                    bind: '{theAddress.street}'
-                }, {
-                    defaults: {
-                        margin: 1,
-                        flex: 1
-                    },
-                    layout: {
-                        type: 'hbox',
-                        align: 'stretch'
-                    },
-                    items: [{
-                            xtype: 'textfield',
-                            name: 'house',
-                            fieldLabel: i18n.address_house_no,
-                            allowBlank: false,
-                            bind: '{theAddress.house}'
-                        }, {
-                            xtype: 'textfield',
-                            name: 'flat',
-                            fieldLabel: i18n.address_flat_no,
-                            allowBlank: true,
-                            bind: '{theAddress.flat}'
-                        }]
-                }, {
-                    xtype: 'textfield',
-                    name: 'postOffice',
-                    fieldLabel: i18n.address_postoffice,
-                    bind: '{theAddress.postoffice}'
-                }, {
-                    xtype: 'textfield',
-                    name: 'voivodship',
-                    fieldLabel: i18n.address_voivodship,
-                    allowBlank: false,
-                    bind: '{theAddress.voivodship}'
-                }, {
-                    xtype: 'textfield',
-                    name: 'county',
-                    fieldLabel: i18n.address_county,
-                    allowBlank: false,
-                    bind: '{theAddress.county}'
-                }]
-//        }, {
-//            defaults: {
-//                margin: 1,
-//                flex: 1
-//            },
-//            layout: {
-//                type: 'vbox',
-//                align: 'stretch'
-//            },
-//            items: [{
-//                    defaults: {
-//                        margin: 1,
-//                        flex: 1
-//                    },
-//                    layout: {
-//                        type: 'hbox',
-//                        align: 'stretch'
-//                    },
-//                    items: [{
-//                            xtype: 'textfield',
-//                            name: 'zipcode',
-//                            fieldLabel: i18n.address_zipcode,
-//                            allowBlank: false,
-//                            bind: '{theAddress.zipCode}'
-//                        }, {
-//                            xtype: 'textfield',
-//                            name: 'city',
-//                            fieldLabel: i18n.address_city,
-//                            allowBlank: false,
-//                            bind: '{theAddress.city}'
-//                        }]
-//                }, {
-//                    xtype: 'textfield',
-//                    name: 'street',
-//                    fieldLabel: i18n.address_street,
-//                    allowBlank: false,
-//                    bind: '{theAddress.street}'
-//                }, {
-//                    defaults: {
-//                        margin: 1,
-//                        flex: 1
-//                    },
-//                    layout: {
-//                        type: 'hbox',
-//                        align: 'stretch'
-//                    },
-//                    items: [{
-//                            xtype: 'textfield',
-//                            name: 'house',
-//                            fieldLabel: i18n.address_house_no,
-//                            allowBlank: false,
-//                            bind: '{theAddress.house}'
-//                        }, {
-//                            xtype: 'textfield',
-//                            name: 'flat',
-//                            fieldLabel: i18n.address_flat_no,
-//                            allowBlank: true,
-//                            bind: '{theAddress.flat}'
-//                        }]
-//                }, {
-//                    xtype: 'textfield',
-//                    name: 'voivodship',
-//                    fieldLabel: i18n.address_postoffice,
-//                    bind: '{theAddress.postoffice}'
-//                }, {
-//                    xtype: 'textfield',
-//                    name: 'voivodship',
-//                    fieldLabel: i18n.address_voivodship,
-//                    allowBlank: false,
-//                    bind: '{theAddress.voivodship}'
-//                }, {
-//                    xtype: 'textfield',
-//                    name: 'county',
-//                    fieldLabel: i18n.address_county,
-//                    allowBlank: false,
-//                    bind: '{theAddress.county}'
-//                }]
+            editable: false,
+            listeners: {
+                change: function (combo, newValue, oldValue, eOpts) {
+                    var parent = combo.up(),
+                            correspondence = parent.viewModel.get('correspondence');
+                    logService.debug(parent.xtype);
+//                    logService.debug(this.parentForm);
+                    logService.debug("oldValue:" + oldValue + "; newValue:" + newValue);
+                    if (newValue !== oldValue) {
+                        var oldAddressPanel = parent.getComponent('address');
+                        if (oldAddressPanel !== undefined) {
+                            logService.debug("oldAddressPanel: " + oldAddressPanel.xtype);
+                            parent.remove('address');
+                        }
+                        if (newValue === "PL" && !correspondence) {
+                            logService.debug("PL && !correspondence");
+                            parent.add({
+                                itemId: 'address',
+                                xtype: 'address_pl',
+                                bind: {address: '{selectedObject.address}'}
+                            });
+                        } else if (newValue === "PL" && correspondence) {
+                            logService.debug("PL && correspondence");
+                            parent.add({
+                                itemId: 'address',
+                                xtype: 'address_pl',
+                                bind: {address: '{selectedObject.correspondenceAddress}'}
+                            });
+                        } else if (!correspondence) {
+                            logService.debug("!correspondence");
+                            parent.add({
+                                itemId: 'address',
+                                xtype: 'address_general',
+                                bind: {address: '{selectedObject.address}'}
+                            });
+                        } else {
+                            logService.debug("correspondence");
+                            parent.add({
+                                itemId: 'address',
+                                xtype: 'address_general',
+                                bind: {address: '{selectedObject.correspondenceAddress}'}
+                            });
+                        }
+                    }
+                }
+            }
         }],
     listeners: {
         collapse: function () {
             this.allowBlank(this.items, true, this.allowBlank);
-            this.parentFormValid();
+//            this.parentFormValid();
         },
         expand: function () {
             this.allowBlank(this.items, false, this.allowBlank);
-            this.parentFormValid();
+//            this.parentFormValid();
         }
     },
     allowBlank: function (items, on, func) {
@@ -236,25 +136,23 @@ Ext.define('Patients.ux.address.FieldSet', {
             }
         });
     },
-    parentFormValid: function () {
-        var viewModel = this.viewModel;
-        if (viewModel === undefined) {
-            return;
-        }
-        var parentForm = this.viewModel.get('parentForm');
-        if (parentForm === undefined || parentForm === null) {
-            return;
-        }
-        
-        Ext.defer(function () {
-            parentForm.isValid();
-        }, 1);        
-    },
-    setAddress: function (address) {
-        this.viewModel.set('theAddress', address);
-    },
-    setParentForm: function (form) {
-        this.viewModel.set('parentForm', form);
+//    parentFormValid: function () {
+//        var viewModel = this.viewModel;
+//        if (viewModel === undefined) {
+//            return;
+//        }
+//        var parentForm = this.viewModel.get('parentForm');
+//        if (parentForm === undefined || parentForm === null) {
+//            return;
+//        }
+//
+//        Ext.defer(function () {
+//            parentForm.isValid();
+//        }, 1);
+//    },
+    setCorrespondence: function (value) {
+        logService.debug("correspondence:" + value);
+        this.viewModel.set('correspondence', value);
     }
 
 });

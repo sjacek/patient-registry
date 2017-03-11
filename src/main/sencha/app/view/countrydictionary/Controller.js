@@ -16,11 +16,11 @@
  */
 /* global Ext, i18n */
 
-Ext.define('Patients.view.addressdictionary.Controller', {
+Ext.define('Patients.view.countrydictionary.Controller', {
     extend: 'Patients.view.base.ViewController',
     config: {
-        objectName: i18n.address_dictionary,
-        objectNamePlural: i18n.address_dictionaries
+        objectName: i18n.country_dictionary,
+        objectNamePlural: i18n.country_dictionaries
     },
     erase: function () {
         this.eraseObject(this.getSelectedObject().get('country'), function () {

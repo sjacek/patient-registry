@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Pivotal Software, Inc.
+ * Copyright (C) 2016 Jacek Sztajnke
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
  */
 package com.grinnotech.patients.dao;
 
-import com.grinnotech.patients.model.AddressDictionary;
+import com.grinnotech.patients.model.CountryDictionary;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
 import org.slf4j.Logger;
@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Jacek Sztajnke
  */
-public class AddressDictionaryRepositoryImpl implements AddressDictionaryRepositoryCustom {
+public class CountryDictionaryRepositoryImpl implements CountryDictionaryRepositoryCustom {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 

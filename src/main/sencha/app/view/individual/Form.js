@@ -16,11 +16,11 @@
  */
 /* global Ext, i18n, logService */
 
-Ext.define('Patients.view.patient.Form', {
+Ext.define('Patients.view.individual.Form', {
     extend: 'Ext.form.Panel',
     requires: ['Ext.form.field.Date', 'Ext.form.field.ComboBox', 'Ext.grid.Panel', 'Ext.grid.plugin.CellEditing', 'Patients.ux.address.FieldSet'],
     reference: 'editPanel',
-    xtype: 'patient.form',
+    xtype: 'individual.form',
     header: {
         title: i18n.patient_card,
         defaults: {
@@ -368,124 +368,21 @@ Ext.define('Patients.view.patient.Form', {
                             align: 'stretch'
                         },
                         items: [{
-                                xtype: 'fieldset',
-                                fieldDefaults: {
-                                    labelAlign: 'right',
-                                    align: 'stretch'
-                                },
-                                layout: {
-                                    type: 'vbox',
-                                    align: 'stretch'
-                                },
-                                defaults: {
-                                    margin: 1,
-                                    flex: 1
-                                },
-                                margin: 0,
+                                xtype: 'address',
                                 title: i18n.patient_address,
-                                items: [{
-                                        xtype: 'combo',
-                                        name: 'country',
-                                        fieldLabel: i18n.address_country,
-                                        store: {type: 'countryDictionary'},
-                                        allowBlank: false,
-                                        bind: {
-                                            value: '{selectedObject.address.country}',
-                                            displayField: 'countryEn'
-                                        },
-                                        valueField: 'code',
-                                        forceSelection: true,
-                                        editable: false,
-                                        listeners: {
-                                            change: function (combo, newValue, oldValue, eOpts) {
-                                                var parent = combo.up();
-                                                logService.debug(parent.xtype);
-                                                logService.debug("oldValue:" + oldValue + "; newValue:" + newValue);
-                                                if (newValue !== oldValue) {
-                                                    var oldAddressPanel = parent.getComponent('address');
-                                                    if (oldAddressPanel !== undefined) {
-                                                        logService.debug("oldAddressPanel: " + oldAddressPanel.xtype);
-                                                        parent.remove('address');
-                                                    }
-                                                    if (newValue === "PL") {
-                                                        parent.add({
-                                                            itemId: 'address',
-                                                            xtype: 'address_pl',
-                                                            bind: {address: '{selectedObject.address}'}
-                                                        });
-                                                    } else {
-                                                        parent.add({
-                                                            itemId: 'address',
-                                                            xtype: 'address_general',
-                                                            bind: {address: '{selectedObject.address}'}
-                                                        });
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }]
+                                bind: {
+                                    address: '{selectedObject.address}'
+                                }
                             }, {
-                                xtype: 'fieldset',
+                                xtype: 'address',
+                                reference: 'correspondence_address',
                                 checkboxToggle: true,
                                 title: i18n.patient_correspondence_address,
-                                fieldDefaults: {
-                                    labelAlign: 'right',
-                                    align: 'stretch'
-                                },
-                                layout: {
-                                    type: 'vbox',
-                                    align: 'stretch'
-                                },
-                                defaults: {
-                                    margin: 1,
-                                    flex: 1
-                                },
-                                margin: 0,
-                                items: [{
-                                        xtype: 'combo',
-                                        name: 'country',
-                                        fieldLabel: i18n.address_country,
-                                        store: {type: 'countryDictionary'},
-                                        allowBlank: false,
-                                        bind: {
-                                            value: '{selectedObject.correspondenceAddress.country}',
-                                            displayField: 'countryEn'
-                                        },
-                                        valueField: 'code',
-                                        forceSelection: true,
-                                        editable: false,
-//                                        initComponent: function () {
-//                                            this.callParent(arguments);
-//                                            logService.debug("*********************initComponent");
-//                                        },
-                                        listeners: {
-                                            change: function (combo, newValue, oldValue, eOpts) {
-                                                var parent = combo.up();
-                                                logService.debug(parent.xtype);
-                                                logService.debug("oldValue:" + oldValue + "; newValue:" + newValue);
-                                                if (newValue !== oldValue) {
-                                                    var oldAddressPanel = parent.getComponent('correspondenceAddress');
-                                                    if (oldAddressPanel !== undefined) {
-                                                        logService.debug("oldAddressPanel: " + oldAddressPanel.xtype);
-                                                        parent.remove('correspondenceAddress');
-                                                    }
-                                                }
-                                                if (newValue === "PL") {
-                                                    parent.add({
-                                                        itemId: 'correspondenceAddress',
-                                                        xtype: 'address_pl',
-                                                        bind: {address: '{selectedObject.correspondenceAddress}'}
-                                                    });
-                                                } else {
-                                                    parent.add({
-                                                        itemId: 'correspondenceAddress',
-                                                        xtype: 'address_general',
-                                                        bind: {address: '{selectedObject.correspondenceAddress}'}
-                                                    });
-                                                }
-                                            }
-                                        }
-                                    }]
+                                parentForm: this,
+                                bind: {
+                                    address: '{selectedObject.correspondenceAddress}',
+                                    collapsed: '{!correspondenceAddressEnabled}'
+                                }
                             }]
                     }]
             }, {
@@ -571,9 +468,6 @@ Ext.define('Patients.view.patient.Form', {
                             }]
                     }]
             }]
-    },
-    countryName: function() {
-        return "countryEn";
     },
     isDirty: function () {
         return false;

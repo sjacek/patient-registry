@@ -39,12 +39,14 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import com.grinnotech.patients.dao.authorities.RequireEmployeeAuthority;
 import com.grinnotech.patients.model.Project;
 import static com.grinnotech.patients.util.QueryUtil.getSpringSort;
+import org.springframework.cache.annotation.Cacheable;
 
 /**
  *
  * @author jacek
  */
 @Service
+@Cacheable
 @RequireEmployeeAuthority
 public class ProjectService extends AbstractService {
 

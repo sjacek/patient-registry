@@ -28,7 +28,7 @@ Ext.define('Patients.Application', {
     requires: ['Ext.direct.*', 'Ext.form.action.DirectSubmit', 'Patients.*', 'Ext.state.Manager', 'Ext.state.LocalStorageProvider', 'Ext.container.Container'],
     name: 'Patients',
 
-    stores: ['Navigation', 'Languages', 'Authority', 'PatientStatus', 'DisabilityLevel', 'ProjectStatus', 'Gender'],
+    stores: ['Navigation', 'Languages', 'Authority', 'PatientStatus', 'DisabilityLevel', 'ProjectStatus', 'Gender', 'CountryDictionary'],
 
     constructor: function () {
         // <debug>
@@ -55,9 +55,17 @@ Ext.define('Patients.Application', {
         this.callParent(arguments);
     },
 
+    getUrlParam: function (param) {
+        var params = Ext.urlDecode(location.search.substring(1));
+        return param ? params[param] : params;
+    },
+
     launch: function () {
         Ext.getBody().removeCls('loading');
         Ext.fly('loading_container').destroy();
+
+        console.log("################### Location: " + location);
+        console.log("################### individual: " + this.getUrlParam('individual'));
 
         var me = this;
         var token = window.location.search.split('token=')[1];

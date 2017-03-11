@@ -38,12 +38,14 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import com.grinnotech.patients.dao.authorities.RequireEmployeeAuthority;
 import static com.grinnotech.patients.util.QueryUtil.getSpringSort;
+import org.springframework.cache.annotation.Cacheable;
 
 /**
  *
  * @author Jacek Sztajnke
  */
 @Service
+@Cacheable
 @RequireEmployeeAuthority
 public class ContactService extends AbstractService {
 

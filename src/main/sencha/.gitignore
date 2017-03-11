@@ -14,5 +14,5 @@
 /app/model/User.js
 /app/model/UserSettings.js
 /app/model/Project.js
-/app/model/AddressDictionary.js
+/app/model/CountryDictionary.js
 /app/model/ZipCodePoland.js

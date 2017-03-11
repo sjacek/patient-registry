@@ -16,10 +16,10 @@
  */
 /* global Ext, i18n */
 
-Ext.define('Patients.view.patient.Controller', {
+Ext.define('Patients.view.individual.Controller', {
     extend: 'Patients.view.base.ViewController',
     config: {
-        formClassName: 'Patients.view.patient.Form',
+        formClassName: 'Patients.view.individual.Form',
         objectName: i18n.patient,
         objectNamePlural: i18n.patients
     },
@@ -92,7 +92,7 @@ Ext.define('Patients.view.patient.Controller', {
     save: function (callback) {
         var viewModel = this.getViewModel(), selectedObject = this.getSelectedObject();
 
-        var correspondence_address = this.lookup('correspondenceAddress');
+        var correspondence_address = this.lookup('correspondence_address');
         if (correspondence_address.collapsed) {
             selectedObject.getCorrespondenceAddress().destroy();
             delete selectedObject.getCorrespondenceAddress();

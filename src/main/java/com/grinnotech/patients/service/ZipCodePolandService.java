@@ -41,12 +41,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import static com.grinnotech.patients.util.QueryUtil.getPageable;
+import org.springframework.cache.annotation.Cacheable;
 
 /**
  *
  * @author Jacek Sztajnke
  */
 @Service
+@Cacheable
 @RequireAnyAuthority
 public class ZipCodePolandService extends AbstractService {
 

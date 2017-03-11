@@ -39,6 +39,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import static com.grinnotech.patients.util.PeselValidator.peselIsValid;
 import static com.grinnotech.patients.util.QueryUtil.getSpringSort;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 /**
@@ -46,6 +47,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
  * @author jacek
  */
 @Service
+@Cacheable
 @RequireUserEmployeeAuthority
 public class PatientService extends AbstractService {
 

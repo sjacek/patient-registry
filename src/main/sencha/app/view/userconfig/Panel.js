@@ -186,6 +186,11 @@ Ext.define('Patients.view.userconfig.Panel', {
             bind: '{persistentLogins}',
             autoLoad: true,
             columns: [{
+                    text: i18n.userconfig_plog_series,
+                    dataIndex: 'series',
+                    flex: 1,
+                    hidden: true
+                }, {
                     text: i18n.userconfig_plog_ip,
                     dataIndex: 'ipAddress',
                     flex: 1

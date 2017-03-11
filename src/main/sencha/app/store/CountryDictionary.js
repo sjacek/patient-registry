@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2016 Jacek Sztajnke
+ * Copyright (C) 2015 jsztajnke
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,17 +14,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 /* global Ext */
 
-Ext.define('Patients.view.addressdictionary.ViewModel', {
-    extend: 'Ext.app.ViewModel',
-    requires: ['Ext.data.BufferedStore'],
-
-    data: {
-        selectedObject: null,
-        totalCount: null
-    },
-    stores: {
-        objects: { type: 'addressDictionary' }
-    }
+Ext.define('Patients.store.CountryDictionary', {
+    extend: 'Ext.data.Store',
+    alias: 'store.countryDictionary',
+    requires: ['Patients.model.CountryDictionary'],
+    model: 'Patients.model.CountryDictionary',
+    autoLoad: false,
+    autoSync: true,
+    pageSize: 100,
+    buffered: true,
+    remoteSort: true,
+    remoteFilter: true,
+    sorters: [{
+            property: 'country',
+            direction: 'ASC'
+        }],
+    leadingBufferZone: 200
 });

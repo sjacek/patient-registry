@@ -48,8 +48,10 @@ import com.grinnotech.patients.web.CsrfController;
 import java.lang.invoke.MethodHandles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.Cacheable;
 
 @Service
+@Cacheable
 public class SecurityService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());

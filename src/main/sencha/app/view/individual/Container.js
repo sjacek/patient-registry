@@ -16,16 +16,16 @@
  */
 /* global Ext */
 
-Ext.define('Patients.view.addressdictionary.Container', {
+Ext.define('Patients.view.individual.Container', {
     extend: 'Ext.container.Container',
     layout: 'card',
     controller: {
-        xclass: 'Patients.view.addressdictionary.Controller'
+        xclass: 'Patients.view.individual.Controller'
     },
     viewModel: {
-        xclass: 'Patients.view.addressdictionary.ViewModel'
+        xclass: 'Patients.view.individual.ViewModel'
     },
     items: [{
-            xclass: 'Patients.view.addressdictionary.Grid'
+            xclass: 'Patients.view.individual.Grid'
         }]
 });

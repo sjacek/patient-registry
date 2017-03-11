@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Pivotal Software, Inc.
+ * Copyright (C) 2016 Jacek Sztajnke
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,11 +16,10 @@
  */
 package com.grinnotech.patients.config;
 
-import com.grinnotech.patients.dao.AddressDictionaryRepository;
 import com.grinnotech.patients.dao.ContactRepository;
 import com.grinnotech.patients.dao.ZipCodePolandRepository;
 import com.grinnotech.patients.domain.AbstractPersistable;
-import com.grinnotech.patients.model.AddressDictionary;
+import com.grinnotech.patients.model.CountryDictionary;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -44,6 +43,7 @@ import static org.apache.commons.lang3.text.WordUtils.capitalizeFully;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
+import com.grinnotech.patients.dao.CountryDictionaryRepository;
 
 @Component
 class Startup {
@@ -56,13 +56,13 @@ class Startup {
 
     private final ContactRepository contactRepository;
     
-    private final AddressDictionaryRepository addressDictionaryRepository;
+    private final CountryDictionaryRepository addressDictionaryRepository;
     
     private final ZipCodePolandRepository zipCodePolandRepository;
 
     @Autowired
     public Startup(MongoDb mongoDb,
-            ContactRepository contactRepository, AddressDictionaryRepository addressDictionaryRepository, ZipCodePolandRepository zipCodePolandRepository, 
+            ContactRepository contactRepository, CountryDictionaryRepository addressDictionaryRepository, ZipCodePolandRepository zipCodePolandRepository, 
             PasswordEncoder passwordEncoder) {
         this.mongoDb = mongoDb;
         this.contactRepository = contactRepository;
@@ -134,19 +134,19 @@ class Startup {
     private void initAddressDictionary() {
         LOGGER.debug("initAddressDictionary start");
         
-        final String CSV = "iso_panstwa.csv";
+        final String CSV = "countries.csv";
 
         if (addressDictionaryRepository.count() == 0) {
             try {
                 CSVReader reader = new CSVReader(new InputStreamReader(new ClassPathResource(CSV).getInputStream()), ';', '"', 1);
 
 //                ColumnPositionMappingStrategy strat = new ColumnPositionMappingStrategy();
-//                strat.setType(AddressDictionary.class);
+//                strat.setType(CountryDictionary.class);
 //                strat.setColumnMapping(new String[] {"nazwa"});
 //                new CsvToBean().parse(strat, reader).forEach(address -> insert((AbstractPersistable) address));
 
 //                HeaderColumnNameMappingStrategy<AddressDictionary> strategy = new HeaderColumnNameMappingStrategy<>();
-//                strategy.setType(AddressDictionary.class);
+//                strategy.setType(CountryDictionary.class);
 //                
 //                CsvToBean<AddressDictionary> csvToBean = new CsvToBean<>();
 //                
@@ -155,8 +155,13 @@ class Startup {
                 String[] line;
                 while ((line = reader.readNext()) != null) {
                     // line[] is an array of values from the line
-                    LOGGER.debug("initAddressDictionary: " + line[2]);
-                    insert(new AddressDictionary(line[2]));
+                    String code = line[0];
+                    String country_en = line[2];
+                    String country_pl = !"".equals(line[3]) ? line[3] : country_en;
+                    String country_de = !"".equals(line[4]) ? line[4] : country_en;
+                    
+                    LOGGER.debug("initAddressDictionary: " + code + "," + country_en);
+                    insert(new CountryDictionary(code, country_en, country_pl, country_de));
                 }                
             } catch (FileNotFoundException ex) {
                 LOGGER.error("File " + CSV + " not found", ex);
@@ -212,8 +217,8 @@ class Startup {
             contact.setChainId(contact.getId());
             contactRepository.save(contact);
         }
-        else if (record instanceof AddressDictionary) {
-            AddressDictionary address = addressDictionaryRepository.insert((AddressDictionary)record);
+        else if (record instanceof CountryDictionary) {
+            CountryDictionary address = addressDictionaryRepository.insert((CountryDictionary)record);
             address.setChainId(address.getId());
             addressDictionaryRepository.save(address);
         }

@@ -16,13 +16,12 @@
  */
 /* global Ext, i18n */
 
-Ext.define('Patients.view.addressdictionary.Grid', {
+Ext.define('Patients.view.individual.Grid', {
     extend: 'Ext.grid.Panel',
-    xtype: 'addresslist',
-    reference: 'gridPanel',
-    requires: ['Ext.grid.plugin.RowEditing'],
+    xtype: 'individuallist',
+    requires: ['Patients.plugin.Clearable'],
     stateful: true,
-    stateId: 'view.contactmethod.Grid',
+    stateId: 'view.patient.Grid',
     height: 100,
     beforeLayout: function () {
         this.height = Ext.Element.getViewportHeight() - 60;
@@ -34,69 +33,96 @@ Ext.define('Patients.view.addressdictionary.Grid', {
         selection: '{selectedObject}'
     },
     header: {
-        title: i18n.address_dictionary,
+        title: i18n.patient_patients,
         defaults: {
             xtype: 'button',
-            margin: '0 0 0 5'
+            margin: '0 0 0 2'
         },
         items: [{
+                emptyText: i18n.filter,
+                xtype: 'textfield',
+                width: 250,
+                plugins: [{
+                        ptype: 'clearable'
+                    }],
+                listeners: {
+                    change: {
+                        fn: 'onFilter',
+                        buffer: 500
+                    }
+                }
+            }, {
                 text: i18n.create,
-                tooltip: i18n.contact_create_tooltip,
+                tooltip: i18n.patient_create_tooltip,
                 iconCls: 'x-fa fa-plus',
                 ui: 'soft-green',
                 handler: 'newObject'
             }]
     },
     listeners: {
-        canceledit: 'back',
+        itemdblclick: 'onItemdblclick',
         afterRender: 'onBaseAfterRender'
     },
     cls: 'shadow',
-    plugins: {
-        ptype: 'rowediting',
-        clicksToEdit: 2
-    },
     viewConfig: {
         preserveScrollOnRefresh: true
     },
-    selModel: 'rowmodel',
     columns: [{
             text: i18n.id,
             dataIndex: 'id',
             flex: 0,
-            stateId: 'view.addressdictionary.Grid.id',
+            stateId: 'view.patient.Grid.id',
             hidden: true
         }, {
-            text: i18n.address_country,
-            dataIndex: 'country',
-            editor: {
-                completeOnEnter: false,
-                // If the editor config contains a field property, then
-                // the editor config is used to create the <a href='Ext.grid.CellEditor.html'>Ext.grid.CellEditor</a>
-                // and the field property is used to create the editing input field.
-                field: {
-                    xtype: 'textfield',
-                    allowBlank: false
-                }
+            text: i18n.patient_fullname,
+            xtype: 'templatecolumn',
+            tpl: '{firstName} {lastName}',
+            flex: 1,
+            stateId: 'view.patient.Grid.fullName'
+        }, {
+            text: i18n.patient_pesel,
+            dataIndex: 'pesel',
+            flex: 1,
+            stateId: 'view.patient.Grid.pesel'
+        }, {
+            xtype: 'datecolumn',
+            text: i18n.patient_birthday,
+            dataIndex: 'birthday',
+            flex: 1,
+            format: 'Y-m-d',
+//            format: Ext.Date.patterns.ISO8601Short,
+            stateId: 'view.patient.Grid.birthday',
+            hidden: true
+        }, {
+            text: i18n.patient_status,
+            dataIndex: 'status',
+            renderer: function (value) {
+                if (value === undefined || value === null)
+                    return 'undefined';
+                var store = Ext.create('Patients.store.PatientStatus');
+                var record = store.findRecord('value', value);
+                if (record === undefined || record === null)
+                    return 'not found';
+                return record.get('text');
             },
             flex: 1,
-            stateId: 'view.addressdictionary.Grid.method'
+            stateId: 'view.patient.Grid.status'
         }, {
             text: i18n.version,
             dataIndex: 'version',
             flex: 1,
-            stateId: 'view.addressdictionary.Grid.version',
+            stateId: 'view.patient.Grid.version',
             hidden: true
         }, {
             xtype: 'actioncolumn',
             width: 50,
             items: [{
                     iconCls: 'x-fa fa-edit',
-                    tooltip: i18n.contact_edit_tooltip,
+                    tooltip: i18n.patient_edit_tooltip,
                     handler: 'onEdit'
                 }, {
                     iconCls: 'x-fa fa-times',
-                    tooltip: i18n.contact_delete_tooltip,
+                    tooltip: i18n.patient_delete_tooltip,
                     handler: 'onDelete'
                 }]
         }],

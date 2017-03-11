@@ -47,8 +47,10 @@ import de.danielbechler.diff.ObjectDiffer;
 import de.danielbechler.diff.ObjectDifferBuilder;
 import de.danielbechler.diff.node.DiffNode;
 import de.danielbechler.diff.node.DiffNode.State;
+import org.springframework.cache.annotation.Cacheable;
 
 @Service
+@Cacheable
 @RequireAdminAuthority
 public class UserService {
 

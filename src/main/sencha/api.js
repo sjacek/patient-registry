@@ -2,7 +2,7 @@ var REMOTING_API = {
   "url" : "router",
   "type" : "remoting",
   "actions" : {
-    "addressDictionaryService" : [ {
+    "contactService" : [ {
       "name" : "destroy",
       "len" : 1
     }, {
@@ -12,7 +12,7 @@ var REMOTING_API = {
       "name" : "update",
       "len" : 1
     } ],
-    "contactService" : [ {
+    "countryDictionaryService" : [ {
       "name" : "destroy",
       "len" : 1
     }, {
