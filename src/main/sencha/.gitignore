@@ -16,3 +16,4 @@
 /app/model/Project.js
 /app/model/CountryDictionary.js
 /app/model/ZipCodePoland.js
+/app/model/Organization.js

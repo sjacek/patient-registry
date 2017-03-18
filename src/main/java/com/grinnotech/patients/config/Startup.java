@@ -44,6 +44,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import com.grinnotech.patients.dao.CountryDictionaryRepository;
+import com.grinnotech.patients.dao.OrganizationRepository;
+import com.grinnotech.patients.model.Organization;
+import java.util.UUID;
+import static java.util.UUID.randomUUID;
 
 @Component
 class Startup {
@@ -54,6 +58,8 @@ class Startup {
 
     private final PasswordEncoder passwordEncoder;
 
+    private final OrganizationRepository organizationRepository;
+
     private final ContactRepository contactRepository;
     
     private final CountryDictionaryRepository addressDictionaryRepository;
@@ -62,9 +68,11 @@ class Startup {
 
     @Autowired
     public Startup(MongoDb mongoDb,
+            OrganizationRepository organizationRepository,
             ContactRepository contactRepository, CountryDictionaryRepository addressDictionaryRepository, ZipCodePolandRepository zipCodePolandRepository, 
             PasswordEncoder passwordEncoder) {
         this.mongoDb = mongoDb;
+        this.organizationRepository = organizationRepository;
         this.contactRepository = contactRepository;
         this.passwordEncoder = passwordEncoder;
         this.addressDictionaryRepository = addressDictionaryRepository;
@@ -73,12 +81,34 @@ class Startup {
     }
 
     private void init() {
+        initOrganizations();
         initUsers();
         initContactMethods();
         initAddressDictionary();
         initZipCodePoland();
     }
     
+    private final UUID uuidRoot = randomUUID();
+    
+    private final UUID uuidPpmdPoland = randomUUID();
+    
+    private void initOrganizations() {
+        LOGGER.debug("initOrganizations start");
+        if (organizationRepository.count() == 0) {
+            insert(new Organization() {{
+                setId(uuidRoot.toString());
+                setName("ROOT");
+                setCode("ROOT");
+            }});
+            insert(new Organization() {{
+                setId(uuidPpmdPoland.toString());
+                setName("Fundacja Parent Project Muscular Dystrophy");
+                setCode("PPMDPoland");
+                setParentId(uuidRoot.toString());
+            }});
+        }
+    }
+
     private void initUsers() {
         LOGGER.debug("initUsers start");
         MongoCollection<User> userCollection = mongoDb.getCollection(User.class);
@@ -88,10 +118,10 @@ class Startup {
             adminUser.setEmail("admin@starter.com");
             adminUser.setFirstName("admin");
             adminUser.setLastName("admin");
-            adminUser.setLocale("en");
+            adminUser.setLocale("pl");
+            adminUser.setOrganizationId(uuidRoot.toString());
             adminUser.setPasswordHash(passwordEncoder.encode("admin"));
             adminUser.setEnabled(true);
-            adminUser.setDeleted(false);
             adminUser.setAuthorities(asList(ADMIN.name()));
             userCollection.insertOne(adminUser);
 
@@ -100,10 +130,10 @@ class Startup {
             normalUser.setEmail("user@starter.com");
             normalUser.setFirstName("user");
             normalUser.setLastName("user");
-            normalUser.setLocale("de");
+            normalUser.setLocale("pl");
+            normalUser.setOrganizationId(uuidPpmdPoland.toString());
             normalUser.setPasswordHash(passwordEncoder.encode("user"));
             normalUser.setEnabled(true);
-            adminUser.setDeleted(false);
             normalUser.setAuthorities(asList(USER.name(), EMPLOYEE.name()));
             userCollection.insertOne(normalUser);
         }
@@ -212,7 +242,12 @@ class Startup {
         record.setVersion(1);
         record.setActive(true);
 
-        if (record instanceof ContactMethod) {
+        if (record instanceof Organization) {
+            Organization organization = organizationRepository.insert((Organization)record);
+            organization.setChainId(organization.getId());
+            organizationRepository.save(organization);
+        }
+        else if (record instanceof ContactMethod) {
             ContactMethod contact = contactRepository.insert((ContactMethod)record);
             contact.setChainId(contact.getId());
             contactRepository.save(contact);
@@ -226,6 +261,9 @@ class Startup {
             ZipCodePoland zipCode = zipCodePolandRepository.insert((ZipCodePoland)record);
             zipCode.setChainId(zipCode.getId());
             zipCodePolandRepository.save(zipCode);
+        }
+        else {
+            throw new UnsupportedOperationException(record.getClass().getSuperclass() + " not supported in the insert method");
         }
     }
     

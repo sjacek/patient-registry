@@ -30,6 +30,7 @@ import javax.persistence.Temporal;
 import static javax.persistence.TemporalType.DATE;
 import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.NotBlank;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -65,6 +66,12 @@ public class Project extends AbstractPersistable {
     @JsonFormat(shape=STRING)
     @Temporal(DATE)
     private Date end;
+
+    @ModelField
+    @Transient
+    private Organization organization;
+
+    private String organizationId;
 
     private List<String> coordinatorsIds;
 
@@ -107,6 +114,22 @@ public class Project extends AbstractPersistable {
         this.end = end;
     }
 
+    public Organization getOrganization() {
+        return this.organization;
+    }
+    
+    public void setOrganization(Organization organization) {
+        this.organization = organization;
+    }
+    
+    public String getOrganizationId() {
+        return this.organizationId;
+    }
+    
+    public void setOrganizationId(String organizationId) {
+        this.organizationId = organizationId;
+    }
+        
     public List<String> getCoordinatorsIds() {
         return coordinatorsIds;
     }

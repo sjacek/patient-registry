@@ -46,6 +46,16 @@ var REMOTING_API = {
       "name" : "getNavigation",
       "len" : 1
     } ],
+    "organizationService" : [ {
+      "name" : "destroy",
+      "len" : 1
+    }, {
+      "name" : "read",
+      "len" : 1
+    }, {
+      "name" : "update",
+      "len" : 1
+    } ],
     "patientRestService" : [ {
       "name" : "destroy",
       "len" : 1

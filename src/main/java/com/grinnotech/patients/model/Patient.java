@@ -30,6 +30,7 @@ import javax.persistence.Temporal;
 import static javax.persistence.TemporalType.DATE;
 import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.NotBlank;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.index.CompoundIndexes;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -88,13 +89,19 @@ public class Patient extends AbstractPersistable {
 
 //    @ModelHasOne
 //    @ModelField(reference=@ReferenceConfig(type="Patients.model.Address"))
-    @ModelField()
+    @ModelField
     private Address address;
 
 //    @ModelHasOne
 //    @ModelField(reference=@ReferenceConfig(type="Patients.model.Address"))
-    @ModelField()
+    @ModelField
     private Address correspondenceAddress;
+
+//    @ModelField
+//    @Transient
+//    private Organization organization;
+//
+//    private String organizationId;
     
 //    @ModelHasMany
     private List<Contact> contacts;
@@ -202,6 +209,22 @@ public class Patient extends AbstractPersistable {
         this.correspondenceAddress = correspondenceAddress;
     }
 
+//    public Organization getOrganization() {
+//        return this.organization;
+//    }
+//    
+//    public void setOrganization(Organization organization) {
+//        this.organization = organization;
+//    }
+//    
+//    public String getOrganizationId() {
+//        return this.organizationId;
+//    }
+//    
+//    public void setOrganizationId(String organizationId) {
+//        this.organizationId = organizationId;
+//    }
+    
     public List<Contact> getContacts() {
         return contacts;
     }

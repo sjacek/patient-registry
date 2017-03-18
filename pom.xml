@@ -34,10 +34,10 @@
         <client.app.dir>${basedir}/src/main/sencha</client.app.dir>
 
         <!--<org.springframework.boot-version>1.5.2.RELEASE</org.springframework.boot-version>-->
-        <org.springframework-version>4.3.6.RELEASE</org.springframework-version>
-        <com.fasterxml.jackson.core-version>2.8.6</com.fasterxml.jackson.core-version>
+        <!--<org.springframework-version>4.3.6.RELEASE</org.springframework-version>-->
+        <!--<com.fasterxml.jackson.core-version>2.8.6</com.fasterxml.jackson.core-version>-->
         <com.querydsl-version>4.1.4</com.querydsl-version>
-        <activiti-version>5.22.0</activiti-version>
+        <!--<activiti-version>5.22.0</activiti-version>-->
     </properties>
 
     <profiles>

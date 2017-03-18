@@ -44,6 +44,15 @@ public class User {
     @NotBlank(message = "{fieldrequired}")
     private String email;
 
+    @ModelField
+    @ch.rasc.bsoncodec.annotation.Transient
+//    @javax.persistence.Transient
+    @org.springframework.data.annotation.Transient
+    private Organization organization;
+
+    @NotBlank(message = "{fieldrequired}")
+    private String organizationId;
+
     private List<String> authorities;
 
     @JsonIgnore
@@ -107,6 +116,22 @@ public class User {
         this.email = email;
     }
 
+    public Organization getOrganization() {
+        return this.organization;
+    }
+    
+    public void setOrganization(Organization organization) {
+        this.organization = organization;
+    }
+    
+    public String getOrganizationId() {
+        return this.organizationId;
+    }
+    
+    public void setOrganizationId(String organizationId) {
+        this.organizationId = organizationId;
+    }
+    
     public List<String> getAuthorities() {
         return this.authorities;
     }
