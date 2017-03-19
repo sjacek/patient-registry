@@ -1,5 +1,5 @@
-/*
- * Copyright (C) 2016 Jacek Sztajnke
+/* 
+ * Copyright (C) 2017 Jacek Sztajnke
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,23 +14,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.grinnotech.patients.dao;
+/* global Ext */
 
-import com.grinnotech.patients.model.Project;
-import java.util.List;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.data.mongodb.repository.Query;
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
-
-/**
- *
- * @author jacek
- */
-public interface ProjectRepository extends
-        MongoRepository<Project, String>,
-        QueryDslPredicateExecutor<Project> {
-
-    @Query("{active:true}")
-    List<Project> findAllActive(Sort sort);
-}
+Ext.define('Patients.view.organization.Container', {
+    extend: 'Ext.container.Container',
+    layout: 'card',
+    controller: {
+        xclass: 'Patients.view.organization.Controller'
+    },
+    viewModel: {
+        xclass: 'Patients.view.organization.ViewModel'
+    },
+    items: [{
+            xclass: 'Patients.view.organization.Grid'
+        }]
+});

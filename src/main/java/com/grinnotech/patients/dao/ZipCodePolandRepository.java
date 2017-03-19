@@ -22,7 +22,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.querydsl.QueryDslPredicateExecutor;
-import org.springframework.data.repository.PagingAndSortingRepository;
 
 /**
  *
@@ -30,7 +29,6 @@ import org.springframework.data.repository.PagingAndSortingRepository;
  */
 public interface ZipCodePolandRepository extends
         MongoRepository<ZipCodePoland, String>,
-        PagingAndSortingRepository<ZipCodePoland, String>,
         QueryDslPredicateExecutor<ZipCodePoland> {
 
     @Query("{active:true}")

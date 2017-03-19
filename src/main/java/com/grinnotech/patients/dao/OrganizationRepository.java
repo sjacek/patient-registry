@@ -22,7 +22,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.querydsl.QueryDslPredicateExecutor;
-import org.springframework.data.repository.PagingAndSortingRepository;
 
 /**
  *
@@ -30,10 +29,16 @@ import org.springframework.data.repository.PagingAndSortingRepository;
  */
 public interface OrganizationRepository extends
         MongoRepository<Organization, String>,
-        PagingAndSortingRepository<Organization, String>,
         QueryDslPredicateExecutor<Organization> {
 
     @Query("{active:true}")
     List<Organization> findAllActive(Sort sort);
 
+    @Query("{$and: [{ $or:["
+            + " {name: {$regex:?0,$options:'i'}}, {code: {$regex:?0,$options:'i'}} ]},"
+            + " {active:true} ]}")
+    List<Organization> findAllWithFilterActive(String filter, Sort sort);
+
+    @Query("{ $and : [ { id: ?0 }, { active: true } ] }")
+    Organization findOneActive(String id);
 }

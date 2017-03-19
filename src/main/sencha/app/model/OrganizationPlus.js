@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Jacek Sztajnke
+ * Copyright (C) 2017 Jacek Sztajnke
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,19 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.grinnotech.patients.dao;
+/* global Ext */
 
-import com.grinnotech.patients.model.CountryDictionary;
-import java.util.List;
-import org.springframework.data.mongodb.repository.Query;
+Ext.define("Patients.model.OrganizationPlus", {
+    extend: "Patients.model.Organization",
 
-/**
- *
- * @author Jacek Sztajnke
- */
-interface CountryDictionaryRepositoryCustom {
-
-//    @Query("{active:true}")
-//    List<AddressDictionary> findAllCountriesActive();
-    
-}
+    hasOne: {
+        model: 'Patients.model.Organization',
+        name: 'parent',
+        nullable: true
+    }
+});

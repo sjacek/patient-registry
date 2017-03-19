@@ -17,10 +17,12 @@
 package com.grinnotech.patients.model;
 
 import ch.rasc.extclassgenerator.Model;
+import ch.rasc.extclassgenerator.ModelField;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 import com.grinnotech.patients.domain.AbstractPersistable;
 import org.hibernate.validator.constraints.NotBlank;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -43,9 +45,13 @@ public class Organization extends AbstractPersistable {
     @Indexed
     private String name;
     
+    private String code;
+
     private String parentId;
 
-    private String code;
+    @Transient
+    @ModelField
+    private Organization parent;
 
     public String getName() {
         return name;
@@ -53,6 +59,14 @@ public class Organization extends AbstractPersistable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public String getParentId() {
@@ -63,11 +77,11 @@ public class Organization extends AbstractPersistable {
         this.parentId = parentId;
     }
 
-    public String getCode() {
-        return code;
+    public Organization getParent() {
+        return parent;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setParent(Organization parent) {
+        this.parent = parent;
     }
 }

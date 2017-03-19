@@ -26,13 +26,13 @@ import org.springframework.data.mongodb.repository.Query;
  */
 public interface UserRepository extends MongoRepository<User, String> /*, QueryDslPredicateExecutor<User> */ {
 
-    @Query("{ $and : [ { id: ?0 }, { deleted: false } ] }")    
+    @Query("{ $and : [ { id: ?0 }, { deleted: false } ] }")
     User findOneNotDeleted(String id);
 
-    @Query("{ $and : [ { email: ?0 }, { deleted: false } ] }")    
+    @Query("{ $and : [ { email: ?0 }, { deleted: false } ] }")
     User findByEmailNotDeleted(String email);
 
-    @Query("{ $and : [ { passwordResetToken: ?0 }, { deleted: false }, { enabled: true } ] }")    
+    @Query("{ $and : [ { passwordResetToken: ?0 }, { deleted: false }, { enabled: true } ] }")
     User findByPasswordResetTokenNotDeletedAndEnabled(String passwordResetToken);
     
     Long countByEmailRegexAndIdNot(String email, String id);

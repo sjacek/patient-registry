@@ -54,6 +54,7 @@ public class NavigationService {
     public NavigationService(MessageSource messageSource) {
         this.messageSource = messageSource;
 
+        rootNodes.add(new NavigationNode("organization_organizations", "organization.Container", true, null, "x-fa fa-organization", "organization", ADMIN));
         rootNodes.add(new NavigationNode("user_users", "user.Container", true, null, "x-fa fa-users", "users", ADMIN));
         rootNodes.add(new NavigationNode("patient_patients", "patient.Container", true, null, "x-fa fa-user-plus", "patients", USER, EMPLOYEE));
 
@@ -70,7 +71,7 @@ public class NavigationService {
         {
             NavigationNode node = new NavigationNode("dictionaries", null, false, null, "x-fa fa-book", null, ADMIN, EMPLOYEE);
             node.addChild(new NavigationNode("contact_methods", "contactmethod.Container", true, null, "x-fa fa-book", "contacts", ADMIN, EMPLOYEE));
-            node.addChild(new NavigationNode("diagnosis_templates", "diagnosis.Container", true, null, "x-fa fa-book", "diagnosis", ADMIN, EMPLOYEE));
+            node.addChild(new NavigationNode("diagnosis_templates", "diagnosis.Container", true, null, "x-fa fa-book", "diagnosis", EMPLOYEE));
             node.addChild(new NavigationNode("address_dictionary", "addressdictionary.Container", true, null, "x-fa fa-book", "address_dictionaries", ADMIN, EMPLOYEE));
             node.addChild(new NavigationNode("zipcodepl_dictionary", "zipcodepl.Container", true, null, "x-fa fa-book", "zipcodespl", ADMIN, EMPLOYEE));
             rootNodes.add(node);

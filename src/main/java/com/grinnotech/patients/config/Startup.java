@@ -53,7 +53,7 @@ import static java.util.UUID.randomUUID;
 class Startup {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    
+
     private final MongoDb mongoDb;
 
     private final PasswordEncoder passwordEncoder;
@@ -61,15 +61,15 @@ class Startup {
     private final OrganizationRepository organizationRepository;
 
     private final ContactRepository contactRepository;
-    
+
     private final CountryDictionaryRepository addressDictionaryRepository;
-    
+
     private final ZipCodePolandRepository zipCodePolandRepository;
 
     @Autowired
     public Startup(MongoDb mongoDb,
             OrganizationRepository organizationRepository,
-            ContactRepository contactRepository, CountryDictionaryRepository addressDictionaryRepository, ZipCodePolandRepository zipCodePolandRepository, 
+            ContactRepository contactRepository, CountryDictionaryRepository addressDictionaryRepository, ZipCodePolandRepository zipCodePolandRepository,
             PasswordEncoder passwordEncoder) {
         this.mongoDb = mongoDb;
         this.organizationRepository = organizationRepository;
@@ -87,28 +87,45 @@ class Startup {
         initAddressDictionary();
         initZipCodePoland();
     }
-    
+
     private final UUID uuidRoot = randomUUID();
-    
+
     private final UUID uuidPpmdPoland = randomUUID();
-    
+
     private void initOrganizations() {
         LOGGER.debug("initOrganizations start");
         if (organizationRepository.count() == 0) {
-            insert(new Organization() {{
-                setId(uuidRoot.toString());
-                setName("ROOT");
-                setCode("ROOT");
-            }});
-            insert(new Organization() {{
-                setId(uuidPpmdPoland.toString());
-                setName("Fundacja Parent Project Muscular Dystrophy");
-                setCode("PPMDPoland");
-                setParentId(uuidRoot.toString());
-            }});
+            Organization root = new Organization();
+            root.setId(uuidRoot.toString());
+            root.setName("ROOT");
+            root.setCode("ROOT");
+            insert(root);
+
+            Organization ppmdPoland = new Organization();
+            ppmdPoland.setId(uuidPpmdPoland.toString());
+            ppmdPoland.setName("Fundacja Parent Project Muscular Dystrophy");
+            ppmdPoland.setCode("PPMDPoland");
+            ppmdPoland.setParentId(root.getId());
+            insert(ppmdPoland);
+
+            Organization test = new Organization();
+            test.setId(randomUUID().toString());
+            test.setName("Test");
+            test.setCode("test");
+            test.setParentId(root.getId());
+            insert(test);
         }
     }
 
+    private void insert(Organization record) {
+        record.setVersion(1);
+        record.setActive(true);
+
+        Organization organization = organizationRepository.insert(record);
+        organization.setChainId(organization.getId());
+        organizationRepository.save(organization);
+    }
+    
     private void initUsers() {
         LOGGER.debug("initUsers start");
         MongoCollection<User> userCollection = mongoDb.getCollection(User.class);
@@ -138,32 +155,49 @@ class Startup {
             userCollection.insertOne(normalUser);
         }
     }
-    
+
     private void initContactMethods() {
         LOGGER.debug("initContactMethods start");
         if (contactRepository.count() == 0) {
-            insert(new ContactMethod() {{
-                setMethod("telefon domowy");
-                setDescription("Telefon domowy");
-            }});
-            insert(new ContactMethod() {{
-                setMethod("telefon komórkowy");
-                setDescription("Telefon komórkowy");
-            }});
-            insert(new ContactMethod() {{
-                setMethod("telefon służbowy");
-                setDescription("Telefon służbowy");
-            }});
-            insert(new ContactMethod() {{
-                setMethod("e-mail");
-                setDescription("Poczta elektroniczna");
-            }});
+            {
+                ContactMethod method = new ContactMethod();
+                method.setMethod("telefon domowy");
+                method.setDescription("Telefon domowy");
+                insert(method);
+            }
+            {
+                ContactMethod method = new ContactMethod();
+                method.setMethod("telefon komórkowy");
+                method.setDescription("Telefon komórkowy");
+                insert(method);
+            }
+            {
+                ContactMethod method = new ContactMethod();
+                method.setMethod("telefon służbowy");
+                method.setDescription("Telefon służbowy");
+                insert(method);
+            }
+            {
+                ContactMethod method = new ContactMethod();
+                method.setMethod("e-mail");
+                method.setDescription("Poczta elektroniczna");
+                insert(method);
+            }
         }
     }
-    
+
+    private void insert(ContactMethod record) {
+        record.setVersion(1);
+        record.setActive(true);
+
+        ContactMethod method = contactRepository.insert(record);
+        method.setChainId(method.getId());
+        contactRepository.save(method);
+    }
+        
     private void initAddressDictionary() {
         LOGGER.debug("initAddressDictionary start");
-        
+
         final String CSV = "countries.csv";
 
         if (addressDictionaryRepository.count() == 0) {
@@ -174,14 +208,12 @@ class Startup {
 //                strat.setType(CountryDictionary.class);
 //                strat.setColumnMapping(new String[] {"nazwa"});
 //                new CsvToBean().parse(strat, reader).forEach(address -> insert((AbstractPersistable) address));
-
 //                HeaderColumnNameMappingStrategy<AddressDictionary> strategy = new HeaderColumnNameMappingStrategy<>();
 //                strategy.setType(CountryDictionary.class);
 //                
 //                CsvToBean<AddressDictionary> csvToBean = new CsvToBean<>();
 //                
 //                csvToBean.parse(strategy, reader).forEach(address -> insert(address));
-
                 String[] line;
                 while ((line = reader.readNext()) != null) {
                     // line[] is an array of values from the line
@@ -189,10 +221,10 @@ class Startup {
                     String country_en = line[2];
                     String country_pl = !"".equals(line[3]) ? line[3] : country_en;
                     String country_de = !"".equals(line[4]) ? line[4] : country_en;
-                    
+
                     LOGGER.debug("initAddressDictionary: " + code + "," + country_en);
                     insert(new CountryDictionary(code, country_en, country_pl, country_de));
-                }                
+                }
             } catch (FileNotFoundException ex) {
                 LOGGER.error("File " + CSV + " not found", ex);
             } catch (IOException ex) {
@@ -201,9 +233,18 @@ class Startup {
         }
     }
 
+    private void insert(CountryDictionary record) {
+        record.setVersion(1);
+        record.setActive(true);
+
+        CountryDictionary country = addressDictionaryRepository.insert(record);
+        country.setChainId(country.getId());
+        addressDictionaryRepository.save(country);
+    }
+    
     private void initZipCodePoland() {
         LOGGER.debug("initZipCodePoland start");
-        
+
         final String CSV = "kody-pocztowe_GUS.csv";
 
         if (zipCodePolandRepository.count() == 0) {
@@ -211,7 +252,7 @@ class Startup {
                 CSVReader reader = new CSVReader(new InputStreamReader(new ClassPathResource(CSV).getInputStream()), ';', '"', 1);
 
                 String[] line;
-                final char[] delimiters = {' ', ',','.','-','(',')'};
+                final char[] delimiters = {' ', ',', '.', '-', '(', ')'};
                 while ((line = reader.readNext()) != null) {
                     final String zipCode = line[0];
                     final String postOffice = line[1];
@@ -225,11 +266,10 @@ class Startup {
                     int count = zipCodePolandRepository.CountByExample(zipCode, postOffice, city, voivodship, street, county);
                     if (count == 0) {
                         insert(new ZipCodePoland(zipCode, postOffice, city, voivodship, street, county));
-                    }
-                    else {
+                    } else {
                         LOGGER.debug("****************** duplicate found, don't insert!");
                     }
-                }                
+                }
             } catch (FileNotFoundException ex) {
                 LOGGER.error("File " + CSV + " not found", ex);
             } catch (IOException ex) {
@@ -237,34 +277,14 @@ class Startup {
             }
         }
     }
-    
-    private void insert(AbstractPersistable record) {
+
+    private void insert(ZipCodePoland record) {
         record.setVersion(1);
         record.setActive(true);
 
-        if (record instanceof Organization) {
-            Organization organization = organizationRepository.insert((Organization)record);
-            organization.setChainId(organization.getId());
-            organizationRepository.save(organization);
-        }
-        else if (record instanceof ContactMethod) {
-            ContactMethod contact = contactRepository.insert((ContactMethod)record);
-            contact.setChainId(contact.getId());
-            contactRepository.save(contact);
-        }
-        else if (record instanceof CountryDictionary) {
-            CountryDictionary address = addressDictionaryRepository.insert((CountryDictionary)record);
-            address.setChainId(address.getId());
-            addressDictionaryRepository.save(address);
-        }
-        else if (record instanceof ZipCodePoland) {
-            ZipCodePoland zipCode = zipCodePolandRepository.insert((ZipCodePoland)record);
-            zipCode.setChainId(zipCode.getId());
-            zipCodePolandRepository.save(zipCode);
-        }
-        else {
-            throw new UnsupportedOperationException(record.getClass().getSuperclass() + " not supported in the insert method");
-        }
+        ZipCodePoland zipCode = zipCodePolandRepository.insert(record);
+        zipCode.setChainId(zipCode.getId());
+        zipCodePolandRepository.save(zipCode);
     }
-    
+
 }

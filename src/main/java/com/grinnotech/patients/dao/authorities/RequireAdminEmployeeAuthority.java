@@ -14,25 +14,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.grinnotech.patients.dao;
+package com.grinnotech.patients.dao.authorities;
 
-import com.grinnotech.patients.model.CountryDictionary;
-import java.util.List;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.data.mongodb.repository.Query;
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+import org.springframework.security.access.prepost.PreAuthorize;
 
 /**
  *
  * @author jacek
  */
-public interface CountryDictionaryRepository extends
-        MongoRepository<CountryDictionary, String>, 
-//        PagingAndSortingRepository<CountryDictionary, String>,
-        QueryDslPredicateExecutor<CountryDictionary> {
-
-    @Query("{active:true}")
-    List<CountryDictionary> findAllCountriesActive(Sort sort);
-
+@Target({ElementType.TYPE, ElementType.METHOD})
+@Retention(RetentionPolicy.RUNTIME)
+@Inherited
+@Documented
+@PreAuthorize("hasAnyAuthority('ADMIN', 'EMPLOYEE')")
+public @interface RequireAdminEmployeeAuthority {
+    // nothing here
 }

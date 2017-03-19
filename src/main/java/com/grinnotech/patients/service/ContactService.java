@@ -23,6 +23,7 @@ import ch.ralscha.extdirectspring.bean.ExtDirectStoreReadRequest;
 import ch.ralscha.extdirectspring.bean.ExtDirectStoreResult;
 import com.grinnotech.patients.config.security.MongoUserDetails;
 import com.grinnotech.patients.dao.ContactRepository;
+import com.grinnotech.patients.dao.authorities.RequireAdminEmployeeAuthority;
 import com.grinnotech.patients.model.ContactMethod;
 import com.grinnotech.patients.util.ValidationMessages;
 import com.grinnotech.patients.util.ValidationMessagesResult;
@@ -36,7 +37,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
-import com.grinnotech.patients.dao.authorities.RequireEmployeeAuthority;
 import static com.grinnotech.patients.util.QueryUtil.getSpringSort;
 import org.springframework.cache.annotation.Cacheable;
 
@@ -46,7 +46,7 @@ import org.springframework.cache.annotation.Cacheable;
  */
 @Service
 @Cacheable
-@RequireEmployeeAuthority
+@RequireAdminEmployeeAuthority
 public class ContactService extends AbstractService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());

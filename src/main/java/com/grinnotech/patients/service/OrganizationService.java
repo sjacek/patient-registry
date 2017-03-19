@@ -24,10 +24,8 @@ import ch.ralscha.extdirectspring.bean.ExtDirectStoreResult;
 import ch.ralscha.extdirectspring.filter.StringFilter;
 import com.grinnotech.patients.config.security.MongoUserDetails;
 import com.grinnotech.patients.dao.OrganizationRepository;
-import com.grinnotech.patients.dao.PatientRepository;
-import com.grinnotech.patients.dao.authorities.RequireUserEmployeeAuthority;
+import com.grinnotech.patients.dao.authorities.RequireAdminAuthority;
 import com.grinnotech.patients.model.Organization;
-import com.grinnotech.patients.model.Patient;
 import com.grinnotech.patients.util.ValidationMessages;
 import com.grinnotech.patients.util.ValidationMessagesResult;
 import com.grinnotech.patients.util.ValidationUtil;
@@ -39,7 +37,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import static com.grinnotech.patients.util.PeselValidator.peselIsValid;
 import static com.grinnotech.patients.util.QueryUtil.getSpringSort;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -50,7 +47,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
  */
 @Service
 @Cacheable
-@RequireUserEmployeeAuthority
+@RequireAdminAuthority
 public class OrganizationService extends AbstractService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -65,8 +62,15 @@ public class OrganizationService extends AbstractService {
     public ExtDirectStoreResult<Organization> read(ExtDirectStoreReadRequest request) {
 
         StringFilter filter = request.getFirstFilterForField("filter");
-        List<Organization> list = organizationRepository.findAllActive(getSpringSort(request));
+        List<Organization> list = (filter != null)
+                ? organizationRepository.findAllWithFilterActive(filter.getValue(), getSpringSort(request))
+                : organizationRepository.findAllActive(getSpringSort(request));
 
+        list.forEach(organization -> {
+            if (organization.getParentId() != null)
+                organization.setParent(organizationRepository.findOneActive(organization.getParentId()));
+        });
+        
         LOGGER.debug("read size:[" + list.size() + "]");
 
         return new ExtDirectStoreResult<>(list);

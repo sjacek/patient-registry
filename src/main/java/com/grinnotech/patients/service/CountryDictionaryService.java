@@ -22,7 +22,6 @@ import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.STORE_RE
 import ch.ralscha.extdirectspring.bean.ExtDirectStoreReadRequest;
 import ch.ralscha.extdirectspring.bean.ExtDirectStoreResult;
 import com.grinnotech.patients.config.security.MongoUserDetails;
-import com.grinnotech.patients.dao.authorities.RequireAnyAuthority;
 import com.grinnotech.patients.dao.authorities.RequireEmployeeAuthority;
 import com.grinnotech.patients.model.CountryDictionary;
 import com.grinnotech.patients.util.ValidationMessages;
@@ -39,6 +38,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import static com.grinnotech.patients.util.QueryUtil.getSpringSort;
 import com.grinnotech.patients.dao.CountryDictionaryRepository;
+import com.grinnotech.patients.dao.authorities.RequireAdminEmployeeAuthority;
 import org.springframework.cache.annotation.Cacheable;
 
 /**
@@ -47,7 +47,7 @@ import org.springframework.cache.annotation.Cacheable;
  */
 @Service
 @Cacheable
-@RequireAnyAuthority
+@RequireAdminEmployeeAuthority
 public class CountryDictionaryService extends AbstractService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
