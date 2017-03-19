@@ -45,8 +45,10 @@ public class Organization extends AbstractPersistable {
     @Indexed
     private String name;
     
+    @Indexed
     private String code;
 
+    @Indexed
     private String parentId;
 
     @Transient

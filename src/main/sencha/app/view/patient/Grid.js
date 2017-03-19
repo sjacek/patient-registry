@@ -94,6 +94,32 @@ Ext.define('Patients.view.patient.Grid', {
             stateId: 'view.patient.Grid.birthday',
             hidden: true
         }, {
+            text: i18n.patient_address,
+            dataIndex: 'address',
+            flex: 1,
+            renderer: function(value, meta, record) {
+                var address = record._address.data;
+                switch (address.country) {
+                case "PL":
+                    var ret = address.zipCode + " ";
+                    if (address.postOffice !== undefined && address.postOffice !== "")
+                        ret += address.postOffice + ",";
+                    if (address.city !== address.postOffice && address.city !== "")
+                        ret += address.city + ",";                        
+                    if (address.street !== undefined && address.street !== "")
+                        ret += address.street;
+                    if (address.house !== undefined && address.house !== "") {
+                        ret += address.house;
+                        if (address.flat !== undefined && address.flat !== "")
+                            ret += "/" + address.flat;
+                    }
+                    return ret;
+                default:
+                    return "ble";                
+                }
+            },
+            stateId: 'view.patient.Grid.address'
+        }, {
             text: i18n.patient_status,
             dataIndex: 'status',
             renderer: function (value) {

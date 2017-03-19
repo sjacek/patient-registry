@@ -18,6 +18,7 @@ package com.grinnotech.patients.model;
 
 import ch.rasc.extclassgenerator.Model;
 import ch.rasc.extclassgenerator.ModelField;
+import org.springframework.data.mongodb.core.index.Indexed;
 
 /**
  *
@@ -34,16 +35,20 @@ public class Address {
     
 //    @ModelField(customType = "zipcode")
     private String zipCode;
-    
+
+    @Indexed
     private String city;
     
     private String postOffice;
     
+    @Indexed
     private String county;
 
+    @Indexed
     private String voivodship;
     
-    @ModelField(defaultValue = "Polska")
+    @Indexed
+    @ModelField(defaultValue = "Pl")
     private String country;
 
     public String getStreet() {

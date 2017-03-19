@@ -29,17 +29,16 @@ import org.springframework.data.querydsl.QueryDslPredicateExecutor;
  */
 public interface PatientRepository extends
         MongoRepository<Patient, String>,
-//        PagingAndSortingRepository<Patient, String>,
         QueryDslPredicateExecutor<Patient>,
         PatientRepositoryCustom {
-
-//    Patient findByPesel(String pesel);
 
     @Query("{active:true}")
     List<Patient> findAllActive(Sort sort);
 
     @Query("{$and: [{ $or:["
-            + " {lastName: {$regex:?0,$options:'i'}}, {firstName: {$regex:?0,$options:'i'}}, {pesel: {$regex:?0,$options:'i'}} ]},"
+            + " {lastName: {$regex:?0,$options:'i'}}, {firstName: {$regex:?0,$options:'i'}}, {pesel: {$regex:?0,$options:'i'}}," 
+            + " {address.city: {$regex:?0,$options:'i'}}, {address.voivodship: {$regex:?0,$options:'i'}}, {address.county: {$regex:?0,$options:'i'}},"
+            + " {address.country: {$regex:?0,$options:'i'}} ]},"
             + " {active:true} ]}")
     List<Patient> findAllWithFilterActive(String filter, Sort sort);
 }
