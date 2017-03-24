@@ -19,15 +19,12 @@ package com.grinnotech.patients.dao;
 import com.grinnotech.patients.model.PersistentLogin;
 import java.util.List;
 import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 
 /**
  *
  * @author jacek
  */
-public interface PersistentLoginRepository extends
-        MongoRepository<PersistentLogin, String>,
-        QueryDslPredicateExecutor<PersistentLogin> {
+public interface PersistentLoginRepository extends MongoRepository<PersistentLogin, String> /*, QueryDslPredicateExecutor<PersistentLogin> */ {
 
     List<PersistentLogin> findByUserId(String userId);
     

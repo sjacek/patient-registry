@@ -14,10 +14,8 @@ import ch.rasc.bsoncodec.annotation.Id;
 import ch.rasc.bsoncodec.annotation.Transient;
 import ch.rasc.extclassgenerator.Model;
 import ch.rasc.extclassgenerator.ModelField;
-import com.querydsl.core.annotations.QueryEntity;
 
 @BsonDocument
-@QueryEntity
 @Model(value = "Patients.model.PersistentLogin",
         idProperty = "series",
         readMethod = "userConfigService.readPersistentLogins",

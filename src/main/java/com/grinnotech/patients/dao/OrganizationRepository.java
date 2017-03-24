@@ -41,7 +41,4 @@ public interface OrganizationRepository extends
 
     @Query("{ $and : [ { id: ?0 }, { active: true } ] }")
     Organization findOneActive(String id);
-
-    @Query("{ $and : [ { code: ?0 }, { active: true } ] }")
-    Organization findByCodeActive(String code);
 }

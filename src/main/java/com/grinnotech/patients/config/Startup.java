@@ -18,6 +18,7 @@ package com.grinnotech.patients.config;
 
 import com.grinnotech.patients.dao.ContactRepository;
 import com.grinnotech.patients.dao.ZipCodePolandRepository;
+import com.grinnotech.patients.domain.AbstractPersistable;
 import com.grinnotech.patients.model.CountryDictionary;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,8 +46,6 @@ import org.springframework.core.io.ClassPathResource;
 import com.grinnotech.patients.dao.CountryDictionaryRepository;
 import com.grinnotech.patients.dao.OrganizationRepository;
 import com.grinnotech.patients.model.Organization;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.UUID;
 import static java.util.UUID.randomUUID;
 
@@ -89,17 +88,21 @@ class Startup {
         initZipCodePoland();
     }
 
+    private final UUID uuidRoot = randomUUID();
+
+    private final UUID uuidPpmdPoland = randomUUID();
+
     private void initOrganizations() {
         LOGGER.debug("initOrganizations start");
         if (organizationRepository.count() == 0) {
             Organization root = new Organization();
-            root.setId(randomUUID().toString());
+            root.setId(uuidRoot.toString());
             root.setName("ROOT");
             root.setCode("ROOT");
             insert(root);
 
             Organization ppmdPoland = new Organization();
-            ppmdPoland.setId(randomUUID().toString());
+            ppmdPoland.setId(uuidPpmdPoland.toString());
             ppmdPoland.setName("Fundacja Parent Project Muscular Dystrophy");
             ppmdPoland.setCode("PPMDPoland");
             ppmdPoland.setParentId(root.getId());
@@ -127,61 +130,29 @@ class Startup {
         LOGGER.debug("initUsers start");
         MongoCollection<User> userCollection = mongoDb.getCollection(User.class);
         if (userCollection.count() == 0) {
-            Organization root = organizationRepository.findByCodeActive("ROOT");
-            Organization ppmd = organizationRepository.findByCodeActive("PPMDPoland");
-            
             // admin user
-            User admin = new User();
-            admin.setEmail("admin@starter.com");
-            admin.setFirstName("admin");
-            admin.setLastName("admin");
-            admin.setLocale("pl");
-            admin.setOrganizationId(root.getId());
-            admin.setPasswordHash(passwordEncoder.encode("admin"));
-            admin.setEnabled(true);
-            admin.setAuthorities(asList(ADMIN.name()));
-            userCollection.insertOne(admin);
+            User adminUser = new User();
+            adminUser.setEmail("admin@starter.com");
+            adminUser.setFirstName("admin");
+            adminUser.setLastName("admin");
+            adminUser.setLocale("pl");
+            adminUser.setOrganizationId(uuidRoot.toString());
+            adminUser.setPasswordHash(passwordEncoder.encode("admin"));
+            adminUser.setEnabled(true);
+            adminUser.setAuthorities(asList(ADMIN.name()));
+            userCollection.insertOne(adminUser);
 
             // normal user
-            User user = new User();
-            user.setEmail("user@starter.com");
-            user.setFirstName("user");
-            user.setLastName("user");
-            user.setLocale("pl");
-            user.setOrganizationId(ppmd.getId());
-            user.setPasswordHash(passwordEncoder.encode("user"));
-            user.setEnabled(true);
-            user.setAuthorities(asList(USER.name(), EMPLOYEE.name()));
-            userCollection.insertOne(user);
-
-            // for activiti purposes
-            User jbarrez = new User();
-            jbarrez.setEmail("jbarrez@starter.com");
-            jbarrez.setFirstName("Joram");
-            jbarrez.setLastName("Barrez");
-            jbarrez.setLocale("en");
-            jbarrez.setOrganizationId(ppmd.getId());
-            jbarrez.setPasswordHash(passwordEncoder.encode("user"));
-            jbarrez.setEnabled(true);
-            jbarrez.setAuthorities(asList(USER.name(), EMPLOYEE.name()));
-            userCollection.insertOne(jbarrez);
-
-            User trademakers = new User();
-            trademakers.setEmail("trademakers@starter.com");
-            trademakers.setFirstName("Tijs");
-            trademakers.setLastName("Rademakers");
-            trademakers.setLocale("en");
-            trademakers.setOrganizationId(ppmd.getId());
-            trademakers.setPasswordHash(passwordEncoder.encode("user"));
-            trademakers.setEnabled(true);
-            trademakers.setAuthorities(asList(USER.name(), EMPLOYEE.name()));
-
-            Calendar c = Calendar.getInstance();
-            c.setTime(new Date());
-            c.add(Calendar.YEAR, -1);
-            c.add(Calendar.MONTH, -1);
-            trademakers.setLastAccess(c.getTime());
-            userCollection.insertOne(trademakers);
+            User normalUser = new User();
+            normalUser.setEmail("user@starter.com");
+            normalUser.setFirstName("user");
+            normalUser.setLastName("user");
+            normalUser.setLocale("pl");
+            normalUser.setOrganizationId(uuidPpmdPoland.toString());
+            normalUser.setPasswordHash(passwordEncoder.encode("user"));
+            normalUser.setEnabled(true);
+            normalUser.setAuthorities(asList(USER.name(), EMPLOYEE.name()));
+            userCollection.insertOne(normalUser);
         }
     }
 

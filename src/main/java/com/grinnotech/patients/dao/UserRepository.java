@@ -19,15 +19,12 @@ package com.grinnotech.patients.dao;
 import com.grinnotech.patients.model.User;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 
 /**
  *
  * @author jacek
  */
-public interface UserRepository extends
-        MongoRepository<User, String>,
-        QueryDslPredicateExecutor<User> {
+public interface UserRepository extends MongoRepository<User, String> /*, QueryDslPredicateExecutor<User> */ {
 
     @Query("{ $and : [ { id: ?0 }, { deleted: false } ] }")
     User findOneNotDeleted(String id);
