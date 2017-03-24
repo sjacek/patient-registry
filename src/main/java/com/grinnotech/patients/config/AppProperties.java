@@ -33,7 +33,7 @@ public class AppProperties {
     private Integer loginLockMinutes;
 
     public String getUrl() {
-        return this.url;
+        return url;
     }
 
     public void setUrl(String url) {
@@ -41,7 +41,7 @@ public class AppProperties {
     }
 
     public String getDefaultEmailSender() {
-        return this.defaultEmailSender;
+        return defaultEmailSender;
     }
 
     public void setDefaultEmailSender(String defaultEmailSender) {
@@ -49,7 +49,7 @@ public class AppProperties {
     }
 
     public String getRemembermeCookieKey() {
-        return this.remembermeCookieKey;
+        return remembermeCookieKey;
     }
 
     public void setRemembermeCookieKey(String remembermeCookieKey) {
@@ -57,7 +57,7 @@ public class AppProperties {
     }
 
     public int getRemembermeCookieValidInDays() {
-        return this.remembermeCookieValidInDays;
+        return remembermeCookieValidInDays;
     }
 
     public void setRemembermeCookieValidInDays(int remembermeCookieValidInDays) {
@@ -65,7 +65,7 @@ public class AppProperties {
     }
 
     public Integer getLoginLockAttempts() {
-        return this.loginLockAttempts;
+        return loginLockAttempts;
     }
 
     public void setLoginLockAttempts(Integer loginLockAttempts) {
@@ -73,7 +73,7 @@ public class AppProperties {
     }
 
     public Integer getLoginLockMinutes() {
-        return this.loginLockMinutes;
+        return loginLockMinutes;
     }
 
     public void setLoginLockMinutes(Integer loginLockMinutes) {

@@ -60,6 +60,12 @@ server:
      mime-types: text/html,text/xml,text/plain,text/css,application/json,application/javascript,image/svg+xml,application/x-font-ttf,application/x-font-truetype,application/x-font-opentype,application/vnd.ms-fontobject,application/font-sfnt     
   use-forward-headers: true
 
+  tomcat:
+    access-log-enabled: true
+    access-log-pattern: "%h %l %u %t %r %s %b %D"
+    basedir: ../tomcat
+    rotate: true
+
 tomcat:
   ajp:
     port: 9090
