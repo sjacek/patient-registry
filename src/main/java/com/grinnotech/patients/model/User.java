@@ -17,8 +17,10 @@ import ch.rasc.bsoncodec.annotation.Id;
 import ch.rasc.extclassgenerator.Model;
 import ch.rasc.extclassgenerator.ModelField;
 import ch.rasc.extclassgenerator.ModelType;
+import com.querydsl.core.annotations.QueryEntity;
 
 @BsonDocument
+@QueryEntity
 @Model(value = "Patients.model.User",
         createMethod = "userService.update",
         readMethod = "userService.read",

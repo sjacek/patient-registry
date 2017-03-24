@@ -29,7 +29,6 @@ import org.springframework.data.querydsl.QueryDslPredicateExecutor;
  */
 public interface CountryDictionaryRepository extends
         MongoRepository<CountryDictionary, String>, 
-//        PagingAndSortingRepository<CountryDictionary, String>,
         QueryDslPredicateExecutor<CountryDictionary> {
 
     @Query("{active:true}")
