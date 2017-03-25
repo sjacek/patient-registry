@@ -22,10 +22,11 @@ Ext.define('Patients.ux.address.FieldSet_pl', {
     alias: 'widget.address_pl',
     cls: 'shadow',
     modelValidation: true,
+    initComponent: function () {
+    },
     viewModel: {
         data: {
-            theAddress: null,
-            parentForm: null
+            theAddress: null
         }
     },
     fieldDefaults: {
@@ -183,11 +184,9 @@ Ext.define('Patients.ux.address.FieldSet_pl', {
         }, 1);
     },
     setAddress: function (address) {
-        logService.debug("FieldSet_pl address:" + address);
+//        logService.debug("FieldSet_pl address:" + Object.keys(address));
+        logService.debug('pl viewModel: ' + Object.keys(this.viewModel));
         this.viewModel.set('theAddress', address);
-    },
-    setParentForm: function (form) {
-        this.viewModel.set('parentForm', form);
     }
 
 });

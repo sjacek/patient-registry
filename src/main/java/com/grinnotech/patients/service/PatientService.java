@@ -40,6 +40,7 @@ import org.springframework.stereotype.Service;
 import static com.grinnotech.patients.util.PeselValidator.peselIsValid;
 import static com.grinnotech.patients.util.QueryUtil.getSpringSort;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.MessageSource;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 /**
@@ -58,6 +59,9 @@ public class PatientService extends AbstractService {
 
     @Autowired
     private Validator validator;
+
+    @Autowired
+    private MessageSource messageSource;
 
     @ExtDirectMethod(STORE_READ)
     public ExtDirectStoreResult<Patient> read(ExtDirectStoreReadRequest request) {

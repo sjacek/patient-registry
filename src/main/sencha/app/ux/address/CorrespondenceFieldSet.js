@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2015 jsztajnke
+ * Copyright (C) 2017 Jacek Sztajnke
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,23 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+/* global Ext, i18n, logService */
 
-/* global Ext */
-
-Ext.define('Patients.store.CountryDictionary', {
-    extend: 'Ext.data.Store',
-    alias: 'store.countryDictionary',
-    requires: ['Patients.model.CountryDictionary'],
-    model: 'Patients.model.CountryDictionary',
-    autoLoad: true,
-    autoSync: true,
-    pageSize: 100,
-    buffered: true,
-    remoteSort: true,
-    remoteFilter: true,
-    sorters: [{
-            property: 'countryEn',
-            direction: 'ASC'
-        }],
-    leadingBufferZone: 200
+Ext.define('Patients.ux.address.CorrespondenceFieldSet', {
+    extend: 'Patients.ux.address.AbstractFieldSet',
+    xtype: 'correspondenceaddress.form',
+    alias: 'widget.correspondenceaddress'
 });

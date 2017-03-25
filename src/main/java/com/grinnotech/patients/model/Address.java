@@ -18,6 +18,7 @@ package com.grinnotech.patients.model;
 
 import ch.rasc.extclassgenerator.Model;
 import ch.rasc.extclassgenerator.ModelField;
+import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.data.mongodb.core.index.Indexed;
 
 /**
@@ -27,6 +28,11 @@ import org.springframework.data.mongodb.core.index.Indexed;
 @Model(value = "Patients.model.Address")
 public class Address {
     
+    @Indexed
+    @ModelField(defaultValue = "Pl")
+    @NotBlank(message = "{fieldrequired}")
+    private String country;
+
     private String street;
     
     private String house;
@@ -47,10 +53,18 @@ public class Address {
     @Indexed
     private String voivodship;
     
-    @Indexed
-    @ModelField(defaultValue = "Pl")
-    private String country;
+    private String address1;
 
+    private String address2;
+    
+    public String getCountry() {
+        return country;
+    }
+    
+    public void setCountry(String country) {
+        this.country = country;
+    }
+    
     public String getStreet() {
         return street;
     }
@@ -115,11 +129,19 @@ public class Address {
         this.voivodship = voivodship;
     }
 
-    public String getCountry() {
-        return country;
+    public String getAddress1() {
+        return address1;
     }
     
-    public void setCountry(String country) {
-        this.country = country;
+    public void setAddress1(String address1) {
+        this.address1 = address1;
+    }
+
+    public String getAddress2() {
+        return address2;
+    }
+    
+    public void setAddress2(String address2) {
+        this.address2 = address2;
     }
 }
