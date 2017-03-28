@@ -49,15 +49,12 @@ public class WebConfig {
         return Mustache.compiler();
     }
 
-    @Value("${tomcat.ajp.port}")
-    int ajpPort;
-
-    @Value("${tomcat.ajp.remoteauthentication}")
-    String remoteAuthentication;
+//    @Value("${tomcat.ajp.remoteauthentication}")
+//    String remoteAuthentication;
 
     @Value("${tomcat.ajp.enabled}")
     boolean tomcatAjpEnabled;
-    
+
     @Bean
     public EmbeddedServletContainerFactory servletContainer() {
         TomcatEmbeddedServletContainerFactory tomcat = new TomcatEmbeddedServletContainerFactory() {
@@ -71,20 +68,12 @@ public class WebConfig {
                 context.addConstraint(securityConstraint);
             }
         };
-        
-        tomcat.addAdditionalTomcatConnectors(initiateHttpConnector());
 
-        if (tomcatAjpEnabled)
-        {
-            Connector ajpConnector = new Connector("AJP/1.3");
-            ajpConnector.setProtocol("AJP/1.3");
-            ajpConnector.setPort(ajpPort);
-            ajpConnector.setSecure(false);
-            ajpConnector.setAllowTrace(false);
-            ajpConnector.setScheme("http");
-            tomcat.addAdditionalTomcatConnectors(ajpConnector);
+        tomcat.addAdditionalTomcatConnectors(initiateHttpConnector());
+        if (tomcatAjpEnabled) {
+            tomcat.addAdditionalTomcatConnectors(initiateAjpConnector());
         }
-    
+
         return tomcat;
     }
 
@@ -93,13 +82,27 @@ public class WebConfig {
 
     @Value("${server.httpPort}")
     private int httpPort;
-    
+
     private Connector initiateHttpConnector() {
         Connector connector = new Connector("org.apache.coyote.http11.Http11NioProtocol");
         connector.setScheme("http");
         connector.setPort(httpPort);
         connector.setSecure(false);
         connector.setRedirectPort(port);
+
+        return connector;
+    }
+
+    @Value("${tomcat.ajp.port}")
+    int ajpPort;
+
+    private Connector initiateAjpConnector() {
+        Connector connector = new Connector("AJP/1.3");
+//        connector.setProtocol("AJP/1.3");
+        connector.setScheme("http");
+        connector.setPort(ajpPort);
+        connector.setSecure(false);
+        connector.setAllowTrace(false);
 
         return connector;
     }

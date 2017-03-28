@@ -33,6 +33,9 @@ public interface PatientRepository extends
         PatientRepositoryCustom {
 
     @Query("{active:true}")
+    List<Patient> findAllActive();
+
+    @Query("{active:true}")
     List<Patient> findAllActive(Sort sort);
 
     @Query("{$and: [{ $or:["

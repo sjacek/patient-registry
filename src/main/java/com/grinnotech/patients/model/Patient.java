@@ -96,11 +96,13 @@ public class Patient extends AbstractPersistable {
     @ModelField
     private Address correspondenceAddress;
 
-//    @ModelField
-//    @Transient
-//    private Organization organization;
-//
-//    private String organizationId;
+    @ModelField
+    @ch.rasc.bsoncodec.annotation.Transient
+//    @javax.persistence.Transient
+    @org.springframework.data.annotation.Transient
+    private Organization organization;
+
+    private String organizationId;
     
 //    @ModelHasMany
     private List<Contact> contacts;
@@ -208,21 +210,21 @@ public class Patient extends AbstractPersistable {
         this.correspondenceAddress = correspondenceAddress;
     }
 
-//    public Organization getOrganization() {
-//        return this.organization;
-//    }
-//    
-//    public void setOrganization(Organization organization) {
-//        this.organization = organization;
-//    }
-//    
-//    public String getOrganizationId() {
-//        return this.organizationId;
-//    }
-//    
-//    public void setOrganizationId(String organizationId) {
-//        this.organizationId = organizationId;
-//    }
+    public Organization getOrganization() {
+        return this.organization;
+    }
+    
+    public void setOrganization(Organization organization) {
+        this.organization = organization;
+    }
+    
+    public String getOrganizationId() {
+        return this.organizationId;
+    }
+    
+    public void setOrganizationId(String organizationId) {
+        this.organizationId = organizationId;
+    }
     
     public List<Contact> getContacts() {
         return contacts;

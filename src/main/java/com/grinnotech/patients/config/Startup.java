@@ -18,7 +18,6 @@ package com.grinnotech.patients.config;
 
 import com.grinnotech.patients.dao.ContactRepository;
 import com.grinnotech.patients.dao.ZipCodePolandRepository;
-import com.grinnotech.patients.domain.AbstractPersistable;
 import com.grinnotech.patients.model.CountryDictionary;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +44,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import com.grinnotech.patients.dao.CountryDictionaryRepository;
 import com.grinnotech.patients.dao.OrganizationRepository;
+import com.grinnotech.patients.dao.PatientRepository;
+import com.grinnotech.patients.dao.UserRepository;
 import com.grinnotech.patients.model.Organization;
+import com.grinnotech.patients.model.Patient;
+import java.util.List;
 import java.util.UUID;
 import static java.util.UUID.randomUUID;
 
@@ -60,19 +63,25 @@ class Startup {
 
     private final OrganizationRepository organizationRepository;
 
+    private final UserRepository userRepository;
+
     private final ContactRepository contactRepository;
 
     private final CountryDictionaryRepository addressDictionaryRepository;
 
     private final ZipCodePolandRepository zipCodePolandRepository;
+    
+    private final PatientRepository patientRepository;
 
     @Autowired
     public Startup(MongoDb mongoDb,
-            OrganizationRepository organizationRepository,
+            OrganizationRepository organizationRepository, UserRepository userRepository, PatientRepository patientRepository,
             ContactRepository contactRepository, CountryDictionaryRepository addressDictionaryRepository, ZipCodePolandRepository zipCodePolandRepository,
             PasswordEncoder passwordEncoder) {
         this.mongoDb = mongoDb;
         this.organizationRepository = organizationRepository;
+        this.userRepository = userRepository;
+        this.patientRepository = patientRepository;
         this.contactRepository = contactRepository;
         this.passwordEncoder = passwordEncoder;
         this.addressDictionaryRepository = addressDictionaryRepository;
@@ -86,6 +95,22 @@ class Startup {
         initContactMethods();
         initAddressDictionary();
         initZipCodePoland();
+        setOrganizationOnUsers();
+        setOrganizationOnPatients();
+    }
+
+    private void setOrganizationOnUsers() {
+        Organization ppmd = organizationRepository.findByCodeActive("PPMDPoland");
+        List<User> users = userRepository.findAllNotDeleted();
+        users.forEach(user -> user.setOrganizationId(ppmd.getId()));
+        userRepository.save(users);
+    }
+
+    private void setOrganizationOnPatients() {
+        Organization ppmd = organizationRepository.findByCodeActive("PPMDPoland");
+        List<Patient> patients = patientRepository.findAllActive();
+        patients.forEach(patient -> patient.setOrganizationId(ppmd.getId()));
+        patientRepository.save(patients);
     }
 
     private final UUID uuidRoot = randomUUID();
