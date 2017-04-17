@@ -51,7 +51,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.Cacheable;
 
 @Service
-@Cacheable
+@Cacheable("main")
 public class SecurityService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());

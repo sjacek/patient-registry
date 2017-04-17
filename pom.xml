@@ -204,7 +204,7 @@
         <dependency>
             <groupId>org.immutables</groupId>
             <artifactId>value</artifactId>
-            <version>2.4.3</version>
+            <version>2.4.6</version>
             <scope>provided</scope>
         </dependency>
 
@@ -239,7 +239,7 @@
         <dependency>
             <groupId>com.itextpdf</groupId>
             <artifactId>itextpdf</artifactId>
-            <version>5.5.10</version>
+            <version>5.5.11</version>
         </dependency>
 
         <dependency>

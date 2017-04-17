@@ -46,7 +46,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
  * @author jacek
  */
 @Service
-@Cacheable
+@Cacheable("main")
 @RequireAdminAuthority
 public class OrganizationService extends AbstractService {
 

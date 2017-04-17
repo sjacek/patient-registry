@@ -10,6 +10,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 import ch.ralscha.extdirectspring.ExtDirectSpring;
 import ch.ralscha.extdirectspring.controller.ApiController;
+import org.springframework.cache.annotation.EnableCaching;
 import static org.springframework.context.annotation.FilterType.ASSIGNABLE_TYPE;
 
 @ComponentScan(basePackageClasses = {ExtDirectSpring.class, Application.class},
@@ -17,6 +18,7 @@ import static org.springframework.context.annotation.FilterType.ASSIGNABLE_TYPE;
 @EnableAutoConfiguration(exclude = {MustacheAutoConfiguration.class, SpringDataWebAutoConfiguration.class})
 @EnableAsync
 @EnableScheduling
+@EnableCaching
 public class Application {
 
     public static void main(String[] args) {

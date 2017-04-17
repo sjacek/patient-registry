@@ -43,7 +43,7 @@ import org.springframework.cache.annotation.Cacheable;
  * @author jacek
  */
 @Service
-@Cacheable
+@Cacheable("main")
 public class NavigationService {
 
     private final MessageSource messageSource;

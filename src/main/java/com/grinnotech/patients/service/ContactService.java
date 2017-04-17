@@ -45,7 +45,7 @@ import org.springframework.cache.annotation.Cacheable;
  * @author Jacek Sztajnke
  */
 @Service
-@Cacheable
+@Cacheable("main")
 @RequireAdminEmployeeAuthority
 public class ContactService extends AbstractService {
 

@@ -95,8 +95,8 @@ class Startup {
         initContactMethods();
         initAddressDictionary();
         initZipCodePoland();
-        setOrganizationOnUsers();
-        setOrganizationOnPatients();
+//        setOrganizationOnUsers();
+//        setOrganizationOnPatients();
     }
 
     private void setOrganizationOnUsers() {

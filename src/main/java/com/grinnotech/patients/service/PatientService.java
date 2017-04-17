@@ -48,7 +48,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
  * @author jacek
  */
 @Service
-@Cacheable
+@Cacheable("main")
 @RequireUserEmployeeAuthority
 public class PatientService extends AbstractService {
 

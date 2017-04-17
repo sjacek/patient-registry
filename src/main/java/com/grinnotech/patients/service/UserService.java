@@ -50,7 +50,7 @@ import de.danielbechler.diff.node.DiffNode.State;
 import org.springframework.cache.annotation.Cacheable;
 
 @Service
-@Cacheable
+@Cacheable("main")
 @RequireAdminAuthority
 public class UserService {
 

@@ -48,7 +48,7 @@ import org.springframework.cache.annotation.Cacheable;
  * @author Jacek Sztajnke
  */
 @Service
-@Cacheable
+@Cacheable("main")
 @RequireAnyAuthority
 public class ZipCodePolandService extends AbstractService {
 

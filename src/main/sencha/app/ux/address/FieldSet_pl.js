@@ -87,63 +87,63 @@ Ext.define('Patients.ux.address.FieldSet_pl', {
                         align: 'stretch'
                     },
                     items: [{
-                            xtype: 'textfield',
-                            name: 'zipcode',
-                            fieldLabel: i18n.address_zipcode,
-                            allowBlank: false,
-                            bind: '{theAddress.zipCode}'
-                        }, {
-                            xtype: 'textfield',
-                            name: 'city',
-                            fieldLabel: i18n.address_city,
-                            allowBlank: false,
-                            bind: '{theAddress.city}'
+//                            xtype: 'textfield',
+//                            name: 'zipcode',
+//                            fieldLabel: i18n.address_zipcode,
+//                            allowBlank: false,
+//                            bind: '{theAddress.zipCode}'
+//                        }, {
+//                            xtype: 'textfield',
+//                            name: 'city',
+//                            fieldLabel: i18n.address_city,
+//                            allowBlank: false,
+//                            bind: '{theAddress.city}'
                         }]
                 }, {
-                    xtype: 'textfield',
-                    name: 'street',
-                    fieldLabel: i18n.address_street,
-                    allowBlank: false,
-                    bind: '{theAddress.street}'
-                }, {
-                    defaults: {
-                        margin: 1,
-                        flex: 1
-                    },
-                    layout: {
-                        type: 'hbox',
-                        align: 'stretch'
-                    },
-                    items: [{
-                            xtype: 'textfield',
-                            name: 'house',
-                            fieldLabel: i18n.address_house_no,
-                            allowBlank: false,
-                            bind: '{theAddress.house}'
-                        }, {
-                            xtype: 'textfield',
-                            name: 'flat',
-                            fieldLabel: i18n.address_flat_no,
-                            allowBlank: true,
-                            bind: '{theAddress.flat}'
-                        }]
-                }, {
-                    xtype: 'textfield',
-                    name: 'postOffice',
-                    fieldLabel: i18n.address_postoffice,
-                    bind: '{theAddress.postoffice}'
-                }, {
-                    xtype: 'textfield',
-                    name: 'voivodship',
-                    fieldLabel: i18n.address_voivodship,
-                    allowBlank: false,
-                    bind: '{theAddress.voivodship}'
-                }, {
-                    xtype: 'textfield',
-                    name: 'county',
-                    fieldLabel: i18n.address_county,
-                    allowBlank: false,
-                    bind: '{theAddress.county}'
+//                    xtype: 'textfield',
+//                    name: 'street',
+//                    fieldLabel: i18n.address_street,
+//                    allowBlank: false,
+//                    bind: '{theAddress.street}'
+//                }, {
+//                    defaults: {
+//                        margin: 1,
+//                        flex: 1
+//                    },
+//                    layout: {
+//                        type: 'hbox',
+//                        align: 'stretch'
+//                    },
+//                    items: [{
+//                            xtype: 'textfield',
+//                            name: 'house',
+//                            fieldLabel: i18n.address_house_no,
+//                            allowBlank: false,
+//                            bind: '{theAddress.house}'
+//                        }, {
+//                            xtype: 'textfield',
+//                            name: 'flat',
+//                            fieldLabel: i18n.address_flat_no,
+//                            allowBlank: true,
+//                            bind: '{theAddress.flat}'
+//                        }]
+//                }, {
+//                    xtype: 'textfield',
+//                    name: 'postOffice',
+//                    fieldLabel: i18n.address_postoffice,
+//                    bind: '{theAddress.postoffice}'
+//                }, {
+//                    xtype: 'textfield',
+//                    name: 'voivodship',
+//                    fieldLabel: i18n.address_voivodship,
+//                    allowBlank: false,
+//                    bind: '{theAddress.voivodship}'
+//                }, {
+//                    xtype: 'textfield',
+//                    name: 'county',
+//                    fieldLabel: i18n.address_county,
+//                    allowBlank: false,
+//                    bind: '{theAddress.county}'
                 }]
         }],
     listeners: {

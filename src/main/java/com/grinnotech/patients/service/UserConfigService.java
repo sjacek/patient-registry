@@ -42,7 +42,7 @@ import eu.bitwalker.useragentutils.UserAgent;
 import org.springframework.cache.annotation.Cacheable;
 
 @Service
-@Cacheable
+@Cacheable("main")
 @RequireAnyAuthority
 public class UserConfigService {
 

@@ -56,7 +56,7 @@ Ext.define('Patients.ux.address.AbstractFieldSet', {
     },
     addAdressDetails: function (newValue, correspondence) {
         var address = this.getAddress();
-        logService.debug("addAdressDetails address:" + address);
+        logService.debug("addAdressDetails address:" + Object.keys(address));
         if (newValue === "PL" && !correspondence) {
             logService.debug("PL && !correspondence");
             this.add({

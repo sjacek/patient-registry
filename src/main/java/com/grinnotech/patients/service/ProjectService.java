@@ -46,7 +46,7 @@ import org.springframework.cache.annotation.Cacheable;
  * @author jacek
  */
 @Service
-@Cacheable
+@Cacheable("main")
 @RequireEmployeeAuthority
 public class ProjectService extends AbstractService {
 
