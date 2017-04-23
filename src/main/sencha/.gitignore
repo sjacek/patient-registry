@@ -6,6 +6,7 @@
 /i18n-*.js
 /sencha-error-*.log
 /app/model/Address.js
+/app/model/AddressPl.js
 /app/model/Contact.js
 /app/model/ContactMethod.js
 /app/model/Diagnosis.js

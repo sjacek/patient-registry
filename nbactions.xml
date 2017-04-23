@@ -46,4 +46,27 @@
                 <exec.workingdir>./target</exec.workingdir>
             </properties>
         </action>
+        <action>
+            <actionName>CUSTOM-spring-boot:run</actionName>
+            <displayName>spring-boot:run</displayName>
+            <goals>
+                <goal>spring-boot:run</goal>
+            </goals>
+            <activatedProfiles>
+                <activatedProfile>development</activatedProfile>
+            </activatedProfiles>
+        </action>
+        <action>
+            <actionName>CUSTOM-spring-boot:run development</actionName>
+            <displayName>spring-boot:run development</displayName>
+            <goals>
+                <goal>spring-boot:run</goal>
+            </goals>
+            <properties>
+                <spring.profiles.active>development</spring.profiles.active>
+            </properties>
+            <activatedProfiles>
+                <activatedProfile>development</activatedProfile>
+            </activatedProfiles>
+        </action>
     </actions>

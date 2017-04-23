@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.grinnotech.patients.model;
+package com.grinnotech.patients.model.address;
 
 import ch.rasc.extclassgenerator.Model;
 import ch.rasc.extclassgenerator.ModelField;
@@ -25,8 +25,8 @@ import org.springframework.data.mongodb.core.index.Indexed;
  *
  * @author Jacek Sztajnke
  */
-@Model(value = "Patients.model.Address")
-public class Address {
+@Model(value = "Patients.model.AddressPl")
+public class AddressPl extends Address {
     
     @Indexed
     @ModelField(defaultValue = "Pl")
@@ -39,12 +39,6 @@ public class Address {
     
     private String flat;
     
-//    @ModelField(customType = "zipcode")
-    private String zipCode;
-
-    @Indexed
-    private String city;
-    
     private String postOffice;
     
     @Indexed
@@ -52,18 +46,6 @@ public class Address {
 
     @Indexed
     private String voivodship;
-    
-    private String address1;
-
-    private String address2;
-    
-    public String getCountry() {
-        return country;
-    }
-    
-    public void setCountry(String country) {
-        this.country = country;
-    }
     
     public String getStreet() {
         return street;
@@ -89,22 +71,6 @@ public class Address {
         this.flat = flat;
     }
 
-    public String getZipCode() {
-        return zipCode;
-    }
-    
-    public void setZipCode(String zipCode) {
-        this.zipCode = zipCode;
-    }
-    
-    public String getCity() {
-        return city;
-    }
-    
-    public void setCity(String city) {
-        this.city = city;
-    }
-
     public String getPostOffice() {
         return postOffice;
     }
@@ -127,21 +93,5 @@ public class Address {
     
     public void setVoivodship(String voivodship) {
         this.voivodship = voivodship;
-    }
-
-    public String getAddress1() {
-        return address1;
-    }
-    
-    public void setAddress1(String address1) {
-        this.address1 = address1;
-    }
-
-    public String getAddress2() {
-        return address2;
-    }
-    
-    public void setAddress2(String address2) {
-        this.address2 = address2;
     }
 }

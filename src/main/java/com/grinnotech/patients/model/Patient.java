@@ -16,6 +16,7 @@
  */
 package com.grinnotech.patients.model;
 
+import com.grinnotech.patients.model.address.Address;
 import ch.rasc.extclassgenerator.Model;
 import ch.rasc.extclassgenerator.ModelField;
 //import ch.rasc.extclassgenerator.ModelHasMany;
