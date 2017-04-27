@@ -45,7 +45,8 @@
     </properties>
 
     <modules>
-        <module>patients</module>
+        <module>backend</module>
+        <module>frontend</module>
     </modules>
 
     <profiles>
