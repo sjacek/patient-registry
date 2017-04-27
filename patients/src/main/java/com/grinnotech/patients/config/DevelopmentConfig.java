@@ -1,20 +1,8 @@
 package com.grinnotech.patients.config;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.ResourceBundle;
-import java.util.TreeMap;
-import java.util.stream.Collectors;
-
+import ch.ralscha.extdirectspring.util.ExtDirectSpringUtil;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.grinnotech.patients.model.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -26,14 +14,14 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.filter.CorsFilter;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
+import java.util.stream.Collectors;
 
-import ch.ralscha.extdirectspring.util.ExtDirectSpringUtil;
-import com.grinnotech.patients.model.Authority;
-import com.grinnotech.patients.model.DisabilityLevel;
-import com.grinnotech.patients.model.Gender;
-import com.grinnotech.patients.model.PatientStatus;
-import com.grinnotech.patients.model.ProjectStatus;
 import static java.util.Locale.ENGLISH;
 import static java.util.Locale.GERMAN;
 import static org.springframework.boot.autoconfigure.security.SecurityProperties.DEFAULT_FILTER_ORDER;
@@ -60,14 +48,16 @@ class DevelopmentConfig {
         return filter;
     }
 
+    @Value("${sencha.client-dir}")
+    private String senchaClientDir;
+
     @EventListener
     public void handleContextRefresh(ApplicationReadyEvent event) throws IOException {
         String extDirectConfig = ExtDirectSpringUtil.generateApiString(event.getApplicationContext());
         String userDir = System.getProperty("user.dir");
-        String senchaDir = "../src/main/sencha";
-        Files.write(Paths.get(userDir, senchaDir, "api.js"), extDirectConfig.getBytes(StandardCharsets.UTF_8));
+        Files.write(Paths.get(userDir, senchaClientDir, "api.js"), extDirectConfig.getBytes(StandardCharsets.UTF_8));
 
-        Path clientDir = Paths.get(userDir, senchaDir);
+        Path clientDir = Paths.get(userDir, senchaClientDir);
         writeI18n(clientDir);
         writeEnums(clientDir);
     }

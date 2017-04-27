@@ -17,7 +17,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.5.2.RELEASE</version>
+        <version>1.5.3.RELEASE</version>
         <relativePath /> <!-- lookup parent from repository -->
     </parent>
 
@@ -33,7 +33,7 @@
         <build.timestamp>${maven.build.timestamp}</build.timestamp>
         <client.app.dir>${basedir}/src/main/sencha</client.app.dir>
 
-        <!--<org.springframework.boot-version>1.5.2.RELEASE</org.springframework.boot-version>-->
+        <!--<org.springframework.boot-version>1.5.3.RELEASE</org.springframework.boot-version>-->
         <!--<org.springframework-version>4.3.6.RELEASE</org.springframework-version>-->
         <!--<com.fasterxml.jackson.core-version>2.8.6</com.fasterxml.jackson.core-version>-->
         <com.querydsl-version>4.1.4</com.querydsl-version>

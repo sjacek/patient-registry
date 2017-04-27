@@ -31,3 +31,6 @@ logging:
     org.springframework.data.mongodb: DEBUG
     org.springframework.data.document: DEBUG
     com.grinnotech: DEBUG
+
+sencha:
+  client-dir: patients/src/main/sencha
