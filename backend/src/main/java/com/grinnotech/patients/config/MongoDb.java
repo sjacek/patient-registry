@@ -6,9 +6,6 @@ import com.grinnotech.patients.model.PersistentLogin;
 import com.grinnotech.patients.model.User;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.gridfs.GridFSBucket;
-import com.mongodb.client.gridfs.GridFSBuckets;
-import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.IndexOptions;
 import com.mongodb.client.model.Indexes;
 import org.bson.Document;
@@ -55,14 +52,6 @@ public class MongoDb {
         return false;
     }
 
-    public boolean collectionExists(final Class<?> clazz) {
-        return collectionExists(getCollectionName(clazz));
-    }
-
-    public boolean collectionExists(final String collectionName) {
-        return this.getMongoDatabase().listCollections().filter(Filters.eq("name", collectionName)).first() != null;
-    }
-
     public MongoDatabase getMongoDatabase() {
         return mongoDatabase;
     }
@@ -81,13 +70,5 @@ public class MongoDb {
 
     public MongoCollection<Document> getCollection(String collectionName) {
         return getMongoDatabase().getCollection(collectionName);
-    }
-
-    public long count(Class<?> documentClass) {
-        return getCollection(documentClass).count();
-    }
-
-    public GridFSBucket createBucket(String bucketName) {
-        return GridFSBuckets.create(getMongoDatabase(), bucketName);
     }
 }

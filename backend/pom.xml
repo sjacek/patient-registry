@@ -253,11 +253,21 @@
             <artifactId>querydsl-mongodb</artifactId>
             <!--<version>${querydsl.version}</version>-->
         </dependency>
-<!--        <dependency>
-            <groupId>org.activiti</groupId>
-            <artifactId>activiti-spring-boot-starter-basic</artifactId>
-            <version>${activiti-version}</version>
-        </dependency>-->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>4</version>
+        </dependency>
+        <dependency>
+            <groupId>net.sf.supercsv</groupId>
+            <artifactId>super-csv</artifactId>
+            <version>2.4.0</version>
+        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.activiti</groupId>-->
+            <!--<artifactId>activiti-spring-boot-starter-basic</artifactId>-->
+            <!--<version>${activiti-version}</version>-->
+        <!--</dependency>-->
 
         <!-- for unit tests -->
         <dependency>

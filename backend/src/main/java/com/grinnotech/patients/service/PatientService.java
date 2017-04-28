@@ -78,6 +78,15 @@ public class PatientService extends AbstractService {
         return new ExtDirectStoreResult<>(list);
     }
 
+    public List<Patient> findAllUsers() {
+
+        List<Patient> list = patientRepository.findAllActive();
+
+        LOGGER.debug("findAllUsers size:[" + list.size() + "]");
+
+        return list;
+    }
+
     @ExtDirectMethod(STORE_MODIFY)
     public ExtDirectStoreResult<Patient> destroy(@AuthenticationPrincipal MongoUserDetails userDetails, Patient patient) {
         ExtDirectStoreResult<Patient> result = new ExtDirectStoreResult<>();
