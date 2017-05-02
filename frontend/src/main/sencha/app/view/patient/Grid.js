@@ -19,6 +19,7 @@
 Ext.define('Patients.view.patient.Grid', {
     extend: 'Ext.grid.Panel',
     xtype: 'patientlist',
+    reference: 'patientGrid',
     requires: ['Patients.plugin.Clearable'],
     stateful: true,
     stateId: 'view.patient.Grid',
@@ -39,8 +40,9 @@ Ext.define('Patients.view.patient.Grid', {
             margin: '0 0 0 2'
         },
         items: [{
-                emptyText: i18n.filter,
                 xtype: 'textfield',
+                emptyText: i18n.filter,
+                reference: 'textFilter',
                 width: 250,
                 plugins: [{
                         ptype: 'clearable'
@@ -57,6 +59,22 @@ Ext.define('Patients.view.patient.Grid', {
                 iconCls: 'x-fa fa-plus',
                 ui: 'soft-green',
                 handler: 'newObject'
+            }, {
+                xtype: 'splitbutton',
+                text: i18n.export,
+                tooltip: i18n.patient_export_tooltip,
+                iconCls: 'x-fa fa-print',
+                ui: 'soft-green',
+                menu : [{
+                    text: i18n.export_pdf_file,
+                    handler: 'printReportPdf'
+                }, {
+                    text: i18n.export_xls_file,
+                    handler: 'printReportXls'
+                }, {
+                    text: i18n.export_csv_file,
+                    handler: 'printReportCsv'
+                }]
             }]
     },
     listeners: {

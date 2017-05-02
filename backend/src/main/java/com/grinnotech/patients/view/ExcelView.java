@@ -16,8 +16,8 @@
  */
 package com.grinnotech.patients.view;
 
-import com.grinnotech.patients.export.ExportController;
 import com.grinnotech.patients.model.Patient;
+import com.grinnotech.patients.service.ExportController;
 import com.grinnotech.patients.util.MessageSource;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.*;

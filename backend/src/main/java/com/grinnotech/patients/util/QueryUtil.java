@@ -17,22 +17,21 @@
 package com.grinnotech.patients.util;
 
 import ch.ralscha.extdirectspring.bean.ExtDirectStoreReadRequest;
-import ch.ralscha.extdirectspring.bean.SortDirection;
 import com.mongodb.client.FindIterable;
-import com.mongodb.client.model.Sorts;
 import org.bson.conversions.Bson;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Order;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import static ch.ralscha.extdirectspring.bean.SortDirection.ASCENDING;
+import static com.mongodb.client.model.Sorts.ascending;
+import static com.mongodb.client.model.Sorts.descending;
 import static org.springframework.data.domain.Sort.Direction.ASC;
 import static org.springframework.data.domain.Sort.Direction.DESC;
 
@@ -40,23 +39,16 @@ import static org.springframework.data.domain.Sort.Direction.DESC;
  *
  * @author jacek
  */
-public abstract class QueryUtil {
+public class QueryUtil {
 
     public static List<Bson> getSorts(ExtDirectStoreReadRequest request) {
-        List<Bson> sorts = new ArrayList<>();
-        request.getSorters().stream().forEach((sortInfo) -> {
-            if (sortInfo.getDirection() == SortDirection.ASCENDING) {
-                sorts.add(Sorts.ascending(sortInfo.getProperty()));
-            } else {
-                sorts.add(Sorts.descending(sortInfo.getProperty()));
-            }
-        });
-        return sorts;
+        return request.getSorters().stream().map(sortInfo ->
+            sortInfo.getDirection() == ASCENDING ? ascending(sortInfo.getProperty()) : descending(sortInfo.getProperty())
+        ).collect(Collectors.toList());
     }
 
     public static <T> List<T> toList(FindIterable<T> iterable) {
-        return StreamSupport.stream(iterable.spliterator(), false)
-                .collect(Collectors.toList());
+        return StreamSupport.stream(iterable.spliterator(), false).collect(Collectors.toList());
     }
 
     public static <T> Stream<T> stream(FindIterable<T> iterable) {
@@ -64,24 +56,13 @@ public abstract class QueryUtil {
     }
 
     public static Sort getSpringSort(ExtDirectStoreReadRequest request) {
-
-        List<Order> orders = new ArrayList<>();
-        
-        request.getSorters().stream().forEach(sortInfo -> {
-            orders.add(new Order(sortInfo.getDirection() == ASCENDING ? ASC : DESC, sortInfo.getProperty()));
-        });
-        
-        return new Sort(orders);
+        List<Order> list = request.getSorters().stream().map(sortInfo ->
+                new Order(sortInfo.getDirection() == ASCENDING ? ASC : DESC, sortInfo.getProperty())
+        ).collect(Collectors.toList());
+        return new Sort(list);
     }
 
     public static Pageable getPageable(ExtDirectStoreReadRequest request) {
-
-        List<Order> orders = new ArrayList<>();
-        
-        request.getSorters().stream().forEach(sortInfo -> {
-            orders.add(new Order(sortInfo.getDirection() == ASCENDING ? ASC : DESC, sortInfo.getProperty()));
-        });
-        
-        return new PageRequest(request.getPage() - 1, request.getLimit(), new Sort(orders));
+        return new PageRequest(request.getPage() - 1, request.getLimit(), getSpringSort(request));
     }
 }

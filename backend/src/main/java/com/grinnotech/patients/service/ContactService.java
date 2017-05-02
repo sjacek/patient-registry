@@ -25,7 +25,6 @@ import com.grinnotech.patients.dao.authorities.RequireAdminEmployeeAuthority;
 import com.grinnotech.patients.model.ContactMethod;
 import com.grinnotech.patients.util.ValidationMessages;
 import com.grinnotech.patients.util.ValidationMessagesResult;
-import com.grinnotech.patients.util.ValidationUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +32,6 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 
-import javax.validation.Validator;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Locale;
@@ -49,15 +47,12 @@ import static com.grinnotech.patients.util.QueryUtil.getSpringSort;
 @Service
 @Cacheable("main")
 @RequireAdminEmployeeAuthority
-public class ContactService extends AbstractService {
+public class ContactService extends AbstractService<ContactMethod> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     @Autowired
     private ContactRepository contactRepository;
-
-    @Autowired
-    private Validator validator;
 
     @ExtDirectMethod(STORE_READ)
     public ExtDirectStoreResult<ContactMethod> read(ExtDirectStoreReadRequest request) {
@@ -113,8 +108,8 @@ public class ContactService extends AbstractService {
         return result;
     }
 
-    private List<ValidationMessages> validateEntity(ContactMethod contact, Locale locale) {
-        List<ValidationMessages> validations = ValidationUtil.validateEntity(validator, contact);
+    protected List<ValidationMessages> validateEntity(ContactMethod contact, Locale locale) {
+        List<ValidationMessages> validations = super.validateEntity(contact);
 
         // TODO:
         return validations;

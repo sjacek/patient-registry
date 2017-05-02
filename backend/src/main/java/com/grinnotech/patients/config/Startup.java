@@ -105,7 +105,6 @@ class Startup {
     private final UUID uuidPpmdPoland = randomUUID();
 
     private void initOrganizations() {
-        LOGGER.debug("initOrganizations start");
         if (organizationRepository.count() == 0) {
             Organization root = new Organization();
             root.setId(uuidRoot.toString());
@@ -139,7 +138,6 @@ class Startup {
     }
     
     private void initUsers() {
-        LOGGER.debug("initUsers start");
         MongoCollection<User> userCollection = mongoDb.getCollection(User.class);
         if (userCollection.count() == 0) {
             // admin user
@@ -169,7 +167,6 @@ class Startup {
     }
 
     private void initContactMethods() {
-        LOGGER.debug("initContactMethods start");
         if (contactRepository.count() == 0) {
             {
                 ContactMethod method = new ContactMethod();
@@ -208,8 +205,6 @@ class Startup {
     }
         
     private void initAddressDictionary() {
-        LOGGER.debug("initAddressDictionary start");
-
         final String CSV = "countries.csv";
 
         if (addressDictionaryRepository.count() == 0) {
@@ -255,8 +250,6 @@ class Startup {
     }
     
     private void initZipCodePoland() {
-        LOGGER.debug("initZipCodePoland start");
-
         final String CSV = "kody-pocztowe_GUS.csv";
 
         if (zipCodePolandRepository.count() == 0) {

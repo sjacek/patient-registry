@@ -27,7 +27,6 @@ import com.grinnotech.patients.dao.authorities.RequireEmployeeAuthority;
 import com.grinnotech.patients.model.ZipCodePoland;
 import com.grinnotech.patients.util.ValidationMessages;
 import com.grinnotech.patients.util.ValidationMessagesResult;
-import com.grinnotech.patients.util.ValidationUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +35,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 
-import javax.validation.Validator;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Locale;
@@ -52,15 +50,12 @@ import static com.grinnotech.patients.util.QueryUtil.getPageable;
 @Service
 @Cacheable("main")
 @RequireAnyAuthority
-public class ZipCodePolandService extends AbstractService {
+public class ZipCodePolandService extends AbstractService<ZipCodePoland> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     @Autowired
     private ZipCodePolandRepository zipCodePolandRepository;
-
-    @Autowired
-    private Validator validator;
 
     @ExtDirectMethod(STORE_READ)
     public ExtDirectStoreResult<ZipCodePoland> read(ExtDirectStoreReadRequest request) {
@@ -124,8 +119,8 @@ public class ZipCodePolandService extends AbstractService {
         return result;
     }
 
-    private List<ValidationMessages> validateEntity(ZipCodePoland zipCodePoland, Locale locale) {
-        List<ValidationMessages> validations = ValidationUtil.validateEntity(validator, zipCodePoland);
+    protected List<ValidationMessages> validateEntity(ZipCodePoland zipCodePoland, Locale locale) {
+        List<ValidationMessages> validations = super.validateEntity(zipCodePoland);
 
         // TODO:
         return validations;

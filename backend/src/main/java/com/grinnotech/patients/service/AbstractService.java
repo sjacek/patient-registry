@@ -19,16 +19,19 @@ package com.grinnotech.patients.service;
 import com.grinnotech.patients.dao.UserRepository;
 import com.grinnotech.patients.domain.AbstractPersistable;
 import com.grinnotech.patients.model.User;
+import com.grinnotech.patients.util.ValidationMessages;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Date;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
+import java.util.*;
 
 /**
  *
  * @author jacek
  */
-public abstract class AbstractService {
+public abstract class AbstractService<T> {
 
     @Autowired
     private UserRepository userRepository;
@@ -77,5 +80,33 @@ public abstract class AbstractService {
         slimUser.setLastName(user.getLastName());            
 
         return slimUser;
+    }
+
+    @Autowired
+    private Validator validator;
+
+    protected List<ValidationMessages> validateEntity(T entity, Class<?>... groups) {
+        Set<ConstraintViolation<T>> constraintViolations = validator.validate(entity, groups);
+        Map<String, List<String>> fieldMessages = new HashMap<>();
+        if (!constraintViolations.isEmpty()) {
+            constraintViolations.stream().forEach((constraintViolation) -> {
+                String property = constraintViolation.getPropertyPath().toString();
+                List<String> messages = fieldMessages.get(property);
+                if (messages == null) {
+                    messages = new ArrayList<>();
+                    fieldMessages.put(property, messages);
+                }
+                messages.add(constraintViolation.getMessage());
+            });
+        }
+        List<ValidationMessages> validationErrors = new ArrayList<>();
+        fieldMessages.forEach((k, v) -> {
+            ValidationMessages errors = new ValidationMessages();
+            errors.setField(k);
+            errors.setMessages(v.toArray(new String[v.size()]));
+            validationErrors.add(errors);
+        });
+
+        return validationErrors;
     }
 }

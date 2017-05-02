@@ -28,8 +28,8 @@ logging:
     org.springframework: INFO
     org.apache: INFO
     ch: INFO
-    org.springframework.data.mongodb: DEBUG
-    org.springframework.data.document: DEBUG
+    org.springframework.data: DEBUG
+    org.springframework.data.mongodb.core.MongoDbUtils: INFO
     com.grinnotech: DEBUG
 
 sencha:

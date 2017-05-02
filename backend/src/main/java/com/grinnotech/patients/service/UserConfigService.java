@@ -4,7 +4,6 @@ import ch.ralscha.extdirectspring.annotation.ExtDirectMethod;
 import ch.ralscha.extdirectspring.bean.ExtDirectStoreResult;
 import com.grinnotech.patients.config.MongoDb;
 import com.grinnotech.patients.config.security.MongoUserDetails;
-import com.grinnotech.patients.dao.PersistentLoginRepository;
 import com.grinnotech.patients.dao.UserRepository;
 import com.grinnotech.patients.dao.authorities.RequireAnyAuthority;
 import com.grinnotech.patients.dto.UserSettings;
@@ -51,9 +50,6 @@ public class UserConfigService {
 
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private PersistentLoginRepository persistentLoginRepository;
 
     @Autowired
     private Validator validator;

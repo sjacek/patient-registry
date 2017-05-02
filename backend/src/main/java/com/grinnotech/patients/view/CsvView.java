@@ -16,8 +16,8 @@
  */
 package com.grinnotech.patients.view;
 
-import com.grinnotech.patients.export.ExportController.Attributes;
 import com.grinnotech.patients.model.Patient;
+import com.grinnotech.patients.service.ExportController.Attributes;
 import com.grinnotech.patients.util.MessageSource;
 import org.supercsv.io.CsvBeanWriter;
 import org.supercsv.io.ICsvBeanWriter;

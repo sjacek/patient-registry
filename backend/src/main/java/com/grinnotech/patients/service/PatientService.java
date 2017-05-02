@@ -26,16 +26,15 @@ import com.grinnotech.patients.dao.authorities.RequireUserEmployeeAuthority;
 import com.grinnotech.patients.model.Patient;
 import com.grinnotech.patients.util.ValidationMessages;
 import com.grinnotech.patients.util.ValidationMessagesResult;
-import com.grinnotech.patients.util.ValidationUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.MessageSource;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 
-import javax.validation.Validator;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Locale;
@@ -52,7 +51,7 @@ import static com.grinnotech.patients.util.QueryUtil.getSpringSort;
 @Service
 @Cacheable("main")
 @RequireUserEmployeeAuthority
-public class PatientService extends AbstractService {
+public class PatientService extends AbstractService<Patient> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
@@ -60,27 +59,22 @@ public class PatientService extends AbstractService {
     private PatientRepository patientRepository;
 
     @Autowired
-    private Validator validator;
-
-    @Autowired
     private MessageSource messageSource;
 
     @ExtDirectMethod(STORE_READ)
     public ExtDirectStoreResult<Patient> read(ExtDirectStoreReadRequest request) {
 
-        StringFilter filter = request.getFirstFilterForField("filter");
-        List<Patient> list = (filter != null)
-                ? patientRepository.findAllWithFilterActive(filter.getValue(), getSpringSort(request))
-                : patientRepository.findAllActive(getSpringSort(request));
-
-        LOGGER.debug("read size:[" + list.size() + "]");
-
+        StringFilter stringFilter = request.getFirstFilterForField("filter");
+        String filter = stringFilter != null ? stringFilter.getValue() : "";
+        List<Patient> list = findAllUsers(filter, getSpringSort(request));
         return new ExtDirectStoreResult<>(list);
     }
 
-    public List<Patient> findAllUsers() {
+    public List<Patient> findAllUsers(String filter, Sort sort) {
 
-        List<Patient> list = patientRepository.findAllActive();
+        List<Patient> list = filter.isEmpty()
+                ? patientRepository.findAllActive(sort)
+                : patientRepository.findAllWithFilterActive(filter, sort);
 
         LOGGER.debug("findAllUsers size:[" + list.size() + "]");
 
@@ -132,8 +126,8 @@ public class PatientService extends AbstractService {
         return result;
     }
 
-    private List<ValidationMessages> validateEntity(Patient patient, Locale locale) {
-        List<ValidationMessages> validations = ValidationUtil.validateEntity(validator, patient);
+    protected List<ValidationMessages> validateEntity(Patient patient, Locale locale) {
+        List<ValidationMessages> validations = super.validateEntity(patient);
 
         if (!peselIsValid(patient.getPesel())) {
             ValidationMessages validationError = new ValidationMessages();

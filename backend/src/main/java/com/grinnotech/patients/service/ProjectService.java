@@ -26,7 +26,6 @@ import com.grinnotech.patients.dao.authorities.RequireEmployeeAuthority;
 import com.grinnotech.patients.model.Project;
 import com.grinnotech.patients.util.ValidationMessages;
 import com.grinnotech.patients.util.ValidationMessagesResult;
-import com.grinnotech.patients.util.ValidationUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +33,6 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 
-import javax.validation.Validator;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Locale;
@@ -50,15 +48,12 @@ import static com.grinnotech.patients.util.QueryUtil.getSpringSort;
 @Service
 @Cacheable("main")
 @RequireEmployeeAuthority
-public class ProjectService extends AbstractService {
+public class ProjectService extends AbstractService<Project> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     @Autowired
     private ProjectRepository projectRepository;
-
-    @Autowired
-    private Validator validator;
 
     @ExtDirectMethod(STORE_READ)
     public ExtDirectStoreResult<Project> read(ExtDirectStoreReadRequest request) {
@@ -96,8 +91,6 @@ public class ProjectService extends AbstractService {
         ValidationMessagesResult<Project> result = new ValidationMessagesResult<>(project);
         result.setValidations(violations);
 
-        Project retProject;
-        
         LOGGER.debug("update 1: " + project.toString());
         if (violations.isEmpty()) {
             Project old = projectRepository.findOne(project.getId());
@@ -111,15 +104,15 @@ public class ProjectService extends AbstractService {
                 setAttrsForCreate(project, userDetails);
             }
 
-            retProject = projectRepository.save(project);
+            projectRepository.save(project);
         }
 
         LOGGER.debug("update end");
         return result;
     }
 
-    private List<ValidationMessages> validateEntity(Project project, Locale locale) {
-        List<ValidationMessages> validations = ValidationUtil.validateEntity(validator, project);
+    protected List<ValidationMessages> validateEntity(Project project, Locale locale) {
+        List<ValidationMessages> validations = super.validateEntity(project);
 
         return validations;
     }

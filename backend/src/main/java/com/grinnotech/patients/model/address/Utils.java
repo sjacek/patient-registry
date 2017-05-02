@@ -23,9 +23,9 @@ public class Utils {
     public static String address(Patient patient) {
         Address address = patient.getAddress();
         StringBuilder sb = new StringBuilder();
-        if (!address.getAddress1().isEmpty())
+        if (isNotEmpty(address.getAddress1()))
             sb.append(address.getAddress1());
-        if (!address.getAddress2().isEmpty()) {
+        if (isNotEmpty(address.getAddress2())) {
             if (sb.length() > 0) sb.append(", ");
             sb.append(address.getAddress2());
         }
@@ -33,5 +33,9 @@ public class Utils {
         sb.append(address.getZipCode()).append(" ").append(address.getCity());
         sb.append(", ").append(address.getCountry());
         return sb.toString();
+    }
+
+    public static boolean isNotEmpty(String s) {
+        return s != null && !s.isEmpty();
     }
 }

@@ -4,7 +4,8 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import java.util.*;
 
-public abstract class ValidationUtil {
+@Deprecated
+public class ValidationUtil {
 
     public static <T> List<ValidationMessages> validateEntity(Validator validator, T entity, Class<?>... groups) {
 

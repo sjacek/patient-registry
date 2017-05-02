@@ -16,8 +16,8 @@
  */
 package com.grinnotech.patients.view;
 
-import com.grinnotech.patients.export.ExportController.Attributes;
 import com.grinnotech.patients.model.Patient;
+import com.grinnotech.patients.service.ExportController.Attributes;
 import com.grinnotech.patients.util.MessageSource;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;
@@ -86,6 +86,5 @@ public class PdfView extends AbstractPdfView {
         }
 
         document.add(table);
-
     }
 }

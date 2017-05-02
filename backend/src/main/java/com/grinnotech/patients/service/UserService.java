@@ -165,7 +165,7 @@ public class UserService {
     }
 
     private List<ValidationMessages> validateEntity(User user, Locale locale) {
-        List<ValidationMessages> validations = ValidationUtil.validateEntity(this.validator, user);
+        List<ValidationMessages> validations = ValidationUtil.validateEntity(validator, user);
 
         if (!isEmailUnique(user.getId(), user.getEmail())) {
             ValidationMessages validationError = new ValidationMessages();

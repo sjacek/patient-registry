@@ -138,6 +138,48 @@ Ext.define('Patients.view.patient.Controller', {
             }
         });
         return ret;
-    }
+    },
+    printReport: function (format) {
+        var url = serverUrl + '/export/patients.' + format;
+        var textFilter = this.lookup('textFilter');
+        url += '?filter=' + textFilter.getValue();
 
+        var grid = this.lookup('patientGrid');
+        var sorter = grid.getStore().sorters.getAt(0);
+
+        var sort = 'Id';
+        var dir = 'ASC';
+        if (typeof sorter != 'undefined') {
+            var sort = sorter.property;
+            var dir = sorter.direction;
+        }
+        url += '&sort=' + sort + '&dir=' + dir;
+
+        Ext.Ajax.request({
+            url: url,
+            method: 'GET',
+            autoAbort: false,
+            success: function(result) {
+                if (result.status == 204) {
+                    Ext.Msg.alert('Empty Report', 'There is no data');
+                }
+                else if(result.status == 200) {
+                    Ext.DomHelper.append(Ext.getBody(), {
+                        tag:          'iframe',
+                        frameBorder:  0,
+                        width:        0,
+                        height:       0,
+                        css:          'display:none;visibility:hidden;height:0px;',
+                        src:          url
+                    });
+                }
+            },
+            failure: function() {
+                // failure action
+            }
+        });
+    },
+    printReportPdf: function () { this.printReport('pdf'); },
+    printReportCsv: function () { this.printReport('csv'); },
+    printReportXls: function () { this.printReport('xls'); }
 });

@@ -16,26 +16,45 @@
  */
 package com.grinnotech.patients.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.lang.invoke.MethodHandles;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.springframework.data.domain.Sort.Direction.ASC;
 
 @Controller
-//@RequestMapping(path = "/export")
+@RequestMapping(path = "/export")
 public class ExportController {
+
+    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     public enum Attributes {
         patients
     }
 
     @Autowired
-    PatientService patientService;
+    private PatientService patientService;
 
-    @RequestMapping(path = "/export_patients", method = RequestMethod.GET)
-    public String patients(Model model) {
-        model.addAttribute(Attributes.patients.name(), patientService.findAllUsers());
+    @RequestMapping(path = "/patients", method = RequestMethod.GET)
+    public String patients(@RequestParam("filter") String filter,
+                           @RequestParam("sort") String sort,
+                           @RequestParam("dir") String dir,
+                           Model model) {
+        logger.trace("/export/patients filter:{}, sort:{}, dir:{}", filter, sort, dir);
+        List<Sort.Order> list = new ArrayList<Sort.Order>() {{
+            add(new Sort.Order(ASC, sort));
+        }};
+        model.addAttribute(Attributes.patients.name(), patientService.findAllUsers(filter, new Sort(list)));
         return "";
     }
 }
