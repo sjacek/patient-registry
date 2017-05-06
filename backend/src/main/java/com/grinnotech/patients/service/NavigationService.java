@@ -49,7 +49,7 @@ public class NavigationService {
 
         rootNodes.add(new NavigationNode("organization_organizations", "organization.Container", true, null, "x-fa fa-organization", "organization", ADMIN));
         rootNodes.add(new NavigationNode("user_users", "user.Container", true, null, "x-fa fa-users", "users", ADMIN));
-        rootNodes.add(new NavigationNode("patient_patients", "patient.Container", true, null, "x-fa fa-user-plus", "patients", USER, EMPLOYEE));
+        rootNodes.add(new NavigationNode("patient_patients", "patient.Container", true, null, "x-fa fa-address-card", "patients", USER, EMPLOYEE));
 
         {
             NavigationNode node = new NavigationNode("projects", "project.Container", true, null, "x-fa fa-space-shuttle", "projects", EMPLOYEE);
