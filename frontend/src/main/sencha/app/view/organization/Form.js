@@ -28,24 +28,24 @@ Ext.define('Patients.view.organization.Form', {
             margin: '0 0 0 5'
         },
         items: [{
-                text: i18n.back,
-                handler: 'back',
-                iconCls: 'x-fa fa-arrow-left',
-                ui: 'soft-green'
-            }, {
-                text: 'Reset',
-                handler: function () {
-                    this.up('form').getForm().reset();
-                },
-                ui: 'soft-red'
-            }, {
-                text: Patients.Util.underline(i18n.save, 'S'),
-                accessKey: 's',
-                ui: 'soft-green',
-                iconCls: 'x-fa fa-floppy-o',
-                formBind: true,
-                handler: 'save'
-            }]
+            text: i18n.back,
+            handler: 'back',
+            iconCls: 'x-fa fa-arrow-left',
+            ui: 'soft-green'
+        }, {
+            text: 'Reset',
+            handler: function () {
+                this.up('form').getForm().reset();
+            },
+            ui: 'soft-red'
+        }, {
+            text: Patients.Util.underline(i18n.save, 'S'),
+            accessKey: 's',
+            ui: 'soft-green',
+            iconCls: 'x-fa fa-floppy-o',
+            formBind: true,
+            handler: 'save'
+        }]
     },
     cls: 'shadow',
     bodyPadding: 20,
@@ -55,73 +55,79 @@ Ext.define('Patients.view.organization.Form', {
         align: 'stretch'
     },
     items: [{
-            xtype: 'form',
-            fieldDefaults: {
-                labelAlign: 'right'
-            },
-            tabConfig: {
-                title: i18n.organization_data,
-                tootip: i18n.organization_data_tooltip
+        xtype: 'form',
+        fieldDefaults: {
+            labelAlign: 'right'
+        },
+        tabConfig: {
+            title: i18n.organization_data,
+            tootip: i18n.organization_data_tooltip
+        },
+        items: [{
+            layout: 'hbox',
+            defaults: {
+                margin: 5,
+                flex: 1
             },
             items: [{
-                    layout: 'hbox',
-                    defaults: {
-                        margin: 5,
-                        flex: 1
-                    },
-                    items: [{
-                            xtype: 'textfield',
-                            name: 'id',
-                            fieldLabel: i18n.id,
-                            bind: '{selectedObject.id}',
-                            disabled: true
-                        }, {
-                            xtype: 'textfield',
-                            name: 'version',
-                            fieldLabel: i18n.version,
-                            bind: '{selectedObject.version}',
-                            disabled: true
-                        }]
+                xtype: 'textfield',
+                name: 'id',
+                fieldLabel: i18n.id,
+                bind: '{selectedObject.id}',
+                disabled: true
+            }, {
+                xtype: 'textfield',
+                name: 'version',
+                fieldLabel: i18n.version,
+                bind: '{selectedObject.version}',
+                disabled: true
+            }]
+        }, {
+            defaults: {
+                margin: 5,
+                flex: 1
+            },
+            layout: {
+                type: 'hbox',
+                align: 'stretch'
+            },
+            items: [{
+                xtype: 'form',
+                layout: {
+                    type: 'vbox',
+                    align: 'stretch'
+                },
+                defaults: {
+                    flex: 1,
+                    margin: 5,
+                    border: true
+                },
+                items: [{
+                    xtype: 'textfield',
+                    name: 'name',
+                    fieldLabel: i18n.organization_name,
+                    allowBlank: false,
+                    bind: '{selectedObject.name}'
                 }, {
-                    defaults: {
-                        margin: 5,
-                        flex: 1
-                    },
-                    layout: {
-                        type: 'hbox',
-                        align: 'stretch'
-                    },
-                    items: [{
-                            xtype: 'form',
-                            layout: {
-                                type: 'vbox',
-                                align: 'stretch'
-                            },
-                            defaults: {
-                                flex: 1,
-                                margin: 5,
-                                border: true
-                            },
-                            items: [{
-                                    xtype: 'textfield',
-                                    name: 'name',
-                                    fieldLabel: i18n.organization_name,
-                                    allowBlank: false,
-                                    bind: '{selectedObject.name}'
-                                }, {
-                                    xtype: 'textfield',
-                                    name: 'code',
-                                    fieldLabel: i18n.organization_code,
-                                    allowBlank: false,
-                                    bind: '{selectedObject.code}'
+                    xtype: 'textfield',
+                    name: 'code',
+                    fieldLabel: i18n.organization_code,
+                    allowBlank: false,
+                    bind: '{selectedObject.code}'
 //                                }, {
 //                                    xtype: 'combo',
 //                                    name: 'parent',
 //                                    fieldLabel: i18n.organization_parent,
 //                                    allowBlank: false,
 //                                    bind: '{selectedObject.code}'
-                                }]
-                        }]
+//                 }, {
+//                     xtype: 'filefield',
+//                     buttonOnly: false,
+//                     fieldLabel: i18n.organization_logo,
+//                     name: 'logoUpload',
+//                     buttonText: i18n.organization_logo_selectfile
                 }]
+            }]
         }]
+    }]
 });
