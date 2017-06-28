@@ -66,6 +66,7 @@
             <groupId>com.grinnotech.patients</groupId>
             <artifactId>model-mongodb</artifactId>
             <version>0.0.1</version>
+            <type>jar</type>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -285,7 +286,7 @@
     </dependencies>
 
     <build>
-        <finalName>patients</finalName>
+        <finalName>patients-backend</finalName>
         <plugins>
 
             <plugin>

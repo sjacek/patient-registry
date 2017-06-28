@@ -45,6 +45,8 @@
     </properties>
 
     <modules>
+        <module>model-dynamodb</module>
+        <module>model-mongodb</module>
         <module>backend</module>
         <module>frontend</module>
     </modules>

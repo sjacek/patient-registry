@@ -15,10 +15,9 @@
     <name>Patients Registry Data Model - MongoDb</name>
 
     <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.5.3.RELEASE</version>
-        <relativePath /> <!-- lookup parent from repository -->
+        <groupId>com.grinnotech</groupId>
+        <artifactId>patients-registry</artifactId>
+        <version>0.0.1</version>
     </parent>
 
     <properties>
@@ -286,45 +285,8 @@
     </dependencies>
 
     <build>
-        <finalName>patients</finalName>
+        <finalName>model-mongodb</finalName>
         <plugins>
-
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <excludes>
-                        <exclude>
-                            <groupId>ch.rasc</groupId>
-                            <artifactId>constgen</artifactId>
-                        </exclude>
-                        <exclude>
-                            <groupId>ch.rasc</groupId>
-                            <artifactId>bsoncodec-apt</artifactId>
-                        </exclude>
-                        <exclude>
-                            <groupId>com.squareup</groupId>
-                            <artifactId>javapoet</artifactId>
-                        </exclude>
-                        <exclude>
-                            <groupId>com.google.auto</groupId>
-                            <artifactId>auto-common</artifactId>
-                        </exclude>
-                        <exclude>
-                            <groupId>com.google.auto.service</groupId>
-                            <artifactId>auto-service</artifactId>
-                        </exclude>
-                        <exclude>
-                            <groupId>org.immutables</groupId>
-                            <artifactId>value</artifactId>
-                        </exclude>
-                        <exclude>
-                            <groupId>com.google.code.findbugs</groupId>
-                            <artifactId>jsr305</artifactId>
-                        </exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
 
             <plugin>
                 <groupId>com.mysema.maven</groupId>

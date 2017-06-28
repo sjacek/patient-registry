@@ -27,8 +27,8 @@ import java.util.List;
  * @author jacek
  */
 public interface PatientRestService {
-    public Result<Patient> update(String idPatient, String firstName, String secondName, String lastName, String pesel, Date birthday);
-    public Result<Patient> destroy (String idPatient);
-    public Result<Patient> read(String idPatient);
-    public Result<List<Patient>> findAll();
+    Result<Patient> update(String idPatient, String firstName, String secondName, String lastName, String pesel, Date birthday);
+    Result<Patient> destroy (String idPatient);
+    Result<Patient> read(String idPatient);
+    Result<List<Patient>> findAll();
 }

@@ -43,7 +43,7 @@
     </profiles>
 
     <build>
-        <finalName>patients</finalName>
+        <finalName>patients-frontend</finalName>
         <plugins>
 
             <plugin>

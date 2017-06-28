@@ -26,8 +26,8 @@ import java.util.List;
  * @author jacek
  */
 public interface FooRestService {
-    public Result<Foo> update(String idFoo);
-    public Result<Foo> destroy (String idFoo);
-    public Result<Foo> read(String idFoo);
-    public Result<List<Foo>> findAll();
+    Result<Foo> update(String idFoo);
+    Result<Foo> destroy (String idFoo);
+    Result<Foo> read(String idFoo);
+    Result<List<Foo>> findAll();
 }

@@ -195,7 +195,7 @@ public abstract class AbstractPersistable implements Serializable {
 
         AbstractPersistable that = (AbstractPersistable) obj;
 
-        return null == this.getId() ? false : this.getId().equals(that.getId());
+        return null != getId() && getId().equals(that.getId());
     }
 
     @Override
@@ -203,12 +203,12 @@ public abstract class AbstractPersistable implements Serializable {
         return  17 + (null == getId() ? 0 : getId().hashCode() * 31);
     }
 
-    public static final String checkNull(String s) {
+    public static String checkNull(String s) {
         if (s != null) return s;
         return "";
     }
     
-    public static final Integer checkNull(Integer n) {
+    public static Integer checkNull(Integer n) {
         if (n != null) return n;
         return -1;
     }

@@ -22,7 +22,7 @@ package com.grinnotech.patients.domain;
  */
 class Utils {
 
-    public static final String checkNull(String s) {
+    public static String checkNull(String s) {
         if (s != null) return s;
         return "";
     }

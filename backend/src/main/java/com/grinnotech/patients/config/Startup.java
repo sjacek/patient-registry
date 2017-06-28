@@ -17,7 +17,10 @@
 package com.grinnotech.patients.config;
 
 import com.grinnotech.patients.config.profiles.mongodb.MongoDb;
-import com.grinnotech.patients.dao.*;
+import com.grinnotech.patients.dao.ContactRepository;
+import com.grinnotech.patients.dao.CountryDictionaryRepository;
+import com.grinnotech.patients.dao.OrganizationRepository;
+import com.grinnotech.patients.dao.ZipCodePolandRepository;
 import com.grinnotech.patients.model.*;
 import com.mongodb.client.MongoCollection;
 import com.opencsv.CSVReader;
@@ -28,7 +31,6 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.invoke.MethodHandles;
@@ -52,25 +54,19 @@ class Startup {
 
     private final OrganizationRepository organizationRepository;
 
-    private final UserRepository userRepository;
-
     private final ContactRepository contactRepository;
 
     private final CountryDictionaryRepository addressDictionaryRepository;
 
     private final ZipCodePolandRepository zipCodePolandRepository;
-    
-    private final PatientRepository patientRepository;
+    private final UUID uuidRoot = randomUUID();
+    private final UUID uuidPpmdPoland = randomUUID();
 
     @Autowired
     public Startup(MongoDb mongoDb,
-            OrganizationRepository organizationRepository, UserRepository userRepository, PatientRepository patientRepository,
-            ContactRepository contactRepository, CountryDictionaryRepository addressDictionaryRepository, ZipCodePolandRepository zipCodePolandRepository,
-            PasswordEncoder passwordEncoder) {
+                   OrganizationRepository organizationRepository, ContactRepository contactRepository, CountryDictionaryRepository addressDictionaryRepository, ZipCodePolandRepository zipCodePolandRepository, PasswordEncoder passwordEncoder) {
         this.mongoDb = mongoDb;
         this.organizationRepository = organizationRepository;
-        this.userRepository = userRepository;
-        this.patientRepository = patientRepository;
         this.contactRepository = contactRepository;
         this.passwordEncoder = passwordEncoder;
         this.addressDictionaryRepository = addressDictionaryRepository;
@@ -84,27 +80,7 @@ class Startup {
         initContactMethods();
         initAddressDictionary();
         initZipCodePoland();
-//        setOrganizationOnUsers();
-//        setOrganizationOnPatients();
     }
-
-//    private void setOrganizationOnUsers() {
-//        Organization ppmd = organizationRepository.findByCodeActive("PPMDPoland");
-//        List<User> users = userRepository.findAllNotDeleted();
-//        users.forEach(user -> user.setOrganizationId(ppmd.getId()));
-//        userRepository.save(users);
-//    }
-//
-//    private void setOrganizationOnPatients() {
-//        Organization ppmd = organizationRepository.findByCodeActive("PPMDPoland");
-//        List<Patient> patients = patientRepository.findAllActive();
-//        patients.forEach(patient -> patient.setOrganizationId(ppmd.getId()));
-//        patientRepository.save(patients);
-//    }
-
-    private final UUID uuidRoot = randomUUID();
-
-    private final UUID uuidPpmdPoland = randomUUID();
 
     private void initOrganizations() {
         if (organizationRepository.count() == 0) {
@@ -138,7 +114,7 @@ class Startup {
         organization.setChainId(organization.getId());
         organizationRepository.save(organization);
     }
-    
+
     private void initUsers() {
         MongoCollection<User> userCollection = mongoDb.getCollection(User.class);
         if (userCollection.count() == 0) {
@@ -205,7 +181,7 @@ class Startup {
         method.setChainId(method.getId());
         contactRepository.save(method);
     }
-        
+
     private void initAddressDictionary() {
         final String CSV = "countries.csv";
 
@@ -234,8 +210,6 @@ class Startup {
                     LOGGER.debug("initAddressDictionary: " + code + "," + country_en);
                     insert(new CountryDictionary(code, country_en, country_pl, country_de));
                 }
-            } catch (FileNotFoundException ex) {
-                LOGGER.error("File " + CSV + " not found", ex);
             } catch (IOException ex) {
                 LOGGER.error("File " + CSV + " not found", ex);
             }
@@ -250,7 +224,7 @@ class Startup {
         country.setChainId(country.getId());
         addressDictionaryRepository.save(country);
     }
-    
+
     private void initZipCodePoland() {
         final String CSV = "kody-pocztowe_GUS.csv";
 
@@ -277,8 +251,6 @@ class Startup {
                         LOGGER.debug("****************** duplicate found, don't insert!");
                     }
                 }
-            } catch (FileNotFoundException ex) {
-                LOGGER.error("File " + CSV + " not found", ex);
             } catch (IOException ex) {
                 LOGGER.error("File " + CSV + " not found", ex);
             }
