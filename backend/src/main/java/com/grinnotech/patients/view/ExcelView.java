@@ -31,6 +31,7 @@ import java.util.Map;
 import static com.grinnotech.patients.model.address.Utils.address;
 import static java.lang.String.format;
 import static java.util.Locale.ENGLISH;
+import static java.util.Locale.getAvailableLocales;
 
 public class ExcelView extends AbstractXlsView {
 

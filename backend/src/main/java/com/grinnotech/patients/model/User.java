@@ -14,7 +14,7 @@ import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.util.StringUtils;
 
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 @BsonDocument
 @Model(value = "Patients.model.User",
@@ -51,7 +51,7 @@ public class User {
     @NotBlank(message = "{fieldrequired}")
     private String organizationId;
 
-    private List<String> authorities;
+    private Set<String> authorities;
 
     @JsonIgnore
     private String passwordHash;
@@ -130,11 +130,11 @@ public class User {
         this.organizationId = organizationId;
     }
     
-    public List<String> getAuthorities() {
+    public Set<String> getAuthorities() {
         return this.authorities;
     }
 
-    public void setAuthorities(List<String> authorities) {
+    public void setAuthorities(Set<String> authorities) {
         this.authorities = authorities;
     }
 

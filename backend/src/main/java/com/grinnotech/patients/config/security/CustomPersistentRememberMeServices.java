@@ -1,7 +1,7 @@
 package com.grinnotech.patients.config.security;
 
 import com.grinnotech.patients.config.AppProperties;
-import com.grinnotech.patients.config.MongoDb;
+import com.grinnotech.patients.config.profiles.mongodb.MongoDb;
 import com.grinnotech.patients.dao.UserRepository;
 import com.grinnotech.patients.model.CPersistentLogin;
 import com.grinnotech.patients.model.CUser;

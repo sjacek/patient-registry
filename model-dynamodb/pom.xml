@@ -8,11 +8,11 @@
     </prerequisites>
 
     <groupId>com.grinnotech.patients</groupId>
-    <artifactId>backend</artifactId>
+    <artifactId>model-dynamodb</artifactId>
     <version>0.0.1</version>
     <packaging>jar</packaging>
 
-    <name>Patients Registry Backend</name>
+    <name>Patients Registry Data Model - DynamoDB</name>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -62,11 +62,11 @@
     </profiles>
     
     <dependencies>
-        <dependency>
-            <groupId>com.grinnotech.patients</groupId>
-            <artifactId>model-mongodb</artifactId>
-            <version>0.0.1</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.mongodb</groupId>-->
+            <!--<artifactId>mongodb-driver</artifactId>-->
+        <!--</dependency>-->
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -214,6 +214,11 @@
             <version>1.0.3</version>
             <optional>true</optional>
         </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.springframework.data</groupId>-->
+            <!--<artifactId>spring-data-mongodb</artifactId>-->
+            <!--<type>jar</type>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>com.opencsv</groupId>
             <artifactId>opencsv</artifactId>
@@ -243,6 +248,11 @@
             <!--<version>${querydsl.version}</version>-->
             <scope>provided</scope>
         </dependency>
+        <!--<dependency>-->
+            <!--<groupId>com.querydsl</groupId>-->
+            <!--<artifactId>querydsl-mongodb</artifactId>-->
+            <!--&lt;!&ndash;<version>${querydsl.version}</version>&ndash;&gt;-->
+        <!--</dependency>-->
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi</artifactId>

@@ -59,17 +59,38 @@
         <profile>
             <id>development</id>
             <activation>
-                <property>
-                    <name>spring.profiles.active</name>
-                    <value>development</value>
-                </property>
+                <activeByDefault>false</activeByDefault>
             </activation>
+            <!--<activation>-->
+                <!--<property>-->
+                    <!--<name>spring.profiles.active</name>-->
+                    <!--<value>development</value>-->
+                <!--</property>-->
+            <!--</activation>-->
             <!--            <properties>
                 <spring.profiles.active>development</spring.profiles.active>
             </properties>-->
         </profile>
+        <profile>
+            <id>mongodb</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <modules>
+                <module>model-mongodb</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>dynamodb</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <modules>
+                <!--<module>model-dynamodb</module>-->
+            </modules>
+        </profile>
     </profiles>
-    
+
     <reporting>
         <plugins>
             <plugin>

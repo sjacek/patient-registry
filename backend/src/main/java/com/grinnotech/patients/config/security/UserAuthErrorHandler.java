@@ -1,7 +1,7 @@
 package com.grinnotech.patients.config.security;
 
 import com.grinnotech.patients.config.AppProperties;
-import com.grinnotech.patients.config.MongoDb;
+import com.grinnotech.patients.config.profiles.mongodb.MongoDb;
 import com.grinnotech.patients.model.CUser;
 import com.grinnotech.patients.model.User;
 import com.mongodb.client.model.Filters;
@@ -16,20 +16,18 @@ import org.springframework.security.authentication.event.AuthenticationFailureBa
 import org.springframework.stereotype.Component;
 
 import java.lang.invoke.MethodHandles;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
 import java.util.Date;
+
+import static java.time.ZoneOffset.UTC;
+import static java.time.ZonedDateTime.now;
 
 @Component
 public class UserAuthErrorHandler implements ApplicationListener<AuthenticationFailureBadCredentialsEvent> {
 
-    private final MongoDb mongoDb;
-
-    private final Integer loginLockAttempts;
-
-    private final Integer loginLockMinutes;
-
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private final MongoDb mongoDb;
+    private final Integer loginLockAttempts;
+    private final Integer loginLockMinutes;
 
     @Autowired
     public UserAuthErrorHandler(MongoDb mongoDb, AppProperties appProperties) {
@@ -46,41 +44,33 @@ public class UserAuthErrorHandler implements ApplicationListener<AuthenticationF
     private void updateLockedProperties(AuthenticationFailureBadCredentialsEvent event) {
         Object principal = event.getAuthentication().getPrincipal();
 
-        if (this.loginLockAttempts != null && (principal instanceof String || principal instanceof MongoUserDetails)) {
+        if (loginLockAttempts != null && (principal instanceof String || principal instanceof MongoUserDetails)) {
 
-            User user = null;
-            if (principal instanceof String) {
-
-                user = mongoDb.getCollection(User.class).findOneAndUpdate(
-                        Filters.and(Filters.eq(CUser.email, principal),
-                                Filters.eq(CUser.deleted, false)),
-                        Updates.inc(CUser.failedLogins, 1), new FindOneAndUpdateOptions()
-                        .returnDocument(ReturnDocument.AFTER).upsert(false));
-            } else {
-
-                user = mongoDb.getCollection(User.class).findOneAndUpdate(
-                        Filters.eq(CUser.id,
-                                ((MongoUserDetails) principal).getUserDbId()),
-                        Updates.inc(CUser.failedLogins, 1), new FindOneAndUpdateOptions()
-                        .returnDocument(ReturnDocument.AFTER).upsert(false));
-            }
+            User user = principal instanceof String ?
+                    mongoDb.getCollection(User.class).findOneAndUpdate(
+                            Filters.and(Filters.eq(CUser.email, principal),
+                                    Filters.eq(CUser.deleted, false)),
+                            Updates.inc(CUser.failedLogins, 1),
+                            new FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER).upsert(false))
+                    :
+                    mongoDb.getCollection(User.class).findOneAndUpdate(
+                            Filters.eq(CUser.id,
+                                    ((MongoUserDetails) principal).getUserDbId()),
+                            Updates.inc(CUser.failedLogins, 1),
+                            new FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER).upsert(false));
 
             if (user != null) {
-                if (user.getFailedLogins() >= this.loginLockAttempts) {
+                if (user.getFailedLogins() >= loginLockAttempts) {
                     if (loginLockMinutes != null) {
                         mongoDb.getCollection(User.class).updateOne(
                                 Filters.eq(CUser.id, user.getId()),
                                 Updates.set(CUser.lockedOutUntil,
-                                        Date.from(ZonedDateTime.now(ZoneOffset.UTC)
-                                                .plusMinutes(this.loginLockMinutes)
-                                                .toInstant())));
+                                        Date.from(now(UTC).plusMinutes(loginLockMinutes).toInstant())));
                     } else {
-                        mongoDb.getCollection(User.class)
-                                .updateOne(Filters.eq(CUser.id, user.getId()),
-                                        Updates.set(CUser.lockedOutUntil,
-                                                Date.from(ZonedDateTime
-                                                        .now(ZoneOffset.UTC)
-                                                        .plusYears(1000).toInstant())));
+                        mongoDb.getCollection(User.class).updateOne(
+                                Filters.eq(CUser.id, user.getId()),
+                                Updates.set(CUser.lockedOutUntil,
+                                        Date.from(now(UTC).plusYears(1000).toInstant())));
                     }
                 }
             } else {

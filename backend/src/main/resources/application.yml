@@ -68,7 +68,7 @@ server:
 
 tomcat:
   ajp:
-    port: 9090
+    port: 9091
     remoteauthentication: false
     enabled: true
 

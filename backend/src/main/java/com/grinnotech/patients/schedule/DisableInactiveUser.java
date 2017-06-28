@@ -1,6 +1,6 @@
 package com.grinnotech.patients.schedule;
 
-import com.grinnotech.patients.config.MongoDb;
+import com.grinnotech.patients.config.profiles.mongodb.MongoDb;
 import com.grinnotech.patients.model.CUser;
 import com.grinnotech.patients.model.User;
 import com.mongodb.client.model.Filters;

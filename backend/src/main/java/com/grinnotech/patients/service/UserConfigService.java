@@ -2,7 +2,7 @@ package com.grinnotech.patients.service;
 
 import ch.ralscha.extdirectspring.annotation.ExtDirectMethod;
 import ch.ralscha.extdirectspring.bean.ExtDirectStoreResult;
-import com.grinnotech.patients.config.MongoDb;
+import com.grinnotech.patients.config.profiles.mongodb.MongoDb;
 import com.grinnotech.patients.config.security.MongoUserDetails;
 import com.grinnotech.patients.dao.UserRepository;
 import com.grinnotech.patients.dao.authorities.RequireAnyAuthority;
@@ -98,14 +98,14 @@ public class UserConfigService {
                     for (String field : new String[]{"newPassword", "newPasswordRetype"}) {
                         ValidationMessages error = new ValidationMessages();
                         error.setField(field);
-                        error.setMessage(this.messageSource.getMessage("userconfig_pwdonotmatch", null, locale));
+                        error.setMessage(messageSource.getMessage("userconfig_pwdonotmatch", null, locale));
                         validations.add(error);
                     }
                 }
             } else {
                 ValidationMessages error = new ValidationMessages();
                 error.setField("currentPassword");
-                error.setMessage(this.messageSource.getMessage("userconfig_wrongpassword", null, locale));
+                error.setMessage(messageSource.getMessage("userconfig_wrongpassword", null, locale));
                 validations.add(error);
             }
         }
@@ -113,7 +113,7 @@ public class UserConfigService {
         if (!isEmailUnique(user.getId(), modifiedUserSettings.getEmail())) {
             ValidationMessages validationError = new ValidationMessages();
             validationError.setField(CUser.email);
-            validationError.setMessage(this.messageSource.getMessage("user_emailtaken", null, locale));
+            validationError.setMessage(messageSource.getMessage("user_emailtaken", null, locale));
             validations.add(validationError);
         }
 

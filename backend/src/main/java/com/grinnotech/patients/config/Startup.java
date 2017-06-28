@@ -16,6 +16,7 @@
  */
 package com.grinnotech.patients.config;
 
+import com.grinnotech.patients.config.profiles.mongodb.MongoDb;
 import com.grinnotech.patients.dao.*;
 import com.grinnotech.patients.model.*;
 import com.mongodb.client.MongoCollection;
@@ -31,12 +32,13 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.invoke.MethodHandles;
-import java.util.List;
 import java.util.UUID;
 
 import static com.grinnotech.patients.model.Authority.*;
-import static java.util.Arrays.asList;
+import static java.util.Collections.singleton;
 import static java.util.UUID.randomUUID;
+import static java.util.stream.Collectors.toSet;
+import static java.util.stream.Stream.of;
 import static org.apache.commons.lang3.text.WordUtils.capitalizeFully;
 
 @Component
@@ -86,19 +88,19 @@ class Startup {
 //        setOrganizationOnPatients();
     }
 
-    private void setOrganizationOnUsers() {
-        Organization ppmd = organizationRepository.findByCodeActive("PPMDPoland");
-        List<User> users = userRepository.findAllNotDeleted();
-        users.forEach(user -> user.setOrganizationId(ppmd.getId()));
-        userRepository.save(users);
-    }
-
-    private void setOrganizationOnPatients() {
-        Organization ppmd = organizationRepository.findByCodeActive("PPMDPoland");
-        List<Patient> patients = patientRepository.findAllActive();
-        patients.forEach(patient -> patient.setOrganizationId(ppmd.getId()));
-        patientRepository.save(patients);
-    }
+//    private void setOrganizationOnUsers() {
+//        Organization ppmd = organizationRepository.findByCodeActive("PPMDPoland");
+//        List<User> users = userRepository.findAllNotDeleted();
+//        users.forEach(user -> user.setOrganizationId(ppmd.getId()));
+//        userRepository.save(users);
+//    }
+//
+//    private void setOrganizationOnPatients() {
+//        Organization ppmd = organizationRepository.findByCodeActive("PPMDPoland");
+//        List<Patient> patients = patientRepository.findAllActive();
+//        patients.forEach(patient -> patient.setOrganizationId(ppmd.getId()));
+//        patientRepository.save(patients);
+//    }
 
     private final UUID uuidRoot = randomUUID();
 
@@ -149,7 +151,7 @@ class Startup {
             adminUser.setOrganizationId(uuidRoot.toString());
             adminUser.setPasswordHash(passwordEncoder.encode("admin"));
             adminUser.setEnabled(true);
-            adminUser.setAuthorities(asList(ADMIN.name()));
+            adminUser.setAuthorities(singleton(ADMIN.name()));
             userCollection.insertOne(adminUser);
 
             // normal user
@@ -161,7 +163,7 @@ class Startup {
             normalUser.setOrganizationId(uuidPpmdPoland.toString());
             normalUser.setPasswordHash(passwordEncoder.encode("user"));
             normalUser.setEnabled(true);
-            normalUser.setAuthorities(asList(USER.name(), EMPLOYEE.name()));
+            normalUser.setAuthorities(of(USER.name(), EMPLOYEE.name()).collect(toSet()));
             userCollection.insertOne(normalUser);
         }
     }

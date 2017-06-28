@@ -4,7 +4,7 @@ import ch.ralscha.extdirectspring.annotation.ExtDirectMethod;
 import ch.ralscha.extdirectspring.bean.ExtDirectStoreReadRequest;
 import ch.ralscha.extdirectspring.bean.ExtDirectStoreResult;
 import ch.ralscha.extdirectspring.filter.StringFilter;
-import com.grinnotech.patients.config.MongoDb;
+import com.grinnotech.patients.config.profiles.mongodb.MongoDb;
 import com.grinnotech.patients.dao.authorities.RequireAdminAuthority;
 import com.grinnotech.patients.model.*;
 import com.grinnotech.patients.util.QueryUtil;

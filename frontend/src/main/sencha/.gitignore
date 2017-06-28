@@ -23,4 +23,5 @@
 /app/constant/DisabilityLevel.js
 /app/constant/Authority.js
 /app/constant/Gender.js
+/app/store/Authority.js
 /api.js

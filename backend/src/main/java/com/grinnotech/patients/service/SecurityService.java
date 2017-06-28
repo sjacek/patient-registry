@@ -3,7 +3,7 @@ package com.grinnotech.patients.service;
 import ch.ralscha.extdirectspring.annotation.ExtDirectMethod;
 import ch.ralscha.extdirectspring.annotation.ExtDirectMethodType;
 import ch.ralscha.extdirectspring.bean.ExtDirectFormPostResult;
-import com.grinnotech.patients.config.MongoDb;
+import com.grinnotech.patients.config.profiles.mongodb.MongoDb;
 import com.grinnotech.patients.config.security.MongoUserDetails;
 import com.grinnotech.patients.dao.UserRepository;
 import com.grinnotech.patients.dao.authorities.RequireAdminAuthority;
@@ -141,9 +141,8 @@ public class SecurityService {
 
         boolean matches = passwordEncoder.matches(password, user.getPasswordHash());
         userDetails.setScreenLocked(!matches);
-        ExtDirectFormPostResult result = new ExtDirectFormPostResult(matches);
 
-        return result;
+        return new ExtDirectFormPostResult(matches);
     }
 
     @ExtDirectMethod(ExtDirectMethodType.FORM_POST)
@@ -159,7 +158,7 @@ public class SecurityService {
                 new FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER).upsert(false));
 
         if (user != null) {
-            this.mailService.sendPasswortResetEmail(user);
+            mailService.sendPasswortResetEmail(user);
         }
 
         return new ExtDirectFormPostResult();

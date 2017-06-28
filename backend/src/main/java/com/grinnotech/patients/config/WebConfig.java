@@ -11,6 +11,7 @@ import org.apache.catalina.connector.Connector;
 import org.apache.tomcat.util.descriptor.web.SecurityCollection;
 import org.apache.tomcat.util.descriptor.web.SecurityConstraint;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer;
 import org.springframework.boot.context.embedded.EmbeddedServletContainerFactory;
 import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
 import org.springframework.context.annotation.Bean;
@@ -102,6 +103,11 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         return config;
     }
 
+//    @Bean
+//    public EmbeddedServletContainerCustomizer containerCustomizer() {
+//        return container -> container.setPort(8012);
+//    }
+//
     @Bean
     public JsonHandler jsonHandler(ObjectMapper objectMapper) {
         JsonHandler jh = new JsonHandler();
@@ -124,8 +130,8 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 //    @Value("${tomcat.ajp.remoteauthentication}")
 //    String remoteAuthentication;
 
-    @Value("${tomcat.ajp.enabled}")
-    boolean tomcatAjpEnabled;
+    @Value("${tomcat.ajp.enabled:false}")
+    Boolean tomcatAjpEnabled;
 
     @Bean
     public EmbeddedServletContainerFactory servletContainer() {

@@ -1,7 +1,7 @@
 package com.grinnotech.patients.config.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.grinnotech.patients.config.MongoDb;
+import com.grinnotech.patients.config.profiles.mongodb.MongoDb;
 import com.grinnotech.patients.dto.UserDetailDto;
 import com.grinnotech.patients.model.CUser;
 import com.grinnotech.patients.model.User;
