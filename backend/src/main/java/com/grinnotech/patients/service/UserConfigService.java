@@ -137,7 +137,7 @@ public class UserConfigService {
     }
 
     private boolean isEmailUnique(String userId, String email) {
-        return userRepository.countByEmailRegexAndIdNot(email, userId) == 0;
+        return userRepository.existsByEmailRegexAndIdNot(email, userId);
     }
 
     @ExtDirectMethod(STORE_READ)

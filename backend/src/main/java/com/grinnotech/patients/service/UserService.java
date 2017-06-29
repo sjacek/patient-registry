@@ -5,38 +5,44 @@ import ch.ralscha.extdirectspring.bean.ExtDirectStoreReadRequest;
 import ch.ralscha.extdirectspring.bean.ExtDirectStoreResult;
 import ch.ralscha.extdirectspring.filter.StringFilter;
 import com.grinnotech.patients.config.profiles.mongodb.MongoDb;
+import com.grinnotech.patients.config.security.MongoUserDetails;
+import com.grinnotech.patients.dao.OrganizationRepository;
+import com.grinnotech.patients.dao.UserRepository;
 import com.grinnotech.patients.dao.authorities.RequireAdminAuthority;
 import com.grinnotech.patients.model.*;
-import com.grinnotech.patients.util.QueryUtil;
 import com.grinnotech.patients.util.ValidationMessages;
 import com.grinnotech.patients.util.ValidationMessagesResult;
 import com.grinnotech.patients.util.ValidationUtil;
-import com.mongodb.client.FindIterable;
-import com.mongodb.client.model.*;
-import com.mongodb.client.result.UpdateResult;
+import com.mongodb.client.model.Filters;
 import de.danielbechler.diff.ObjectDiffer;
 import de.danielbechler.diff.ObjectDifferBuilder;
 import de.danielbechler.diff.node.DiffNode;
 import de.danielbechler.diff.node.DiffNode.State;
-import org.bson.conversions.Bson;
+import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.MessageSource;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.validation.Validator;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
 import java.util.*;
 
 import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.STORE_MODIFY;
 import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.STORE_READ;
+import static com.grinnotech.patients.util.QueryUtil.getSpringSort;
+import static java.time.ZoneOffset.UTC;
+import static java.time.ZonedDateTime.now;
+import static java.util.Collections.singleton;
+import static java.util.Date.from;
+import static java.util.stream.Collectors.toSet;
 
 @Service
 @Cacheable("main")
 @RequireAdminAuthority
-public class UserService {
+@Log4j
+public class UserService extends AbstractService<Patient> {
 
     @Autowired
     private MessageSource messageSource;
@@ -48,45 +54,73 @@ public class UserService {
     private MongoDb mongoDb;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private MailService mailService;
+
+    @Autowired
+    private OrganizationRepository organizationRepository;
 
     @ExtDirectMethod(STORE_READ)
     public ExtDirectStoreResult<User> read(ExtDirectStoreReadRequest request) {
 
-        List<Bson> andFilters = new ArrayList<>();
         StringFilter filter = request.getFirstFilterForField("filter");
-        if (filter != null) {
-            List<Bson> orFilters = new ArrayList<>();
-            orFilters.add(Filters.regex(CUser.lastName, filter.getValue(), "i"));
-            orFilters.add(Filters.regex(CUser.firstName, filter.getValue(), "i"));
-            orFilters.add(Filters.regex(CUser.email, filter.getValue(), "i"));
+        List<User> list = (filter != null)
+                ? userRepository.findAllWithFilterActive(filter.getValue(), getSpringSort(request))
+                : userRepository.findAllActive(getSpringSort(request));
 
-            andFilters.add(Filters.or(orFilters));
-        }
-        andFilters.add(Filters.eq(CUser.deleted, false));
+//        List<Bson> andFilters = new ArrayList<>();
+//        if (filter != null) {
+//            List<Bson> orFilters = new ArrayList<>();
+//            orFilters.add(Filters.regex(CUser.lastName, filter.getValue(), "i"));
+//            orFilters.add(Filters.regex(CUser.firstName, filter.getValue(), "i"));
+//            orFilters.add(Filters.regex(CUser.email, filter.getValue(), "i"));
+//
+//            andFilters.add(Filters.or(orFilters));
+//        }
+//        andFilters.add(Filters.eq(CUser.deleted, false));
 
-        long total = mongoDb.getCollection(User.class).count(Filters.and(andFilters));
+//        long total = mongoDb.getCollection(User.class).count(Filters.and(andFilters));
+//
+//        FindIterable<User> find = mongoDb.getCollection(User.class).find(Filters.and(andFilters));
+//        find.sort(Sorts.orderBy(QueryUtil.getSorts(request)));
+//        find.skip(request.getStart());
+//        find.limit(request.getLimit());
 
-        FindIterable<User> find = mongoDb.getCollection(User.class).find(Filters.and(andFilters));
-        find.sort(Sorts.orderBy(QueryUtil.getSorts(request)));
-        find.skip(request.getStart());
-        find.limit(request.getLimit());
+        list.forEach(user ->
+                user.setOrganizations(new HashSet<>(
+                        (Collection<? extends Organization>) organizationRepository.findAll(user.getOrganizationIds()))));
 
-        return new ExtDirectStoreResult<>(total, QueryUtil.toList(find));
+        log.debug("read size:[" + list.size() + "]");
+
+        return new ExtDirectStoreResult<>(list);
     }
 
     @ExtDirectMethod(STORE_MODIFY)
-    public ExtDirectStoreResult<User> destroy(User user) {
+    public ExtDirectStoreResult<User> destroy(@AuthenticationPrincipal MongoUserDetails userDetails, User user) {
         ExtDirectStoreResult<User> result = new ExtDirectStoreResult<>();
-        if (!isLastAdmin(user.getId())) {
-            mongoDb.getCollection(User.class).updateOne(Filters.eq(CUser.id, user.getId()), Updates.set(CUser.deleted, true));
-            result.setSuccess(Boolean.TRUE);
+//        if (!isLastAdmin(user.getId())) {
+//            mongoDb.getCollection(User.class).updateOne(Filters.eq(CUser.id, user.getId()), Updates.set(CUser.deleted, true));
+//            result.setSuccess(Boolean.TRUE);
+//
+//            deletePersistentLogins(user.getId());
+//        } else {
+//            result.setSuccess(Boolean.FALSE);
+//        }
 
-            deletePersistentLogins(user.getId());
-        } else {
-            result.setSuccess(Boolean.FALSE);
-        }
-        return result;
+        log.debug("destroy 1");
+        User old = userRepository.findOne(user.getId());
+
+        old.setId(null);
+        old.setActive(false);
+        userRepository.save(old);
+        log.debug("destroy 2 " + old.getId());
+
+        setAttrsForDelete(user, userDetails, old);
+        userRepository.save(user);
+        log.debug("destroy end");
+        return result.setSuccess(true);
     }
 
     private void deletePersistentLogins(String userId) {
@@ -94,41 +128,68 @@ public class UserService {
     }
 
     @ExtDirectMethod(STORE_MODIFY)
-    public ValidationMessagesResult<User> update(User user, Locale locale) {
-        List<ValidationMessages> violations = validateEntity(user, locale);
-        violations.addAll(checkIfLastAdmin(user, locale));
+    public ValidationMessagesResult<User> update(@AuthenticationPrincipal MongoUserDetails userDetails, User user) {
+//        List<ValidationMessages> violations = validateEntity(user, locale);
+//        violations.addAll(checkIfLastAdmin(user, locale));
+//
+//        if (violations.isEmpty()) {
+//            List<Bson> updates = new ArrayList<>();
+//            updates.add(Updates.set(CUser.email, user.getEmail()));
+//            updates.add(Updates.set(CUser.firstName, user.getFirstName()));
+//            updates.add(Updates.set(CUser.lastName, user.getLastName()));
+//            updates.add(Updates.set(CUser.locale, user.getLocale()));
+//            updates.add(Updates.set(CUser.enabled, user.isEnabled()));
+//            if (user.getAuthorities() != null && !user.getAuthorities().isEmpty()) {
+//                updates.add(Updates.set(CUser.authorities, user.getAuthorities()));
+//            } else {
+//                updates.add(Updates.unset(CUser.authorities));
+//            }
+//            updates.add(Updates.setOnInsert(CUser.deleted, false));
+//
+//            UpdateResult result = mongoDb.getCollection(User.class).updateOne(Filters.eq(CUser.id, user.getId()), Updates.combine(updates),
+//                    new UpdateOptions().upsert(true));
+//
+//            if (!user.isEnabled()) {
+//                deletePersistentLogins(user.getId());
+//            }
+//
+//            return new ValidationMessagesResult<>(user);
+//        }
+//
+//        ValidationMessagesResult<User> result = new ValidationMessagesResult<>(user);
+//        result.setValidations(violations);
+//        return result;
 
-        if (violations.isEmpty()) {
-            List<Bson> updates = new ArrayList<>();
-            updates.add(Updates.set(CUser.email, user.getEmail()));
-            updates.add(Updates.set(CUser.firstName, user.getFirstName()));
-            updates.add(Updates.set(CUser.lastName, user.getLastName()));
-            updates.add(Updates.set(CUser.locale, user.getLocale()));
-            updates.add(Updates.set(CUser.enabled, user.isEnabled()));
-            if (user.getAuthorities() != null && !user.getAuthorities().isEmpty()) {
-                updates.add(Updates.set(CUser.authorities, user.getAuthorities()));
-            } else {
-                updates.add(Updates.unset(CUser.authorities));
-            }
-            updates.add(Updates.setOnInsert(CUser.deleted, false));
-
-            UpdateResult result = mongoDb.getCollection(User.class).updateOne(Filters.eq(CUser.id, user.getId()), Updates.combine(updates),
-                    new UpdateOptions().upsert(true));
-
-            if (!user.isEnabled()) {
-                deletePersistentLogins(user.getId());
-            }
-
-            return new ValidationMessagesResult<>(user);
-        }
+        List<ValidationMessages> violations = validateEntity(user, userDetails.getLocale());
 
         ValidationMessagesResult<User> result = new ValidationMessagesResult<>(user);
         result.setValidations(violations);
+
+        log.debug("update 1: " + user.toString());
+        if (violations.isEmpty()) {
+            User old = userRepository.findOne(user.getId());
+            if (old != null) {
+                old.setId(null);
+                old.setActive(false);
+                userRepository.save(old);
+                setAttrsForUpdate(user, userDetails, old);
+            }
+            else {
+                setAttrsForCreate(user, userDetails);
+            }
+
+            user.setOrganizationIds(user.getOrganizations().stream().map(Organization::getCode).collect(toSet()));
+
+            userRepository.save(user);
+        }
+
+        log.debug("update end");
         return result;
     }
 
     private List<ValidationMessages> checkIfLastAdmin(User user, Locale locale) {
-        User dbUser = mongoDb.getCollection(User.class).find(Filters.eq(CUser.id, user.getId())).first();
+//        User dbUser = mongoDb.getCollection(User.class).find(Filters.eq(CUser.id, user.getId())).first();
+        User dbUser = userRepository.findOne(user.getId());
 
         List<ValidationMessages> validationErrors = new ArrayList<>();
 
@@ -179,11 +240,12 @@ public class UserService {
 
     private boolean isLastAdmin(String id) {
 
-        long count = mongoDb.getCollection(User.class)
-                .count(Filters.and(Filters.ne(CUser.id, id),
-                        Filters.eq(CUser.deleted, false),
-                        Filters.eq(CUser.authorities, Authority.ADMIN.name()),
-                        Filters.eq(CUser.enabled, true)));
+//        long count = mongoDb.getCollection(User.class)
+//                .count(Filters.and(Filters.ne(CUser.id, id),
+//                        Filters.eq(CUser.deleted, false),
+//                        Filters.eq(CUser.authorities, Authority.ADMIN.name()),
+//                        Filters.eq(CUser.enabled, true)));
+        long count = userRepository.countByIdAndAuthoritiesActive(id, singleton(Authority.ADMIN.name()));
         return count == 0;
     }
 
@@ -191,12 +253,14 @@ public class UserService {
         if (StringUtils.hasText(email)) {
             long count;
             if (userId != null) {
-                count = mongoDb.getCollection(User.class).count(Filters.and(
-                        Filters.eq(CUser.deleted, false),
-                        Filters.regex(CUser.email, "^" + email + "$", "i"),
-                        Filters.ne(CUser.id, userId)));
+//                count = mongoDb.getCollection(User.class).count(Filters.and(
+//                        Filters.eq(CUser.deleted, false),
+//                        Filters.regex(CUser.email, "^" + email + "$", "i"),
+//                        Filters.ne(CUser.id, userId)));
+                count = userRepository.countByIdNotAndEmailActive(userId, email);
             } else {
-                count = mongoDb.getCollection(User.class).count(Filters.regex(CUser.email, "^" + email + "$", "i"));
+//                count = mongoDb.getCollection(User.class).count(Filters.regex(CUser.email, "^" + email + "$", "i"));
+                count = userRepository.countByEmailActive(email);
             }
 
             return count == 0;
@@ -207,25 +271,35 @@ public class UserService {
 
     @ExtDirectMethod
     public void unlock(String userId) {
-        mongoDb.getCollection(User.class).updateOne(Filters.eq(CUser.id, userId),
-                Updates.combine(Updates.unset(CUser.lockedOutUntil), Updates.set(CUser.failedLogins, 0)));
+//        mongoDb.getCollection(User.class).updateOne(Filters.eq(CUser.id, userId),
+//                Updates.combine(Updates.unset(CUser.lockedOutUntil), Updates.set(CUser.failedLogins, 0)));
+        User user = userRepository.findOne(userId);
+        user.setLockedOutUntil(null);
+        user.setFailedLogins(0);
+        userRepository.save(user);
     }
 
     @ExtDirectMethod
     public void disableTwoFactorAuth(String userId) {
-        mongoDb.getCollection(User.class).updateOne(Filters.eq(CUser.id, userId), Updates.unset(CUser.secret));
+//        mongoDb.getCollection(User.class).updateOne(Filters.eq(CUser.id, userId), Updates.unset(CUser.secret));
+        User user = userRepository.findOne(userId);
+        user.setSecret(null);
+        userRepository.save(user);
     }
 
     @ExtDirectMethod
     public void sendPassordResetEmail(String userId) {
         String token = UUID.randomUUID().toString();
 
-        User user = mongoDb.getCollection(User.class).findOneAndUpdate(
-                Filters.eq(CUser.id, userId),
-                Updates.combine(Updates.set(CUser.passwordResetTokenValidUntil,
-                        Date.from(ZonedDateTime.now(ZoneOffset.UTC).plusHours(4).toInstant())),
-                        Updates.set(CUser.passwordResetToken, token)),
-                new FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER));
+//        User user = mongoDb.getCollection(User.class).findOneAndUpdate(
+//                Filters.eq(CUser.id, userId),
+//                Updates.combine(Updates.set(CUser.passwordResetTokenValidUntil,
+//                        Date.from(ZonedDateTime.now(ZoneOffset.UTC).plusHours(4).toInstant())),
+//                        Updates.set(CUser.passwordResetToken, token)),
+//                new FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER));
+
+        User user = userRepository.findOne(userId);
+        user.setPasswordResetTokenValidUntil(from(now(UTC).plusHours(4).toInstant()));
 
         this.mailService.sendPasswortResetEmail(user);
     }

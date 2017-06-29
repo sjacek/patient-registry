@@ -1,12 +1,12 @@
 info:
   app.name: "@project.name@"
+  app.artifact: "@project.artifactId@"
   app.description: "@project.description@"
   app.version: "@project.version@"
-  build.artifact: "@project.artifactId@"
   build.time: "@build.timestamp@"
 
 app:
-  url: https://localhost:8443
+  url: https://localhost:8444
   rememberme-cookie-key: patients
   rememberme-cookie-valid-in-days: 31
   default-email-sender: no-reply@parentproject.org.pl
@@ -43,7 +43,6 @@ spring:
 
   main:
     banner-mode: log 
-
 
 server:
   port: 8444

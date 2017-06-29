@@ -124,7 +124,7 @@ class Startup {
             adminUser.setFirstName("admin");
             adminUser.setLastName("admin");
             adminUser.setLocale("pl");
-            adminUser.setOrganizationId(uuidRoot.toString());
+            adminUser.setOrganizationIds(singleton(uuidRoot.toString()));
             adminUser.setPasswordHash(passwordEncoder.encode("admin"));
             adminUser.setEnabled(true);
             adminUser.setAuthorities(singleton(ADMIN.name()));
@@ -136,7 +136,7 @@ class Startup {
             normalUser.setFirstName("user");
             normalUser.setLastName("user");
             normalUser.setLocale("pl");
-            normalUser.setOrganizationId(uuidPpmdPoland.toString());
+            normalUser.setOrganizationIds(singleton(uuidPpmdPoland.toString()));
             normalUser.setPasswordHash(passwordEncoder.encode("user"));
             normalUser.setEnabled(true);
             normalUser.setAuthorities(of(USER.name(), EMPLOYEE.name()).collect(toSet()));
@@ -202,10 +202,10 @@ class Startup {
                 String[] line;
                 while ((line = reader.readNext()) != null) {
                     // line[] is an array of values from the line
-                    String code = line[0];
-                    String country_en = line[2];
-                    String country_pl = !"".equals(line[3]) ? line[3] : country_en;
-                    String country_de = !"".equals(line[4]) ? line[4] : country_en;
+                    final String code = line[0];
+                    final String country_en = line[2];
+                    final String country_pl = !"".equals(line[3]) ? line[3] : country_en;
+                    final String country_de = !"".equals(line[4]) ? line[4] : country_en;
 
                     LOGGER.debug("initAddressDictionary: " + code + "," + country_en);
                     insert(new CountryDictionary(code, country_en, country_pl, country_de));

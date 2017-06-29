@@ -35,13 +35,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.lang.invoke.MethodHandles;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
 import java.util.Base64;
 import java.util.Date;
 import java.util.UUID;
 
 import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.POLL;
+import static java.time.ZoneOffset.UTC;
+import static java.time.ZonedDateTime.now;
+import static java.util.Date.from;
 
 @Service
 @Cacheable("main")
@@ -135,9 +136,10 @@ public class SecurityService {
     @RequireAnyAuthority
     public ExtDirectFormPostResult disableScreenLock(@AuthenticationPrincipal MongoUserDetails userDetails, @RequestParam("password") String password) {
 
-        User user = mongoDb.getCollection(User.class)
-                .find(Filters.eq(CUser.id, userDetails.getUserDbId()))
-                .projection(Projections.include(CUser.passwordHash)).first();
+//        User user = mongoDb.getCollection(User.class)
+//                .find(Filters.eq(CUser.id, userDetails.getUserDbId()))
+//                .projection(Projections.include(CUser.passwordHash)).first();
+        User user = userRepository.findOne(userDetails.getUserDbId());
 
         boolean matches = passwordEncoder.matches(password, user.getPasswordHash());
         userDetails.setScreenLocked(!matches);
@@ -150,14 +152,19 @@ public class SecurityService {
 
         String token = UUID.randomUUID().toString();
 
-        User user = mongoDb.getCollection(User.class).findOneAndUpdate(
-                Filters.and(Filters.eq(CUser.email, email), Filters.eq(CUser.deleted, false)),
-                Updates.combine(
-                        Updates.set(CUser.passwordResetTokenValidUntil, Date.from(ZonedDateTime.now(ZoneOffset.UTC).plusHours(4).toInstant())),
-                        Updates.set(CUser.passwordResetToken, token)),
-                new FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER).upsert(false));
+//        User user = mongoDb.getCollection(User.class).findOneAndUpdate(
+//                Filters.and(Filters.eq(CUser.email, email), Filters.eq(CUser.deleted, false)),
+//                Updates.combine(
+//                        Updates.set(CUser.passwordResetTokenValidUntil, from(now(UTC).plusHours(4).toInstant())),
+//                        Updates.set(CUser.passwordResetToken, token)),
+//                new FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER).upsert(false));
 
+        User user = userRepository.findOneByEmailNotDeleted(email);
         if (user != null) {
+            user.setPasswordResetTokenValidUntil(from(now(UTC).plusHours(4).toInstant()));
+            user.setPasswordResetToken(token);
+            userRepository.save(user);
+
             mailService.sendPasswortResetEmail(user);
         }
 

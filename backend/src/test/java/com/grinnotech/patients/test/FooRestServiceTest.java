@@ -37,7 +37,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @ContextConfiguration(
         initializers = ConfigFileApplicationContextInitializer.class,
-        locations = "classpath:/testApplicationContext.xml")
+        locations = "classpath:/applicationContext.xml")
 @Ignore
 public class FooRestServiceTest {
     

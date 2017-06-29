@@ -35,8 +35,8 @@ public class MongoConfig {
     public MongoDatabase mongoDatabase(MongoClient mongoClient) {
         return mongoClient.getDatabase(createUri().getDatabase()).withCodecRegistry(
                 fromRegistries(MongoClient.getDefaultCodecRegistry(),
-                fromProviders(new ListCodec.Provider()),
-                fromProviders(new PojoCodecProvider())));
+                fromProviders(new ListCodec.Provider())));
+//                fromProviders(new PojoCodecProvider())));
     }
 
     @Bean

@@ -129,7 +129,7 @@ public class CustomPersistentRememberMeServices extends AbstractRememberMeServic
 
         LOGGER.debug("Creating new persistent login for user {}", loginName);
 
-        User user = userRepository.findByEmailNotDeleted(loginName);
+        User user = userRepository.findOneByEmailNotDeleted(loginName);
         if (user == null) {
             throw new UsernameNotFoundException("User " + loginName + " was not found in the database");
         }

@@ -1,14 +1,13 @@
 package com.grinnotech.patients.model;
 
 import ch.rasc.bsoncodec.annotation.BsonDocument;
-import ch.rasc.bsoncodec.annotation.Id;
 import ch.rasc.extclassgenerator.Model;
 import ch.rasc.extclassgenerator.ModelField;
 import ch.rasc.extclassgenerator.ModelType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.grinnotech.patients.domain.UUIDStringGenerator;
+import com.grinnotech.patients.domain.AbstractPersistable;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.util.StringUtils;
@@ -23,33 +22,36 @@ import java.util.Set;
         updateMethod = "userService.update",
         destroyMethod = "userService.destroy",
         rootProperty = "records",
+        paging = true,
         identifier = "uuid")
 @ModelField(value = "twoFactorAuth", persist = false, type = ModelType.BOOLEAN)
 @JsonInclude(Include.NON_NULL)
-public class User {
+public class User extends AbstractPersistable {
 
-    @ModelField(useNull = true, convert = "null")
-    @Id(generator = UUIDStringGenerator.class)
-    private String id;
-
-    @NotBlank(message = "{fieldrequired}")
-    private String lastName;
+//    @ModelField(useNull = true, convert = "null")
+//    @Id(generator = UUIDStringGenerator.class)
+//    private String id;
 
     @NotBlank(message = "{fieldrequired}")
     private String firstName;
+
+    @NotBlank(message = "{fieldrequired}")
+    private String lastName;
 
     @Email(message = "{invalidemail}")
     @NotBlank(message = "{fieldrequired}")
     private String email;
 
+    private Set<String> organizationIds;
+
     @ModelField
     @ch.rasc.bsoncodec.annotation.Transient
 //    @javax.persistence.Transient
     @org.springframework.data.annotation.Transient
-    private Organization organization;
+    private Set<Organization> organizations;
 
-    @NotBlank(message = "{fieldrequired}")
-    private String organizationId;
+//    @NotBlank(message = "{fieldrequired}")
+//    private String organizationId;
 
     private Set<String> authorities;
 
@@ -76,19 +78,19 @@ public class User {
     @JsonIgnore
     private Date passwordResetTokenValidUntil;
 
-    @JsonIgnore
-    private boolean deleted;
+//    @JsonIgnore
+//    private boolean deleted;
 
     @JsonIgnore
     private String secret;
 
-    public String getId() {
-        return this.id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
+//    public String getId() {
+//        return this.id;
+//    }
+//
+//    public void setId(String id) {
+//        this.id = id;
+//    }
 
     public String getLastName() {
         return this.lastName;
@@ -114,20 +116,20 @@ public class User {
         this.email = email;
     }
 
-    public Organization getOrganization() {
-        return this.organization;
+    public Set<Organization> getOrganizations() {
+        return this.organizations;
     }
     
-    public void setOrganization(Organization organization) {
-        this.organization = organization;
+    public void setOrganizations(Set<Organization> organizations) {
+        this.organizations = organizations;
     }
     
-    public String getOrganizationId() {
-        return this.organizationId;
+    public Set<String> getOrganizationIds() {
+        return this.organizationIds;
     }
     
-    public void setOrganizationId(String organizationId) {
-        this.organizationId = organizationId;
+    public void setOrganizationIds(Set<String> organizationIds) {
+        this.organizationIds = organizationIds;
     }
     
     public Set<String> getAuthorities() {
@@ -202,13 +204,13 @@ public class User {
         this.passwordResetTokenValidUntil = passwordResetTokenValidUntil;
     }
 
-    public boolean isDeleted() {
-        return this.deleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        this.deleted = deleted;
-    }
+//    public boolean isDeleted() {
+//        return this.deleted;
+//    }
+//
+//    public void setDeleted(boolean deleted) {
+//        this.deleted = deleted;
+//    }
 
     public String getSecret() {
         return this.secret;

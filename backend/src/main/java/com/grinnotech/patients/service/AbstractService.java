@@ -37,7 +37,7 @@ public abstract class AbstractService<T> {
     private UserRepository userRepository;
 
     public void setAttrsForCreate(AbstractPersistable persistable, UserDetails userDetails) {
-        User user = slimDown(userRepository.findByEmailNotDeleted(userDetails.getUsername()));
+        User user = slimDown(userRepository.findOneByEmailNotDeleted(userDetails.getUsername()));
         
         persistable.setCreatedDate(new Date());
         persistable.setCreatedBy(user);
@@ -48,7 +48,7 @@ public abstract class AbstractService<T> {
     }
 
     public void setAttrsForUpdate(AbstractPersistable persistable, UserDetails userDetails, AbstractPersistable old) {
-        User user = slimDown(userRepository.findByEmailNotDeleted(userDetails.getUsername()));
+        User user = slimDown(userRepository.findOneByEmailNotDeleted(userDetails.getUsername()));
         
         persistable.setUpdatedDate(new Date());
         persistable.setUpdatedBy(user);
@@ -59,7 +59,7 @@ public abstract class AbstractService<T> {
     }
 
     public void setAttrsForDelete(AbstractPersistable persistable, UserDetails userDetails, AbstractPersistable old) {
-        User user = slimDown(userRepository.findByEmailNotDeleted(userDetails.getUsername()));
+        User user = slimDown(userRepository.findOneByEmailNotDeleted(userDetails.getUsername()));
 
         persistable.setDeletedDate(new Date());
         persistable.setDeletedBy(user);
@@ -72,7 +72,8 @@ public abstract class AbstractService<T> {
     private User slimDown(User user) {
         User slimUser = new User();
         slimUser.setAuthorities(user.getAuthorities());
-        slimUser.setDeleted(user.isDeleted());
+//        slimUser.setDeleted(user.isDeleted());
+        slimUser.setActive(user.isActive());
         slimUser.setEmail(user.getEmail());
         slimUser.setEnabled(user.isEnabled());
         slimUser.setFirstName(user.getFirstName());

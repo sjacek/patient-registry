@@ -54,7 +54,7 @@ public class ExportController {
         List<Sort.Order> list = new ArrayList<Sort.Order>() {{
             add(new Sort.Order(ASC, sort));
         }};
-        model.addAttribute(Attributes.patients.name(), patientService.findAllUsers(filter, new Sort(list)));
+        model.addAttribute(Attributes.patients.name(), patientService.findAllPatients(filter, new Sort(list)));
         return "";
     }
 }
