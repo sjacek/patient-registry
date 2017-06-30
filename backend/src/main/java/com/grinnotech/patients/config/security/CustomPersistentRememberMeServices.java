@@ -4,10 +4,12 @@ import com.grinnotech.patients.config.AppProperties;
 import com.grinnotech.patients.config.profiles.mongodb.MongoDb;
 import com.grinnotech.patients.dao.UserRepository;
 import com.grinnotech.patients.model.CPersistentLogin;
-import com.grinnotech.patients.model.CUser;
 import com.grinnotech.patients.model.PersistentLogin;
 import com.grinnotech.patients.model.User;
-import com.mongodb.client.model.*;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.FindOneAndUpdateOptions;
+import com.mongodb.client.model.ReturnDocument;
+import com.mongodb.client.model.Updates;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,7 +76,7 @@ public class CustomPersistentRememberMeServices extends AbstractRememberMeServic
 
     private final int tokenValidInSeconds;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     @Autowired
     public CustomPersistentRememberMeServices(MongoDb mongoDb, UserDetailsService userDetailsService, AppProperties appProperties) {
@@ -101,14 +103,11 @@ public class CustomPersistentRememberMeServices extends AbstractRememberMeServic
                         new FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
                 );
 
-        User user = mongoDb.getCollection(User.class)
-                .find(Filters.and(Filters.eq(CUser.id, pl.getUserId()), Filters.eq(CUser.deleted, false)))
-                .projection(Projections.include(CUser.email)).first();
-
+        User user = userRepository.findOneActive(pl.getUserId());
         String loginName = user.getEmail();
         String token = pl.getToken();
 
-        LOGGER.debug("Refreshing persistent login token for user '{}', series '{}'", loginName, series);
+        logger.debug("Refreshing persistent login token for user '{}', series '{}'", loginName, series);
 
         addCookie(series, token, request, response);
 
@@ -127,9 +126,9 @@ public class CustomPersistentRememberMeServices extends AbstractRememberMeServic
 
         String loginName = successfulAuthentication.getName();
 
-        LOGGER.debug("Creating new persistent login for user {}", loginName);
+        logger.debug("Creating new persistent login for user {}", loginName);
 
-        User user = userRepository.findOneByEmailNotDeleted(loginName);
+        User user = userRepository.findOneByEmailActive(loginName);
         if (user == null) {
             throw new UsernameNotFoundException("User " + loginName + " was not found in the database");
         }
@@ -164,9 +163,9 @@ public class CustomPersistentRememberMeServices extends AbstractRememberMeServic
                 String[] cookieTokens = decodeCookie(rememberMeCookie);
                 removePersistentLogin(getPersistentToken(cookieTokens));
             } catch (InvalidCookieException ice) {
-                LOGGER.info("Invalid cookie, no persistent token could be deleted");
+                logger.info("Invalid cookie, no persistent token could be deleted");
             } catch (RememberMeAuthenticationException rmae) {
-                LOGGER.debug("No persistent token found, so no token could be deleted");
+                logger.debug("No persistent token found, so no token could be deleted");
             }
         }
 

@@ -18,7 +18,8 @@ import de.danielbechler.diff.ObjectDiffer;
 import de.danielbechler.diff.ObjectDifferBuilder;
 import de.danielbechler.diff.node.DiffNode;
 import de.danielbechler.diff.node.DiffNode.State;
-import lombok.extern.log4j.Log4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.MessageSource;
@@ -27,6 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.validation.Validator;
+import java.lang.invoke.MethodHandles;
 import java.util.*;
 
 import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.STORE_MODIFY;
@@ -41,8 +43,9 @@ import static java.util.stream.Collectors.toSet;
 @Service
 @Cacheable("main")
 @RequireAdminAuthority
-@Log4j
 public class UserService extends AbstractService<Patient> {
+
+    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     @Autowired
     private MessageSource messageSource;
@@ -70,29 +73,11 @@ public class UserService extends AbstractService<Patient> {
                 ? userRepository.findAllWithFilterActive(filter.getValue(), getSpringSort(request))
                 : userRepository.findAllActive(getSpringSort(request));
 
-//        List<Bson> andFilters = new ArrayList<>();
-//        if (filter != null) {
-//            List<Bson> orFilters = new ArrayList<>();
-//            orFilters.add(Filters.regex(CUser.lastName, filter.getValue(), "i"));
-//            orFilters.add(Filters.regex(CUser.firstName, filter.getValue(), "i"));
-//            orFilters.add(Filters.regex(CUser.email, filter.getValue(), "i"));
-//
-//            andFilters.add(Filters.or(orFilters));
-//        }
-//        andFilters.add(Filters.eq(CUser.deleted, false));
-
-//        long total = mongoDb.getCollection(User.class).count(Filters.and(andFilters));
-//
-//        FindIterable<User> find = mongoDb.getCollection(User.class).find(Filters.and(andFilters));
-//        find.sort(Sorts.orderBy(QueryUtil.getSorts(request)));
-//        find.skip(request.getStart());
-//        find.limit(request.getLimit());
-
         list.forEach(user ->
                 user.setOrganizations(new HashSet<>(
                         (Collection<? extends Organization>) organizationRepository.findAll(user.getOrganizationIds()))));
 
-        log.debug("read size:[" + list.size() + "]");
+        logger.debug("read size:[{}]", list.size());
 
         return new ExtDirectStoreResult<>(list);
     }
@@ -100,26 +85,24 @@ public class UserService extends AbstractService<Patient> {
     @ExtDirectMethod(STORE_MODIFY)
     public ExtDirectStoreResult<User> destroy(@AuthenticationPrincipal MongoUserDetails userDetails, User user) {
         ExtDirectStoreResult<User> result = new ExtDirectStoreResult<>();
-//        if (!isLastAdmin(user.getId())) {
-//            mongoDb.getCollection(User.class).updateOne(Filters.eq(CUser.id, user.getId()), Updates.set(CUser.deleted, true));
-//            result.setSuccess(Boolean.TRUE);
-//
-//            deletePersistentLogins(user.getId());
-//        } else {
-//            result.setSuccess(Boolean.FALSE);
-//        }
+        if (isLastAdmin(user.getId())) {
+            return result.setSuccess(false);
+        }
 
-        log.debug("destroy 1");
+        logger.debug("destroy 1");
         User old = userRepository.findOne(user.getId());
 
         old.setId(null);
         old.setActive(false);
         userRepository.save(old);
-        log.debug("destroy 2 " + old.getId());
+        logger.debug("destroy 2 " + old.getId());
 
         setAttrsForDelete(user, userDetails, old);
         userRepository.save(user);
-        log.debug("destroy end");
+        deletePersistentLogins(user.getId());
+
+        logger.debug("destroy end");
+
         return result.setSuccess(true);
     }
 
@@ -165,7 +148,7 @@ public class UserService extends AbstractService<Patient> {
         ValidationMessagesResult<User> result = new ValidationMessagesResult<>(user);
         result.setValidations(violations);
 
-        log.debug("update 1: " + user.toString());
+        logger.debug("update 1: " + user.toString());
         if (violations.isEmpty()) {
             User old = userRepository.findOne(user.getId());
             if (old != null) {
@@ -173,22 +156,24 @@ public class UserService extends AbstractService<Patient> {
                 old.setActive(false);
                 userRepository.save(old);
                 setAttrsForUpdate(user, userDetails, old);
-            }
-            else {
+            } else {
                 setAttrsForCreate(user, userDetails);
             }
 
             user.setOrganizationIds(user.getOrganizations().stream().map(Organization::getCode).collect(toSet()));
 
             userRepository.save(user);
+
+            if (!user.isEnabled()) {
+                deletePersistentLogins(user.getId());
+            }
         }
 
-        log.debug("update end");
+        logger.debug("update end");
         return result;
     }
 
     private List<ValidationMessages> checkIfLastAdmin(User user, Locale locale) {
-//        User dbUser = mongoDb.getCollection(User.class).find(Filters.eq(CUser.id, user.getId())).first();
         User dbUser = userRepository.findOne(user.getId());
 
         List<ValidationMessages> validationErrors = new ArrayList<>();
@@ -239,40 +224,16 @@ public class UserService extends AbstractService<Patient> {
     }
 
     private boolean isLastAdmin(String id) {
-
-//        long count = mongoDb.getCollection(User.class)
-//                .count(Filters.and(Filters.ne(CUser.id, id),
-//                        Filters.eq(CUser.deleted, false),
-//                        Filters.eq(CUser.authorities, Authority.ADMIN.name()),
-//                        Filters.eq(CUser.enabled, true)));
-        long count = userRepository.countByIdAndAuthoritiesActive(id, singleton(Authority.ADMIN.name()));
-        return count == 0;
+        return userRepository.existsByIdAndAuthoritiesActive(id, singleton(Authority.ADMIN.name()));
     }
 
     private boolean isEmailUnique(String userId, String email) {
-        if (StringUtils.hasText(email)) {
-            long count;
-            if (userId != null) {
-//                count = mongoDb.getCollection(User.class).count(Filters.and(
-//                        Filters.eq(CUser.deleted, false),
-//                        Filters.regex(CUser.email, "^" + email + "$", "i"),
-//                        Filters.ne(CUser.id, userId)));
-                count = userRepository.countByIdNotAndEmailActive(userId, email);
-            } else {
-//                count = mongoDb.getCollection(User.class).count(Filters.regex(CUser.email, "^" + email + "$", "i"));
-                count = userRepository.countByEmailActive(email);
-            }
-
-            return count == 0;
-        }
-
-        return true;
+        return !StringUtils.hasText(email) ||
+                (userId != null ? userRepository.existsByIdNotAndEmailActive(userId, email) : userRepository.existsByEmailActive(email));
     }
 
     @ExtDirectMethod
     public void unlock(String userId) {
-//        mongoDb.getCollection(User.class).updateOne(Filters.eq(CUser.id, userId),
-//                Updates.combine(Updates.unset(CUser.lockedOutUntil), Updates.set(CUser.failedLogins, 0)));
         User user = userRepository.findOne(userId);
         user.setLockedOutUntil(null);
         user.setFailedLogins(0);
@@ -281,7 +242,6 @@ public class UserService extends AbstractService<Patient> {
 
     @ExtDirectMethod
     public void disableTwoFactorAuth(String userId) {
-//        mongoDb.getCollection(User.class).updateOne(Filters.eq(CUser.id, userId), Updates.unset(CUser.secret));
         User user = userRepository.findOne(userId);
         user.setSecret(null);
         userRepository.save(user);
@@ -291,17 +251,12 @@ public class UserService extends AbstractService<Patient> {
     public void sendPassordResetEmail(String userId) {
         String token = UUID.randomUUID().toString();
 
-//        User user = mongoDb.getCollection(User.class).findOneAndUpdate(
-//                Filters.eq(CUser.id, userId),
-//                Updates.combine(Updates.set(CUser.passwordResetTokenValidUntil,
-//                        Date.from(ZonedDateTime.now(ZoneOffset.UTC).plusHours(4).toInstant())),
-//                        Updates.set(CUser.passwordResetToken, token)),
-//                new FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER));
-
         User user = userRepository.findOne(userId);
         user.setPasswordResetTokenValidUntil(from(now(UTC).plusHours(4).toInstant()));
+        user.setPasswordResetToken(token);
+        userRepository.save(user);
 
-        this.mailService.sendPasswortResetEmail(user);
+        mailService.sendPasswortResetEmail(user);
     }
 
 }

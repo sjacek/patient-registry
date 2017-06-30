@@ -9,6 +9,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.StringUtils;
 
 import java.util.*;
+import java.util.stream.Collectors;
+
+import static java.util.Collections.emptySet;
+import static java.util.Collections.unmodifiableCollection;
+import static java.util.stream.Collectors.toList;
+import static org.springframework.security.core.authority.AuthorityUtils.createAuthorityList;
+import static org.springframework.util.StringUtils.hasText;
 
 public class MongoUserDetails implements UserDetails {
 
@@ -39,7 +46,7 @@ public class MongoUserDetails implements UserDetails {
         this.email = user.getEmail();
         this.enabled = user.isEnabled();
 
-        if (StringUtils.hasText(user.getLocale())) {
+        if (hasText(user.getLocale())) {
             this.locale = new Locale(user.getLocale());
         } else {
             this.locale = Locale.ENGLISH;
@@ -47,17 +54,10 @@ public class MongoUserDetails implements UserDetails {
 
         this.locked = user.getLockedOutUntil() != null && user.getLockedOutUntil().after(new Date());
 
-        if (user.getAuthorities() != null) {
-            this.userAuthorities = createAuthorityList(user.getAuthorities());
-        } else {
-            this.userAuthorities = Collections.emptyList();
-        }
+        this.userAuthorities = user.getAuthorities() != null ? createAuthorities(user.getAuthorities()) : emptySet();
 
-        if (StringUtils.hasText(user.getSecret())) {
-            this.authorities = Collections.unmodifiableCollection(AuthorityUtils.createAuthorityList("PRE_AUTH"));
-        } else {
-            this.authorities = Collections.unmodifiableCollection(this.userAuthorities);
-        }
+        this.authorities = unmodifiableCollection(
+                hasText(user.getSecret()) ? createAuthorityList("PRE_AUTH") : this.userAuthorities);
     }
 
     public boolean isPreAuth() {
@@ -65,7 +65,7 @@ public class MongoUserDetails implements UserDetails {
     }
 
     public void grantAuthorities() {
-        this.authorities = Collections.unmodifiableCollection(this.userAuthorities);
+        this.authorities = unmodifiableCollection(this.userAuthorities);
     }
 
     @Override
@@ -83,12 +83,8 @@ public class MongoUserDetails implements UserDetails {
         return this.email;
     }
 
-//    public User getUser(MongoDb mongoDb) {
-//        return mongoDb.getCollection(User.class).find(Filters.and(Filters.eq(CUser.id, getUserDbId()), Filters.eq(CUser.deleted, false))).first();
-//    }
-
     public User getUser(UserRepository userRepository) {
-        return userRepository.findOneNotDeleted(getUserDbId());
+        return userRepository.findOneActive(getUserDbId());
     }
 
     public String getUserDbId() {
@@ -131,14 +127,8 @@ public class MongoUserDetails implements UserDetails {
         this.screenLocked = screenLocked;
     }
 
-    private static List<GrantedAuthority> createAuthorityList(Collection<String> stringAuthorities) {
-        List<GrantedAuthority> authorities = new ArrayList<>(stringAuthorities.size());
-
-        stringAuthorities.stream().forEach(stringAuthority -> {
-            authorities.add(new SimpleGrantedAuthority(stringAuthority));
-        });
-
-        return authorities;
+    private static Set<GrantedAuthority> createAuthorities(Collection<String> stringAuthorities) {
+        return stringAuthorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toSet());
     }
 
 }

@@ -3,17 +3,14 @@ package com.grinnotech.patients.service;
 import ch.ralscha.extdirectspring.annotation.ExtDirectMethod;
 import ch.ralscha.extdirectspring.annotation.ExtDirectMethodType;
 import ch.ralscha.extdirectspring.bean.ExtDirectFormPostResult;
-import com.grinnotech.patients.config.profiles.mongodb.MongoDb;
 import com.grinnotech.patients.config.security.MongoUserDetails;
 import com.grinnotech.patients.dao.UserRepository;
 import com.grinnotech.patients.dao.authorities.RequireAdminAuthority;
 import com.grinnotech.patients.dao.authorities.RequireAnyAuthority;
 import com.grinnotech.patients.dto.UserDetailDto;
-import com.grinnotech.patients.model.CUser;
 import com.grinnotech.patients.model.User;
 import com.grinnotech.patients.util.TotpAuthUtil;
 import com.grinnotech.patients.web.CsrfController;
-import com.mongodb.client.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,12 +45,9 @@ import static java.util.Date.from;
 @Cacheable("main")
 public class SecurityService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     public static final String AUTH_USER = "authUser";
-
-    @Autowired
-    private MongoDb mongoDb;
 
     @Autowired
     private UserRepository userRepository;
@@ -70,7 +64,7 @@ public class SecurityService {
     @ExtDirectMethod
     public UserDetailDto getAuthUser(@AuthenticationPrincipal MongoUserDetails userDetails) {
 
-        LOGGER.debug("getAuthUser");
+        logger.debug("getAuthUser");
         if (userDetails == null) {
             return null;
         }
@@ -114,7 +108,7 @@ public class SecurityService {
             if (user.getLockedOutUntil() != null) {
                 HttpSession session = request.getSession(false);
                 if (session != null) {
-                    LOGGER.debug("Invalidating session: " + session.getId());
+                    logger.debug("Invalidating session: " + session.getId());
                     session.invalidate();
                 }
                 SecurityContext context = SecurityContextHolder.getContext();
@@ -136,9 +130,6 @@ public class SecurityService {
     @RequireAnyAuthority
     public ExtDirectFormPostResult disableScreenLock(@AuthenticationPrincipal MongoUserDetails userDetails, @RequestParam("password") String password) {
 
-//        User user = mongoDb.getCollection(User.class)
-//                .find(Filters.eq(CUser.id, userDetails.getUserDbId()))
-//                .projection(Projections.include(CUser.passwordHash)).first();
         User user = userRepository.findOne(userDetails.getUserDbId());
 
         boolean matches = passwordEncoder.matches(password, user.getPasswordHash());
@@ -152,14 +143,7 @@ public class SecurityService {
 
         String token = UUID.randomUUID().toString();
 
-//        User user = mongoDb.getCollection(User.class).findOneAndUpdate(
-//                Filters.and(Filters.eq(CUser.email, email), Filters.eq(CUser.deleted, false)),
-//                Updates.combine(
-//                        Updates.set(CUser.passwordResetTokenValidUntil, from(now(UTC).plusHours(4).toInstant())),
-//                        Updates.set(CUser.passwordResetToken, token)),
-//                new FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER).upsert(false));
-
-        User user = userRepository.findOneByEmailNotDeleted(email);
+        User user = userRepository.findOneByEmailActive(email);
         if (user != null) {
             user.setPasswordResetTokenValidUntil(from(now(UTC).plusHours(4).toInstant()));
             user.setPasswordResetToken(token);
@@ -181,18 +165,15 @@ public class SecurityService {
                 && newPassword.equals(newPasswordRetype)) {
             String decodedToken = new String(Base64.getUrlDecoder().decode(token));
             
-            User user = userRepository.findByPasswordResetTokenNotDeletedAndEnabled(decodedToken);
+            User user = userRepository.findOneByPasswordResetTokenAndEnabled(decodedToken);
 
             if (user != null && user.getPasswordResetTokenValidUntil() != null) {
 
                 ExtDirectFormPostResult result;
-//                List<Bson> updates = new ArrayList<>();
 
                 if (user.getPasswordResetTokenValidUntil().after(new Date())) {
                     user.setPasswordHash(this.passwordEncoder.encode(newPassword));
                     user.setSecret(null);
-//                    updates.add(Updates.unset(CUser.secret));
-//                    updates.add(Updates.set(CUser.passwordHash, user.getPasswordHash()));
 
                     MongoUserDetails principal = new MongoUserDetails(user);
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(principal, null, principal.getAuthorities());
@@ -207,11 +188,6 @@ public class SecurityService {
                 user.setPasswordResetTokenValidUntil(null);
                 userRepository.save(user);
                 
-//                updates.add(Updates.unset(CUser.passwordResetToken));
-//                updates.add(Updates.unset(CUser.passwordResetTokenValidUntil));
-//
-//                mongoDb.getCollection(User.class).updateOne(Filters.eq(CUser.id, user.getId()), Updates.combine(updates));
-
                 return result;
             }
         }
@@ -222,7 +198,7 @@ public class SecurityService {
     @ExtDirectMethod
     @RequireAdminAuthority
     public UserDetailDto switchUser(String userId) {
-        User switchToUser = userRepository.findOneNotDeleted(userId);
+        User switchToUser = userRepository.findOneActive(userId);
         if (switchToUser != null) {
 
             MongoUserDetails principal = new MongoUserDetails(switchToUser);

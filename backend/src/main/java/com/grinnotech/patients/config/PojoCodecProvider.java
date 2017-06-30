@@ -3,8 +3,6 @@ package com.grinnotech.patients.config;
 import com.grinnotech.patients.domain.UUIDStringGenerator;
 import com.grinnotech.patients.model.PersistentLogin;
 import com.grinnotech.patients.model.PersistentLoginCodec;
-import com.grinnotech.patients.model.User;
-import com.grinnotech.patients.model.UserCodec;
 import org.bson.codecs.Codec;
 import org.bson.codecs.configuration.CodecProvider;
 import org.bson.codecs.configuration.CodecRegistry;
@@ -27,9 +25,6 @@ public final class PojoCodecProvider implements CodecProvider {
         if (clazz.equals(PersistentLogin.class)) {
             return (Codec<T>) new PersistentLoginCodec();
         }
-//        if (clazz.equals(User.class)) {
-//            return (Codec<T>) new UserCodec(uUIDStringGenerator);
-//        }
         return null;
     }
 }

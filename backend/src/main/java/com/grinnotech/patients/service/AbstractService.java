@@ -37,7 +37,7 @@ public abstract class AbstractService<T> {
     private UserRepository userRepository;
 
     public void setAttrsForCreate(AbstractPersistable persistable, UserDetails userDetails) {
-        User user = slimDown(userRepository.findOneByEmailNotDeleted(userDetails.getUsername()));
+        User user = slimDown(userRepository.findOneByEmailActive(userDetails.getUsername()));
         
         persistable.setCreatedDate(new Date());
         persistable.setCreatedBy(user);
@@ -48,7 +48,7 @@ public abstract class AbstractService<T> {
     }
 
     public void setAttrsForUpdate(AbstractPersistable persistable, UserDetails userDetails, AbstractPersistable old) {
-        User user = slimDown(userRepository.findOneByEmailNotDeleted(userDetails.getUsername()));
+        User user = slimDown(userRepository.findOneByEmailActive(userDetails.getUsername()));
         
         persistable.setUpdatedDate(new Date());
         persistable.setUpdatedBy(user);
@@ -59,7 +59,7 @@ public abstract class AbstractService<T> {
     }
 
     public void setAttrsForDelete(AbstractPersistable persistable, UserDetails userDetails, AbstractPersistable old) {
-        User user = slimDown(userRepository.findOneByEmailNotDeleted(userDetails.getUsername()));
+        User user = slimDown(userRepository.findOneByEmailActive(userDetails.getUsername()));
 
         persistable.setDeletedDate(new Date());
         persistable.setDeletedBy(user);
@@ -90,13 +90,9 @@ public abstract class AbstractService<T> {
         Set<ConstraintViolation<T>> constraintViolations = validator.validate(entity, groups);
         Map<String, List<String>> fieldMessages = new HashMap<>();
         if (!constraintViolations.isEmpty()) {
-            constraintViolations.stream().forEach((constraintViolation) -> {
+            constraintViolations.forEach(constraintViolation -> {
                 String property = constraintViolation.getPropertyPath().toString();
-                List<String> messages = fieldMessages.get(property);
-                if (messages == null) {
-                    messages = new ArrayList<>();
-                    fieldMessages.put(property, messages);
-                }
+                List<String> messages = fieldMessages.computeIfAbsent(property, k -> new ArrayList<>());
                 messages.add(constraintViolation.getMessage());
             });
         }

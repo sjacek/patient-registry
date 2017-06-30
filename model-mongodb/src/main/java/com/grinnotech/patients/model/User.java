@@ -1,6 +1,5 @@
 package com.grinnotech.patients.model;
 
-import ch.rasc.bsoncodec.annotation.BsonDocument;
 import ch.rasc.extclassgenerator.Model;
 import ch.rasc.extclassgenerator.ModelField;
 import ch.rasc.extclassgenerator.ModelType;
@@ -10,12 +9,13 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.grinnotech.patients.domain.AbstractPersistable;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
+import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.util.StringUtils;
 
 import java.util.Date;
 import java.util.Set;
 
-@BsonDocument
+@Document
 @Model(value = "Patients.model.User",
         createMethod = "userService.update",
         readMethod = "userService.read",
@@ -27,10 +27,6 @@ import java.util.Set;
 @ModelField(value = "twoFactorAuth", persist = false, type = ModelType.BOOLEAN)
 @JsonInclude(Include.NON_NULL)
 public class User extends AbstractPersistable {
-
-//    @ModelField(useNull = true, convert = "null")
-//    @Id(generator = UUIDStringGenerator.class)
-//    private String id;
 
     @NotBlank(message = "{fieldrequired}")
     private String firstName;
@@ -49,9 +45,6 @@ public class User extends AbstractPersistable {
 //    @javax.persistence.Transient
     @org.springframework.data.annotation.Transient
     private Set<Organization> organizations;
-
-//    @NotBlank(message = "{fieldrequired}")
-//    private String organizationId;
 
     private Set<String> authorities;
 
@@ -78,19 +71,8 @@ public class User extends AbstractPersistable {
     @JsonIgnore
     private Date passwordResetTokenValidUntil;
 
-//    @JsonIgnore
-//    private boolean deleted;
-
     @JsonIgnore
     private String secret;
-
-//    public String getId() {
-//        return this.id;
-//    }
-//
-//    public void setId(String id) {
-//        this.id = id;
-//    }
 
     public String getLastName() {
         return this.lastName;
@@ -203,14 +185,6 @@ public class User extends AbstractPersistable {
     public void setPasswordResetTokenValidUntil(Date passwordResetTokenValidUntil) {
         this.passwordResetTokenValidUntil = passwordResetTokenValidUntil;
     }
-
-//    public boolean isDeleted() {
-//        return this.deleted;
-//    }
-//
-//    public void setDeleted(boolean deleted) {
-//        this.deleted = deleted;
-//    }
 
     public String getSecret() {
         return this.secret;
