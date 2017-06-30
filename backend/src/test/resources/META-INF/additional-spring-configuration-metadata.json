@@ -1,0 +1,44 @@
+{
+  "properties": [
+    {
+      "name": "server.httpPort",
+      "type": "java.lang.Integer",
+      "description": "Description for server.httpPort."
+    },
+    {
+      "name": "server.tomcat.access-log-enabled",
+      "type": "java.lang.Boolean",
+      "description": "Description for server.tomcat.access-log-enabled."
+    },
+    {
+      "name": "server.tomcat.access-log-pattern",
+      "type": "java.lang.String",
+      "description": "Description for server.tomcat.access-log-pattern."
+    },
+    {
+      "name": "server.tomcat.rotate",
+      "type": "java.lang.Boolean",
+      "description": "Description for server.tomcat.rotate."
+    },
+    {
+      "name": "tomcat.ajp.port",
+      "type": "java.lang.Integer",
+      "description": "Description for tomcat.ajp.port."
+    },
+    {
+      "name": "tomcat.ajp.remoteauthentication",
+      "type": "java.lang.Boolean",
+      "description": "Description for tomcat.ajp.remoteauthentication."
+    },
+    {
+      "name": "tomcat.ajp.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Description for tomcat.ajp.enabled."
+    },
+    {
+      "name": "mongodb.uri",
+      "type": "java.lang.String",
+      "description": "Description for mongodb.uri."
+    }
+  ]
+}

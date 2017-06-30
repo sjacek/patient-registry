@@ -16,9 +16,7 @@ import com.grinnotech.patients.util.ValidationMessages;
 import com.grinnotech.patients.util.ValidationMessagesResult;
 import com.grinnotech.patients.util.ValidationUtil;
 import com.mongodb.client.model.Filters;
-import com.mongodb.client.model.Updates;
 import eu.bitwalker.useragentutils.UserAgent;
-import org.bson.conversions.Bson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.MessageSource;
@@ -28,7 +26,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.validation.Validator;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -67,18 +64,21 @@ public class UserConfigService {
     public String enable2f(@AuthenticationPrincipal MongoUserDetails userDetails) {
         String randomSecret = TotpAuthUtil.randomSecret();
 
-        mongoDb.getCollection(User.class).updateOne(
-                Filters.eq(CUser.id, userDetails.getUserDbId()),
-                Updates.set(CUser.secret, randomSecret));
+        User user = userRepository.findOne(userDetails.getUserDbId());
+        user.setSecret(randomSecret);
+        userRepository.save(user);
+//        mongoDb.getCollection(User.class).updateOne(
+//                Filters.eq(CUser.id, userDetails.getUserDbId()),
+//                Updates.set(CUser.secret, randomSecret));
 
         return randomSecret;
     }
 
     @ExtDirectMethod
     public void disable2f(@AuthenticationPrincipal MongoUserDetails userDetails) {
-        mongoDb.getCollection(User.class).updateOne(
-                Filters.eq(CUser.id, userDetails.getUserDbId()),
-                Updates.unset(CUser.secret));
+        User user = userRepository.findOne(userDetails.getUserDbId());
+        user.setSecret(null);
+        userRepository.save(user);
     }
 
     @ExtDirectMethod(STORE_MODIFY)
@@ -87,13 +87,13 @@ public class UserConfigService {
 
         List<ValidationMessages> validations = ValidationUtil.validateEntity(validator, modifiedUserSettings);
         User user = userDetails.getUser(userRepository);
-        List<Bson> updates = new ArrayList<>();
+        boolean userModified = false;
 
         if (StringUtils.hasText(modifiedUserSettings.getNewPassword()) && validations.isEmpty()) {
             if (passwordEncoder.matches(modifiedUserSettings.getCurrentPassword(), user.getPasswordHash())) {
                 if (modifiedUserSettings.getNewPassword().equals(modifiedUserSettings.getNewPasswordRetype())) {
                     user.setPasswordHash(passwordEncoder.encode(modifiedUserSettings.getNewPassword()));
-                    updates.add(Updates.set(CUser.passwordHash, user.getPasswordHash()));
+                    userModified = true;
                 } else {
                     for (String field : new String[]{"newPassword", "newPasswordRetype"}) {
                         ValidationMessages error = new ValidationMessages();
@@ -122,22 +122,18 @@ public class UserConfigService {
             user.setFirstName(modifiedUserSettings.getFirstName());
             user.setEmail(modifiedUserSettings.getEmail());
             user.setLocale(modifiedUserSettings.getLocale());
-
-            updates.add(Updates.set(CUser.lastName, user.getLastName()));
-            updates.add(Updates.set(CUser.firstName, user.getFirstName()));
-            updates.add(Updates.set(CUser.email, user.getEmail()));
-            updates.add(Updates.set(CUser.locale, user.getLocale()));
+            userModified = true;
         }
 
-        if (!updates.isEmpty()) {
-            mongoDb.getCollection(User.class).updateOne(Filters.eq(CUser.id, user.getId()), Updates.combine(updates));
+        if (userModified) {
+            userRepository.save(user);
         }
 
         return new ValidationMessagesResult<>(modifiedUserSettings, validations);
     }
 
     private boolean isEmailUnique(String userId, String email) {
-        return userRepository.countByEmailRegexAndIdNot(email, userId) == 0;
+        return userRepository.existsByEmailRegexAndIdNot(email, userId);
     }
 
     @ExtDirectMethod(STORE_READ)

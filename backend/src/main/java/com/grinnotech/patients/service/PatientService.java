@@ -26,6 +26,7 @@ import com.grinnotech.patients.dao.authorities.RequireUserEmployeeAuthority;
 import com.grinnotech.patients.model.Patient;
 import com.grinnotech.patients.util.ValidationMessages;
 import com.grinnotech.patients.util.ValidationMessagesResult;
+import lombok.extern.log4j.Log4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,9 +52,8 @@ import static com.grinnotech.patients.util.QueryUtil.getSpringSort;
 @Service
 @Cacheable("main")
 @RequireUserEmployeeAuthority
+@Log4j
 public class PatientService extends AbstractService<Patient> {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     @Autowired
     private PatientRepository patientRepository;
@@ -66,17 +66,17 @@ public class PatientService extends AbstractService<Patient> {
 
         StringFilter stringFilter = request.getFirstFilterForField("filter");
         String filter = stringFilter != null ? stringFilter.getValue() : "";
-        List<Patient> list = findAllUsers(filter, getSpringSort(request));
+        List<Patient> list = findAllPatients(filter, getSpringSort(request));
         return new ExtDirectStoreResult<>(list);
     }
 
-    public List<Patient> findAllUsers(String filter, Sort sort) {
+    public List<Patient> findAllPatients(String filter, Sort sort) {
 
         List<Patient> list = filter.isEmpty()
                 ? patientRepository.findAllActive(sort)
                 : patientRepository.findAllWithFilterActive(filter, sort);
 
-        LOGGER.debug("findAllUsers size:[" + list.size() + "]");
+        log.debug("findAllPatients size:[" + list.size() + "]");
 
         return list;
     }
@@ -85,17 +85,17 @@ public class PatientService extends AbstractService<Patient> {
     public ExtDirectStoreResult<Patient> destroy(@AuthenticationPrincipal MongoUserDetails userDetails, Patient patient) {
         ExtDirectStoreResult<Patient> result = new ExtDirectStoreResult<>();
 
-        LOGGER.debug("destroy 1");
+        log.debug("destroy 1");
         Patient old = patientRepository.findOne(patient.getId());
 
         old.setId(null);
         old.setActive(false);
         patientRepository.save(old);
-        LOGGER.debug("destroy 2 " + old.getId());
+        log.debug("destroy 2 " + old.getId());
 
         setAttrsForDelete(patient, userDetails, old);
         patientRepository.save(patient);
-        LOGGER.debug("destroy end");
+        log.debug("destroy end");
         return result.setSuccess(true);
     }
 
@@ -106,7 +106,7 @@ public class PatientService extends AbstractService<Patient> {
         ValidationMessagesResult<Patient> result = new ValidationMessagesResult<>(patient);
         result.setValidations(violations);
 
-        LOGGER.debug("update 1: " + patient.toString());
+        log.debug("update 1: " + patient.toString());
         if (violations.isEmpty()) {
             Patient old = patientRepository.findOne(patient.getId());
             if (old != null) {
@@ -122,7 +122,7 @@ public class PatientService extends AbstractService<Patient> {
             patientRepository.save(patient);
         }
 
-        LOGGER.debug("update end");
+        log.debug("update end");
         return result;
     }
 

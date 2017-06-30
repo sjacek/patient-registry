@@ -16,13 +16,8 @@
  */
 package com.grinnotech.patients.config;
 
-import com.grinnotech.patients.config.profiles.mongodb.MongoDb;
-import com.grinnotech.patients.dao.ContactRepository;
-import com.grinnotech.patients.dao.CountryDictionaryRepository;
-import com.grinnotech.patients.dao.OrganizationRepository;
-import com.grinnotech.patients.dao.ZipCodePolandRepository;
+import com.grinnotech.patients.dao.*;
 import com.grinnotech.patients.model.*;
-import com.mongodb.client.MongoCollection;
 import com.opencsv.CSVReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,13 +29,13 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.invoke.MethodHandles;
+import java.util.HashSet;
 import java.util.UUID;
 
 import static com.grinnotech.patients.model.Authority.*;
+import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
 import static java.util.UUID.randomUUID;
-import static java.util.stream.Collectors.toSet;
-import static java.util.stream.Stream.of;
 import static org.apache.commons.lang3.text.WordUtils.capitalizeFully;
 
 @Component
@@ -48,9 +43,9 @@ class Startup {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    private final MongoDb mongoDb;
-
     private final PasswordEncoder passwordEncoder;
+
+    private final UserRepository userRepository;
 
     private final OrganizationRepository organizationRepository;
 
@@ -59,13 +54,15 @@ class Startup {
     private final CountryDictionaryRepository addressDictionaryRepository;
 
     private final ZipCodePolandRepository zipCodePolandRepository;
-    private final UUID uuidRoot = randomUUID();
-    private final UUID uuidPpmdPoland = randomUUID();
+
+    private String uuidRoot;
+    private String uuidPpmdPoland;
+    private String uuidTest;
 
     @Autowired
-    public Startup(MongoDb mongoDb,
+    public Startup(UserRepository userRepository,
                    OrganizationRepository organizationRepository, ContactRepository contactRepository, CountryDictionaryRepository addressDictionaryRepository, ZipCodePolandRepository zipCodePolandRepository, PasswordEncoder passwordEncoder) {
-        this.mongoDb = mongoDb;
+        this.userRepository = userRepository;
         this.organizationRepository = organizationRepository;
         this.contactRepository = contactRepository;
         this.passwordEncoder = passwordEncoder;
@@ -83,26 +80,42 @@ class Startup {
     }
 
     private void initOrganizations() {
-        if (organizationRepository.count() == 0) {
-            Organization root = new Organization();
-            root.setId(uuidRoot.toString());
+        Organization root = organizationRepository.findByCodeActive("ROOT");
+        if (root == null) {
+            root = new Organization();
+            root.setId(uuidRoot = randomUUID().toString());
             root.setName("ROOT");
             root.setCode("ROOT");
             insert(root);
+        }
+        else {
+            uuidRoot = root.getId();
+        }
 
-            Organization ppmdPoland = new Organization();
-            ppmdPoland.setId(uuidPpmdPoland.toString());
+        Organization ppmdPoland = organizationRepository.findByCodeActive("PPMDPoland");
+        if (ppmdPoland == null) {
+            ppmdPoland = new Organization();
+            ppmdPoland.setId(uuidPpmdPoland = randomUUID().toString());
             ppmdPoland.setName("Fundacja Parent Project Muscular Dystrophy");
             ppmdPoland.setCode("PPMDPoland");
             ppmdPoland.setParentId(root.getId());
             insert(ppmdPoland);
+        }
+        else {
+            uuidPpmdPoland = ppmdPoland.getId();
+        }
 
-            Organization test = new Organization();
-            test.setId(randomUUID().toString());
+        Organization test = organizationRepository.findByCodeActive("test");
+        if (test == null) {
+            test = new Organization();
+            test.setId(uuidTest = randomUUID().toString());
             test.setName("Test");
             test.setCode("test");
             test.setParentId(root.getId());
             insert(test);
+        }
+        else {
+            uuidTest = test.getId();
         }
     }
 
@@ -116,32 +129,42 @@ class Startup {
     }
 
     private void initUsers() {
-        MongoCollection<User> userCollection = mongoDb.getCollection(User.class);
-        if (userCollection.count() == 0) {
+        if (userRepository.count() == 0) {
             // admin user
-            User adminUser = new User();
-            adminUser.setEmail("admin@starter.com");
-            adminUser.setFirstName("admin");
-            adminUser.setLastName("admin");
-            adminUser.setLocale("pl");
-            adminUser.setOrganizationId(uuidRoot.toString());
-            adminUser.setPasswordHash(passwordEncoder.encode("admin"));
-            adminUser.setEnabled(true);
-            adminUser.setAuthorities(singleton(ADMIN.name()));
-            userCollection.insertOne(adminUser);
+            User admin = new User();
+            admin.setEmail("admin@starter.com");
+            admin.setFirstName("admin");
+            admin.setLastName("admin");
+            admin.setLocale("pl");
+            admin.setOrganizationIds(singleton(uuidRoot));
+            admin.setPasswordHash(passwordEncoder.encode("admin"));
+            admin.setEnabled(true);
+            admin.setAuthorities(singleton(ADMIN.name()));
+            admin.setActive(true);
+            insert(admin);
 
             // normal user
-            User normalUser = new User();
-            normalUser.setEmail("user@starter.com");
-            normalUser.setFirstName("user");
-            normalUser.setLastName("user");
-            normalUser.setLocale("pl");
-            normalUser.setOrganizationId(uuidPpmdPoland.toString());
-            normalUser.setPasswordHash(passwordEncoder.encode("user"));
-            normalUser.setEnabled(true);
-            normalUser.setAuthorities(of(USER.name(), EMPLOYEE.name()).collect(toSet()));
-            userCollection.insertOne(normalUser);
+            User user = new User();
+            user.setEmail("user@starter.com");
+            user.setFirstName("user");
+            user.setLastName("user");
+            user.setLocale("pl");
+            user.setOrganizationIds(new HashSet<>(asList(uuidPpmdPoland, uuidTest)));
+            user.setPasswordHash(passwordEncoder.encode("user"));
+            user.setEnabled(true);
+            user.setAuthorities(new HashSet<>(asList(USER.name(), EMPLOYEE.name())));
+            user.setActive(true);
+            insert(user);
         }
+    }
+
+    private void insert(User record) {
+        record.setVersion(1);
+        record.setActive(true);
+
+        User user = userRepository.insert(record);
+        user.setChainId(user.getId());
+        userRepository.save(user);
     }
 
     private void initContactMethods() {
@@ -202,10 +225,10 @@ class Startup {
                 String[] line;
                 while ((line = reader.readNext()) != null) {
                     // line[] is an array of values from the line
-                    String code = line[0];
-                    String country_en = line[2];
-                    String country_pl = !"".equals(line[3]) ? line[3] : country_en;
-                    String country_de = !"".equals(line[4]) ? line[4] : country_en;
+                    final String code = line[0];
+                    final String country_en = line[2];
+                    final String country_pl = !"".equals(line[3]) ? line[3] : country_en;
+                    final String country_de = !"".equals(line[4]) ? line[4] : country_en;
 
                     LOGGER.debug("initAddressDictionary: " + code + "," + country_en);
                     insert(new CountryDictionary(code, country_en, country_pl, country_de));

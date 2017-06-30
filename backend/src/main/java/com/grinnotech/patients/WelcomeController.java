@@ -1,15 +1,15 @@
 package com.grinnotech.patients;
 
-import com.grinnotech.patients.dao.authorities.RequireAnyAuthority;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-@RequireAnyAuthority
+@Secured("permitAll")
 public class WelcomeController {
 
     static final String REPLY_WELCOME = "Reply: Welcome";

@@ -17,28 +17,45 @@
 package com.grinnotech.patients.dao;
 
 import com.grinnotech.patients.model.User;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
+import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  *
  * @author jacek
  */
-public interface UserRepository extends MongoRepository<User, String> /*, QueryDslPredicateExecutor<User> */ {
+public interface UserRepository extends MongoRepository<User, String>, QueryDslPredicateExecutor<User> {
 
-    @Query("{ deleted: false }")
-    List<User> findAllNotDeleted();
+    @Query("{ active: true }")
+    List<User> findAllActive(Sort sort);
 
-    @Query("{ $and : [ { id: ?0 }, { deleted: false } ] }")
-    User findOneNotDeleted(String id);
+    @Query("{$and: [{ $or: [{lastName: {$regex:?0,$options:'i'}}, {firstName: {$regex:?0,$options:'i'}} ]}, { active: true } ]}")
+    List<User> findAllWithFilterActive(String filter, Sort sort);
 
-    @Query("{ $and : [ { email: ?0 }, { deleted: false } ] }")
-    User findByEmailNotDeleted(String email);
+    @Query("{ $and : [ { id: ?0 }, { active: true } ] }")
+    User findOneActive(String id);
 
-    @Query("{ $and : [ { passwordResetToken: ?0 }, { deleted: false }, { enabled: true } ] }")
-    User findByPasswordResetTokenNotDeletedAndEnabled(String passwordResetToken);
-    
-    Long countByEmailRegexAndIdNot(String email, String id);
+    @Query("{ $and : [ { email: ?0 }, { active: true } ] }")
+    User findOneByEmailActive(String email);
+
+    @Query("{ $and : [ { passwordResetToken: ?0 }, { enabled: true }, { active: true } ] }")
+    User findOneByPasswordResetTokenAndEnabled(String passwordResetToken);
+
+    boolean existsByEmailRegexAndIdNot(String email, String id);
+
+    @Query("{ $and : [ { id: ?0 }, { authorities: ?0 }, { enabled: true }, { active: true } ] }")
+    boolean existsByIdAndAuthoritiesActive(String id, Set<String> authorities);
+
+    @Query("{ $and : " +
+            "[ { id: { $ne: ?0 }}, { email: {$regex:?0,$options:'i'} }, { enabled: true }, { active: true } ] }")
+    boolean existsByIdNotAndEmailActive(String userId, String email);
+
+    @Query("{ $and : " +
+            "[ { email: {$regex:?0,$options:'i'} }, { enabled: true }, { active: true } ] }")
+    boolean existsByEmailActive(String email);
 }
