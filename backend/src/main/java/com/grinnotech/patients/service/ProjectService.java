@@ -29,7 +29,6 @@ import com.grinnotech.patients.util.ValidationMessagesResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 
@@ -46,7 +45,6 @@ import static com.grinnotech.patients.util.QueryUtil.getSpringSort;
  * @author jacek
  */
 @Service
-@Cacheable("main")
 @RequireEmployeeAuthority
 public class ProjectService extends AbstractService<Project> {
 

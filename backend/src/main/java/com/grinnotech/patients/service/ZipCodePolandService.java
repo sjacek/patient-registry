@@ -30,7 +30,6 @@ import com.grinnotech.patients.util.ValidationMessagesResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
@@ -48,7 +47,6 @@ import static com.grinnotech.patients.util.QueryUtil.getPageable;
  * @author Jacek Sztajnke
  */
 @Service
-@Cacheable("main")
 @RequireAnyAuthority
 public class ZipCodePolandService extends AbstractService<ZipCodePoland> {
 

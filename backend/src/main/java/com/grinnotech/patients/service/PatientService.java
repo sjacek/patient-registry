@@ -27,16 +27,12 @@ import com.grinnotech.patients.model.Patient;
 import com.grinnotech.patients.util.ValidationMessages;
 import com.grinnotech.patients.util.ValidationMessagesResult;
 import lombok.extern.log4j.Log4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 
-import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Locale;
 
@@ -50,7 +46,6 @@ import static com.grinnotech.patients.util.QueryUtil.getSpringSort;
  * @author jacek
  */
 @Service
-@Cacheable("main")
 @RequireUserEmployeeAuthority
 @Log4j
 public class PatientService extends AbstractService<Patient> {

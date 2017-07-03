@@ -42,7 +42,7 @@ public class PatientRestServiceImpl implements PatientRestService {
     final protected Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    protected PatientRepository patientRepository;
+    private PatientRepository patientRepository;
     
     @ExtDirectMethod(STORE_MODIFY)
     @Transactional(readOnly = false, propagation = REQUIRED)

@@ -25,7 +25,6 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.MessageSource;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import javax.validation.Validator;
 import java.lang.invoke.MethodHandles;
@@ -36,13 +35,11 @@ import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.STORE_RE
 import static com.grinnotech.patients.util.QueryUtil.getSpringSort;
 import static java.time.ZoneOffset.UTC;
 import static java.time.ZonedDateTime.now;
-import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
 import static java.util.Date.from;
 import static java.util.stream.Collectors.toSet;
 
 @Service
-@Cacheable("main")
 @RequireAdminAuthority
 public class UserService extends AbstractService<Patient> {
 
@@ -74,13 +71,15 @@ public class UserService extends AbstractService<Patient> {
                 ? userRepository.findAllWithFilterActive(filter.getValue(), getSpringSort(request))
                 : userRepository.findAllActive(getSpringSort(request));
 
-        list.forEach(user ->
-                user.setOrganizations(new HashSet<>(
-                        (Collection<? extends Organization>) organizationRepository.findAll(user.getOrganizationIds()))));
+        list.forEach(this::loadOrganizations);
 
         logger.debug("read size:[{}]", list.size());
 
         return new ExtDirectStoreResult<>(list);
+    }
+
+    private void loadOrganizations(User user) {
+        user.setOrganizations(new HashSet<>((Collection<Organization>) organizationRepository.findAll(user.getOrganizationIds())));
     }
 
     @ExtDirectMethod(STORE_MODIFY)
@@ -163,13 +162,20 @@ public class UserService extends AbstractService<Patient> {
             }
 
             if (user.getOrganizations() == null || user.getOrganizations().isEmpty()) {
-                Organization organization = organizationRepository.findByCodeActive("PPMDPoland");
+                Organization organization = organizationRepository.findByCodeActive("PPMDPoland"); // TODO: change to user active org
                 user.setOrganizationIds(singleton(organization.getId()));
-            }
-            else {
-                user.setOrganizationIds(user.getOrganizations().stream().map(Organization::getCode).collect(toSet()));
+                loadOrganizations(user);
+            } else {
+                user.setOrganizationIds(user.getOrganizations().stream().map(Organization::getId).collect(toSet()));
             }
 
+            // copy all JsonIgnore fields
+            if (old != null) {
+                user.setPasswordHash(old.getPasswordHash());
+                user.setPasswordResetToken(old.getPasswordResetToken());
+                user.setPasswordResetTokenValidUntil(old.getPasswordResetTokenValidUntil());
+                user.setSecret(old.getSecret());
+            }
             userRepository.save(user);
             if (!user.isEnabled()) {
                 deletePersistentLogins(user.getId());
@@ -222,6 +228,8 @@ public class UserService extends AbstractService<Patient> {
     private List<ValidationMessages> validateEntity(User user, Locale locale) {
         List<ValidationMessages> validations = ValidationUtil.validateEntity(validator, user);
 
+        String c = user.getId();
+        boolean b = !isEmailUnique(user.getId(), user.getEmail());
         if (!isEmailUnique(user.getId(), user.getEmail())) {
             ValidationMessages validationError = new ValidationMessages();
             validationError.setField(CUser.email);
@@ -233,24 +241,14 @@ public class UserService extends AbstractService<Patient> {
     }
 
     private boolean isLastAdmin(String id) {
-        Boolean ret = userRepository.existsByIdAndAuthoritiesActive(id, singleton(Authority.ADMIN.name()));
-        return ret == null || ret;
+        return userRepository.existsByIdAndAuthoritiesActive(id, singleton(Authority.ADMIN.name()));
     }
 
-    private boolean isEmailUnique(String userId, String email) {
-        if (StringUtils.hasText(email)) {
-            Boolean ret;
-            if (userId != null) {
-                ret = userRepository.existsByIdNotAndEmailActive(userId, email);
-            } else {
-                ret = userRepository.existsByEmailActive(email);
-            }
-
-            if (ret == null) ret = true;
-            return ret;
-        }
-
-        return true;
+    private boolean isEmailUnique(String id, String email) {
+        return id != null ?
+                !userRepository.existsByIdNotAndEmailActive(id, email)
+                :
+                !userRepository.existsByEmailActive(email);
     }
 
     @ExtDirectMethod

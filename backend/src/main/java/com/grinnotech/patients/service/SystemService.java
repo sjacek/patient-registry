@@ -18,7 +18,7 @@ public class SystemService {
     @RequireAdminAuthority
     @ResponseBody
     public void sendTestEmail(@RequestParam(value = "to") String to) {
-        this.mailService.sendSimpleMessage(to, "TEST EMAIL", "THIS IS A TEST MESSAGE");
+        mailService.sendSimpleMessage(to, "TEST EMAIL", "THIS IS A TEST MESSAGE");
     }
 
 }

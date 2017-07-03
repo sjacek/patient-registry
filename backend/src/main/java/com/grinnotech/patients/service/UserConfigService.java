@@ -18,7 +18,6 @@ import com.grinnotech.patients.util.ValidationUtil;
 import com.mongodb.client.model.Filters;
 import eu.bitwalker.useragentutils.UserAgent;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.MessageSource;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -35,7 +34,6 @@ import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.STORE_MO
 import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.STORE_READ;
 
 @Service
-@Cacheable("main")
 @RequireAnyAuthority
 public class UserConfigService {
 
@@ -83,7 +81,7 @@ public class UserConfigService {
 
     @ExtDirectMethod(STORE_MODIFY)
     public ValidationMessagesResult<UserSettings> updateSettings(UserSettings modifiedUserSettings,
-            @AuthenticationPrincipal MongoUserDetails userDetails, Locale locale) {
+                                                                 @AuthenticationPrincipal MongoUserDetails userDetails, Locale locale) {
 
         List<ValidationMessages> validations = ValidationUtil.validateEntity(validator, modifiedUserSettings);
         User user = userDetails.getUser(userRepository);
@@ -140,8 +138,9 @@ public class UserConfigService {
     public List<PersistentLogin> readPersistentLogins(@AuthenticationPrincipal MongoUserDetails userDetails) {
         return StreamSupport.stream(
 //                persistentLoginRepository.findByUserId(userDetails.getUserDbId()).spliterator(),
-                mongoDb.getCollection(PersistentLogin.class).find(Filters.eq(CPersistentLogin.userId, userDetails.getUserDbId())).spliterator(),
-                false).peek(p -> {
+                mongoDb.getCollection(PersistentLogin.class)
+                        .find(Filters.eq(CPersistentLogin.userId, userDetails.getUserDbId())).spliterator(), false)
+                .peek(p -> {
                     String ua = p.getUserAgent();
                     if (StringUtils.hasText(ua)) {
                         UserAgent userAgent = UserAgent.parseUserAgentString(ua);

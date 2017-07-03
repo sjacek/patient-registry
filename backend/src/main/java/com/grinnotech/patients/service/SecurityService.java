@@ -14,7 +14,6 @@ import com.grinnotech.patients.web.CsrfController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -42,7 +41,6 @@ import static java.time.ZonedDateTime.now;
 import static java.util.Date.from;
 
 @Service
-@Cacheable("main")
 public class SecurityService {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());

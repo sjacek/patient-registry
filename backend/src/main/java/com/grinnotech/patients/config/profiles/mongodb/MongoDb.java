@@ -31,8 +31,14 @@ public class MongoDb {
 
     @PostConstruct
     public void createIndexes() {
-        if (!indexExists(User.class, CUser.email)) {
-            getCollection(User.class).createIndex(ascending(CUser.email, "_version"), new IndexOptions().unique(true));
+        String idxName = CUser.email + "_version";
+        if (!indexExists(User.class, idxName)) {
+            getCollection(User.class).createIndex(ascending(CUser.email, "_version"), new IndexOptions().name(idxName).unique(true));
+        }
+
+        idxName = CUser.email + "_chain_id";
+        if (!indexExists(User.class, idxName)) {
+            getCollection(User.class).createIndex(ascending(CUser.email, "_chain_id"), new IndexOptions().name(idxName));
         }
 
         if (!indexExists(PersistentLogin.class, CPersistentLogin.userId)) {

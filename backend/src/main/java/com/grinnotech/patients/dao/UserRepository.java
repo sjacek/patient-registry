@@ -18,6 +18,7 @@ package com.grinnotech.patients.dao;
 
 import com.grinnotech.patients.model.User;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.repository.ExistsQuery;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.querydsl.QueryDslPredicateExecutor;
@@ -48,14 +49,14 @@ public interface UserRepository extends MongoRepository<User, String>, QueryDslP
 
     boolean existsByEmailRegexAndIdNot(String email, String id);
 
-    @Query("{ $and : [ { id: ?0 }, { authorities: ?0 }, { enabled: true }, { active: true } ] }")
-    Boolean existsByIdAndAuthoritiesActive(String id, Set<String> authorities);
+    @ExistsQuery("{ $and : [ { id: ?0 }, { authorities: ?0 }, { enabled: true }, { active: true } ] }")
+    boolean existsByIdAndAuthoritiesActive(String id, Set<String> authorities);
 
-    @Query("{ $and : " +
+    @ExistsQuery("{ $and : " +
             "[ { id: { $ne: ?0 }}, { email: {$regex:?0,$options:'i'} }, { enabled: true }, { active: true } ] }")
-    Boolean existsByIdNotAndEmailActive(String userId, String email);
+    boolean existsByIdNotAndEmailActive(String id, String email);
 
-    @Query("{ $and : " +
+    @ExistsQuery("{ $and : " +
             "[ { email: {$regex:?0,$options:'i'} }, { enabled: true }, { active: true } ] }")
     boolean existsByEmailActive(String email);
 }
