@@ -18,14 +18,18 @@ package com.grinnotech.patients.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.grinnotech.patients.model.Authority;
+import lombok.Getter;
 import org.springframework.context.MessageSource;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.*;
 
-@JsonInclude(Include.NON_NULL)
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
+import static com.grinnotech.patients.model.Authority.valueOf;
+
+@JsonInclude(NON_NULL)
+@Getter
 public class NavigationNode {
 
     private final String text;
@@ -72,7 +76,7 @@ public class NavigationNode {
                     .filter(sourceChild -> (hasAuthority(sourceChild, authorities)))
                     .map(sourceChild -> NavigationNode.copyOf(sourceChild, authorities, locale, messageSource))
                     .filter(copy -> (copy != null))
-                    .forEach(copy -> children.add(copy) );
+                    .forEach(children::add);
 
             if (!children.isEmpty()) {
                 menuNode.children.addAll(children);
@@ -88,43 +92,12 @@ public class NavigationNode {
     }
 
     private static boolean hasAuthority(NavigationNode node, Collection<? extends GrantedAuthority> authorities) {
-        if (node.authorities == null || node.authorities.isEmpty()) {
-            return true;
-        }
-
-        return authorities.stream().anyMatch((grantedAuthority) -> (node.authorities.contains(Authority.valueOf(grantedAuthority.getAuthority()))));
-    }
-
-    public String getText() {
-        return this.text;
-    }
-
-    public String getView() {
-        return this.view;
-    }
-
-    public Boolean getLeaf() {
-        return this.leaf;
-    }
-
-    public Boolean getSelectable() {
-        return this.selectable;
-    }
-
-    public String getIconCls() {
-        return this.iconCls;
-    }
-
-    public String getRouteId() {
-        return this.routeId;
-    }
-
-    public List<NavigationNode> getChildren() {
-        return this.children;
+        return node.authorities == null || node.authorities.isEmpty()
+                || authorities.stream().anyMatch(
+                        grantedAuthority -> node.authorities.contains(valueOf(grantedAuthority.getAuthority())));
     }
 
     public void addChild(NavigationNode menuNode) {
-        this.children.add(menuNode);
+        children.add(menuNode);
     }
-
 }

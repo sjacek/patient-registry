@@ -19,9 +19,13 @@ package com.grinnotech.patients.dto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import lombok.Getter;
+import lombok.Setter;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_NULL)
+@Getter
+@Setter
 public class ConfigurationDto {
 
     private String logLevel;
@@ -29,29 +33,4 @@ public class ConfigurationDto {
     private Integer loginLockMinutes;
 
     private Integer loginLockAttempts;
-
-    public String getLogLevel() {
-        return logLevel;
-    }
-
-    public void setLogLevel(String logLevel) {
-        this.logLevel = logLevel;
-    }
-
-    public Integer getLoginLockMinutes() {
-        return loginLockMinutes;
-    }
-
-    public void setLoginLockMinutes(Integer loginLockMinutes) {
-        this.loginLockMinutes = loginLockMinutes;
-    }
-
-    public Integer getLoginLockAttempts() {
-        return loginLockAttempts;
-    }
-
-    public void setLoginLockAttempts(Integer loginLockAttempts) {
-        this.loginLockAttempts = loginLockAttempts;
-    }
-
 }

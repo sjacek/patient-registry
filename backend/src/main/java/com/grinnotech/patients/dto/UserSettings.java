@@ -2,15 +2,21 @@ package com.grinnotech.patients.dto;
 
 import ch.rasc.extclassgenerator.Model;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.grinnotech.patients.model.User;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
+
 @Model(value = "Patients.model.UserSettings",
         readMethod = "userConfigService.readSettings",
-        updateMethod = "userConfigService.updateSettings", rootProperty = "records")
-@JsonInclude(Include.NON_NULL)
+        updateMethod = "userConfigService.updateSettings",
+        rootProperty = "records")
+@JsonInclude(NON_NULL)
+@Getter
+@Setter
 public class UserSettings {
 
     @NotBlank(message = "{fieldrequired}")
@@ -42,65 +48,4 @@ public class UserSettings {
         this.email = user.getEmail();
         this.twoFactorAuth = user.isTwoFactorAuth();
     }
-
-    public String getFirstName() {
-        return this.firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return this.lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getLocale() {
-        return this.locale;
-    }
-
-    public void setLocale(String locale) {
-        this.locale = locale;
-    }
-
-    public String getEmail() {
-        return this.email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getCurrentPassword() {
-        return this.currentPassword;
-    }
-
-    public void setCurrentPassword(String currentPassword) {
-        this.currentPassword = currentPassword;
-    }
-
-    public String getNewPassword() {
-        return this.newPassword;
-    }
-
-    public void setNewPassword(String newPassword) {
-        this.newPassword = newPassword;
-    }
-
-    public String getNewPasswordRetype() {
-        return this.newPasswordRetype;
-    }
-
-    public void setNewPasswordRetype(String newPasswordRetype) {
-        this.newPasswordRetype = newPasswordRetype;
-    }
-
-    public boolean isTwoFactorAuth() {
-        return this.twoFactorAuth;
-    }
-
 }
