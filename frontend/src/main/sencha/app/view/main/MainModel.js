@@ -20,6 +20,13 @@ Ext.define('Patients.view.main.MainModel', {
     extend: 'Ext.app.ViewModel',
     data: {
         currentView: null,
-        fullName: null
+        fullName: null,
+        // organizations: null,
+        currentOrganization: null
+    },
+    stores: {
+        organizations: {
+            fields: [ 'id', 'name' ]
+        }
     }
 });

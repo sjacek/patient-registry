@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Jacek Sztajnke
+ * Copyright (C) 2017 Jacek Sztajnke
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,19 +16,15 @@
  */
 package com.grinnotech.patients.dao;
 
+import com.grinnotech.patients.model.User;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.lang.invoke.MethodHandles;
+import java.util.Collection;
 
 /**
- *
- * @author jacek
+ * Created by jacek.sztajnke on 2017-07-03.
  */
-class PatientRepositoryImpl implements PatientRepositoryCustom {
+interface UserRepositoryCustom {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-
-    public static final String COLLECTION_NAME = "patient";
+    void loadOrganizationsData(User user);
+    void loadOrganizationsData(Collection<User> users);
 }

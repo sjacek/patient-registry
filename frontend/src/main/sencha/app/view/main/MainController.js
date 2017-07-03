@@ -67,24 +67,17 @@ Ext.define('Patients.view.main.MainController', {
         }
 
         Patients.app.authUser = user;
-        if (user.locale === 'pl') {
-            if (localStorage.patients_locale !== 'pl') {
-                localStorage.patients_locale = 'pl';
-                window.location.reload();
-            }
-        } else if (user.locale === 'de') {
-            if (localStorage.patients_locale !== 'de') {
-                localStorage.patients_locale = 'de';
-                window.location.reload();
-            }
-        } else {
-            if (localStorage.patients_locale !== 'en') {
-                localStorage.patients_locale = 'en';
-                window.location.reload();
-            }
-        }
+        me.reloadLocale(user.locale);
 
         me.getViewModel().set('fullName', user.firstName + ' ' + user.lastName);
+        // me.getViewModel().set('organizations', user.organizations);
+        var orgs = user.organizations;
+        logService.debug(JSON.stringify(user));
+        logService.debug(JSON.stringify(orgs));
+        //
+        var organizationsStore = me.getViewModel().getStore('organizations');
+        // // operationsStore.load(user.organizations);
+        organizationsStore.add({id: 'bla', name: 'blabla'});
 
         if (localStorage.patients_navigation_micro === 'true') {
             this.onToggleNavigationSize();
@@ -121,6 +114,12 @@ Ext.define('Patients.view.main.MainController', {
             }
         });
 
+    },
+    reloadLocale: function(locale) {
+        if (localStorage.patients_locale !== locale) {
+            localStorage.patients_locale = locale;
+            window.location.reload();
+        }
     },
     enableLockscreen: function () {
         var me = this;

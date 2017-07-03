@@ -30,7 +30,7 @@ import java.util.Set;
  *
  * @author jacek
  */
-public interface UserRepository extends MongoRepository<User, String>, QueryDslPredicateExecutor<User> {
+public interface UserRepository extends MongoRepository<User, String>, QueryDslPredicateExecutor<User>, UserRepositoryCustom {
 
     @Query("{ active: true }")
     List<User> findAllActive(Sort sort);

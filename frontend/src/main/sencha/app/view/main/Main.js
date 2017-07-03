@@ -30,71 +30,85 @@ Ext.define('Patients.view.main.Main', {
         align: 'stretch'
     },
     items: [{
-            xtype: 'toolbar',
-            cls: 'app-dash-dash-headerbar shadow',
-            height: 44,
-            items: [{
-                    xtype: 'component',
-                    reference: 'appLogo',
-                    cls: 'app-logo',
-                    html: '<div><img src="resources/images/logo.png"/><span>' + i18n.app_name + '</span></div>',
-                    width: 250
-                }, {
-                    cls: 'no-bg-button',
-                    iconCls: 'x-fa fa-navicon',
-                    handler: 'onToggleNavigationSize'
-                }, {
+        xtype: 'toolbar',
+        cls: 'app-dash-dash-headerbar shadow',
+        height: 44,
+        items: [{
+            xtype: 'component',
+            reference: 'appLogo',
+            cls: 'app-logo',
+            html: '<div><img src="resources/images/logo.png"/><span>' + i18n.app_name + '</span></div>',
+            width: 250
+        }, {
+            cls: 'no-bg-button',
+            iconCls: 'x-fa fa-navicon',
+            handler: 'onToggleNavigationSize'
+        }, {
 //                    xtype: 'tbtext',
 //                    cls: 'navigation-title',
 //                    bind: {
 //                        text: '{navigationTitle}'
 //                    }
 //                }, {
-                    xtype: 'tbspacer',
-                    flex: 1
-                }, {
-                    cls: 'no-bg-button',
-                    iconCls: 'x-fa fa-cog',
-                    href: '#userconfig',
-                    hrefTarget: '_self',
-                    bind: {
-                        text: '{fullName}'
-                    },
-                    tooltip: i18n.userconfig
-                }, {
-                    cls: 'no-bg-button',
-                    iconCls: 'x-fa fa-sign-out',
-                    handler: 'onLogoutClick',
-                    tooltip: i18n.auth_signout
-                }]
+            xtype: 'tbspacer',
+            flex: 1
         }, {
-            xclass: 'Patients.view.main.MainContainer',
-            reference: 'mainContainer',
-            flex: 1,
-            items: [{
-                    xtype: 'treelist',
-                    reference: 'navigationTreeList',
-                    itemId: 'navigationTreeList',
-                    ui: 'navigation',
-                    store: 'navigation',
-                    width: 250,
-                    expanderFirst: false,
-                    expanderOnly: false,
-                    animation: {
-                        duration: 100,
-                        easing: 'ease'
-                    },
-                    listeners: {
-                        selectionchange: 'onNavigationTreeSelectionChange'
-                    }
-                }, {
-                    xtype: 'container',
-                    flex: 1,
-                    reference: 'mainCardPanel',
-                    padding: 8,
-                    layout: {
-                        type: 'card'
-                    }
-                }]
+            xtype: 'combobox',
+            fieldLabel: i18n.organization,
+            // store: '{organizations}',
+            bind: {
+                store: '{organizations}'
+            //     value: '{currentOrganization}'
+            },
+            // // name: 'code',
+            valueField: 'id',
+            displayField: 'name',
+            // queryMode: 'local',
+            forceSelection: true,
+            editable: false
+        }, {
+            cls: 'no-bg-button',
+            iconCls: 'x-fa fa-cog',
+            href: '#userconfig',
+            hrefTarget: '_self',
+            bind: {
+                text: '{fullName}'
+            },
+            tooltip: i18n.userconfig
+        }, {
+            cls: 'no-bg-button',
+            iconCls: 'x-fa fa-sign-out',
+            handler: 'onLogoutClick',
+            tooltip: i18n.auth_signout
         }]
+    }, {
+        xclass: 'Patients.view.main.MainContainer',
+        reference: 'mainContainer',
+        flex: 1,
+        items: [{
+            xtype: 'treelist',
+            reference: 'navigationTreeList',
+            itemId: 'navigationTreeList',
+            ui: 'navigation',
+            store: 'navigation',
+            width: 250,
+            expanderFirst: false,
+            expanderOnly: false,
+            animation: {
+                duration: 100,
+                easing: 'ease'
+            },
+            listeners: {
+                selectionchange: 'onNavigationTreeSelectionChange'
+            }
+        }, {
+            xtype: 'container',
+            flex: 1,
+            reference: 'mainCardPanel',
+            padding: 8,
+            layout: {
+                type: 'card'
+            }
+        }]
+    }]
 });

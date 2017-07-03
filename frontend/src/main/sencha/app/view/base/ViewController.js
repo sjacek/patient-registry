@@ -90,7 +90,7 @@ Ext.define('Patients.view.base.ViewController', {
         var form = null;
         var editPanel = this.lookup('editPanel');
         if (editPanel !== null) {
-            var form = editPanel.getForm();
+            form = editPanel.getForm();
         }
         var grid = this.lookup('gridPanel');
 
@@ -100,8 +100,9 @@ Ext.define('Patients.view.base.ViewController', {
             var selectedObject = this.getSelectedObject();
             
             this.preSave(selectedObject);
+            var me = this;
             selectedObject.save({
-                scope: this,
+                scope: me,
                 success: function (record, operation) {
                     this.afterSuccessfulSave();
                     Patients.Util.successToast(i18n.savesuccessful);
@@ -120,7 +121,7 @@ Ext.define('Patients.view.base.ViewController', {
                     }
                 },
                 callback: function (record, operation, success) {
-                    this.getView().unmask();
+                    me.getView().unmask();
                 }
             });
 

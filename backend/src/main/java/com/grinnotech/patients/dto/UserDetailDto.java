@@ -4,9 +4,16 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.grinnotech.patients.config.security.MongoUserDetails;
 import com.grinnotech.patients.model.Authority;
+import com.grinnotech.patients.model.Organization;
 import com.grinnotech.patients.model.User;
+import lombok.Getter;
+
+import java.util.Map;
+
+import static java.util.stream.Collectors.toMap;
 
 @JsonInclude(Include.NON_NULL)
+@Getter
 public class UserDetailDto {
 
     private final String firstName;
@@ -20,6 +27,8 @@ public class UserDetailDto {
     private final boolean screenLocked;
 
     private final boolean preAuth;
+
+    private final Map<String,String> organizations;
 
     private final String csrf;
 
@@ -38,35 +47,7 @@ public class UserDetailDto {
             this.autoOpenView = null;
         }
 
+        this.organizations = user.getOrganizations().stream().collect(toMap(Organization::getId, Organization::getName));
         this.csrf = csrf;
     }
-
-    public String getFirstName() {
-        return this.firstName;
-    }
-
-    public String getLastName() {
-        return this.lastName;
-    }
-
-    public String getLocale() {
-        return this.locale;
-    }
-
-    public String getAutoOpenView() {
-        return this.autoOpenView;
-    }
-
-    public boolean isScreenLocked() {
-        return this.screenLocked;
-    }
-
-    public boolean isPreAuth() {
-        return this.preAuth;
-    }
-
-    public String getCsrf() {
-        return this.csrf;
-    }
-
 }

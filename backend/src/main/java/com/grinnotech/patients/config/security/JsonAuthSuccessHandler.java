@@ -36,8 +36,9 @@ public class JsonAuthSuccessHandler implements AuthenticationSuccessHandler {
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
             throws IOException, ServletException {
 
-        Map<String, Object> result = new HashMap<>();
-        result.put("success", true);
+        Map<String, Object> result = new HashMap<String, Object>() {{
+            put("success", true);
+        }};
 
         MongoUserDetails userDetails = (MongoUserDetails) authentication.getPrincipal();
         if (userDetails != null) {
@@ -46,6 +47,7 @@ public class JsonAuthSuccessHandler implements AuthenticationSuccessHandler {
                 user.setLastAccess(new Date());
                 userRepository.save(user);
             }
+            userRepository.loadOrganizationsData(user);
             result.put(SecurityService.AUTH_USER, new UserDetailDto(userDetails, user, CsrfController.getCsrfToken(request)));
         }
 

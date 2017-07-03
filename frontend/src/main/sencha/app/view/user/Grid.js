@@ -38,25 +38,25 @@ Ext.define('Patients.view.user.Grid', {
             margin: '0 0 0 2'
         },
         items: [{
-                emptyText: i18n.filter,
-                xtype: 'textfield',
-                width: 250,
-                plugins: [{
-                        ptype: 'clearable'
-                    }],
-                listeners: {
-                    change: {
-                        fn: 'onFilter',
-                        buffer: 500
-                    }
+            emptyText: i18n.filter,
+            xtype: 'textfield',
+            width: 250,
+            plugins: [{
+                ptype: 'clearable'
+            }],
+            listeners: {
+                change: {
+                    fn: 'onFilter',
+                    buffer: 500
                 }
-            }, {
-                text: i18n.create,
-                tooltip: i18n.user_create_tooltip,
-                iconCls: 'x-fa fa-plus',
-                ui: 'soft-green',
-                handler: 'newObject'
-            }]
+            }
+        }, {
+            text: i18n.create,
+            tooltip: i18n.user_create_tooltip,
+            iconCls: 'x-fa fa-plus',
+            ui: 'soft-green',
+            handler: 'newObject'
+        }]
     },
     listeners: {
         itemdblclick: 'onItemdblclick',
@@ -67,72 +67,85 @@ Ext.define('Patients.view.user.Grid', {
         preserveScrollOnRefresh: true
     },
     columns: [{
-            text: i18n.id,
-            dataIndex: 'id',
-            flex: 0,
-            stateId: 'view.user.Grid.id',
-            hidden: true
+        text: i18n.id,
+        dataIndex: 'id',
+        flex: 0,
+        stateId: 'view.user.Grid.id',
+        hidden: true
+    }, {
+        text: i18n.user_email,
+        dataIndex: 'email',
+        flex: 1,
+        stateId: 'view.user.Grid.email'
+    }, {
+        text: i18n.user_fullname,
+        xtype: 'templatecolumn',
+        tpl: '{lastName} {firstName}',
+        flex: 1,
+        stateId: 'view.user.Grid.fullName'
+    }, {
+        text: i18n.organization,
+        dataIndex: 'organizations',
+        renderer: function (value) {
+            var ret = "";
+            for (var i = 0, len = value.length; i < len; i++) {
+                if (ret.length > 0) ret += ",";
+                ret += value[i].name;
+            }
+            return ret;
+        },
+        flex: 1,
+        stateId: 'view.organization.Grid.parent'
+    }, {
+        text: i18n.user_authorities,
+        xtype: 'templatecolumn',
+        tpl: '<tpl for="authorities"><span class="label label-info">{.}</span>&nbsp;</tpl>',
+        flex: 1,
+        stateId: 'view.user.Grid.authorities'
+    }, {
+        xtype: 'datecolumn',
+        format: 'Y-m-d H:i:s',
+        text: i18n.user_lastaccess,
+        dataIndex: 'lastAccess',
+        width: 170,
+        stateId: 'view.user.Grid.lastAccess'
+    }, {
+        text: i18n.user_enabled,
+        dataIndex: 'enabled',
+        width: 85,
+        align: 'center',
+        defaultRenderer: function (value) {
+            if (value === true) {
+                return '<span class="label label-success">' + i18n.yes + '</span>';
+            }
+            return '<span class="label label-error">' + i18n.no + '</span>';
+        },
+        stateId: 'view.user.Grid.enabled'
+    }, {
+        text: i18n.user_locked,
+        dataIndex: 'lockedOutUntil',
+        width: 95,
+        align: 'center',
+        defaultRenderer: function (value) {
+            if (value) {
+                return '<span class="label label-error">' + i18n.yes + '</span>';
+            }
+            return '<span class="label label-success">' + i18n.no + '</span>';
+        },
+        stateId: 'view.user.Grid.lockedOutUntil'
+    }, {
+        xtype: 'actioncolumn',
+        width: 50,
+        items: [{
+            iconCls: 'x-fa fa-edit',
+            tooltip: i18n.user_edit_tooltip,
+            handler: 'onEdit'
         }, {
-            text: i18n.user_email,
-            dataIndex: 'email',
-            flex: 1,
-            stateId: 'view.user.Grid.email'
-        }, {
-            text: i18n.user_fullname,
-            xtype: 'templatecolumn',
-            tpl: '{lastName} {firstName}',
-            flex: 1,
-            stateId: 'view.user.Grid.fullName'
-        }, {
-            text: i18n.user_authorities,
-            xtype: 'templatecolumn',
-            tpl: '<tpl for="authorities"><span class="label label-info">{.}</span>&nbsp;</tpl>',
-            flex: 1,
-            stateId: 'view.user.Grid.authorities'
-        }, {
-            xtype: 'datecolumn',
-            format: 'Y-m-d H:i:s',
-            text: i18n.user_lastaccess,
-            dataIndex: 'lastAccess',
-            width: 170,
-            stateId: 'view.user.Grid.lastAccess'
-        }, {
-            text: i18n.user_enabled,
-            dataIndex: 'enabled',
-            width: 85,
-            align: 'center',
-            defaultRenderer: function (value) {
-                if (value === true) {
-                    return '<span class="label label-success">' + i18n.yes + '</span>';
-                }
-                return '<span class="label label-error">' + i18n.no + '</span>';
-            },
-            stateId: 'view.user.Grid.enabled'
-        }, {
-            text: i18n.user_locked,
-            dataIndex: 'lockedOutUntil',
-            width: 95,
-            align: 'center',
-            defaultRenderer: function (value) {
-                if (value) {
-                    return '<span class="label label-error">' + i18n.yes + '</span>';
-                }
-                return '<span class="label label-success">' + i18n.no + '</span>';
-            },
-            stateId: 'view.user.Grid.lockedOutUntil'
-        }, {
-            xtype: 'actioncolumn',
-            width: 50,
-            items: [{
-                    iconCls: 'x-fa fa-edit',
-                    tooltip: i18n.user_edit_tooltip,
-                    handler: 'onEdit'
-                }, {
-                    iconCls: 'x-fa fa-times',
-                    tooltip: i18n.user_delete_tooltip,
-                    handler: 'onDelete'
-                }]
-        }],
+            iconCls: 'x-fa fa-times',
+            tooltip: i18n.user_delete_tooltip,
+            handler: 'onDelete'
+        }]
+    }],
     dockedItems: [
         {xtype: 'pagingtoolbar', bind: {store: '{objects}'}, dock: 'bottom', displayInfo: true}
     ]

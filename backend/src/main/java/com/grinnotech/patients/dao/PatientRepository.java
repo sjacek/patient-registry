@@ -28,10 +28,7 @@ import java.util.List;
  *
  * @author jacek
  */
-public interface PatientRepository extends
-        MongoRepository<Patient, String>,
-        QueryDslPredicateExecutor<Patient>,
-        PatientRepositoryCustom {
+public interface PatientRepository extends MongoRepository<Patient, String>, QueryDslPredicateExecutor<Patient> {
 
     @Query("{active:true}")
     List<Patient> findAllActive(Sort sort);

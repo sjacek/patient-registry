@@ -45,23 +45,27 @@ public class UserService extends AbstractService<Patient> {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    @Autowired
-    private MessageSource messageSource;
+    private final MessageSource messageSource;
+
+    private final Validator validator;
+
+    private final MongoDb mongoDb;
+
+    private final UserRepository userRepository;
+
+    private final MailService mailService;
+
+    private final OrganizationRepository organizationRepository;
 
     @Autowired
-    private Validator validator;
-
-    @Autowired
-    private MongoDb mongoDb;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private MailService mailService;
-
-    @Autowired
-    private OrganizationRepository organizationRepository;
+    public UserService(MessageSource messageSource, Validator validator, MongoDb mongoDb, UserRepository userRepository, MailService mailService, OrganizationRepository organizationRepository) {
+        this.messageSource = messageSource;
+        this.validator = validator;
+        this.mongoDb = mongoDb;
+        this.userRepository = userRepository;
+        this.mailService = mailService;
+        this.organizationRepository = organizationRepository;
+    }
 
     @ExtDirectMethod(STORE_READ)
     public ExtDirectStoreResult<User> read(ExtDirectStoreReadRequest request) {
@@ -71,15 +75,11 @@ public class UserService extends AbstractService<Patient> {
                 ? userRepository.findAllWithFilterActive(filter.getValue(), getSpringSort(request))
                 : userRepository.findAllActive(getSpringSort(request));
 
-        list.forEach(this::loadOrganizations);
+        userRepository.loadOrganizationsData(list);
 
         logger.debug("read size:[{}]", list.size());
 
         return new ExtDirectStoreResult<>(list);
-    }
-
-    private void loadOrganizations(User user) {
-        user.setOrganizations(new HashSet<>((Collection<Organization>) organizationRepository.findAll(user.getOrganizationIds())));
     }
 
     @ExtDirectMethod(STORE_MODIFY)
@@ -164,7 +164,7 @@ public class UserService extends AbstractService<Patient> {
             if (user.getOrganizations() == null || user.getOrganizations().isEmpty()) {
                 Organization organization = organizationRepository.findByCodeActive("PPMDPoland"); // TODO: change to user active org
                 user.setOrganizationIds(singleton(organization.getId()));
-                loadOrganizations(user);
+                userRepository.loadOrganizationsData(user);
             } else {
                 user.setOrganizationIds(user.getOrganizations().stream().map(Organization::getId).collect(toSet()));
             }

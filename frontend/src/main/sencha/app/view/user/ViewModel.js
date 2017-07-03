@@ -26,20 +26,9 @@ Ext.define('Patients.view.user.ViewModel', {
     stores: {
         objects: {
             type: 'user',
-//            model: 'Patients.model.User',
-//            autoLoad: false,
-//            buffered: true,
-//            remoteSort: true,
-//            remoteFilter: true,
-//            sorters: [{
-//                    property: 'lastName',
-//                    direction: 'ASC'
-//                }],
             listeners: {
                 load: 'onObjectStoreLoad'
             }
-//            pageSize: 100,
-//            leadingBufferZone: 200
         }
     },
     formulas: {

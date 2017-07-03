@@ -47,17 +47,21 @@ public class SecurityService {
 
     public static final String AUTH_USER = "authUser";
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+
+    private final PasswordEncoder passwordEncoder;
+
+    private final MailService mailService;
+
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private MailService mailService;
-
-    @Autowired
-    private ApplicationEventPublisher applicationEventPublisher;
+    public SecurityService(UserRepository userRepository, PasswordEncoder passwordEncoder, MailService mailService, ApplicationEventPublisher applicationEventPublisher) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.mailService = mailService;
+        this.applicationEventPublisher = applicationEventPublisher;
+    }
 
     @ExtDirectMethod
     public UserDetailDto getAuthUser(@AuthenticationPrincipal MongoUserDetails userDetails) {
@@ -68,6 +72,7 @@ public class SecurityService {
         }
                     
         User user = userDetails.getUser(userRepository);
+        userRepository.loadOrganizationsData(user);
         UserDetailDto userDetailDto = new UserDetailDto(userDetails, user, null);
 
         if (!userDetails.isPreAuth()) {
@@ -93,6 +98,7 @@ public class SecurityService {
                 SecurityContextHolder.getContext().setAuthentication(newAuth);
 
                 ExtDirectFormPostResult result = new ExtDirectFormPostResult();
+                userRepository.loadOrganizationsData(user);
                 result.addResultProperty(AUTH_USER, new UserDetailDto(userDetails, user, CsrfController.getCsrfToken(request)));
                 return result;
             }
@@ -170,7 +176,7 @@ public class SecurityService {
                 ExtDirectFormPostResult result;
 
                 if (user.getPasswordResetTokenValidUntil().after(new Date())) {
-                    user.setPasswordHash(this.passwordEncoder.encode(newPassword));
+                    user.setPasswordHash(passwordEncoder.encode(newPassword));
                     user.setSecret(null);
 
                     MongoUserDetails principal = new MongoUserDetails(user);
@@ -178,6 +184,7 @@ public class SecurityService {
                     SecurityContextHolder.getContext().setAuthentication(authToken);
 
                     result = new ExtDirectFormPostResult();
+                    userRepository.loadOrganizationsData(user);
                     result.addResultProperty(AUTH_USER, new UserDetailDto(principal, user, null));
                 } else {
                     result = new ExtDirectFormPostResult(false);
@@ -198,6 +205,7 @@ public class SecurityService {
     public UserDetailDto switchUser(String userId) {
         User switchToUser = userRepository.findOneActive(userId);
         if (switchToUser != null) {
+            userRepository.loadOrganizationsData(switchToUser);
 
             MongoUserDetails principal = new MongoUserDetails(switchToUser);
             UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(principal, null, principal.getAuthorities());
