@@ -9,14 +9,17 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.IndexOptions;
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.PostConstruct;
 
 import static com.mongodb.client.model.Indexes.ascending;
+import static com.mongodb.client.model.Indexes.compoundIndex;
 
 @Component
+@Profile("mongodb")
 public class MongoDb {
 
     @Autowired
@@ -29,7 +32,7 @@ public class MongoDb {
     @PostConstruct
     public void createIndexes() {
         if (!indexExists(User.class, CUser.email)) {
-            getCollection(User.class).createIndex(ascending(CUser.email), new IndexOptions().unique(true));
+            getCollection(User.class).createIndex(ascending(CUser.email, "_version"), new IndexOptions().unique(true));
         }
 
         if (!indexExists(PersistentLogin.class, CPersistentLogin.userId)) {

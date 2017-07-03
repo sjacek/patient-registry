@@ -49,11 +49,11 @@ public interface UserRepository extends MongoRepository<User, String>, QueryDslP
     boolean existsByEmailRegexAndIdNot(String email, String id);
 
     @Query("{ $and : [ { id: ?0 }, { authorities: ?0 }, { enabled: true }, { active: true } ] }")
-    boolean existsByIdAndAuthoritiesActive(String id, Set<String> authorities);
+    Boolean existsByIdAndAuthoritiesActive(String id, Set<String> authorities);
 
     @Query("{ $and : " +
             "[ { id: { $ne: ?0 }}, { email: {$regex:?0,$options:'i'} }, { enabled: true }, { active: true } ] }")
-    boolean existsByIdNotAndEmailActive(String userId, String email);
+    Boolean existsByIdNotAndEmailActive(String userId, String email);
 
     @Query("{ $and : " +
             "[ { email: {$regex:?0,$options:'i'} }, { enabled: true }, { active: true } ] }")

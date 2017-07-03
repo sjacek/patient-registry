@@ -14,7 +14,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.filter.CorsFilter;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -24,6 +23,7 @@ import java.util.stream.Collectors;
 import static ch.ralscha.extdirectspring.util.ExtDirectSpringUtil.generateApiString;
 import static java.lang.String.format;
 import static java.lang.System.getProperty;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
 import static java.util.Collections.singleton;
@@ -63,8 +63,7 @@ class SetupConfig {
             Files.createDirectories(constantDir);
         }
 
-        Files.write(constantDir.resolve(name + ".js"),
-                sb.toString().getBytes(StandardCharsets.UTF_8));
+        Files.write(constantDir.resolve(name + ".js"), sb.toString().getBytes(UTF_8));
 
         if (writeStore) {
             sb = new StringBuilder(200);
@@ -79,8 +78,7 @@ class SetupConfig {
                     .collect(Collectors.joining(",\n"));
             sb.append(valuesString).append("\n\t]\n});");
 
-            Files.write(clientDir.resolve("app").resolve("store").resolve(name + ".js"),
-                    sb.toString().getBytes(StandardCharsets.UTF_8));
+            Files.write(clientDir.resolve("app").resolve("store").resolve(name + ".js"), sb.toString().getBytes(UTF_8));
         }
     }
 
@@ -102,7 +100,7 @@ class SetupConfig {
     public void handleContextRefresh(ApplicationReadyEvent event) throws IOException {
         String extDirectConfig = generateApiString(event.getApplicationContext());
         String userDir = getProperty("user.dir");
-        Files.write(Paths.get(userDir, senchaClientDir, "api.js"), extDirectConfig.getBytes(StandardCharsets.UTF_8));
+        Files.write(Paths.get(userDir, senchaClientDir, "api.js"), extDirectConfig.getBytes(UTF_8));
 
         Path clientDir = Paths.get(userDir, senchaClientDir);
         writeI18n(clientDir);
@@ -114,7 +112,7 @@ class SetupConfig {
         for (Locale locale : locales) {
             String tag = locale.toLanguageTag();
             String output = "var i18n = " + new ObjectMapper().writeValueAsString(buildMessageMap(locale)) + ";";
-            Files.write(clientDir.resolve("i18n-" + tag + ".js"), output.getBytes(StandardCharsets.UTF_8));
+            Files.write(clientDir.resolve("i18n-" + tag + ".js"), output.getBytes(UTF_8));
         }
     }
 

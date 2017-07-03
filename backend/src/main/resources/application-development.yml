@@ -25,7 +25,7 @@ management:
 
 logging:
   level:
-    org.springframework: DEBUG
+    org.springframework: INFO
     org.apache: INFO
     ch: INFO
     org.springframework.data: DEBUG

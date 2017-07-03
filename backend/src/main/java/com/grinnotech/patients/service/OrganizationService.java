@@ -119,26 +119,7 @@ public class OrganizationService extends AbstractService<Organization> {
     }
 
     protected List<ValidationMessages> validateEntity(Organization organization, Locale locale) {
-        List<ValidationMessages> validations = super.validateEntity(organization);
 
-        return validations;
+        return super.validateEntity(organization);
     }
-
-//    private boolean isEmailUnique(String patientId, String email) {
-//        if (StringUtils.hasText(email)) {
-//            long count;
-//            if (patientId != null) {
-//                count = this.mongoDb.getCollection(Patient.class)
-//                        .count(Filters.and(
-//                                Filters.regex(CPatient.email, "^" + email + "$", "i"),
-//                                Filters.ne(CPatient.id, patientId)));
-//            } else {
-//                count = this.mongoDb.getCollection(Patient.class)
-//                        .count(Filters.regex(CPatient.email, "^" + email + "$", "i"));
-//            }
-//
-//            return count == 0;
-//        }
-//        return true;
-//    }
 }

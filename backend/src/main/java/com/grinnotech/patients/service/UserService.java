@@ -36,6 +36,7 @@ import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.STORE_RE
 import static com.grinnotech.patients.util.QueryUtil.getSpringSort;
 import static java.time.ZoneOffset.UTC;
 import static java.time.ZonedDateTime.now;
+import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
 import static java.util.Date.from;
 import static java.util.stream.Collectors.toSet;
@@ -144,6 +145,7 @@ public class UserService extends AbstractService<Patient> {
 //        return result;
 
         List<ValidationMessages> violations = validateEntity(user, userDetails.getLocale());
+        violations.addAll(checkIfLastAdmin(user, userDetails.getLocale()));
 
         ValidationMessagesResult<User> result = new ValidationMessagesResult<>(user);
         result.setValidations(violations);
@@ -151,22 +153,30 @@ public class UserService extends AbstractService<Patient> {
         logger.debug("update 1: " + user.toString());
         if (violations.isEmpty()) {
             User old = userRepository.findOne(user.getId());
+
             if (old != null) {
                 old.setId(null);
                 old.setActive(false);
-                userRepository.save(old);
                 setAttrsForUpdate(user, userDetails, old);
             } else {
                 setAttrsForCreate(user, userDetails);
             }
 
-            user.setOrganizationIds(user.getOrganizations().stream().map(Organization::getCode).collect(toSet()));
+            if (user.getOrganizations() == null || user.getOrganizations().isEmpty()) {
+                Organization organization = organizationRepository.findByCodeActive("PPMDPoland");
+                user.setOrganizationIds(singleton(organization.getId()));
+            }
+            else {
+                user.setOrganizationIds(user.getOrganizations().stream().map(Organization::getCode).collect(toSet()));
+            }
 
             userRepository.save(user);
-
             if (!user.isEnabled()) {
                 deletePersistentLogins(user.getId());
             }
+
+            if (old != null)
+                userRepository.save(old);
         }
 
         logger.debug("update end");
@@ -203,7 +213,6 @@ public class UserService extends AbstractService<Patient> {
                     validationError.setMessage(messageSource.getMessage("user_lastadmin_error", null, locale));
                     validationErrors.add(validationError);
                 }
-
             }
         }
 
@@ -224,12 +233,24 @@ public class UserService extends AbstractService<Patient> {
     }
 
     private boolean isLastAdmin(String id) {
-        return userRepository.existsByIdAndAuthoritiesActive(id, singleton(Authority.ADMIN.name()));
+        Boolean ret = userRepository.existsByIdAndAuthoritiesActive(id, singleton(Authority.ADMIN.name()));
+        return ret == null || ret;
     }
 
     private boolean isEmailUnique(String userId, String email) {
-        return !StringUtils.hasText(email) ||
-                (userId != null ? userRepository.existsByIdNotAndEmailActive(userId, email) : userRepository.existsByEmailActive(email));
+        if (StringUtils.hasText(email)) {
+            Boolean ret;
+            if (userId != null) {
+                ret = userRepository.existsByIdNotAndEmailActive(userId, email);
+            } else {
+                ret = userRepository.existsByEmailActive(email);
+            }
+
+            if (ret == null) ret = true;
+            return ret;
+        }
+
+        return true;
     }
 
     @ExtDirectMethod
