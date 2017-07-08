@@ -22,6 +22,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.grinnotech.patients.domain.AbstractPersistable;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -49,6 +51,8 @@ import static javax.persistence.TemporalType.DATE;
         paging = true,
         identifier = "uuid")
 @JsonInclude(NON_NULL)
+@Getter
+@Setter
 public class Project extends AbstractPersistable {
 
     @NotBlank(message = "{fieldrequired}")
@@ -91,100 +95,4 @@ public class Project extends AbstractPersistable {
     private List<Patient> participants;
 
     private ProjectStatus status;
-    
-    public String getName() {
-        return name;
-    }
-    
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Date getStart() {
-        return start;
-    }
-    
-    public void setStart(Date start) {
-        this.start = start;
-    }
-
-    public Date getEnd() {
-        return end;
-    }
-    
-    public void setEnd(Date end) {
-        this.end = end;
-    }
-
-    public Organization getOrganization() {
-        return this.organization;
-    }
-    
-    public void setOrganization(Organization organization) {
-        this.organization = organization;
-    }
-    
-    public String getOrganizationId() {
-        return this.organizationId;
-    }
-    
-    public void setOrganizationId(String organizationId) {
-        this.organizationId = organizationId;
-    }
-        
-    public List<String> getCoordinatorsIds() {
-        return coordinatorsIds;
-    }
-    
-    public void setCoordinatorsIds(List<String> coordinatorsIds) {
-        this.coordinatorsIds = coordinatorsIds;
-    }
-
-    public List<User> getCoordinators() {
-        return coordinators;
-    }
-    
-    public void setCoordinators(List<User> coordinators) {
-        this.coordinators = coordinators;
-    }
-
-    public List<String> getEmployeesIds() {
-        return employeesIds;
-    }
-    
-    public void setEmployeesIds(List<String> employeesIds) {
-        this.employeesIds = employeesIds;
-    }
-
-    public List<User> getEmployees() {
-        return employees;
-    }
-    
-    public void setEmployees(List<User> employees) {
-        this.employees = employees;
-    }
-
-    public List<String> getParticipantsIds() {
-        return participantsIds;
-    }
-    
-    public void setParticipantsIds(List<String> participantsIds) {
-        this.participantsIds = participantsIds;
-    }
-
-    public List<Patient> getParticipants() {
-        return participants;
-    }
-    
-    public void setParticipants(List<Patient> participants) {
-        this.participants = participants;
-    }
-
-    public ProjectStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(ProjectStatus status) {
-        this.status = status;
-    }
 }

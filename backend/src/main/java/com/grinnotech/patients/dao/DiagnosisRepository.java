@@ -28,7 +28,9 @@ import java.util.List;
  *
  * @author Jacek Sztajnke
  */
-public interface DiagnosisRepository extends MongoRepository<Diagnosis, String>, QueryDslPredicateExecutor<Diagnosis> {
+public interface DiagnosisRepository extends
+        MongoRepository<Diagnosis, String>,
+        QueryDslPredicateExecutor<Diagnosis> {
     
     @Query("{active:true}")
     List<Diagnosis> findAllActive(Sort sort);

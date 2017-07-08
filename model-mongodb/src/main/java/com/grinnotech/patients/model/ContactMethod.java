@@ -19,7 +19,11 @@ package com.grinnotech.patients.model;
 import ch.rasc.extclassgenerator.Model;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.grinnotech.patients.domain.AbstractPersistable;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.validator.constraints.NotBlank;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -30,6 +34,7 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
  * @author Jacek Sztajnke
  */
 @Document(collection="dic_contactmethod")
+@CompoundIndex(name = "locale_method", def = "{'locale': 1, 'method': 1, 'version': 1}", unique = true)
 @Model(value = "Patients.model.ContactMethod",
         createMethod = "contactService.update",
         readMethod = "contactService.read",
@@ -38,29 +43,18 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
         paging = true,
         identifier = "uuid")
 @JsonInclude(NON_NULL)
+@Builder
+@Getter
+@Setter
 public class ContactMethod extends AbstractPersistable {
 
     @NotBlank(message = "{fieldrequired}")
-    @Indexed
+    private String locale;
+
+    @NotBlank(message = "{fieldrequired}")
     private String method;
-    
+
     private String description;
-    
-    public void setMethod(String method) {
-        this.method = method;
-    }
-
-    public String getMethod() {
-        return method;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-    
-    public void setDescription(String description) {
-        this.description = description;
-    }
 
     @Override
     public String toString() {

@@ -158,7 +158,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     @Value("${server.port}")
     private int port;
 
-    @Value("${server.httpPort}")
+    @Value("${server.http-port}")
     private int httpPort;
 
     private Connector initiateHttpConnector() {
@@ -176,7 +176,6 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
     private Connector initiateAjpConnector() {
         Connector connector = new Connector("AJP/1.3");
-//        connector.setProtocol("AJP/1.3");
         connector.setScheme("http");
         connector.setPort(ajpPort);
         connector.setSecure(false);

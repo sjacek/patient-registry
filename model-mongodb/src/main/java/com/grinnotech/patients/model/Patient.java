@@ -22,6 +22,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.grinnotech.patients.domain.AbstractPersistable;
 import com.grinnotech.patients.model.address.Address;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.index.CompoundIndexes;
@@ -44,9 +46,7 @@ import static javax.persistence.TemporalType.DATE;
  * @author jsztajnke
  */
 @Document
-@CompoundIndexes({
-    @CompoundIndex(name = "lastName_firstName", def = "{'lastName': 1, 'firstName': 1}")
-})
+@CompoundIndex(name = "lastName_firstName", def = "{'lastName': 1, 'firstName': 1}")
 @Model(value = "Patients.model.Patient",
         createMethod = "patientService.update",
         readMethod = "patientService.read",
@@ -55,6 +55,8 @@ import static javax.persistence.TemporalType.DATE;
         paging = true,
         identifier = "uuid")
 @JsonInclude(NON_NULL)
+@Getter
+@Setter
 public class Patient extends AbstractPersistable {
 
     @NotBlank(message = "{fieldrequired}")
@@ -130,153 +132,6 @@ public class Patient extends AbstractPersistable {
 
     @ModelField
     private Diagnosis diagnosis;
-    
-    public Patient() {
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getSecondName() {
-        return secondName;
-    }
-
-    public void setSecondName(String secondName) {
-        this.secondName = secondName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public Gender getGender() {
-        return gender;
-    }
-    
-    public void setGender(Gender gender) {
-        this.gender = gender;
-    }
-    
-    public PatientStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(PatientStatus status) {
-        this.status = status;
-    }
-
-    public boolean IsWard() {
-        return ward;
-    }
-    
-    public void setWard(boolean ward) {
-        this.ward = ward;
-    }
-    
-    public String getPesel() {
-        return pesel;
-    }
-
-    public void setPesel(String pesel) {
-        this.pesel = pesel;
-    }
-
-    public Date getBirthday() {
-        return birthday;
-    }
-    
-    public void setBirthday(Date birthday) {
-        this.birthday = birthday;
-    }
-
-    public Address getAddress() {
-        return address;
-    }
-    
-    public void setAddress(Address address) {
-        this.address = address;
-    }
-    
-    public Address getCorrespondenceAddress() {
-        return correspondenceAddress;
-    }
-    
-    public void setCorrespondenceAddress(Address correspondenceAddress) {
-        this.correspondenceAddress = correspondenceAddress;
-    }
-
-    public Organization getOrganization() {
-        return this.organization;
-    }
-    
-    public void setOrganization(Organization organization) {
-        this.organization = organization;
-    }
-    
-    public String getOrganizationId() {
-        return this.organizationId;
-    }
-    
-    public void setOrganizationId(String organizationId) {
-        this.organizationId = organizationId;
-    }
-    
-    public List<Contact> getContacts() {
-        return contacts;
-    }
-    
-    public void setContacts(List<Contact> contacts) {
-        this.contacts = contacts;
-    }
-    
-    public DisabilityLevel getDisabilityLevel() {
-        return disabilityLevel;
-    }
-    
-    public void setDisabilityLevel(DisabilityLevel disabilityLevel) {
-        this.disabilityLevel = disabilityLevel;
-    }
-
-    public Date getCertificateOfDisabilityIssue() {
-        return certificateOfDisabilityIssue;
-    }
-    
-    public void setCertificateOfDisabilityIssue(Date certificateOfDisabilityIssue) {
-        this.certificateOfDisabilityIssue = certificateOfDisabilityIssue;
-    }
-
-    public String getCertificateOfDisabilityIssuingUnit() {
-        return certificateOfDisabilityIssuingUnit;
-    }
-    
-    public void setCertificateOfDisabilityIssuingUnit(String certificateOfDisabilityIssuingUnit) {
-        this.certificateOfDisabilityIssuingUnit = certificateOfDisabilityIssuingUnit;
-    }
-
-    public Date getCertificateOfDisabilityExpiration() {
-        return certificateOfDisabilityExpiration;
-    }
-    
-    public void setCertificateOfDisabilityExpiration(Date certificateOfDisabilityExpiration) {
-        this.certificateOfDisabilityExpiration = certificateOfDisabilityExpiration;
-    }
-
-    public Diagnosis getDiagnosis() {
-        return diagnosis;
-    }
-    
-    public void setDiagnosis(Diagnosis diagnosis) {
-        this.diagnosis = diagnosis;
-    }
 
     @Override
     public String toString() {

@@ -258,6 +258,11 @@
             <!--<artifactId>activiti-spring-boot-starter-basic</artifactId>-->
             <!--<version>${activiti-version}</version>-->
         <!--</dependency>-->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
 
         <!-- for unit tests -->
         <dependency>

@@ -19,6 +19,8 @@ package com.grinnotech.patients.model;
 import ch.rasc.extclassgenerator.Model;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.grinnotech.patients.domain.AbstractPersistable;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -40,6 +42,8 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
         paging = true,
         identifier = "uuid")
 @JsonInclude(NON_NULL)
+@Getter
+@Setter
 public class Diagnosis extends AbstractPersistable {
 
     @NotBlank(message = "{fieldrequired}")
@@ -55,46 +59,6 @@ public class Diagnosis extends AbstractPersistable {
     private String icd10;
 
     private String description;
-    
-    public String getDiagnosisName() {
-        return diagnosisName;
-    }
-    
-    public void setDiagnosisName(String diagnosisName) {
-        this.diagnosisName = diagnosisName;
-    }
-
-    public List<String> getOtherNames() {
-        return otherNames;
-    }
-    
-    public void setOtherNames(List<String> otherName) {
-        this.otherNames = otherName;
-    }
-
-    public String getDiagnosisEnglishName() {
-        return diagnosisEnglishName;
-    }
-    
-    public void setDiagnosisEnglishName(String diagnosisEnglishName) {
-        this.diagnosisEnglishName = diagnosisEnglishName;
-    }
-
-    public String getIcd10() {
-        return icd10;
-    }
-    
-    public void setIcd10(String icd10) {
-        this.icd10 = icd10;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-    
-    public void setDescription(String description) {
-        this.description = description;
-    }
 
     @Override
     public String toString() {
