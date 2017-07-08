@@ -29,8 +29,7 @@ import java.util.List;
  * @author jacek
  */
 public interface CountryDictionaryRepository extends
-        MongoRepository<CountryDictionary, String>, 
-//        PagingAndSortingRepository<CountryDictionary, String>,
+        MongoRepository<CountryDictionary, String>,
         QueryDslPredicateExecutor<CountryDictionary> {
 
     @Query("{active:true}")

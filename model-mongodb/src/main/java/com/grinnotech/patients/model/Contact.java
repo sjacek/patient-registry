@@ -17,13 +17,19 @@
 package com.grinnotech.patients.model;
 
 import ch.rasc.extclassgenerator.Model;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.validator.constraints.NotBlank;
+
+import javax.ws.rs.GET;
 
 /**
  *
  * @author Jacek Sztajnke
  */
 @Model(value = "Patients.model.Contact")
+@Getter
+@Setter
 public class Contact {
 
     @NotBlank(message = "{fieldrequired}")
@@ -31,28 +37,4 @@ public class Contact {
 
     @NotBlank(message = "{fieldrequired}")
     private String contact;
-
-    public Contact() {
-    }
-
-    public Contact(String method, String contact) {
-        this.method = method;
-        this.contact = contact;
-    }
-    
-    public void setMethod(String method) {
-        this.method = method;
-    }
-
-    public String getMethod() {
-        return method;
-    }
-
-    public void setContact(String contact) {
-        this.contact = contact;
-    }
-
-    public String getContact() {
-        return contact;
-    }
 }

@@ -20,6 +20,9 @@ import ch.rasc.extclassgenerator.Model;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.grinnotech.patients.domain.AbstractPersistable;
 import com.opencsv.bean.CsvBindByName;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -39,6 +42,9 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
         paging = true,
         identifier = "uuid")
 @JsonInclude(NON_NULL)
+@Builder
+@Getter
+@Setter
 public class CountryDictionary extends AbstractPersistable {
 
     @Indexed
@@ -60,44 +66,4 @@ public class CountryDictionary extends AbstractPersistable {
     @CsvBindByName(column = "country_de", required = true)
     @NotBlank(message = "{fieldrequired}")
     private String countryDe;
-
-    public CountryDictionary(String code, String countryEn, String countryPl, String countryDe) {
-        super();
-        this.code = code;
-        this.countryEn = countryEn;
-        this.countryPl = countryPl;
-        this.countryDe = countryDe;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getCountryEn() {
-        return countryEn;
-    }
-
-    public void setCountryEn(String countryEn) {
-        this.countryEn = countryEn;
-    }
-
-    public String getCountryPl() {
-        return countryPl;
-    }
-
-    public void setCountryPl(String countryPl) {
-        this.countryPl = countryPl;
-    }
-
-    public String getCountryDe() {
-        return countryDe;
-    }
-
-    public void setCountryDe(String countryDe) {
-        this.countryDe = countryDe;
-    }
 }

@@ -19,6 +19,9 @@ package com.grinnotech.patients.model;
 import ch.rasc.extclassgenerator.Model;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.grinnotech.patients.domain.AbstractPersistable;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -38,6 +41,9 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
         paging = true,
         identifier = "uuid")
 @JsonInclude(NON_NULL)
+@Builder
+@Getter
+@Setter
 public class ZipCodePoland extends AbstractPersistable {
 
     @Indexed
@@ -58,62 +64,4 @@ public class ZipCodePoland extends AbstractPersistable {
     
     @Indexed
     private String county;
-
-    public ZipCodePoland(String zipCode, String postOffice, String city, String voivodship, String street, String county) {
-        this.zipCode = zipCode;
-        this.postOffice = postOffice;
-        this.city = city;
-        this.voivodship = voivodship;
-        this.street = street;
-        this.county = county;
-    }
-
-    public void setZipCode(String zipCode) {
-        this.zipCode = zipCode;
-    }
-
-    public String getZipCode() {
-        return zipCode;
-    }
-    
-    public void setPostOffice(String postOffice) {
-        this.postOffice = postOffice;
-    }
-
-    public String getPostOffice() {
-        return postOffice;
-    }
-    
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getCity() {
-        return city;
-    }
-    
-    public void setVoivodship(String voivodship) {
-        this.voivodship = voivodship;
-    }
-
-    public String getVoivodship() {
-        return voivodship;
-    }
-    
-    public void setStreet(String street) {
-        this.street = street;
-    }
-
-    public String getStreet() {
-        return street;
-    }
-    
-    public void setCounty(String county) {
-        this.county = county;
-    }
-
-    public String getCounty() {
-        return county;
-    }
-    
 }
