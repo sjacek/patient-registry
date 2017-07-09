@@ -14,16 +14,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.grinnotech.patients.model;
+package com.grinnotech.patients.model.orphadata;
 
 import ch.rasc.extclassgenerator.Model;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.Builder;
+import com.grinnotech.patients.domain.AbstractPersistable;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.validator.constraints.NotBlank;
-import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import javax.validation.constraints.NotNull;
+import java.util.List;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 
@@ -31,9 +35,9 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
  *
  * @author Jacek Sztajnke
  */
-@Document(collection="dic_orphadata")
+@Document(collection="dic_orphadata_disorder")
 //@CompoundIndex(name = "locale_method", def = "{'locale': 1, 'method': 1, 'version': 1}", unique = true)
-@Model(value = "Patients.model.Orphadata",
+@Model(value = "Patients.model.orphadata.Disorder",
 //        createMethod = "contactService.update",
 //        readMethod = "contactService.read",
 //        updateMethod = "contactService.update",
@@ -41,14 +45,33 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
         paging = true,
         identifier = "uuid")
 @JsonInclude(NON_NULL)
-@Builder
 @Getter
 @Setter
-public class Orphadata {
+@ToString
+public class Disorder extends AbstractPersistable {
+
+    @NotNull(message = "{fieldrequired}")
+    @Indexed
+    private Integer orphaNumber;
+
+    @NotNull(message = "{fieldrequired}")
+    @Indexed
+    private Integer typeOrphaNumber;
+
+    @NotNull(message = "{fieldrequired}")
+    @Indexed
+    private Integer orphaId;
 
     @NotBlank(message = "{fieldrequired}")
-    private String method;
+    @Indexed
+    private String name;
 
-    @NotBlank(message = "{fieldrequired}")
-    private String contact;
+    private String type;
+
+    private String expertLink;
+
+    @Indexed
+    private String icd10;
+
+    private List<String> synonyms;
 }
