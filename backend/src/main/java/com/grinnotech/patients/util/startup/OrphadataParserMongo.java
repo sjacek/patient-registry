@@ -38,14 +38,14 @@ public class OrphadataParserMongo extends OrphadataParser {
         this.disorderRepository = disorderRepository;
     }
 
-    public void on__start_object() {
-        logger.info("******** OrphadataParserMongo start ***************");
-        super.on__start_object();
+    public static void parse(URL url, DisorderRepository disorderRepository) {
+        OrphadataParserMongo parser = new OrphadataParserMongo(url, disorderRepository);
+        parser.parse((Integer) null);
     }
 
-    public void on__end_object() {
-        logger.info("******** OrphadataParserMongo end ***************");
-        super.on__end_object();
+    public void on_JDBOR_DisorderList_Disorder_end_object() {
+        super.on_JDBOR_DisorderList_Disorder_end_object();
+        disorderRepository.save(getDisorder());
     }
 
 }

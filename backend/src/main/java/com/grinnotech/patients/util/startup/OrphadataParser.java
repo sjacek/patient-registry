@@ -88,6 +88,10 @@ public class OrphadataParser extends JsonEventParser {
 
     private Disorder disorder = null;
 
+    protected Disorder getDisorder() {
+        return disorder;
+    }
+
     private String externalReference;
 
     public void on_JDBOR_DisorderList_Disorder_start_object() {
