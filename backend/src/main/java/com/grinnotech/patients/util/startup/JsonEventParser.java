@@ -73,21 +73,24 @@ public class JsonEventParser {
                  i++, token = parser.nextToken()) {
 
                 String name = parser.getCurrentName();
-                Optional<String> path = tokenPath.stream().reduce((a, b) -> a + "_" + b);
+                String path = tokenPath.stream().reduce((a, b) -> a + "_" + b).orElse("");
 
-                logger.info("i: {}, path: {}, Token {} name: {}", i, path, token, name);
+                if (repeat != null)
+                    logger.debug("{} : {} : {} name: {}", i, path, token, name);
+                else
+                    logger.trace("{} : {} : {} name: {}", i, path, token, name);
 
                 switch (token) {
-                    case FIELD_NAME: {
+                    case FIELD_NAME:
                         tokenPath.push(name);
                         break;
-                    }
                     case END_ARRAY:
                     case END_OBJECT:
                     case VALUE_STRING:
                         if (!tokenPath.empty() && tokenPath.peek().equals(name)) {
                             tokenPath.pop();
                         }
+                        break;
                 }
 
                 String value = null;
@@ -95,7 +98,7 @@ public class JsonEventParser {
                     value = parser.getValueAsString();
                 } catch (IOException ignored) {}
 
-                String methodName = "on_" + path.orElse("") + "_" + token.name().toLowerCase();
+                String methodName = "on_" + path + "_" + token.name().toLowerCase();
                 try {
                     if (value != null) {
                         Method method = clazz.getMethod(methodName, String.class);

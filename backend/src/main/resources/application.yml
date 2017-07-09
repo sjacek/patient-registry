@@ -30,7 +30,7 @@ spring:
   
   mvc:
     favicon:
-      enabled: false
+      enabled: true
 
   mail:
     host: localhost    
@@ -95,5 +95,4 @@ management:
 
 orphadata:
   enabled: true
-  url:
-    pl: http://www.orphadata.org/data/export/pl_product1.json
+  url-pl: http://www.orphadata.org/data/export/pl_product1.json

@@ -14,16 +14,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.grinnotech.patients.dao;
-
-import com.grinnotech.patients.model.Orphadata;
-import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+package com.grinnotech.patients.model.orphadata;
 
 /**
+ *
  * @author Jacek Sztajnke
  */
-public interface OrphadataRepository extends
-        MongoRepository<Orphadata, String>,
-        QueryDslPredicateExecutor<Orphadata> {
+public enum DisorderType {
+
+    /**
+     *
+     */
+    NEW,
+
+    /**
+     *
+     */
+    IN_PROGRESS,
+
+    /**
+     *
+     */
+    FINISHED
 }

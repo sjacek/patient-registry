@@ -16,15 +16,16 @@
  */
 package com.grinnotech.patients.config.profiles.development;
 
+import com.grinnotech.patients.config.OrphadataProperties;
 import com.grinnotech.patients.dao.*;
 import com.grinnotech.patients.domain.AbstractPersistable;
 import com.grinnotech.patients.model.*;
 import com.grinnotech.patients.util.startup.OrphadataParser;
+import com.grinnotech.patients.util.startup.OrphadataParserMongo;
 import com.opencsv.CSVReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -72,13 +73,19 @@ class Startup {
 
     @Autowired
     public Startup(UserRepository userRepository,
-                   OrganizationRepository organizationRepository, ContactRepository contactRepository, CountryDictionaryRepository addressDictionaryRepository, ZipCodePolandRepository zipCodePolandRepository, PasswordEncoder passwordEncoder) {
+                   OrganizationRepository organizationRepository,
+                   ContactRepository contactRepository,
+                   CountryDictionaryRepository addressDictionaryRepository,
+                   ZipCodePolandRepository zipCodePolandRepository,
+                   PasswordEncoder passwordEncoder,
+                   OrphadataProperties orphadataProperties) {
         this.userRepository = userRepository;
         this.organizationRepository = organizationRepository;
         this.contactRepository = contactRepository;
         this.passwordEncoder = passwordEncoder;
         this.addressDictionaryRepository = addressDictionaryRepository;
         this.zipCodePolandRepository = zipCodePolandRepository;
+        this.orphadataProperties = orphadataProperties;
         init();
     }
 
@@ -245,25 +252,30 @@ class Startup {
         }
     }
 
-    @Value("${startup.enabled:true}")
-    private Boolean orphadataEnabled;
+//    @Value("${orphadata.enabled:true}")
+//    private boolean orphadataEnabled;
+//
+//    @Value("${orphadata.url.pl}")
+//    private String orphadataUrlPl;
 
-    @Value("${startup.url.pl}")
-    private String orphadataUrlPl;
-
+    private OrphadataProperties orphadataProperties;
 
     private void initOrphaData() {
-        if (!orphadataEnabled) return;
+        if (!orphadataProperties.isEnabled()) return;
 
         URL urlPl;
         try {
-            urlPl = new URL(orphadataUrlPl);
+            urlPl = new URL(orphadataProperties.getUrlPl());
         } catch (MalformedURLException ex) {
-            logger.error("Bad orphaData JSON address: {}", orphadataUrlPl, ex);
+            logger.error("Bad orphaData JSON address: {}", orphadataProperties.getUrlPl(), ex);
             return;
         }
 
-        OrphadataParser.parse(urlPl);
+        OrphadataParser parser = new OrphadataParser(urlPl);
+        parser.parse(20);
+        logger.info("Orphadata version: {}", parser.getInfo().getVersion());
+
+        OrphadataParserMongo.parse(urlPl);
     }
 
     private <T extends AbstractPersistable, R extends MongoRepository<T, String>>

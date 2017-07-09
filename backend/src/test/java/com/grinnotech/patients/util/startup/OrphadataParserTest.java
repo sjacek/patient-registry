@@ -18,8 +18,10 @@ package com.grinnotech.patients.util.startup;
 
 import org.junit.Test;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
@@ -31,9 +33,9 @@ import static org.junit.Assert.*;
  */
 public class OrphadataParserTest {
     @Test
-    public void parse() throws Exception {
+    public void checkOrphadataInfo() throws ParseException, MalformedURLException {
         OrphadataParser parser = new OrphadataParser(new URL("http://www.orphadata.org/data/export/pl_product1.json"));
-        parser.parse(1000);
+        parser.parse(20);
 
 //        DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.SHORT, new Locale("pl_PL"));
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", new Locale("pl"));

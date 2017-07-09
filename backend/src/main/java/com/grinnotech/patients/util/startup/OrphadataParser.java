@@ -17,6 +17,7 @@
 package com.grinnotech.patients.util.startup;
 
 import com.grinnotech.patients.model.info.OrphadataInfo;
+import com.grinnotech.patients.model.orphadata.Disorder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,7 +26,10 @@ import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Locale;
+
+import static java.lang.Integer.parseInt;
 
 /**
  *
@@ -52,13 +56,15 @@ public class OrphadataParser extends JsonEventParser {
     }
 
     public void on__start_object() {
-        logger.info("******** OrphadataParser start ***************");
+        logger.trace("******** OrphadataParser start ***************");
         info = new OrphadataInfo();
     }
 
     public void on__end_object() {
-        logger.info("******** OrphadataParser end ***************");
+        logger.trace("******** OrphadataParser end ***************");
     }
+
+    private int countDisorder = 0;
 
     public void on_JDBOR_date_value_string(String date) {
         try {
@@ -78,5 +84,66 @@ public class OrphadataParser extends JsonEventParser {
 
     public OrphadataInfo getInfo() {
         return info;
+    }
+
+    private Disorder disorder = null;
+
+    private String externalReference;
+
+    public void on_JDBOR_DisorderList_Disorder_start_object() {
+        disorder = new Disorder();
+        disorder.setSynonyms(new ArrayList<>());
+        externalReference = null;
+    }
+
+    public void on_JDBOR_DisorderList_Disorder_end_object() {
+        assert disorder != null;
+        countDisorder++;
+        logger.trace("******** Disorder end {} ***************", countDisorder);
+        logger.debug("{}", disorder);
+    }
+
+    public void on_JDBOR_DisorderList_Disorder_DisorderType_Name_label_value_string(String type) {
+        assert disorder != null;
+        disorder.setType(type);
+    }
+
+    public void on_JDBOR_DisorderList_Disorder_DisorderType_OrphaNumber_value_string(String orphaNumber) {
+        assert disorder != null;
+        disorder.setTypeOrphaNumber(parseInt(orphaNumber));
+    }
+
+    public void on_JDBOR_DisorderList_Disorder_ExpertLink_link_value_string(String expertLink) {
+        assert disorder != null;
+        disorder.setExpertLink(expertLink);
+    }
+
+    public void on_JDBOR_DisorderList_Disorder_Name_label_value_string(String name) {
+        assert disorder != null;
+        disorder.setName(name);
+    }
+
+    public void on_JDBOR_DisorderList_Disorder_OrphaNumber_value_string(String orphaNumber) {
+        assert disorder != null;
+        disorder.setOrphaNumber(parseInt(orphaNumber));
+    }
+
+    public void on_JDBOR_DisorderList_Disorder_ExternalReferenceList_ExternalReference_Reference_value_string(String reference) {
+        this.externalReference = reference;
+    }
+
+    public void on_JDBOR_DisorderList_Disorder_ExternalReferenceList_ExternalReference_Source_value_string(String source) {
+        assert disorder != null;
+        switch (source) {
+            case "ICD-10":
+                disorder.setIcd10(externalReference);
+                externalReference = null;
+                break;
+        }
+    }
+
+    public void on_JDBOR_DisorderList_Disorder_SynonymList_Synonym_label_value_string(String name) {
+        assert disorder != null;
+        disorder.getSynonyms().add(name);
     }
 }

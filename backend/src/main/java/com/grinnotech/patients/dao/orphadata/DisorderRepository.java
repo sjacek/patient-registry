@@ -14,35 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.grinnotech.patients.model.info;
+package com.grinnotech.patients.dao.orphadata;
 
-import ch.rasc.extclassgenerator.Model;
-import com.grinnotech.patients.domain.Info;
-import lombok.*;
-
-import java.util.Date;
+import com.grinnotech.patients.model.orphadata.Disorder;
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 
 /**
- *
  * @author Jacek Sztajnke
  */
-@Model(value = "Patients.model.info.OrphadataInfo",
-//        createMethod = "contactService.update",
-//        readMethod = "contactService.read",
-//        updateMethod = "contactService.update",
-//        destroyMethod = "contactService.destroy",
-        paging = true,
-        identifier = "uuid")
-@Builder
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-public class OrphadataInfo implements Info {
-
-    private Date date;
-
-    private String version;
-
-    private String copyright;
+public interface DisorderRepository extends
+        MongoRepository<Disorder, String>,
+        QueryDslPredicateExecutor<Disorder> {
 }

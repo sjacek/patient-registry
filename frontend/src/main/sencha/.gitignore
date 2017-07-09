@@ -18,6 +18,8 @@
 /app/model/CountryDictionary.js
 /app/model/ZipCodePoland.js
 /app/model/Organization.js
+/app/model/info/OrphadataInfo.js
+/app/model/orphadata/Disorder.js
 /app/constant/ProjectStatus.js
 /app/constant/PatientStatus.js
 /app/constant/DisabilityLevel.js

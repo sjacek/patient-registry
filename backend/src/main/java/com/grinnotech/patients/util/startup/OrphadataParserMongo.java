@@ -16,7 +16,7 @@
  */
 package com.grinnotech.patients.util.startup;
 
-import com.grinnotech.patients.dao.OrphadataRepository;
+import com.grinnotech.patients.dao.orphadata.DisorderRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,11 +31,11 @@ public class OrphadataParserMongo extends OrphadataParser {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    private OrphadataRepository orphadataRepository;
+    private DisorderRepository disorderRepository;
 
-    public OrphadataParserMongo(URL url, OrphadataRepository orphadataRepository) {
+    public OrphadataParserMongo(URL url, DisorderRepository disorderRepository) {
         super(url, OrphadataParserMongo.class);
-        this.orphadataRepository = orphadataRepository;
+        this.disorderRepository = disorderRepository;
     }
 
     public void on__start_object() {

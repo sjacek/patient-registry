@@ -10,6 +10,7 @@ import org.apache.catalina.Context;
 import org.apache.catalina.connector.Connector;
 import org.apache.tomcat.util.descriptor.web.SecurityCollection;
 import org.apache.tomcat.util.descriptor.web.SecurityConstraint;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer;
 import org.springframework.boot.context.embedded.EmbeddedServletContainerFactory;
@@ -131,7 +132,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 //    String remoteAuthentication;
 
     @Value("${tomcat.ajp.enabled:false}")
-    private Boolean tomcatAjpEnabled;
+    private boolean tomcatAjpEnabled;
 
     @Bean
     public EmbeddedServletContainerFactory servletContainer() {
