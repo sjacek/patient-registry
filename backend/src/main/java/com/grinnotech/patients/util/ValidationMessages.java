@@ -1,5 +1,9 @@
 package com.grinnotech.patients.util;
 
+/**
+ *
+ * @author Jacek Sztajnke
+ */
 public class ValidationMessages {
 
     private String field;

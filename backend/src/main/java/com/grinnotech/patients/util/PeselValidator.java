@@ -18,7 +18,7 @@ package com.grinnotech.patients.util;
 
 /**
  *
- * @author jacek
+ * @author Jacek Sztajnke
  */
 public class PeselValidator {
 
@@ -79,8 +79,7 @@ public class PeselValidator {
     }
 
     public int getBirthDay() {
-        int day = 10 * PESEL[4] + PESEL[5];
-        return day;
+        return 10 * PESEL[4] + PESEL[5];
     }
 
     public String getSex() {
@@ -115,7 +114,6 @@ public class PeselValidator {
 
     private boolean checkMonth() {
         int month = getBirthMonth();
-        int day = getBirthDay();
 
         return month > 0 && month < 13;
     }
@@ -124,7 +122,7 @@ public class PeselValidator {
         int year = getBirthYear();
         int month = getBirthMonth();
         int day = getBirthDay();
-        
+
         if ((day > 0 && day < 32) && (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12)) {
             return true;
         }

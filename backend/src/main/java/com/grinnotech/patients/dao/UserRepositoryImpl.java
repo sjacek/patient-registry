@@ -16,16 +16,18 @@
  */
 package com.grinnotech.patients.dao;
 
-import com.grinnotech.patients.model.Organization;
 import com.grinnotech.patients.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 import java.util.HashSet;
 
 /**
- * Created by jacek.sztajnke on 2017-07-03.
+ *
+ * @author Jacek Sztajnke
  */
+@Component
 public class UserRepositoryImpl implements UserRepositoryCustom {
 
     private final OrganizationRepository organizationRepository;
@@ -37,7 +39,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
 
     @Override
     public void loadOrganizationsData(User user) {
-        user.setOrganizations(new HashSet<>((Collection<Organization>) organizationRepository.findAll(user.getOrganizationIds())));
+        user.setOrganizations(new HashSet<>(organizationRepository.findAllActive(user.getOrganizationIds())));
     }
 
     @Override

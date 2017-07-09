@@ -31,7 +31,7 @@ import static javax.persistence.TemporalType.DATE;
 
 /**
  *
- * @author jacek
+ * @author Jacek Sztajnke
  */
 @MappedSuperclass
 public abstract class AbstractPersistable implements Serializable {

@@ -22,7 +22,7 @@ import java.util.Objects;
 
 /**
  *
- * @author jacek
+ * @author Jacek Sztajnke
  * @param <T>
  */
 public class Result<T> implements Serializable {

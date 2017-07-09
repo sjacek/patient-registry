@@ -32,24 +32,15 @@ import java.util.stream.StreamSupport;
 import static ch.ralscha.extdirectspring.bean.SortDirection.ASCENDING;
 import static com.mongodb.client.model.Sorts.ascending;
 import static com.mongodb.client.model.Sorts.descending;
+import static java.util.stream.Collectors.toList;
 import static org.springframework.data.domain.Sort.Direction.ASC;
 import static org.springframework.data.domain.Sort.Direction.DESC;
 
 /**
  *
- * @author jacek
+ * @author Jacek Sztajnke
  */
 public class QueryUtil {
-
-    public static List<Bson> getSorts(ExtDirectStoreReadRequest request) {
-        return request.getSorters().stream().map(sortInfo ->
-            sortInfo.getDirection() == ASCENDING ? ascending(sortInfo.getProperty()) : descending(sortInfo.getProperty())
-        ).collect(Collectors.toList());
-    }
-
-    public static <T> List<T> toList(FindIterable<T> iterable) {
-        return StreamSupport.stream(iterable.spliterator(), false).collect(Collectors.toList());
-    }
 
     public static <T> Stream<T> stream(FindIterable<T> iterable) {
         return StreamSupport.stream(iterable.spliterator(), false);
@@ -58,7 +49,7 @@ public class QueryUtil {
     public static Sort getSpringSort(ExtDirectStoreReadRequest request) {
         List<Order> list = request.getSorters().stream().map(sortInfo ->
                 new Order(sortInfo.getDirection() == ASCENDING ? ASC : DESC, sortInfo.getProperty())
-        ).collect(Collectors.toList());
+        ).collect(toList());
         return new Sort(list);
     }
 

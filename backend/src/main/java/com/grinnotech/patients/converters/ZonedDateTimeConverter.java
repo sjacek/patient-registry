@@ -24,7 +24,7 @@ import java.time.ZonedDateTime;
 
 /**
  *
- * @author jacek
+ * @author Jacek Sztajnke
  */
 @Converter(autoApply = true)
 public class ZonedDateTimeConverter implements AttributeConverter<ZonedDateTime, Timestamp> {

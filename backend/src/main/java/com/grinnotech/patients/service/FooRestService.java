@@ -23,7 +23,7 @@ import java.util.List;
 
 /**
  *
- * @author jacek
+ * @author Jacek Sztajnke
  */
 public interface FooRestService {
     Result<Foo> update(String idFoo);

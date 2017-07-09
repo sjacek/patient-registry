@@ -23,7 +23,7 @@ import java.time.LocalDateTime;
 
 /**
  *
- * @author jacek
+ * @author Jacek Sztajnke
  */
 @Converter(autoApply = true)
 public class LocalDateTimeConverter implements AttributeConverter<LocalDateTime, Timestamp> {

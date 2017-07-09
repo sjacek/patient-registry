@@ -18,7 +18,7 @@ package com.grinnotech.patients.util;
 
 /**
  *
- * @author jacek
+ * @author Jacek Sztajnke
  */
 public class PatientException extends Exception {
 

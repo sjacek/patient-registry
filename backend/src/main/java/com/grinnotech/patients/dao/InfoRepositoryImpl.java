@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Jacek Sztajnke
+ * Copyright (C) 2017 Jacek Sztajnke
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,21 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.grinnotech.patients.dao.authorities;
-
-import org.springframework.security.access.prepost.PreAuthorize;
-
-import java.lang.annotation.*;
+package com.grinnotech.patients.dao;
 
 /**
  *
  * @author Jacek Sztajnke
  */
-@Target({ElementType.TYPE, ElementType.METHOD})
-@Retention(RetentionPolicy.RUNTIME)
-@Inherited
-@Documented
-@PreAuthorize("hasAnyAuthority('EMPLOYEE')")
-public @interface RequireEmployeeAuthority {
-    // nothing here
+public class InfoRepositoryImpl {
 }

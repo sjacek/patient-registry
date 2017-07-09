@@ -25,8 +25,7 @@ import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import java.util.List;
 
 /**
- *
- * @author jacek
+ * @author Jacek Sztajnke
  */
 public interface OrganizationRepository extends
         MongoRepository<Organization, String>,
@@ -35,9 +34,12 @@ public interface OrganizationRepository extends
     @Query("{active:true}")
     List<Organization> findAllActive(Sort sort);
 
-    @Query("{$and: [{ $or:["
-            + " {name: {$regex:?0,$options:'i'}}, {code: {$regex:?0,$options:'i'}} ]},"
-            + " {active:true} ]}")
+    @Query("{$and: [ {id: {$in: ?0} }, {active:true} ]}")
+    List<Organization> findAllActive(Iterable<String> ids);
+
+    @Query("{$and: [" +
+            " { $or:[ {name: {$regex:?0,$options:'i'}}, {code: {$regex:?0,$options:'i'}} ]}," +
+            " {active:true} ]}")
     List<Organization> findAllWithFilterActive(String filter, Sort sort);
 
     @Query("{ $and : [ { id: ?0 }, { active: true } ] }")

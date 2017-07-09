@@ -39,6 +39,16 @@
       "name": "mongodb.uri",
       "type": "java.lang.String",
       "description": "Description for mongodb.uri."
+    },
+    {
+      "name": "orphadata.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Description for orphadata.enabled."
+    },
+    {
+      "name": "orphadata.url.pl",
+      "type": "java.net.URL",
+      "description": "Description for orphadata.url.pl."
     }
   ]
 }

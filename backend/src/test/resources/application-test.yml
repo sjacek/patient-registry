@@ -37,3 +37,6 @@ logging:
     org.springframework.data.mongodb: DEBUG
     org.springframework.data.document: DEBUG
     com.grinnotech: DEBUG
+
+orphadata:
+  enabled: false

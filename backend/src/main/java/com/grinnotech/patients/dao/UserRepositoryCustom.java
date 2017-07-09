@@ -21,7 +21,8 @@ import com.grinnotech.patients.model.User;
 import java.util.Collection;
 
 /**
- * Created by jacek.sztajnke on 2017-07-03.
+ *
+ * @author Jacek Sztajnke
  */
 interface UserRepositoryCustom {
 

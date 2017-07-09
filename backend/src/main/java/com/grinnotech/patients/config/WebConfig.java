@@ -131,7 +131,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 //    String remoteAuthentication;
 
     @Value("${tomcat.ajp.enabled:false}")
-    Boolean tomcatAjpEnabled;
+    private Boolean tomcatAjpEnabled;
 
     @Bean
     public EmbeddedServletContainerFactory servletContainer() {
@@ -172,7 +172,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     }
 
     @Value("${tomcat.ajp.port}")
-    int ajpPort;
+    private int ajpPort;
 
     private Connector initiateAjpConnector() {
         Connector connector = new Connector("AJP/1.3");

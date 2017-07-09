@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Jacek Sztajnke
+ * Copyright (C) 2017 Jacek Sztajnke
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,21 +14,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.grinnotech.patients.dao.authorities;
+package com.grinnotech.patients.model.info;
 
-import org.springframework.security.access.prepost.PreAuthorize;
+import com.grinnotech.patients.domain.Info;
+import lombok.*;
 
-import java.lang.annotation.*;
+import java.util.Date;
 
 /**
  *
  * @author Jacek Sztajnke
  */
-@Target({ElementType.TYPE, ElementType.METHOD})
-@Retention(RetentionPolicy.RUNTIME)
-@Inherited
-@Documented
-@PreAuthorize("hasAnyAuthority('EMPLOYEE')")
-public @interface RequireEmployeeAuthority {
-    // nothing here
+@Builder
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class OrphadataInfo implements Info {
+
+    private Date date;
+
+    private String version;
+
+    private String copyright;
 }
