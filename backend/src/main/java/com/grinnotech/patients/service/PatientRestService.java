@@ -24,7 +24,7 @@ import java.util.List;
 
 /**
  *
- * @author jacek
+ * @author Jacek Sztajnke
  */
 public interface PatientRestService {
     Result<Patient> update(String idPatient, String firstName, String secondName, String lastName, String pesel, Date birthday);

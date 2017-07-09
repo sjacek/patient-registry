@@ -28,7 +28,7 @@ import java.util.Set;
 
 /**
  *
- * @author jacek
+ * @author Jacek Sztajnke
  */
 public interface UserRepository extends
         MongoRepository<User, String>,

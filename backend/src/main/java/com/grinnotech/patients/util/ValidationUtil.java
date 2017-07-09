@@ -12,13 +12,9 @@ public class ValidationUtil {
         Set<ConstraintViolation<T>> constraintViolations = validator.validate(entity, groups);
         Map<String, List<String>> fieldMessages = new HashMap<>();
         if (!constraintViolations.isEmpty()) {
-            constraintViolations.stream().forEach((constraintViolation) -> {
+            constraintViolations.forEach((constraintViolation) -> {
                 String property = constraintViolation.getPropertyPath().toString();
-                List<String> messages = fieldMessages.get(property);
-                if (messages == null) {
-                    messages = new ArrayList<>();
-                    fieldMessages.put(property, messages);
-                }
+                List<String> messages = fieldMessages.computeIfAbsent(property, k -> new ArrayList<>());
                 messages.add(constraintViolation.getMessage());
             });
         }

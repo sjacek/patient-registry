@@ -18,7 +18,7 @@ package com.grinnotech.patients.model;
 
 /**
  *
- * @author jacek
+ * @author Jacek Sztajnke
  */
 public enum Authority {
     ADMIN, EMPLOYEE, USER

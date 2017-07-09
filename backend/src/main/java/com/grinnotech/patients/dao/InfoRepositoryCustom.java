@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Jacek Sztajnke
+ * Copyright (C) 2017 Jacek Sztajnke
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,16 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.grinnotech.patients.domain;
+package com.grinnotech.patients.dao;
 
 /**
  *
- * @author jacek
+ * @author Jacek Sztajnke
  */
-class Utils {
-
-    public static String checkNull(String s) {
-        if (s != null) return s;
-        return "";
-    }
+public interface InfoRepositoryCustom {
 }

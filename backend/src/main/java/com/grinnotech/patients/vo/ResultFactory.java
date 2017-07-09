@@ -18,7 +18,7 @@ package com.grinnotech.patients.vo;
 
 /**
  *
- * @author jacek
+ * @author Jacek Sztajnke
  */
 public class ResultFactory {
     public static <T> Result<T> getSuccessResult(T data) {

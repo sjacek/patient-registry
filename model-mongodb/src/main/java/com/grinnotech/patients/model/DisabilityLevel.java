@@ -18,7 +18,7 @@ package com.grinnotech.patients.model;
 
 /**
  *
- * @author jacek
+ * @author Jacek Sztajnke
  */
 public enum DisabilityLevel {
     NO_CERTIFICATE, LIGHTWIEGHT, MODERATE, SEVERE

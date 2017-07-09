@@ -39,9 +39,13 @@ import static java.util.Collections.singleton;
 import static java.util.Date.from;
 import static java.util.stream.Collectors.toSet;
 
+/**
+ *
+ * @author Jacek Sztajnke
+ */
 @Service
 @RequireAdminAuthority
-public class UserService extends AbstractService<Patient> {
+public class UserService extends AbstractService<User> {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
@@ -226,10 +230,8 @@ public class UserService extends AbstractService<Patient> {
     }
 
     private List<ValidationMessages> validateEntity(User user, Locale locale) {
-        List<ValidationMessages> validations = ValidationUtil.validateEntity(validator, user);
+        List<ValidationMessages> validations = super.validateEntity(user);
 
-        String c = user.getId();
-        boolean b = !isEmailUnique(user.getId(), user.getEmail());
         if (!isEmailUnique(user.getId(), user.getEmail())) {
             ValidationMessages validationError = new ValidationMessages();
             validationError.setField(CUser.email);

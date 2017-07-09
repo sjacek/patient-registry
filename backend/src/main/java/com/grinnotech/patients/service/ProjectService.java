@@ -42,7 +42,7 @@ import static com.grinnotech.patients.util.QueryUtil.getSpringSort;
 
 /**
  *
- * @author jacek
+ * @author Jacek Sztajnke
  */
 @Service
 @RequireEmployeeAuthority

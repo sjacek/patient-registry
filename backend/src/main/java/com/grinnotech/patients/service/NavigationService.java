@@ -33,7 +33,7 @@ import static com.grinnotech.patients.model.Authority.*;
 
 /**
  *
- * @author jacek
+ * @author Jacek Sztajnke
  */
 @Service
 @Cacheable("main")

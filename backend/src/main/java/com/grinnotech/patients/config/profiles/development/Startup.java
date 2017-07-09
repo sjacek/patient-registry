@@ -19,10 +19,12 @@ package com.grinnotech.patients.config.profiles.development;
 import com.grinnotech.patients.dao.*;
 import com.grinnotech.patients.domain.AbstractPersistable;
 import com.grinnotech.patients.model.*;
+import com.grinnotech.patients.util.startup.OrphadataParser;
 import com.opencsv.CSVReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -32,6 +34,8 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.invoke.MethodHandles;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashSet;
 
 import static com.grinnotech.patients.model.Authority.*;
@@ -40,6 +44,10 @@ import static java.util.Collections.singleton;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 import static org.apache.commons.lang3.text.WordUtils.capitalizeFully;
 
+/**
+ *
+ * @author Jacek Sztajnke
+ */
 @Component
 @Profile("development")
 class Startup {
@@ -80,6 +88,7 @@ class Startup {
         initContactMethods();
         initAddressDictionary();
         initZipCodePoland();
+        initOrphaData();
     }
 
     private void initOrganizations() {
@@ -234,6 +243,27 @@ class Startup {
                 logger.error("File " + CSV + " not found", ex);
             }
         }
+    }
+
+    @Value("${startup.enabled:true}")
+    private Boolean orphadataEnabled;
+
+    @Value("${startup.url.pl}")
+    private String orphadataUrlPl;
+
+
+    private void initOrphaData() {
+        if (!orphadataEnabled) return;
+
+        URL urlPl;
+        try {
+            urlPl = new URL(orphadataUrlPl);
+        } catch (MalformedURLException ex) {
+            logger.error("Bad orphaData JSON address: {}", orphadataUrlPl, ex);
+            return;
+        }
+
+        OrphadataParser.parse(urlPl);
     }
 
     private <T extends AbstractPersistable, R extends MongoRepository<T, String>>

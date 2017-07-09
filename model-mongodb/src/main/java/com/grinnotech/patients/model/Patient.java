@@ -43,7 +43,7 @@ import static javax.persistence.TemporalType.DATE;
 
 /**
  *
- * @author jsztajnke
+ * @author Jacek Sztajnke
  */
 @Document
 @CompoundIndex(name = "lastName_firstName", def = "{'lastName': 1, 'firstName': 1}")

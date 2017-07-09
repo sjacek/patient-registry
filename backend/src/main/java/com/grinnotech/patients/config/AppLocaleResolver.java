@@ -12,7 +12,7 @@ import java.util.Locale;
 
 /**
  *
- * @author jacek
+ * @author Jacek Sztajnke
  */
 public class AppLocaleResolver extends AbstractLocaleResolver {
 

@@ -29,14 +29,14 @@ import java.util.*;
 
 /**
  *
- * @author jacek
+ * @author Jacek Sztajnke
  */
 public abstract class AbstractService<T> {
 
     @Autowired
     private UserRepository userRepository;
 
-    public void setAttrsForCreate(AbstractPersistable persistable, UserDetails userDetails) {
+    protected void setAttrsForCreate(AbstractPersistable persistable, UserDetails userDetails) {
         User user = slimDown(userRepository.findOneByEmailActive(userDetails.getUsername()));
         
         persistable.setCreatedDate(new Date());
@@ -47,7 +47,7 @@ public abstract class AbstractService<T> {
         persistable.setActive(true);
     }
 
-    public void setAttrsForUpdate(AbstractPersistable persistable, UserDetails userDetails, AbstractPersistable old) {
+    protected void setAttrsForUpdate(AbstractPersistable persistable, UserDetails userDetails, AbstractPersistable old) {
         User user = slimDown(userRepository.findOneByEmailActive(userDetails.getUsername()));
         
         persistable.setUpdatedDate(new Date());
@@ -58,7 +58,7 @@ public abstract class AbstractService<T> {
         persistable.setActive(true);
     }
 
-    public void setAttrsForDelete(AbstractPersistable persistable, UserDetails userDetails, AbstractPersistable old) {
+    protected void setAttrsForDelete(AbstractPersistable persistable, UserDetails userDetails, AbstractPersistable old) {
         User user = slimDown(userRepository.findOneByEmailActive(userDetails.getUsername()));
 
         persistable.setDeletedDate(new Date());

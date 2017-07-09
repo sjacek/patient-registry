@@ -22,7 +22,7 @@ import java.lang.annotation.*;
 
 /**
  *
- * @author jacek
+ * @author Jacek Sztajnke
  */
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)

@@ -26,7 +26,7 @@ import java.util.List;
 
 /**
  *
- * @author jacek
+ * @author Jacek Sztajnke
  */
 public interface CountryDictionaryRepository extends
         MongoRepository<CountryDictionary, String>,

@@ -13,6 +13,9 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Random;
 import java.util.stream.Collectors;
 
+import static java.lang.String.valueOf;
+import static java.util.stream.Collectors.joining;
+
 public class TotpAuthUtil {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -28,7 +31,7 @@ public class TotpAuthUtil {
         return false;
     }
 
-    public static long getCode(byte[] secret, long timeIndex) {
+    private static long getCode(byte[] secret, long timeIndex) {
         try {
             SecretKeySpec signKey = new SecretKeySpec(secret, "HmacSHA1");
             ByteBuffer buffer = ByteBuffer.allocate(8);
@@ -43,7 +46,7 @@ public class TotpAuthUtil {
                 truncatedHash <<= 8;
                 truncatedHash |= hash[offset + i] & 0xff;
             }
-            return truncatedHash %= 1000000;
+            return truncatedHash % 1000000;
         } catch (InvalidKeyException | NoSuchAlgorithmException | IllegalStateException e) {
             LOGGER.error("getCode", e);
             return 0;
@@ -51,8 +54,8 @@ public class TotpAuthUtil {
     }
 
     public static String randomSecret() {
-        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
-        return new Random().ints(16, 0, 32).mapToObj(i -> String.valueOf(chars.charAt(i))).collect(Collectors.joining());
+        final String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+        return new Random().ints(16, 0, 32).mapToObj(i -> valueOf(chars.charAt(i))).collect(joining());
     }
 
 }

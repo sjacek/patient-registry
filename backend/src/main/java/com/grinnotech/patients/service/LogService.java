@@ -13,7 +13,7 @@ import java.util.Map;
 
 /**
  *
- * @author jacek
+ * @author Jacek Sztajnke
  */
 @Service
 public class LogService {
