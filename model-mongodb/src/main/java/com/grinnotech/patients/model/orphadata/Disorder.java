@@ -37,7 +37,7 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 //@CompoundIndex(name = "locale_method", def = "{'locale': 1, 'method': 1, 'version': 1}", unique = true)
 @Model(value = "Patients.model.orphadata.Disorder",
 //        createMethod = "contactService.update",
-//        readMethod = "contactService.read",
+        readMethod = "contactService.read",
 //        updateMethod = "contactService.update",
 //        destroyMethod = "contactService.destroy",
         paging = true,

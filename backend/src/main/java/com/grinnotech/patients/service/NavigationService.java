@@ -67,6 +67,7 @@ public class NavigationService {
             node.addChild(new NavigationNode("diagnosis_templates", "diagnosis.Container", true, null, "x-fa fa-book", "diagnosis", EMPLOYEE));
             node.addChild(new NavigationNode("address_dictionary", "addressdictionary.Container", true, null, "x-fa fa-book", "address_dictionaries", ADMIN, EMPLOYEE));
             node.addChild(new NavigationNode("zipcodepl_dictionary", "zipcodepl.Container", true, null, "x-fa fa-book", "zipcodespl", ADMIN, EMPLOYEE));
+            node.addChild(new NavigationNode("orphadata", "orphadata.disorder.Container", true, null, "x-fa fa-book", "orphadata", ADMIN, EMPLOYEE));
             rootNodes.add(node);
         }
 

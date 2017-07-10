@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2016 Jacek Sztajnke
+ * Copyright (C) 2017 Jacek Sztajnke
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,13 +16,13 @@
  */
 /* global Ext, i18n */
 
-Ext.define('Patients.view.countrydictionary.Grid', {
+Ext.define('Patients.view.orphadata.disorder.Grid', {
     extend: 'Ext.grid.Panel',
-    xtype: 'countrylist',
+    xtype: 'orphadatadisorderlist',
     reference: 'gridPanel',
     requires: ['Ext.grid.plugin.RowEditing'],
     stateful: true,
-    stateId: 'view.countrydictionary.Grid',
+    stateId: 'view.orphadata.disorder.Grid',
     height: 100,
     beforeLayout: function () {
         this.height = Ext.Element.getViewportHeight() - 60;
