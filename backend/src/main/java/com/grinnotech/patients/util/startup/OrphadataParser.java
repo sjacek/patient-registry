@@ -86,50 +86,53 @@ public class OrphadataParser extends JsonEventParser {
         return info;
     }
 
+    private Disorder.DisorderBuilder disorderBuilder = null;
+
     private Disorder disorder = null;
 
-    protected Disorder getDisorder() {
+    public Disorder getDisorder() {
         return disorder;
     }
 
     private String externalReference;
 
     public void on_JDBOR_DisorderList_Disorder_start_object() {
-        disorder = new Disorder();
-        disorder.setSynonyms(new ArrayList<>());
+        disorderBuilder = Disorder.builder();
+        disorder = null;
         externalReference = null;
     }
 
     public void on_JDBOR_DisorderList_Disorder_end_object() {
-        assert disorder != null;
+        assert disorderBuilder != null;
+        disorder = disorderBuilder.build();
         countDisorder++;
         logger.trace("******** Disorder end {} ***************", countDisorder);
         logger.debug("{}", disorder);
     }
 
     public void on_JDBOR_DisorderList_Disorder_DisorderType_Name_label_value_string(String type) {
-        assert disorder != null;
-        disorder.setType(type);
+        assert disorderBuilder != null;
+        disorderBuilder.type(type);
     }
 
     public void on_JDBOR_DisorderList_Disorder_DisorderType_OrphaNumber_value_string(String orphaNumber) {
-        assert disorder != null;
-        disorder.setTypeOrphaNumber(parseInt(orphaNumber));
+        assert disorderBuilder != null;
+        disorderBuilder.typeOrphaNumber(parseInt(orphaNumber));
     }
 
     public void on_JDBOR_DisorderList_Disorder_ExpertLink_link_value_string(String expertLink) {
-        assert disorder != null;
-        disorder.setExpertLink(expertLink);
+        assert disorderBuilder != null;
+        disorderBuilder.expertLink(expertLink);
     }
 
     public void on_JDBOR_DisorderList_Disorder_Name_label_value_string(String name) {
-        assert disorder != null;
-        disorder.setName(name);
+        assert disorderBuilder != null;
+        disorderBuilder.name(name);
     }
 
     public void on_JDBOR_DisorderList_Disorder_OrphaNumber_value_string(String orphaNumber) {
-        assert disorder != null;
-        disorder.setOrphaNumber(parseInt(orphaNumber));
+        assert disorderBuilder != null;
+        disorderBuilder.orphaNumber(parseInt(orphaNumber));
     }
 
     public void on_JDBOR_DisorderList_Disorder_ExternalReferenceList_ExternalReference_Reference_value_string(String reference) {
@@ -137,17 +140,17 @@ public class OrphadataParser extends JsonEventParser {
     }
 
     public void on_JDBOR_DisorderList_Disorder_ExternalReferenceList_ExternalReference_Source_value_string(String source) {
-        assert disorder != null;
+        assert disorderBuilder != null;
         switch (source) {
             case "ICD-10":
-                disorder.setIcd10(externalReference);
+                disorderBuilder.icd10(externalReference);
                 externalReference = null;
                 break;
         }
     }
 
     public void on_JDBOR_DisorderList_Disorder_SynonymList_Synonym_label_value_string(String name) {
-        assert disorder != null;
-        disorder.getSynonyms().add(name);
+        assert disorderBuilder != null;
+        disorderBuilder.synonym(name);
     }
 }

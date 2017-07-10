@@ -19,9 +19,7 @@ package com.grinnotech.patients.model.orphadata;
 import ch.rasc.extclassgenerator.Model;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.grinnotech.patients.domain.AbstractPersistable;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -45,6 +43,7 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
         paging = true,
         identifier = "uuid")
 @JsonInclude(NON_NULL)
+@Builder
 @Getter
 @Setter
 @ToString
@@ -73,5 +72,6 @@ public class Disorder extends AbstractPersistable {
     @Indexed
     private String icd10;
 
+    @Singular("synonym")
     private List<String> synonyms;
 }
