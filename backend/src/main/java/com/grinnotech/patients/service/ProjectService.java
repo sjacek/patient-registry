@@ -48,7 +48,7 @@ import static com.grinnotech.patients.util.QueryUtil.getSpringSort;
 @RequireEmployeeAuthority
 public class ProjectService extends AbstractService<Project> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     @Autowired
     private ProjectRepository projectRepository;
@@ -59,7 +59,7 @@ public class ProjectService extends AbstractService<Project> {
         StringFilter filter = request.getFirstFilterForField("filter");
         List<Project> list = projectRepository.findAllActive(getSpringSort(request));
 
-        LOGGER.debug("read size:[" + list.size() + "]");
+        logger.debug("read size:[" + list.size() + "]");
 
         return new ExtDirectStoreResult<>(list);
     }
@@ -68,17 +68,17 @@ public class ProjectService extends AbstractService<Project> {
     public ExtDirectStoreResult<Project> destroy(@AuthenticationPrincipal MongoUserDetails userDetails, Project project) {
         ExtDirectStoreResult<Project> result = new ExtDirectStoreResult<>();
 
-        LOGGER.debug("destroy 1");
+        logger.debug("destroy 1");
         Project old = projectRepository.findOne(project.getId());
 
         old.setId(null);
         old.setActive(false);
         projectRepository.save(old);
-        LOGGER.debug("destroy 2 " + old.getId());
+        logger.debug("destroy 2 " + old.getId());
 
         setAttrsForDelete(project, userDetails, old);
         projectRepository.save(project);
-        LOGGER.debug("destroy end");
+        logger.debug("destroy end");
         return result.setSuccess(true);
     }
 
@@ -89,7 +89,7 @@ public class ProjectService extends AbstractService<Project> {
         ValidationMessagesResult<Project> result = new ValidationMessagesResult<>(project);
         result.setValidations(violations);
 
-        LOGGER.debug("update 1: " + project.toString());
+        logger.debug("update 1: " + project.toString());
         if (violations.isEmpty()) {
             Project old = projectRepository.findOne(project.getId());
             if (old != null) {
@@ -105,7 +105,7 @@ public class ProjectService extends AbstractService<Project> {
             projectRepository.save(project);
         }
 
-        LOGGER.debug("update end");
+        logger.debug("update end");
         return result;
     }
 

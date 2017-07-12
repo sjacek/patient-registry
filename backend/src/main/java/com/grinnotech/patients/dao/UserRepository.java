@@ -45,7 +45,7 @@ public interface UserRepository extends
     User findOneActive(String id);
 
     @Query("{ $and : [ { email: ?0 }, { active: true } ] }")
-    User findOneByEmailActive(String email);
+    User findByEmailActive(String email);
 
     @Query("{ $and : [ { passwordResetToken: ?0 }, { enabled: true }, { active: true } ] }")
     User findOneByPasswordResetTokenAndEnabled(String passwordResetToken);

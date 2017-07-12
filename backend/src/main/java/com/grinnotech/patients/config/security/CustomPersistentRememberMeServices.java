@@ -1,19 +1,13 @@
 package com.grinnotech.patients.config.security;
 
 import com.grinnotech.patients.config.AppProperties;
-import com.grinnotech.patients.config.profiles.mongodb.MongoDb;
+import com.grinnotech.patients.dao.PersistentLoginRepository;
 import com.grinnotech.patients.dao.UserRepository;
-import com.grinnotech.patients.model.CPersistentLogin;
 import com.grinnotech.patients.model.PersistentLogin;
 import com.grinnotech.patients.model.User;
-import com.mongodb.client.model.Filters;
-import com.mongodb.client.model.FindOneAndUpdateOptions;
-import com.mongodb.client.model.ReturnDocument;
-import com.mongodb.client.model.Updates;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -34,6 +28,8 @@ import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Date;
+
+import static org.springframework.http.HttpHeaders.USER_AGENT;
 
 /**
  * Copy of the CustomPersistentRememberMeServices class from the
@@ -69,23 +65,30 @@ public class CustomPersistentRememberMeServices extends AbstractRememberMeServic
 
     private final SecureRandom random;
 
-    private final MongoDb mongoDb;
+//    private final MongoDb mongoDb;
     
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+
+    private final PersistentLoginRepository persistentLoginRepository;
 
     private final int tokenValidInSeconds;
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     @Autowired
-    public CustomPersistentRememberMeServices(MongoDb mongoDb, UserDetailsService userDetailsService, AppProperties appProperties) {
+    public CustomPersistentRememberMeServices(//MongoDb mongoDb,
+                                              UserDetailsService userDetailsService,
+                                              AppProperties appProperties,
+                                              UserRepository userRepository,
+                                              PersistentLoginRepository persistentLoginRepository) {
         super(appProperties.getRemembermeCookieKey(), userDetailsService);
 
         this.tokenValidInSeconds = 60 * 60 * 24 * appProperties.getRemembermeCookieValidInDays();
 
-        this.mongoDb = mongoDb;
+//        this.mongoDb = mongoDb;
         this.random = new SecureRandom();
+        this.userRepository = userRepository;
+        this.persistentLoginRepository = persistentLoginRepository;
     }
 
     @Override
@@ -93,25 +96,31 @@ public class CustomPersistentRememberMeServices extends AbstractRememberMeServic
 
         String series = getPersistentToken(cookieTokens);
 
-        PersistentLogin pl = mongoDb.getCollection(PersistentLogin.class)
-                .findOneAndUpdate(Filters.eq(CPersistentLogin.series, series),
-                        Updates.combine(
-                                Updates.set(CPersistentLogin.lastUsed, new Date()),
-                                Updates.set(CPersistentLogin.token, generateTokenData()),
-                                Updates.set(CPersistentLogin.ipAddress, request.getRemoteAddr()),
-                                Updates.set(CPersistentLogin.userAgent, request.getHeader(HttpHeaders.USER_AGENT))),
-                        new FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
-                );
+//        PersistentLogin pl = mongoDb.getCollection(PersistentLogin.class)
+//                .findOneAndUpdate(Filters.eq(CPersistentLogin.series, series),
+//                        Updates.combine(
+//                                Updates.set(CPersistentLogin.lastUsed, new Date()),
+//                                Updates.set(CPersistentLogin.token, generateTokenData()),
+//                                Updates.set(CPersistentLogin.ipAddress, request.getRemoteAddr()),
+//                                Updates.set(CPersistentLogin.userAgent, request.getHeader(HttpHeaders.USER_AGENT))),
+//                        new FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
+//                );
+        PersistentLogin login = persistentLoginRepository.findFirstBySeries(series);
+        login.setLastUsed(new Date());
+        login.setToken(generateTokenData());
+        login.setIpAddress(request.getRemoteAddr());
+        login.setUserAgent(request.getHeader(USER_AGENT));
+        persistentLoginRepository.save(login);
 
-        User user = userRepository.findOneActive(pl.getUserId());
-        String loginName = user.getEmail();
-        String token = pl.getToken();
+        User user = userRepository.findOneActive(login.getUserId());
+//        String loginName = user.getEmail();
+//        String token = login.getToken();
 
-        logger.debug("Refreshing persistent login token for user '{}', series '{}'", loginName, series);
+        logger.debug("Refreshing persistent login token for user '{}', series '{}'", user.getEmail(), series);
 
-        addCookie(series, token, request, response);
+        addCookie(series, login.getToken(), request, response);
 
-        return getUserDetailsService().loadUserByUsername(loginName);
+        return getUserDetailsService().loadUserByUsername(user.getEmail());
     }
 
     /**
@@ -128,21 +137,29 @@ public class CustomPersistentRememberMeServices extends AbstractRememberMeServic
 
         logger.debug("Creating new persistent login for user {}", loginName);
 
-        User user = userRepository.findOneByEmailActive(loginName);
+        User user = userRepository.findByEmailActive(loginName);
         if (user == null) {
             throw new UsernameNotFoundException("User " + loginName + " was not found in the database");
         }
 
-        PersistentLogin newPersistentLogin = new PersistentLogin();
-        newPersistentLogin.setSeries(generateSeriesData());
-        newPersistentLogin.setUserId(user.getId());
-        newPersistentLogin.setToken(generateTokenData());
-        newPersistentLogin.setLastUsed(new Date());
-        newPersistentLogin.setIpAddress(request.getRemoteAddr());
-        newPersistentLogin.setUserAgent(request.getHeader(HttpHeaders.USER_AGENT));
-        mongoDb.getCollection(PersistentLogin.class).insertOne(newPersistentLogin);
+//        PersistentLogin newPersistentLogin = new PersistentLogin();
+//        newPersistentLogin.setSeries(generateSeriesData());
+//        newPersistentLogin.setUserId(user.getId());
+//        newPersistentLogin.setToken(generateTokenData());
+//        newPersistentLogin.setLastUsed(new Date());
+//        newPersistentLogin.setIpAddress(request.getRemoteAddr());
+//        newPersistentLogin.setUserAgent(request.getHeader(USER_AGENT));
+//        mongoDb.getCollection(PersistentLogin.class).insertOne(newPersistentLogin);
+        PersistentLogin login = PersistentLogin.builder()
+                .series(generateSeriesData())
+                .userId(user.getId())
+                .token(generateTokenData())
+                .lastUsed(new Date())
+                .ipAddress(request.getRemoteAddr())
+                .userAgent(request.getHeader(USER_AGENT)).build();
+        login = persistentLoginRepository.save(login);
 
-        addCookie(newPersistentLogin.getSeries(), newPersistentLogin.getToken(), request, response);
+        addCookie(login.getSeries(), login.getToken(), request, response);
     }
 
     /**
@@ -161,7 +178,7 @@ public class CustomPersistentRememberMeServices extends AbstractRememberMeServic
         if (rememberMeCookie != null && rememberMeCookie.length() != 0) {
             try {
                 String[] cookieTokens = decodeCookie(rememberMeCookie);
-                removePersistentLogin(getPersistentToken(cookieTokens));
+                persistentLoginRepository.deleteBySeries(getPersistentToken(cookieTokens));
             } catch (InvalidCookieException ice) {
                 logger.info("Invalid cookie, no persistent token could be deleted");
             } catch (RememberMeAuthenticationException rmae) {
@@ -172,9 +189,9 @@ public class CustomPersistentRememberMeServices extends AbstractRememberMeServic
         super.logout(request, response, authentication);
     }
 
-    private void removePersistentLogin(String series) {
-        mongoDb.getCollection(PersistentLogin.class).deleteOne(Filters.eq(CPersistentLogin.series, series));
-    }
+//    private void removePersistentLogin(String series) {
+//        mongoDb.getCollection(PersistentLogin.class).deleteOne(Filters.eq(CPersistentLogin.series, series));
+//    }
 
     /**
      * Validate the token and return it.
@@ -188,30 +205,32 @@ public class CustomPersistentRememberMeServices extends AbstractRememberMeServic
         final String presentedSeries = cookieTokens[0];
         final String presentedToken = cookieTokens[1];
 
-        PersistentLogin pl = mongoDb.getCollection(PersistentLogin.class).find(Filters.eq(CPersistentLogin.series, presentedSeries)).first();
-
-        if (pl == null) {
+//        PersistentLogin login = mongoDb.getCollection(PersistentLogin.class).find(Filters.eq(CPersistentLogin.series, presentedSeries)).first();
+        PersistentLogin login = persistentLoginRepository.findFirstBySeries(presentedSeries);
+        if (login == null) {
             // No series match, so we can't authenticate using this cookie
             throw new RememberMeAuthenticationException("No persistent token found for series id: " + presentedSeries);
         }
 
-        String token = pl.getToken();
-        String series = pl.getSeries();
+        String token = login.getToken();
+        String series = login.getSeries();
 
         // We have a match for this user/series combination
         if (!presentedToken.equals(token)) {
             // Presented token doesn't match stored token. Delete persistentLogin
-            removePersistentLogin(series);
+//            removePersistentLogin(series);
+            persistentLoginRepository.deleteBySeries(series);
 
             throw new CookieTheftException(this.messages.getMessage(
                     "PersistentTokenBasedRememberMeServices.cookieStolen",
                     "Invalid remember-me token (Series/token) mismatch. Implies previous cookie theft attack."));
         }
-        Instant instant = Instant.ofEpochMilli(pl.getLastUsed().getTime());
+        Instant instant = Instant.ofEpochMilli(login.getLastUsed().getTime());
         LocalDateTime ldt = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
 
-        if (ldt.plusSeconds(this.tokenValidInSeconds).isBefore(LocalDateTime.now())) {
-            removePersistentLogin(series);
+        if (ldt.plusSeconds(tokenValidInSeconds).isBefore(LocalDateTime.now())) {
+//            removePersistentLogin(series);
+            persistentLoginRepository.deleteBySeries(series);
             throw new RememberMeAuthenticationException("Remember-me login has expired");
         }
 

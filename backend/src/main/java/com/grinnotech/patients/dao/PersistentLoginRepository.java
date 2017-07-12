@@ -19,7 +19,7 @@ package com.grinnotech.patients.dao;
 import com.grinnotech.patients.model.PersistentLogin;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-import java.util.List;
+import java.util.Collection;
 
 /**
  *
@@ -27,7 +27,13 @@ import java.util.List;
  */
 public interface PersistentLoginRepository extends MongoRepository<PersistentLogin, String> /*, QueryDslPredicateExecutor<PersistentLogin> */ {
 
-    List<PersistentLogin> findByUserId(String userId);
-    
-    int deletePersistentLoginBySeriesAndUserId(String series, String userId);
+    Collection<PersistentLogin> findByUserId(String userId);
+
+    void deletePersistentLoginBySeriesAndUserId(String series, String userId);
+
+    void deleteBySeries(String series);
+
+    void deleteByUserId(String userId);
+
+    PersistentLogin findFirstBySeries(String series);
 }

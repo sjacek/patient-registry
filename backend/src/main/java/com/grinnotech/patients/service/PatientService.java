@@ -125,10 +125,10 @@ public class PatientService extends AbstractService<Patient> {
         List<ValidationMessages> validations = super.validateEntity(patient);
 
         if (!peselIsValid(patient.getPesel())) {
-            ValidationMessages validationError = new ValidationMessages();
-            validationError.setField("pesel");
-            validationError.setMessage(messageSource.getMessage("patient_pesel_not_valid", null, locale));
-            validations.add(validationError);
+            validations.add(ValidationMessages.builder()
+                    .field("pesel")
+                    .message(messageSource.getMessage("patient_pesel_not_valid", null, locale))
+                    .build());
         }
         return validations;
     }

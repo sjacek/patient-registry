@@ -1,6 +1,5 @@
 package com.grinnotech.patients.model;
 
-import ch.rasc.bsoncodec.annotation.BsonDocument;
 import ch.rasc.bsoncodec.annotation.Id;
 import ch.rasc.bsoncodec.annotation.Transient;
 import ch.rasc.extclassgenerator.Model;
@@ -8,18 +7,25 @@ import ch.rasc.extclassgenerator.ModelField;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Date;
 
-@BsonDocument
+@Document
 @Model(value = "Patients.model.PersistentLogin",
         idProperty = "series",
         readMethod = "userConfigService.readPersistentLogins",
         destroyMethod = "userConfigService.destroyPersistentLogin",
         writeAllFields = false)
 @JsonInclude(Include.NON_NULL)
+@Getter
+@Setter
+@Builder
 public class PersistentLogin {
 
     @Id
@@ -48,77 +54,4 @@ public class PersistentLogin {
 
     @Transient
     private String operatingSystem;
-
-    public String getSeries() {
-        return this.series;
-    }
-
-    public void setSeries(String series) {
-        this.series = series;
-    }
-
-    public String getToken() {
-        return this.token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-    public Date getLastUsed() {
-        return this.lastUsed;
-    }
-
-    public void setLastUsed(Date lastUsed) {
-        this.lastUsed = lastUsed;
-    }
-
-    public String getIpAddress() {
-        return this.ipAddress;
-    }
-
-    public void setIpAddress(String ipAddress) {
-        this.ipAddress = ipAddress;
-    }
-
-    public String getUserAgent() {
-        return this.userAgent;
-    }
-
-    public void setUserAgent(String userAgent) {
-        this.userAgent = userAgent;
-    }
-
-    public String getUserId() {
-        return this.userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public String getUserAgentName() {
-        return this.userAgentName;
-    }
-
-    public void setUserAgentName(String userAgentName) {
-        this.userAgentName = userAgentName;
-    }
-
-    public String getUserAgentVersion() {
-        return this.userAgentVersion;
-    }
-
-    public void setUserAgentVersion(String userAgentVersion) {
-        this.userAgentVersion = userAgentVersion;
-    }
-
-    public String getOperatingSystem() {
-        return this.operatingSystem;
-    }
-
-    public void setOperatingSystem(String operatingSystem) {
-        this.operatingSystem = operatingSystem;
-    }
-
 }

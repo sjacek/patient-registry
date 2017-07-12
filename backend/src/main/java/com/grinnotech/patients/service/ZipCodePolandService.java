@@ -50,7 +50,7 @@ import static com.grinnotech.patients.util.QueryUtil.getPageable;
 @RequireAnyAuthority
 public class ZipCodePolandService extends AbstractService<ZipCodePoland> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     @Autowired
     private ZipCodePolandRepository zipCodePolandRepository;
@@ -64,7 +64,7 @@ public class ZipCodePolandService extends AbstractService<ZipCodePoland> {
                 ? zipCodePolandRepository.findAllWithFilterActive(filter.getValue(), getPageable(request))
                 : zipCodePolandRepository.findAllActive(getPageable(request));
 
-        LOGGER.debug("read size:[" + page.getSize() + "]");
+        logger.debug("read size:[" + page.getSize() + "]");
         return new ExtDirectStoreResult<>(page.getTotalElements(), page.getContent());
     }
 
@@ -73,17 +73,17 @@ public class ZipCodePolandService extends AbstractService<ZipCodePoland> {
     public ExtDirectStoreResult<ZipCodePoland> destroy(@AuthenticationPrincipal MongoUserDetails userDetails, ZipCodePoland zipCodePoland) {
         ExtDirectStoreResult<ZipCodePoland> result = new ExtDirectStoreResult<>();
 
-        LOGGER.debug("destroy 1");
+        logger.debug("destroy 1");
         ZipCodePoland old = zipCodePolandRepository.findOne(zipCodePoland.getId());
 
         old.setId(null);
         old.setActive(false);
         zipCodePolandRepository.save(old);
-        LOGGER.debug("destroy 2 " + old.getId());
+        logger.debug("destroy 2 " + old.getId());
 
         setAttrsForDelete(zipCodePoland, userDetails, old);
         zipCodePolandRepository.save(zipCodePoland);
-        LOGGER.debug("destroy end");
+        logger.debug("destroy end");
         return result.setSuccess(true);
     }
 
@@ -95,14 +95,14 @@ public class ZipCodePolandService extends AbstractService<ZipCodePoland> {
         ValidationMessagesResult<ZipCodePoland> result = new ValidationMessagesResult<>(zipCodePoland);
         result.setValidations(violations);
 
-        LOGGER.debug("update 1: " + zipCodePoland.toString());
+        logger.debug("update 1: " + zipCodePoland.toString());
         if (violations.isEmpty()) {
             ZipCodePoland old = zipCodePolandRepository.findOne(zipCodePoland.getId());
             if (old != null) {
                 old.setId(null);
                 old.setActive(false);
                 zipCodePolandRepository.save(old);
-                LOGGER.debug("update 2 " + old);
+                logger.debug("update 2 " + old);
                 setAttrsForUpdate(zipCodePoland, userDetails, old);
             }
             else {
@@ -110,10 +110,10 @@ public class ZipCodePolandService extends AbstractService<ZipCodePoland> {
             }
 
             zipCodePolandRepository.save(zipCodePoland);
-            LOGGER.debug("update 3");
+            logger.debug("update 3");
         }
         
-        LOGGER.debug("update end");
+        logger.debug("update end");
         return result;
     }
 

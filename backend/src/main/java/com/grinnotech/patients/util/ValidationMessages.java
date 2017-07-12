@@ -1,14 +1,21 @@
 package com.grinnotech.patients.util;
 
+import lombok.Builder;
+import lombok.Singular;
+
+import java.util.List;
+
 /**
  *
  * @author Jacek Sztajnke
  */
+@Builder
 public class ValidationMessages {
 
     private String field;
 
-    private String[] messages;
+    @Singular("message")
+    private List<String> messages;
 
     public String getField() {
         return this.field;
@@ -18,15 +25,15 @@ public class ValidationMessages {
         this.field = field;
     }
 
-    public String[] getMessages() {
+    public List<String> getMessages() {
         return this.messages;
     }
 
-    public void setMessages(String[] messages) {
+    public void setMessages(List<String> messages) {
         this.messages = messages;
     }
 
-    public void setMessage(String message) {
-        this.messages = new String[]{message};
-    }
+//    public void setMessage(String message) {
+//        this.messages = new String[]{message};
+//    }
 }
