@@ -74,9 +74,21 @@ Ext.define('Patients.view.main.MainController', {
         var orgs = user.organizations;
         logService.debug(JSON.stringify(user));
         logService.debug(JSON.stringify(orgs));
-        //
+
         var organizationsStore = me.getViewModel().getStore('organizations');
-        // // operationsStore.load(user.organizations);
+        // organizationsStore.load(user.organizations);
+        // user.organizations.forEach = function(organization) {
+        //     // organizationsStore.add({id: organization})
+        //     logService.debug(JSON.stringify(organization));
+        // };
+        for (var k in target){
+            if (target.hasOwnProperty(k)) {
+                alert("Key is " + k + ", value is" + target[k]);
+            }
+        }
+        // Object.keys(user.organizations).forEach(function(key) {
+        //     logService.debug(key, user.organizations[key]);
+        // });
         organizationsStore.add({id: 'bla', name: 'blabla'});
 
         if (localStorage.patients_navigation_micro === 'true') {
