@@ -196,12 +196,6 @@ class Startup {
         }
     }
 
-//    @Value("${orphadata.enabled:true}")
-//    private boolean orphadataEnabled;
-//
-//    @Value("${orphadata.url.pl}")
-//    private String orphadataUrlPl;
-
     private void initZipCodePoland() {
         final String CSV = "kody-pocztowe_GUS.csv";
 

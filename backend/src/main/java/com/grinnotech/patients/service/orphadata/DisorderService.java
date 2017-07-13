@@ -19,6 +19,7 @@ package com.grinnotech.patients.service.orphadata;
 import ch.ralscha.extdirectspring.annotation.ExtDirectMethod;
 import ch.ralscha.extdirectspring.bean.ExtDirectStoreReadRequest;
 import ch.ralscha.extdirectspring.bean.ExtDirectStoreResult;
+import ch.ralscha.extdirectspring.filter.StringFilter;
 import com.grinnotech.patients.dao.authorities.RequireEmployeeAuthority;
 import com.grinnotech.patients.dao.orphadata.DisorderRepository;
 import com.grinnotech.patients.model.orphadata.Disorder;
@@ -26,10 +27,11 @@ import com.grinnotech.patients.service.AbstractService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
-import java.util.List;
+import java.util.Collection;
 
 import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.STORE_READ;
 import static com.grinnotech.patients.util.QueryUtil.getSpringSort;
@@ -48,10 +50,21 @@ public class DisorderService extends AbstractService<Disorder> {
 
     @ExtDirectMethod(STORE_READ)
     public ExtDirectStoreResult<Disorder> read(ExtDirectStoreReadRequest request) {
-        logger.debug("read 1");
-        List<Disorder> list = disorderRepository .findAll(getSpringSort(request));
-        logger.debug("read size:[" + list.size() + "]");
-        return new ExtDirectStoreResult<>(list);
+        StringFilter stringFilter = request.getFirstFilterForField("filter");
+        String filter = stringFilter != null ? stringFilter.getValue() : "";
+        Collection<Disorder> collection = findAllDisorders(filter, getSpringSort(request));
+        return new ExtDirectStoreResult<>(collection);
+    }
+
+    private Collection<Disorder> findAllDisorders(String filter, Sort sort) {
+
+        Collection<Disorder> collection = filter.isEmpty()
+                ? disorderRepository.findAll(sort)
+                : disorderRepository.findAllWithFilter(filter, sort);
+
+        logger.debug("findAllPatients size:[" + collection.size() + "]");
+
+        return collection;
     }
 
 //    @ExtDirectMethod(STORE_MODIFY)

@@ -34,18 +34,32 @@ Ext.define('Patients.view.orphadata.disorder.Grid', {
         selection: '{selectedObject}'
     },
     header: {
-        title: i18n.country_dictionary,
+        title: i18n.orphadata_disorders,
         defaults: {
             xtype: 'button',
             margin: '0 0 0 5'
         },
         items: [{
-                text: i18n.create,
-                tooltip: i18n.contact_create_tooltip,
-                iconCls: 'x-fa fa-plus',
-                ui: 'soft-green',
-                handler: 'newObject'
-            }]
+            xtype: 'textfield',
+            emptyText: i18n.filter,
+            reference: 'textFilter',
+            width: 250,
+            plugins: [{
+                ptype: 'clearable'
+            }],
+            listeners: {
+                change: {
+                    fn: 'onFilter',
+                    buffer: 500
+                }
+            }
+        // }, {
+        //     text: i18n.create,
+        //     tooltip: i18n.contact_create_tooltip,
+        //     iconCls: 'x-fa fa-plus',
+        //     ui: 'soft-green',
+        //     handler: 'newObject'
+        }]
     },
     listeners: {
         canceledit: 'back',
@@ -61,45 +75,60 @@ Ext.define('Patients.view.orphadata.disorder.Grid', {
     },
     selModel: 'rowmodel',
     columns: [{
-            text: i18n.id,
-            dataIndex: 'id',
-            flex: 0,
-            stateId: 'view.countrydictionary.Grid.id',
-            hidden: true
-        }, {
-            text: i18n.address_country,
-            dataIndex: 'country',
-            editor: {
-                completeOnEnter: false,
-                // If the editor config contains a field property, then
-                // the editor config is used to create the <a href='Ext.grid.CellEditor.html'>Ext.grid.CellEditor</a>
-                // and the field property is used to create the editing input field.
-                field: {
-                    xtype: 'textfield',
-                    allowBlank: false
-                }
-            },
-            flex: 1,
-            stateId: 'view.countrydictionary.Grid.method'
-        }, {
-            text: i18n.version,
-            dataIndex: 'version',
-            flex: 1,
-            stateId: 'view.countrydictionary.Grid.version',
-            hidden: true
-        }, {
-            xtype: 'actioncolumn',
-            width: 50,
-            items: [{
-                    iconCls: 'x-fa fa-edit',
-                    tooltip: i18n.contact_edit_tooltip,
-                    handler: 'onEdit'
-                }, {
-                    iconCls: 'x-fa fa-times',
-                    tooltip: i18n.contact_delete_tooltip,
-                    handler: 'onDelete'
-                }]
-        }],
+        text: i18n.id,
+        dataIndex: 'id',
+        flex: 0,
+        stateId: 'view.orphadata.disorder.Grid.id',
+        hidden: true
+    }, {
+        text: i18n.orphadata_disorder_orphanumber,
+        dataIndex: 'orphaNumber',
+        flex: 1,
+        stateId: 'view.orphadata.disorder.Grid.orphaNumber'
+    }, {
+        text: i18n.orphadata_disorder_name,
+        dataIndex: 'name',
+        flex: 1,
+        stateId: 'view.orphadata.disorder.Grid.name'
+    }, {
+        text: i18n.orphadata_disorder_type,
+        dataIndex: 'type',
+        flex: 1,
+        stateId: 'view.orphadata.disorder.Grid.type'
+    }, {
+        text: i18n.orphadata_disorder_expert_link,
+        dataIndex: 'expertLink',
+        renderer : function(ref) {
+            return '<a href="' + ref + '" target="_blank">' + ref + '</a>';
+        },
+        flex: 1,
+        stateId: 'view.orphadata.disorder.Grid.expertLink'
+    }, {
+        text: i18n.orphadata_disorder_icd10,
+        dataIndex: 'icd10',
+        flex: 1,
+        stateId: 'view.orphadata.disorder.Grid.icd10'
+    }, {
+        text: i18n.orphadata_disorder_synonyms,
+        dataIndex: 'synonyms',
+        flex: 1,
+        stateId: 'view.orphadata.disorder.Grid.synonyms',
+        css: 'white-space:normal;',
+        renderer: function (value) {
+            var ret = "";
+            for (var i = 0, len = value.length; i < len; i++) {
+                if (ret.length > 0) ret += "<BR/>";
+                ret += value[i];
+            }
+            return ret;
+        }
+    }, {
+        text: i18n.version,
+        dataIndex: 'version',
+        flex: 1,
+        stateId: 'view.orphadata.disorder.Grid.version',
+        hidden: true
+    }],
     dockedItems: [
         {xtype: 'pagingtoolbar', bind: {store: '{objects}'}, dock: 'bottom', displayInfo: true}
     ]

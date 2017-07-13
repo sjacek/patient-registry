@@ -26,21 +26,22 @@ Ext.define('Patients.view.orphadata.disorder.ViewModel', {
     },
     stores: {
         objects: {
-            model: 'Patients.model.orphadata.Disorder',
-            autoLoad: false,
-            autoSync: true,
-            pageSize: 100,
-            buffered: true,
-            remoteSort: true,
-            remoteFilter: true,
-            sorters: [{
-                property: 'name',
-                direction: 'ASC'
-            }],
+            type: 'disorder',
+            // model: 'Patients.model.orphadata.Disorder',
+            // autoLoad: true,
+            // autoSync: true,
+            // pageSize: 100,
+            // buffered: true,
+            // remoteSort: true,
+            // remoteFilter: true,
+            // sorters: [{
+            //     property: 'name',
+            //     direction: 'ASC'
+            // }],
+            // leadingBufferZone: 200,
             listeners: {
                 load: 'onObjectStoreLoad'
-            },
-            leadingBufferZone: 200
+            }
         }
     }
 });

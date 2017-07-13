@@ -17,8 +17,12 @@
 package com.grinnotech.patients.dao.orphadata;
 
 import com.grinnotech.patients.model.orphadata.Disorder;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+
+import java.util.Collection;
 
 /**
  * @author Jacek Sztajnke
@@ -26,4 +30,8 @@ import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 public interface DisorderRepository extends
         MongoRepository<Disorder, String>,
         QueryDslPredicateExecutor<Disorder> {
+
+    @Query("{ $or:["
+            + " {name: {$regex:?0,$options:'i'}}, {icd10: {$regex:?0,$options:'i'}}, {synonyms: {$regex:?0,$options:'i'}} ]} }")
+    Collection<Disorder> findAllWithFilter(String filter, Sort sort);
 }

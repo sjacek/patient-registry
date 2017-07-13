@@ -89,11 +89,12 @@ Ext.define('Patients.view.user.Grid', {
         renderer: function (value) {
             var ret = "";
             for (var i = 0, len = value.length; i < len; i++) {
-                if (ret.length > 0) ret += ",";
+                if (ret.length > 0) ret += "<BR/>";
                 ret += value[i].name;
             }
             return ret;
         },
+        css: 'white-space:normal;',
         flex: 1,
         stateId: 'view.organization.Grid.parent'
     }, {
