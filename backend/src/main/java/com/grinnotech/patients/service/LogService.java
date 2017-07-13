@@ -18,7 +18,7 @@ import java.util.Map;
 @Service
 public class LogService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final static String LINE_SEPARATOR = System.getProperty("line.separator");
 
@@ -28,21 +28,20 @@ public class LogService {
         StringBuilder sb = new StringBuilder();
         sb.append("JavaScript Error").append(LINE_SEPARATOR).append("User-Agent: ").append(userAgent);
 
-        crashData.forEach((k, v) ->
-                sb.append(LINE_SEPARATOR).append(k).append(": ").append(v));
+        crashData.forEach((k, v) -> sb.append(LINE_SEPARATOR).append(k).append(": ").append(v));
 
-        LOGGER.error(sb.toString());
+        logger.error(sb.toString());
     }
 
     @ExtDirectMethod
     @Async
     public void info(String message) {
-        LOGGER.info(message);
+        logger.info(message);
     }
 
     @ExtDirectMethod
     @Async
     public void debug(String message) {
-        LOGGER.debug(message);
+        logger.debug(message);
     }
 }

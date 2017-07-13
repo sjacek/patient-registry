@@ -105,29 +105,20 @@ class Startup {
 
     private void initOrganizations() {
         Organization root = organizationRepository.findByCodeActive("ROOT");
-        if (root == null) {
+        if (root == null)
             root = insert(Organization.builder().name("ROOT").code("ROOT").build(), organizationRepository);
-        }
         uuidRoot = root.getId();
 
         Organization ppmdPoland = organizationRepository.findByCodeActive("PPMDPoland");
-        if (ppmdPoland == null) {
+        if (ppmdPoland == null)
             ppmdPoland = insert(Organization.builder()
-                            .name("Fundacja Parent Project Muscular Dystrophy")
-                            .code("PPMDPoland")
-                            .parentId(uuidRoot).build(),
+                            .name("Fundacja Parent Project Muscular Dystrophy").code("PPMDPoland").parentId(uuidRoot).build(),
                     organizationRepository);
-        }
         uuidPpmdPoland = ppmdPoland.getId();
 
         Organization test = organizationRepository.findByCodeActive("test");
-        if (test == null) {
-            test = insert(Organization.builder()
-                            .name("Test")
-                            .code("test")
-                            .parentId(uuidRoot).build(),
-                    organizationRepository);
-        }
+        if (test == null)
+            test = insert(Organization.builder().name("Test").code("test").parentId(uuidRoot).build(),organizationRepository);
         uuidTest = test.getId();
     }
 
@@ -162,22 +153,10 @@ class Startup {
         if (contactRepository.count() != 0)
             return;
 
-        insert(ContactMethod.builder().locale("pl_PL")
-                .method("telefon domowy")
-                .description("Telefon domowy")
-                .build(), contactRepository);
-        insert(ContactMethod.builder().locale("pl_PL")
-                .method("telefon komórkowy")
-                .description("Telefon komórkowy")
-                .build(), contactRepository);
-        insert(ContactMethod.builder().locale("pl_PL")
-                .method("telefon służbowy")
-                .description("Telefon służbowy")
-                .build(), contactRepository);
-        insert(ContactMethod.builder().locale("pl_PL")
-                .method("e-mail")
-                .description("Poczta elektroniczna")
-                .build(), contactRepository);
+        insert(ContactMethod.builder().method("telefon domowy").description("Telefon domowy").locale("pl_PL").build(), contactRepository);
+        insert(ContactMethod.builder().method("telefon komórkowy").description("Telefon komórkowy").locale("pl_PL").build(), contactRepository);
+        insert(ContactMethod.builder().method("telefon służbowy").description("Telefon służbowy").locale("pl_PL").build(), contactRepository);
+        insert(ContactMethod.builder().method("e-mail").description("Poczta elektroniczna").locale("pl_PL").build(), contactRepository);
     }
 
     private void initAddressDictionary() {
