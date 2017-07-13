@@ -20,6 +20,8 @@ package com.grinnotech.patients.domain;
 import ch.rasc.extclassgenerator.ModelField;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.grinnotech.patients.model.User;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -34,6 +36,8 @@ import static javax.persistence.TemporalType.DATE;
  * @author Jacek Sztajnke
  */
 @MappedSuperclass
+@Setter
+@Getter
 public abstract class AbstractPersistable implements Serializable {
 
     @Id
@@ -85,94 +89,6 @@ public abstract class AbstractPersistable implements Serializable {
     @Temporal(DATE)
     private Date deletedDate;
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public Integer getVersion() {
-        return version;
-    }
-
-    public String getChainId() {
-        return chainId;
-    }
-    
-    public void setChainId(String chainId) {
-        this.chainId = chainId;
-    }
-    
-    public String getPrevId() {
-        return prevId;
-    }
-    
-    public void setPrevId(String prevId) {
-        this.prevId = prevId;
-    }
-    
-    public void setVersion(Integer version) {
-        this.version = version;
-    }
-
-    public User getCreatedBy() {
-        return createdBy;
-    }
-    
-    public void setCreatedBy(User user) {
-        this.createdBy = user;
-    }
-    
-    public Date getCreatedDate() {
-        return createdDate;
-    }
-    
-    public void setCreatedDate(Date date) {
-        this.createdDate = date;
-    }
-    
-    public User getUpdatedBy() {
-        return updatedBy;
-    }
-    
-    public void setUpdatedBy(User user) {
-        this.updatedBy = user;
-    }
-    
-    public Date getUpdatedDate() {
-        return updatedDate;
-    }
-    
-    public void setUpdatedDate(Date date) {
-        this.updatedDate = date;
-    }
-    
-    public boolean isActive() {
-        return this.active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
-    }
-
-    public User getDeletedBy() {
-        return deletedBy;
-    }
-    
-    public void setDeletedBy(User user) {
-        this.deletedBy = user;
-    }
-    
-    public Date getDeletedDate() {
-        return deletedDate;
-    }
-    
-    public void setDeletedDate(Date date) {
-        this.deletedDate = date;
-    }
-        
     @Override
     public String toString() {
         return String.format("Entity of type %s with id: %s", this.getClass().getName(), getId());

@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2015 Jacek Sztajnke
+ * Copyright (C) 2017 Jacek Sztajnke
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,11 +17,11 @@
 
 /* global Ext */
 
-Ext.define('Patients.store.User', {
+Ext.define('Patients.store.orphadata.Disorder', {
     extend: 'Ext.data.BufferedStore',
-    alias: 'store.user',
-    storeId: 'User',
-    model: 'Patients.model.User',
+    alias: 'store.disorder',
+    storeId: 'Disorder',
+    model: 'Patients.model.orphadata.Disorder',
     autoLoad: true,
     autoSync: true,
     pageSize: 100,
@@ -29,7 +29,7 @@ Ext.define('Patients.store.User', {
     remoteSort: true,
     remoteFilter: true,
     sorters: [{
-            property: 'lastName',
+            property: 'name',
             direction: 'ASC'
         }],
     leadingBufferZone: 200

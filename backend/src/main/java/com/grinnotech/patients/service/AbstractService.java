@@ -27,6 +27,8 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import java.util.*;
 
+import static java.util.stream.Collectors.toList;
+
 /**
  *
  * @author Jacek Sztajnke
@@ -37,7 +39,7 @@ public abstract class AbstractService<T> {
     private UserRepository userRepository;
 
     protected void setAttrsForCreate(AbstractPersistable persistable, UserDetails userDetails) {
-        User user = slimDown(userRepository.findOneByEmailActive(userDetails.getUsername()));
+        User user = slimDown(userRepository.findByEmailActive(userDetails.getUsername()));
         
         persistable.setCreatedDate(new Date());
         persistable.setCreatedBy(user);
@@ -48,7 +50,7 @@ public abstract class AbstractService<T> {
     }
 
     protected void setAttrsForUpdate(AbstractPersistable persistable, UserDetails userDetails, AbstractPersistable old) {
-        User user = slimDown(userRepository.findOneByEmailActive(userDetails.getUsername()));
+        User user = slimDown(userRepository.findByEmailActive(userDetails.getUsername()));
         
         persistable.setUpdatedDate(new Date());
         persistable.setUpdatedBy(user);
@@ -59,7 +61,7 @@ public abstract class AbstractService<T> {
     }
 
     protected void setAttrsForDelete(AbstractPersistable persistable, UserDetails userDetails, AbstractPersistable old) {
-        User user = slimDown(userRepository.findOneByEmailActive(userDetails.getUsername()));
+        User user = slimDown(userRepository.findByEmailActive(userDetails.getUsername()));
 
         persistable.setDeletedDate(new Date());
         persistable.setDeletedBy(user);
@@ -88,22 +90,19 @@ public abstract class AbstractService<T> {
 
     protected List<ValidationMessages> validateEntity(T entity, Class<?>... groups) {
         Set<ConstraintViolation<T>> constraintViolations = validator.validate(entity, groups);
-        Map<String, List<String>> fieldMessages = new HashMap<>();
-        if (!constraintViolations.isEmpty()) {
-            constraintViolations.forEach(constraintViolation -> {
-                String property = constraintViolation.getPropertyPath().toString();
-                List<String> messages = fieldMessages.computeIfAbsent(property, k -> new ArrayList<>());
-                messages.add(constraintViolation.getMessage());
-            });
-        }
-        List<ValidationMessages> validationErrors = new ArrayList<>();
-        fieldMessages.forEach((k, v) -> {
-            ValidationMessages errors = new ValidationMessages();
-            errors.setField(k);
-            errors.setMessages(v.toArray(new String[v.size()]));
-            validationErrors.add(errors);
-        });
+        if (constraintViolations.isEmpty())
+            return new ArrayList<>();
 
-        return validationErrors;
+        //TODO:
+        Map<String, List<String>> fieldMessages = new HashMap<>();
+        constraintViolations.forEach(constraintViolation -> {
+             String property = constraintViolation.getPropertyPath().toString();
+             List<String> messages = fieldMessages.computeIfAbsent(property, k -> new ArrayList<>());
+             messages.add(constraintViolation.getMessage());
+         });
+
+        return fieldMessages.entrySet().stream().map(e ->
+                ValidationMessages.builder().field(e.getKey()).messages(e.getValue()).build())
+                .collect(toList());
     }
 }

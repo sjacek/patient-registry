@@ -16,13 +16,13 @@
  */
 /* global Ext, i18n */
 
-Ext.define('Patients.view.country.Grid', {
+Ext.define('Patients.view.countrydictionary.Grid', {
     extend: 'Ext.grid.Panel',
     xtype: 'countrylist',
     reference: 'gridPanel',
     requires: ['Ext.grid.plugin.RowEditing'],
     stateful: true,
-    stateId: 'view.contactmethod.Grid',
+    stateId: 'view.countrydictionary.Grid',
     height: 100,
     beforeLayout: function () {
         this.height = Ext.Element.getViewportHeight() - 60;

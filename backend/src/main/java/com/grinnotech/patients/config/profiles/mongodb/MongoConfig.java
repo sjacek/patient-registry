@@ -48,4 +48,5 @@ public class MongoConfig {
     public MongoTemplate mongoTemplate() throws Exception {
         return new MongoTemplate(mongoDbFactory());
     }
+
 }

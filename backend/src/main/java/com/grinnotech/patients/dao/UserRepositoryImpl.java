@@ -18,9 +18,14 @@ package com.grinnotech.patients.dao;
 
 import com.grinnotech.patients.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 
 /**
@@ -32,9 +37,20 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
 
     private final OrganizationRepository organizationRepository;
 
+    private final MongoTemplate mongoTemplate;
+
     @Autowired
-    public UserRepositoryImpl(OrganizationRepository organizationRepository) {
+    public UserRepositoryImpl(OrganizationRepository organizationRepository, MongoTemplate mongoTemplate) {
         this.organizationRepository = organizationRepository;
+        this.mongoTemplate = mongoTemplate;
+    }
+
+    @Override
+    public void setNotEnabledByLastAccessIsGreaterThan(Date date) {
+        Query query = new Query(Criteria.where("lastAccess").gte(date));
+        Update update = Update.update("enabled", false);
+
+        mongoTemplate.updateMulti(query, update, User.class);
     }
 
     @Override

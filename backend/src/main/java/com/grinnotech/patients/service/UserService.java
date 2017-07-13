@@ -4,35 +4,38 @@ import ch.ralscha.extdirectspring.annotation.ExtDirectMethod;
 import ch.ralscha.extdirectspring.bean.ExtDirectStoreReadRequest;
 import ch.ralscha.extdirectspring.bean.ExtDirectStoreResult;
 import ch.ralscha.extdirectspring.filter.StringFilter;
-import com.grinnotech.patients.config.profiles.mongodb.MongoDb;
 import com.grinnotech.patients.config.security.MongoUserDetails;
 import com.grinnotech.patients.dao.OrganizationRepository;
+import com.grinnotech.patients.dao.PersistentLoginRepository;
 import com.grinnotech.patients.dao.UserRepository;
 import com.grinnotech.patients.dao.authorities.RequireAdminAuthority;
-import com.grinnotech.patients.model.*;
+import com.grinnotech.patients.model.CUser;
+import com.grinnotech.patients.model.Organization;
+import com.grinnotech.patients.model.User;
 import com.grinnotech.patients.util.ValidationMessages;
 import com.grinnotech.patients.util.ValidationMessagesResult;
-import com.grinnotech.patients.util.ValidationUtil;
-import com.mongodb.client.model.Filters;
 import de.danielbechler.diff.ObjectDiffer;
 import de.danielbechler.diff.ObjectDifferBuilder;
 import de.danielbechler.diff.node.DiffNode;
-import de.danielbechler.diff.node.DiffNode.State;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.MessageSource;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 
 import javax.validation.Validator;
 import java.lang.invoke.MethodHandles;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.UUID;
 
 import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.STORE_MODIFY;
 import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.STORE_READ;
+import static com.grinnotech.patients.model.Authority.ADMIN;
 import static com.grinnotech.patients.util.QueryUtil.getSpringSort;
+import static de.danielbechler.diff.node.DiffNode.State.UNTOUCHED;
 import static java.time.ZoneOffset.UTC;
 import static java.time.ZonedDateTime.now;
 import static java.util.Collections.singleton;
@@ -53,22 +56,26 @@ public class UserService extends AbstractService<User> {
 
     private final Validator validator;
 
-    private final MongoDb mongoDb;
-
     private final UserRepository userRepository;
 
     private final MailService mailService;
 
     private final OrganizationRepository organizationRepository;
 
+    private final PersistentLoginRepository persistentLoginRepository;
+
     @Autowired
-    public UserService(MessageSource messageSource, Validator validator, MongoDb mongoDb, UserRepository userRepository, MailService mailService, OrganizationRepository organizationRepository) {
+    public UserService(MessageSource messageSource,
+                       Validator validator,
+                       UserRepository userRepository,
+                       MailService mailService,
+                       OrganizationRepository organizationRepository, PersistentLoginRepository persistentLoginRepository) {
         this.messageSource = messageSource;
         this.validator = validator;
-        this.mongoDb = mongoDb;
         this.userRepository = userRepository;
         this.mailService = mailService;
         this.organizationRepository = organizationRepository;
+        this.persistentLoginRepository = persistentLoginRepository;
     }
 
     @ExtDirectMethod(STORE_READ)
@@ -103,15 +110,11 @@ public class UserService extends AbstractService<User> {
 
         setAttrsForDelete(user, userDetails, old);
         userRepository.save(user);
-        deletePersistentLogins(user.getId());
+        persistentLoginRepository.deleteByUserId(user.getId());
 
         logger.debug("destroy end");
 
         return result.setSuccess(true);
-    }
-
-    private void deletePersistentLogins(String userId) {
-        mongoDb.getCollection(PersistentLogin.class).deleteMany(Filters.eq(CPersistentLogin.userId, userId));
     }
 
     @ExtDirectMethod(STORE_MODIFY)
@@ -181,9 +184,8 @@ public class UserService extends AbstractService<User> {
                 user.setSecret(old.getSecret());
             }
             userRepository.save(user);
-            if (!user.isEnabled()) {
-                deletePersistentLogins(user.getId());
-            }
+            if (!user.isEnabled())
+                persistentLoginRepository.deleteByUserId(user.getId());
 
             if (old != null)
                 userRepository.save(old);
@@ -198,30 +200,30 @@ public class UserService extends AbstractService<User> {
 
         List<ValidationMessages> validationErrors = new ArrayList<>();
 
-        if (dbUser != null && (!user.isEnabled() || user.getAuthorities() == null || !user.getAuthorities().contains(Authority.ADMIN.name()))) {
+        if (dbUser != null && (!user.isEnabled() || user.getAuthorities() == null || !user.getAuthorities().contains(ADMIN.name()))) {
             if (isLastAdmin(user.getId())) {
 
-                ObjectDiffer objectDiffer = ObjectDifferBuilder.startBuilding().filtering().returnNodesWithState(State.UNTOUCHED).and().build();
+                ObjectDiffer objectDiffer = ObjectDifferBuilder.startBuilding().filtering().returnNodesWithState(UNTOUCHED).and().build();
                 DiffNode diff = objectDiffer.compare(user, dbUser);
 
                 DiffNode diffNode = diff.getChild(CUser.enabled);
                 if (!diffNode.isUntouched()) {
                     user.setEnabled(dbUser.isEnabled());
 
-                    ValidationMessages validationError = new ValidationMessages();
-                    validationError.setField(CUser.enabled);
-                    validationError.setMessage(messageSource.getMessage("user_lastadmin_error", null, locale));
-                    validationErrors.add(validationError);
+                    validationErrors.add(ValidationMessages.builder()
+                            .field(CUser.enabled)
+                            .message(messageSource.getMessage("user_lastadmin_error", null, locale))
+                            .build());
                 }
 
                 diffNode = diff.getChild(CUser.authorities);
                 if (!diffNode.isUntouched()) {
                     user.setAuthorities(dbUser.getAuthorities());
 
-                    ValidationMessages validationError = new ValidationMessages();
-                    validationError.setField(CUser.authorities);
-                    validationError.setMessage(messageSource.getMessage("user_lastadmin_error", null, locale));
-                    validationErrors.add(validationError);
+                    validationErrors.add(ValidationMessages.builder()
+                            .field(CUser.authorities)
+                            .message(messageSource.getMessage("user_lastadmin_error", null, locale))
+                            .build());
                 }
             }
         }
@@ -233,17 +235,17 @@ public class UserService extends AbstractService<User> {
         List<ValidationMessages> validations = super.validateEntity(user);
 
         if (!isEmailUnique(user.getId(), user.getEmail())) {
-            ValidationMessages validationError = new ValidationMessages();
-            validationError.setField(CUser.email);
-            validationError.setMessage(messageSource.getMessage("user_emailtaken", null, locale));
-            validations.add(validationError);
+            validations.add(ValidationMessages.builder()
+                    .field(CUser.email)
+                    .message(messageSource.getMessage("user_emailtaken", null, locale))
+                    .build());
         }
 
         return validations;
     }
 
     private boolean isLastAdmin(String id) {
-        return userRepository.existsByIdAndAuthoritiesActive(id, singleton(Authority.ADMIN.name()));
+        return userRepository.existsByIdAndAuthoritiesActive(id, singleton(ADMIN.name()));
     }
 
     private boolean isEmailUnique(String id, String email) {

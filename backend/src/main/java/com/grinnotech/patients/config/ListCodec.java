@@ -34,9 +34,9 @@ public final class ListCodec implements Codec<List> {
     public void encode(BsonWriter writer, List value, EncoderContext encoderContext) {
         if (value != null && !value.isEmpty()) {
             writer.writeStartArray();
-            value.stream().forEach((a) -> {
+            value.forEach(a -> {
                 if (a != null) {
-                    Codec codec = this.codecRegistry.get(a.getClass());
+                    Codec codec = codecRegistry.get(a.getClass());
                     encoderContext.encodeWithChildContext(codec, writer, a);
                 } else {
                     writer.writeNull();

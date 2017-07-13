@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2015 Jacek Sztajnke
+ * Copyright (C) 2017 Jacek Sztajnke
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,23 +14,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 /* global Ext */
 
-Ext.define('Patients.store.User', {
-    extend: 'Ext.data.BufferedStore',
-    alias: 'store.user',
-    storeId: 'User',
-    model: 'Patients.model.User',
-    autoLoad: true,
-    autoSync: true,
-    pageSize: 100,
-    buffered: true,
-    remoteSort: true,
-    remoteFilter: true,
-    sorters: [{
-            property: 'lastName',
-            direction: 'ASC'
-        }],
-    leadingBufferZone: 200
+Ext.define('Patients.view.orphadata.disorder.Container', {
+    extend: 'Ext.container.Container',
+    layout: 'card',
+    controller: {
+        xclass: 'Patients.view.orphadata.disorder.Controller'
+    },
+    viewModel: {
+        xclass: 'Patients.view.orphadata.disorder.ViewModel'
+    },
+    items: [{
+            xclass: 'Patients.view.orphadata.disorder.Grid'
+        }]
 });

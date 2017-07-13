@@ -19,9 +19,7 @@ package com.grinnotech.patients.model.orphadata;
 import ch.rasc.extclassgenerator.Model;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.grinnotech.patients.domain.AbstractPersistable;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -38,13 +36,14 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 @Document(collection="dic_orphadata_disorder")
 //@CompoundIndex(name = "locale_method", def = "{'locale': 1, 'method': 1, 'version': 1}", unique = true)
 @Model(value = "Patients.model.orphadata.Disorder",
-//        createMethod = "contactService.update",
-//        readMethod = "contactService.read",
-//        updateMethod = "contactService.update",
-//        destroyMethod = "contactService.destroy",
+//        createMethod = "disorderService.update",
+        readMethod = "disorderService.read",
+//        updateMethod = "disorderService.update",
+//        destroyMethod = "disorderService.destroy",
         paging = true,
         identifier = "uuid")
 @JsonInclude(NON_NULL)
+@Builder
 @Getter
 @Setter
 @ToString
@@ -73,5 +72,6 @@ public class Disorder extends AbstractPersistable {
     @Indexed
     private String icd10;
 
+    @Singular("synonym")
     private List<String> synonyms;
 }

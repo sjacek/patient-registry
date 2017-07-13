@@ -19,12 +19,16 @@ package com.grinnotech.patients.dao;
 import com.grinnotech.patients.model.User;
 
 import java.util.Collection;
+import java.util.Date;
+import java.util.List;
 
 /**
  *
  * @author Jacek Sztajnke
  */
 interface UserRepositoryCustom {
+
+    void setNotEnabledByLastAccessIsGreaterThan(Date date);
 
     void loadOrganizationsData(User user);
     void loadOrganizationsData(Collection<User> users);

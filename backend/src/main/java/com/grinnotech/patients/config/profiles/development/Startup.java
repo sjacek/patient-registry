@@ -18,6 +18,7 @@ package com.grinnotech.patients.config.profiles.development;
 
 import com.grinnotech.patients.config.OrphadataProperties;
 import com.grinnotech.patients.dao.*;
+import com.grinnotech.patients.dao.orphadata.DisorderRepository;
 import com.grinnotech.patients.domain.AbstractPersistable;
 import com.grinnotech.patients.model.*;
 import com.grinnotech.patients.util.startup.OrphadataParser;
@@ -46,7 +47,6 @@ import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 import static org.apache.commons.lang3.text.WordUtils.capitalizeFully;
 
 /**
- *
  * @author Jacek Sztajnke
  */
 @Component
@@ -67,9 +67,12 @@ class Startup {
 
     private final ZipCodePolandRepository zipCodePolandRepository;
 
+    private final DisorderRepository disorderRepository;
+
     private String uuidRoot;
     private String uuidPpmdPoland;
     private String uuidTest;
+    private OrphadataProperties orphadataProperties;
 
     @Autowired
     public Startup(UserRepository userRepository,
@@ -77,6 +80,7 @@ class Startup {
                    ContactRepository contactRepository,
                    CountryDictionaryRepository addressDictionaryRepository,
                    ZipCodePolandRepository zipCodePolandRepository,
+                   DisorderRepository disorderRepository,
                    PasswordEncoder passwordEncoder,
                    OrphadataProperties orphadataProperties) {
         this.userRepository = userRepository;
@@ -85,6 +89,7 @@ class Startup {
         this.passwordEncoder = passwordEncoder;
         this.addressDictionaryRepository = addressDictionaryRepository;
         this.zipCodePolandRepository = zipCodePolandRepository;
+        this.disorderRepository = disorderRepository;
         this.orphadataProperties = orphadataProperties;
         init();
     }
@@ -100,29 +105,20 @@ class Startup {
 
     private void initOrganizations() {
         Organization root = organizationRepository.findByCodeActive("ROOT");
-        if (root == null) {
+        if (root == null)
             root = insert(Organization.builder().name("ROOT").code("ROOT").build(), organizationRepository);
-        }
         uuidRoot = root.getId();
 
         Organization ppmdPoland = organizationRepository.findByCodeActive("PPMDPoland");
-        if (ppmdPoland == null) {
+        if (ppmdPoland == null)
             ppmdPoland = insert(Organization.builder()
-                            .name("Fundacja Parent Project Muscular Dystrophy")
-                            .code("PPMDPoland")
-                            .parentId(uuidRoot).build(),
+                            .name("Fundacja Parent Project Muscular Dystrophy").code("PPMDPoland").parentId(uuidRoot).build(),
                     organizationRepository);
-        }
         uuidPpmdPoland = ppmdPoland.getId();
 
         Organization test = organizationRepository.findByCodeActive("test");
-        if (test == null) {
-            test = insert(Organization.builder()
-                            .name("Test")
-                            .code("test")
-                            .parentId(uuidRoot).build(),
-                    organizationRepository);
-        }
+        if (test == null)
+            test = insert(Organization.builder().name("Test").code("test").parentId(uuidRoot).build(),organizationRepository);
         uuidTest = test.getId();
     }
 
@@ -157,31 +153,21 @@ class Startup {
         if (contactRepository.count() != 0)
             return;
 
-        insert(ContactMethod.builder().locale("pl_PL")
-                .method("telefon domowy")
-                .description("Telefon domowy")
-                .build(), contactRepository);
-        insert(ContactMethod.builder().locale("pl_PL")
-                .method("telefon komórkowy")
-                .description("Telefon komórkowy")
-                .build(), contactRepository);
-        insert(ContactMethod.builder().locale("pl_PL")
-                .method("telefon służbowy")
-                .description("Telefon służbowy")
-                .build(), contactRepository);
-        insert(ContactMethod.builder().locale("pl_PL")
-                .method("e-mail")
-                .description("Poczta elektroniczna")
-                .build(), contactRepository);
+        insert(ContactMethod.builder().method("telefon domowy").description("Telefon domowy").locale("pl_PL").build(), contactRepository);
+        insert(ContactMethod.builder().method("telefon komórkowy").description("Telefon komórkowy").locale("pl_PL").build(), contactRepository);
+        insert(ContactMethod.builder().method("telefon służbowy").description("Telefon służbowy").locale("pl_PL").build(), contactRepository);
+        insert(ContactMethod.builder().method("e-mail").description("Poczta elektroniczna").locale("pl_PL").build(), contactRepository);
     }
 
     private void initAddressDictionary() {
         final String CSV = "countries.csv";
 
-        if (addressDictionaryRepository.count() == 0) {
-            try (
-                    CSVReader reader = new CSVReader(new InputStreamReader(new ClassPathResource(CSV).getInputStream()), ';', '"', 1)
-            ) {
+        if (addressDictionaryRepository.count() != 0)
+            return;
+
+        try (
+                CSVReader reader = new CSVReader(new InputStreamReader(new ClassPathResource(CSV).getInputStream()), ';', '"', 1)
+        ) {
 
 //                ColumnPositionMappingStrategy strat = new ColumnPositionMappingStrategy();
 //                strat.setType(CountryDictionary.class);
@@ -189,79 +175,72 @@ class Startup {
 //                new CsvToBean().parse(strat, reader).forEach(address -> insert((AbstractPersistable) address));
 //                HeaderColumnNameMappingStrategy<AddressDictionary> strategy = new HeaderColumnNameMappingStrategy<>();
 //                strategy.setType(CountryDictionary.class);
-//                
+//
 //                CsvToBean<AddressDictionary> csvToBean = new CsvToBean<>();
-//                
+//
 //                csvToBean.parse(strategy, reader).forEach(address -> insert(address));
-                String[] line;
-                while ((line = reader.readNext()) != null) {
-                    // line[] is an array of values from the line
-                    CountryDictionary cd = insert(CountryDictionary.builder()
-                                    .code(line[0])
-                                    .countryEn(line[2])
-                                    .countryPl(isNotEmpty(line[3]) ? line[3] : line[2])
-                                    .countryDe(isNotEmpty(line[4]) ? line[4] : line[2])
-                                    .build(),
-                            addressDictionaryRepository);
-                    logger.debug("initAddressDictionary: {}, {}" + cd.getCode(), cd.getCountryEn());
-                }
-            } catch (IOException ex) {
-                logger.error("File " + CSV + " not found", ex);
+            String[] line;
+            while ((line = reader.readNext()) != null) {
+                // line[] is an array of values from the line
+                CountryDictionary cd = insert(CountryDictionary.builder()
+                                .code(line[0])
+                                .countryEn(line[2])
+                                .countryPl(isNotEmpty(line[3]) ? line[3] : line[2])
+                                .countryDe(isNotEmpty(line[4]) ? line[4] : line[2])
+                                .build(),
+                        addressDictionaryRepository);
+                logger.debug("initAddressDictionary: {}, {}" + cd.getCode(), cd.getCountryEn());
             }
+        } catch (IOException ex) {
+            logger.error("File " + CSV + " not found", ex);
         }
     }
 
     private void initZipCodePoland() {
         final String CSV = "kody-pocztowe_GUS.csv";
 
-        if (zipCodePolandRepository.count() == 0) {
-            try (
-                    InputStreamReader isReader = new InputStreamReader(new ClassPathResource(CSV).getInputStream());
-                    CSVReader reader = new CSVReader(isReader, ';', '"', 1)
-            ) {
-                String[] line;
-                final char[] delimiters = {' ', ',', '.', '-', '(', ')'};
+        if (zipCodePolandRepository.count() != 0)
+            return;
 
-                while ((line = reader.readNext()) != null) {
-                    final String zipCode = line[0];
-                    final String postOffice = line[1];
-                    final String city = capitalizeFully(line[2], delimiters);
-                    final String voivodship = capitalizeFully(line[3], delimiters);
-                    final String street = line[4];
-                    final String county = capitalizeFully(line[5], delimiters);
+        try (
+                InputStreamReader isReader = new InputStreamReader(new ClassPathResource(CSV).getInputStream());
+                CSVReader reader = new CSVReader(isReader, ';', '"', 1)
+        ) {
+            String[] line;
+            final char[] delimiters = {' ', ',', '.', '-', '(', ')'};
 
-                    if (!zipCodePolandRepository.existsByExample(zipCode, postOffice, city, voivodship, street, county)) {
-                        logger.debug("initZipCodePoland: {}, {}, {}, {}, {}, {}, ()",
-                                zipCode, postOffice, city, voivodship, street, county);
-                        insert(ZipCodePoland.builder()
-                                        .zipCode(zipCode)
-                                        .postOffice(postOffice)
-                                        .city(city)
-                                        .voivodship(voivodship)
-                                        .street(street)
-                                        .county(county).build(),
-                                zipCodePolandRepository);
+            while ((line = reader.readNext()) != null) {
+                final String zipCode = line[0];
+                final String postOffice = line[1];
+                final String city = capitalizeFully(line[2], delimiters);
+                final String voivodship = capitalizeFully(line[3], delimiters);
+                final String street = line[4];
+                final String county = capitalizeFully(line[5], delimiters);
 
-                    } else {
-                        logger.debug("****************** duplicate found, don't insert!");
-                    }
+                if (!zipCodePolandRepository.existsByExample(zipCode, postOffice, city, voivodship, street, county)) {
+                    logger.debug("initZipCodePoland: {}, {}, {}, {}, {}, {}, ()",
+                            zipCode, postOffice, city, voivodship, street, county);
+                    insert(ZipCodePoland.builder()
+                                    .zipCode(zipCode)
+                                    .postOffice(postOffice)
+                                    .city(city)
+                                    .voivodship(voivodship)
+                                    .street(street)
+                                    .county(county).build(),
+                            zipCodePolandRepository);
+
+                } else {
+                    logger.debug("****************** duplicate found, don't insert!");
                 }
-            } catch (IOException ex) {
-                logger.error("File " + CSV + " not found", ex);
             }
+        } catch (IOException ex) {
+            logger.error("File " + CSV + " not found", ex);
         }
     }
 
-//    @Value("${orphadata.enabled:true}")
-//    private boolean orphadataEnabled;
-//
-//    @Value("${orphadata.url.pl}")
-//    private String orphadataUrlPl;
-
-    private OrphadataProperties orphadataProperties;
-
     private void initOrphaData() {
-        if (!orphadataProperties.isEnabled()) return;
+        if (disorderRepository.count() != 0)
+            return;
 
         URL urlPl;
         try {
@@ -275,7 +254,7 @@ class Startup {
         parser.parse(20);
         logger.info("Orphadata version: {}", parser.getInfo().getVersion());
 
-        OrphadataParserMongo.parse(urlPl);
+        OrphadataParserMongo.parse(urlPl, disorderRepository);
     }
 
     private <T extends AbstractPersistable, R extends MongoRepository<T, String>>

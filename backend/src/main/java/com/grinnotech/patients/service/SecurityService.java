@@ -147,7 +147,7 @@ public class SecurityService {
 
         String token = UUID.randomUUID().toString();
 
-        User user = userRepository.findOneByEmailActive(email);
+        User user = userRepository.findByEmailActive(email);
         if (user != null) {
             user.setPasswordResetTokenValidUntil(from(now(UTC).plusHours(4).toInstant()));
             user.setPasswordResetToken(token);

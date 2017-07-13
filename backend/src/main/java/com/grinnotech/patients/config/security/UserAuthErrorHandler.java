@@ -42,10 +42,13 @@ public class UserAuthErrorHandler implements ApplicationListener<AuthenticationF
 
         if (loginLockAttempts != null && (principal instanceof String || principal instanceof MongoUserDetails)) {
 
-            User user = principal instanceof String ?
-                    userRepository.findOneByEmailActive((String) principal)
-                    :
-                    userRepository.findOneActive(((MongoUserDetails) principal).getUserDbId());
+            User user;
+            if (principal instanceof String) {
+                user = userRepository.findByEmailActive((String) principal);
+            }
+            else {
+                user = userRepository.findOneActive(((MongoUserDetails) principal).getUserDbId());
+            }
 
             if (user != null) {
                 user.setFailedLogins(user.getFailedLogins() + 1);
