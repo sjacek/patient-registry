@@ -20,7 +20,6 @@ import org.springframework.context.MessageSource;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import javax.validation.Validator;
 import java.util.List;
@@ -35,27 +34,28 @@ import static org.springframework.util.StringUtils.hasText;
 @RequireAnyAuthority
 public class UserConfigService {
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
-//    @Autowired
-//    private MongoDb mongoDb;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private UserRepository userRepository;
+    private final PersistentLoginRepository persistentLoginRepository;
 
-    @Autowired
-    private PersistentLoginRepository persistentLoginRepository;
+    private final Validator validator;
+
+    private final MessageSource messageSource;
 
     @Autowired
-    private Validator validator;
-
-    @Autowired
-    private MessageSource messageSource;
+    public UserConfigService(PasswordEncoder passwordEncoder, UserRepository userRepository, PersistentLoginRepository persistentLoginRepository, Validator validator, MessageSource messageSource) {
+        this.passwordEncoder = passwordEncoder;
+        this.userRepository = userRepository;
+        this.persistentLoginRepository = persistentLoginRepository;
+        this.validator = validator;
+        this.messageSource = messageSource;
+    }
 
     @ExtDirectMethod(STORE_READ)
     public ExtDirectStoreResult<UserSettings> readSettings(@AuthenticationPrincipal MongoUserDetails userDetails) {
-        UserSettings userSettings = new UserSettings(userDetails.getUser(userRepository));
+        UserSettings userSettings = new UserSettings(userRepository.findOne(userDetails.getUserDbId()));
         return new ExtDirectStoreResult<>(userSettings);
     }
 
@@ -82,7 +82,7 @@ public class UserConfigService {
                                                                  @AuthenticationPrincipal MongoUserDetails userDetails, Locale locale) {
 
         List<ValidationMessages> validations = ValidationUtil.validateEntity(validator, modifiedUserSettings);
-        User user = userDetails.getUser(userRepository);
+        User user = userRepository.findOne(userDetails.getUserDbId());
         boolean userModified = false;
 
         if (hasText(modifiedUserSettings.getNewPassword()) && validations.isEmpty()) {
@@ -137,8 +137,6 @@ public class UserConfigService {
     @ExtDirectMethod(STORE_READ)
     public List<PersistentLogin> readPersistentLogins(@AuthenticationPrincipal MongoUserDetails userDetails) {
         return persistentLoginRepository.findByUserId(userDetails.getUserDbId()).stream()
-//                mongoDb.getCollection(PersistentLogin.class)
-//                        .find(Filters.eq(CPersistentLogin.userId, userDetails.getUserDbId())).spliterator(), false)
                 .peek(login -> {
                     String ua = login.getUserAgent();
                     if (hasText(ua)) {
@@ -153,9 +151,6 @@ public class UserConfigService {
     @ExtDirectMethod(STORE_MODIFY)
     public void destroyPersistentLogin(String series, @AuthenticationPrincipal MongoUserDetails userDetails) {
         persistentLoginRepository.deletePersistentLoginBySeriesAndUserId(series, userDetails.getUserDbId());
-//        mongoDb.getCollection(PersistentLogin.class).deleteOne(Filters.and(
-//                Filters.eq(CPersistentLogin.series, series),
-//                Filters.eq(CPersistentLogin.userId, userDetails.getUserDbId())));
     }
 
 }

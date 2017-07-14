@@ -60,10 +60,10 @@ Ext.define('Patients.view.main.Main', {
                 store: '{organizations}'
             //     value: '{currentOrganization}'
             },
-            // // name: 'code',
+            // name: 'code',
             valueField: 'id',
             displayField: 'name',
-            // queryMode: 'local',
+            queryMode: 'local',
             forceSelection: true,
             editable: false
         }, {

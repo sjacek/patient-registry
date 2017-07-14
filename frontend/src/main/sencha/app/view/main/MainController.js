@@ -70,14 +70,12 @@ Ext.define('Patients.view.main.MainController', {
         me.reloadLocale(user.locale);
 
         me.getViewModel().set('fullName', user.firstName + ' ' + user.lastName);
-        // me.getViewModel().set('organizations', user.organizations);
-        var orgs = user.organizations;
         logService.debug(JSON.stringify(user));
-        logService.debug(JSON.stringify(orgs));
-        //
+
         var organizationsStore = me.getViewModel().getStore('organizations');
-        // // operationsStore.load(user.organizations);
-        organizationsStore.add({id: 'bla', name: 'blabla'});
+        Object.keys(user.organizations).forEach(function(id) {
+            organizationsStore.add({id: id, name: user.organizations[id]});
+        });
 
         if (localStorage.patients_navigation_micro === 'true') {
             this.onToggleNavigationSize();
@@ -318,23 +316,20 @@ Ext.define('Patients.view.main.MainController', {
         }
 
         this.getViewModel().set('currentView', newView);
-
     },
     onLogoutClick: function () {
         Ext.Ajax.request({
             url: serverUrl + 'logout',
             method: 'POST'
-        }).then(function (r) {
+        }).then(function () {
             var currentLocation = window.location.toString();
             var hashPos = currentLocation.indexOf("#");
             if (hashPos > 0) {
-                currentLocation = currentLocation.substring(0, hashPos) + '?logout';
-            } else {
-                currentLocation += '?logout';
+                currentLocation = currentLocation.substring(0, hashPos);
             }
+            currentLocation += '?logout';
             window.location.replace(currentLocation);
         });
-
     },
     onNavigationTreeSelectionChange: function (tree, node) {
         if (node && node.get('view')) {

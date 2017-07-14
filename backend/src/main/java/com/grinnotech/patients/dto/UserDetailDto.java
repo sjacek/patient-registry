@@ -3,17 +3,20 @@ package com.grinnotech.patients.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.grinnotech.patients.config.security.MongoUserDetails;
-import com.grinnotech.patients.model.Authority;
 import com.grinnotech.patients.model.Organization;
 import com.grinnotech.patients.model.User;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.util.Map;
 
+import static com.grinnotech.patients.model.Authority.ADMIN;
+import static com.grinnotech.patients.model.Authority.USER;
 import static java.util.stream.Collectors.toMap;
 
 @JsonInclude(Include.NON_NULL)
 @Getter
+@ToString
 public class UserDetailDto {
 
     private final String firstName;
@@ -39,15 +42,15 @@ public class UserDetailDto {
         this.screenLocked = userDetails.isScreenLocked();
         this.preAuth = userDetails.isPreAuth();
 
-        if (userDetails.hasAuthority(Authority.ADMIN.name())) {
+        if (userDetails.hasAuthority(ADMIN.name())) {
             this.autoOpenView = "users";
-        } else if (userDetails.hasAuthority(Authority.USER.name())) {
+        } else if (userDetails.hasAuthority(USER.name())) {
             this.autoOpenView = "blank";
         } else {
             this.autoOpenView = null;
         }
 
-        this.organizations = user.getOrganizations().stream().collect(toMap(Organization::getId, Organization::getName));
+        this.organizations = user.getOrganizations().stream().collect(toMap(Organization::getId, Organization::getCode));
         this.csrf = csrf;
     }
 }

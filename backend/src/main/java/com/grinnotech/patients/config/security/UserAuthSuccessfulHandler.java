@@ -10,8 +10,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserAuthSuccessfulHandler implements ApplicationListener<InteractiveAuthenticationSuccessEvent> {
 
+    private final UserRepository userRepository;
+
     @Autowired
-    private UserRepository userRepository;
+    public UserAuthSuccessfulHandler(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
     public void onApplicationEvent(InteractiveAuthenticationSuccessEvent event) {
@@ -19,7 +23,7 @@ public class UserAuthSuccessfulHandler implements ApplicationListener<Interactiv
         if (principal instanceof MongoUserDetails) {
             String userId = ((MongoUserDetails) principal).getUserDbId();
 
-            User user = userRepository.findOneActive(userId);
+            User user = userRepository.findOne(userId);
             if (user != null) {
                 user.setFailedLogins(0);
                 user.setLockedOutUntil(null);

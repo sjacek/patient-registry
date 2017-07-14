@@ -21,7 +21,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.repository.ExistsQuery;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 
 import java.util.List;
 import java.util.Set;
@@ -30,19 +29,13 @@ import java.util.Set;
  *
  * @author Jacek Sztajnke
  */
-public interface UserRepository extends
-        MongoRepository<User, String>,
-        QueryDslPredicateExecutor<User>,
-        UserRepositoryCustom {
+public interface UserRepository extends MongoRepository<User, String>, UserRepositoryCustom {
 
     @Query("{ active: true }")
     List<User> findAllActive(Sort sort);
 
     @Query("{$and: [{ $or: [{lastName: {$regex:?0,$options:'i'}}, {firstName: {$regex:?0,$options:'i'}} ]}, { active: true } ]}")
     List<User> findAllWithFilterActive(String filter, Sort sort);
-
-    @Query("{ $and : [ { id: ?0 }, { active: true } ] }")
-    User findOneActive(String id);
 
     @Query("{ $and : [ { email: ?0 }, { active: true } ] }")
     User findByEmailActive(String email);

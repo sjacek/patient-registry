@@ -38,7 +38,7 @@ public class QRCodeController {
     public void qrcode(HttpServletResponse response, @AuthenticationPrincipal MongoUserDetails userDetails)
             throws WriterException, IOException {
 
-        User user = userDetails.getUser(userRepository);
+        User user = userRepository.findOne(userDetails.getUserDbId());
         if (user != null && StringUtils.hasText(user.getSecret())) {
             response.setContentType("image/png");
             String contents = "otpauth://totp/" + user.getEmail() + "?secret=" + user.getSecret() + "&issuer=" + this.appName;
