@@ -65,8 +65,6 @@ public class CustomPersistentRememberMeServices extends AbstractRememberMeServic
 
     private final SecureRandom random;
 
-//    private final MongoDb mongoDb;
-    
     private final UserRepository userRepository;
 
     private final PersistentLoginRepository persistentLoginRepository;
@@ -76,8 +74,7 @@ public class CustomPersistentRememberMeServices extends AbstractRememberMeServic
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     @Autowired
-    public CustomPersistentRememberMeServices(//MongoDb mongoDb,
-                                              UserDetailsService userDetailsService,
+    public CustomPersistentRememberMeServices(UserDetailsService userDetailsService,
                                               AppProperties appProperties,
                                               UserRepository userRepository,
                                               PersistentLoginRepository persistentLoginRepository) {
@@ -85,7 +82,6 @@ public class CustomPersistentRememberMeServices extends AbstractRememberMeServic
 
         this.tokenValidInSeconds = 60 * 60 * 24 * appProperties.getRemembermeCookieValidInDays();
 
-//        this.mongoDb = mongoDb;
         this.random = new SecureRandom();
         this.userRepository = userRepository;
         this.persistentLoginRepository = persistentLoginRepository;
@@ -112,9 +108,7 @@ public class CustomPersistentRememberMeServices extends AbstractRememberMeServic
         login.setUserAgent(request.getHeader(USER_AGENT));
         persistentLoginRepository.save(login);
 
-        User user = userRepository.findOneActive(login.getUserId());
-//        String loginName = user.getEmail();
-//        String token = login.getToken();
+        User user = userRepository.findOne(login.getUserId());
 
         logger.debug("Refreshing persistent login token for user '{}', series '{}'", user.getEmail(), series);
 
@@ -189,10 +183,6 @@ public class CustomPersistentRememberMeServices extends AbstractRememberMeServic
         super.logout(request, response, authentication);
     }
 
-//    private void removePersistentLogin(String series) {
-//        mongoDb.getCollection(PersistentLogin.class).deleteOne(Filters.eq(CPersistentLogin.series, series));
-//    }
-
     /**
      * Validate the token and return it.
      */
@@ -205,7 +195,6 @@ public class CustomPersistentRememberMeServices extends AbstractRememberMeServic
         final String presentedSeries = cookieTokens[0];
         final String presentedToken = cookieTokens[1];
 
-//        PersistentLogin login = mongoDb.getCollection(PersistentLogin.class).find(Filters.eq(CPersistentLogin.series, presentedSeries)).first();
         PersistentLogin login = persistentLoginRepository.findFirstBySeries(presentedSeries);
         if (login == null) {
             // No series match, so we can't authenticate using this cookie
@@ -218,7 +207,6 @@ public class CustomPersistentRememberMeServices extends AbstractRememberMeServic
         // We have a match for this user/series combination
         if (!presentedToken.equals(token)) {
             // Presented token doesn't match stored token. Delete persistentLogin
-//            removePersistentLogin(series);
             persistentLoginRepository.deleteBySeries(series);
 
             throw new CookieTheftException(this.messages.getMessage(
@@ -229,7 +217,6 @@ public class CustomPersistentRememberMeServices extends AbstractRememberMeServic
         LocalDateTime ldt = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
 
         if (ldt.plusSeconds(tokenValidInSeconds).isBefore(LocalDateTime.now())) {
-//            removePersistentLogin(series);
             persistentLoginRepository.deleteBySeries(series);
             throw new RememberMeAuthenticationException("Remember-me login has expired");
         }

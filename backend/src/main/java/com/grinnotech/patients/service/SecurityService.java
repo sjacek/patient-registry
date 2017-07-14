@@ -1,7 +1,6 @@
 package com.grinnotech.patients.service;
 
 import ch.ralscha.extdirectspring.annotation.ExtDirectMethod;
-import ch.ralscha.extdirectspring.annotation.ExtDirectMethodType;
 import ch.ralscha.extdirectspring.bean.ExtDirectFormPostResult;
 import com.grinnotech.patients.config.security.MongoUserDetails;
 import com.grinnotech.patients.dao.UserRepository;
@@ -35,6 +34,7 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.UUID;
 
+import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.FORM_POST;
 import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.POLL;
 import static java.time.ZoneOffset.UTC;
 import static java.time.ZonedDateTime.now;
@@ -66,12 +66,12 @@ public class SecurityService {
     @ExtDirectMethod
     public UserDetailDto getAuthUser(@AuthenticationPrincipal MongoUserDetails userDetails) {
 
-        logger.debug("getAuthUser");
+        logger.debug("getAuthUser {}", userDetails);
         if (userDetails == null) {
             return null;
         }
-                    
-        User user = userDetails.getUser(userRepository);
+
+        User user = userRepository.findOne(userDetails.getUserDbId());
         userRepository.loadOrganizationsData(user);
         UserDetailDto userDetailDto = new UserDetailDto(userDetails, user, null);
 
@@ -83,11 +83,11 @@ public class SecurityService {
         return userDetailDto;
     }
 
-    @ExtDirectMethod(ExtDirectMethodType.FORM_POST)
+    @ExtDirectMethod(FORM_POST)
     @PreAuthorize("hasAuthority('PRE_AUTH')")
     public ExtDirectFormPostResult signin2fa(HttpServletRequest request, @AuthenticationPrincipal MongoUserDetails userDetails, @RequestParam("code") int code) {
 
-        User user = userDetails.getUser(userRepository);
+        User user = userRepository.findOne(userDetails.getUserDbId());
         if (user != null) {
             if (TotpAuthUtil.verifyCode(user.getSecret(), code, 3)) {
                 user.setLastAccess(new Date());
@@ -108,7 +108,7 @@ public class SecurityService {
                     SecurityContextHolder.getContext().getAuthentication(), excp);
             applicationEventPublisher.publishEvent(event);
 
-            user = userDetails.getUser(userRepository);
+            user = userRepository.findOne(userDetails.getUserDbId());
             if (user.getLockedOutUntil() != null) {
                 HttpSession session = request.getSession(false);
                 if (session != null) {
@@ -130,7 +130,7 @@ public class SecurityService {
         userDetails.setScreenLocked(true);
     }
 
-    @ExtDirectMethod(ExtDirectMethodType.FORM_POST)
+    @ExtDirectMethod(FORM_POST)
     @RequireAnyAuthority
     public ExtDirectFormPostResult disableScreenLock(@AuthenticationPrincipal MongoUserDetails userDetails, @RequestParam("password") String password) {
 
@@ -142,7 +142,7 @@ public class SecurityService {
         return new ExtDirectFormPostResult(matches);
     }
 
-    @ExtDirectMethod(ExtDirectMethodType.FORM_POST)
+    @ExtDirectMethod(FORM_POST)
     public ExtDirectFormPostResult resetRequest(@RequestParam("email") String email) {
 
         String token = UUID.randomUUID().toString();
@@ -159,10 +159,10 @@ public class SecurityService {
         return new ExtDirectFormPostResult();
     }
 
-    @ExtDirectMethod(ExtDirectMethodType.FORM_POST)
+    @ExtDirectMethod(FORM_POST)
     public ExtDirectFormPostResult reset(@RequestParam("newPassword") String newPassword,
-            @RequestParam("newPasswordRetype") String newPasswordRetype,
-            @RequestParam("token") String token) {
+                                         @RequestParam("newPasswordRetype") String newPasswordRetype,
+                                         @RequestParam("token") String token) {
 
         if (StringUtils.hasText(token) && StringUtils.hasText(newPassword)
                 && StringUtils.hasText(newPasswordRetype)
@@ -170,7 +170,6 @@ public class SecurityService {
             String decodedToken = new String(Base64.getUrlDecoder().decode(token));
             
             User user = userRepository.findOneByPasswordResetTokenAndEnabled(decodedToken);
-
             if (user != null && user.getPasswordResetTokenValidUntil() != null) {
 
                 ExtDirectFormPostResult result;
@@ -203,7 +202,7 @@ public class SecurityService {
     @ExtDirectMethod
     @RequireAdminAuthority
     public UserDetailDto switchUser(String userId) {
-        User switchToUser = userRepository.findOneActive(userId);
+        User switchToUser = userRepository.findOne(userId);
         if (switchToUser != null) {
             userRepository.loadOrganizationsData(switchToUser);
 

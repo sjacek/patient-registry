@@ -1,19 +1,19 @@
 package com.grinnotech.patients.config.security;
 
-import com.grinnotech.patients.dao.UserRepository;
 import com.grinnotech.patients.model.User;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.util.StringUtils;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Collection;
+import java.util.Date;
+import java.util.Locale;
+import java.util.Set;
 
+import static com.grinnotech.patients.model.Authority.PRE_AUTH;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.unmodifiableCollection;
-import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
 import static org.springframework.security.core.authority.AuthorityUtils.createAuthorityList;
 import static org.springframework.util.StringUtils.hasText;
 
@@ -57,42 +57,38 @@ public class MongoUserDetails implements UserDetails {
         this.userAuthorities = user.getAuthorities() != null ? createAuthorities(user.getAuthorities()) : emptySet();
 
         this.authorities = unmodifiableCollection(
-                hasText(user.getSecret()) ? createAuthorityList("PRE_AUTH") : this.userAuthorities);
+                hasText(user.getSecret()) ? createAuthorityList(PRE_AUTH.name()) : this.userAuthorities);
     }
 
     public boolean isPreAuth() {
-        return hasAuthority("PRE_AUTH");
+        return hasAuthority(PRE_AUTH.name());
     }
 
     public void grantAuthorities() {
-        this.authorities = unmodifiableCollection(this.userAuthorities);
+        authorities = unmodifiableCollection(userAuthorities);
     }
 
     @Override
     public Collection<GrantedAuthority> getAuthorities() {
-        return this.authorities;
+        return authorities;
     }
 
     @Override
     public String getPassword() {
-        return this.password;
+        return password;
     }
 
     @Override
     public String getUsername() {
-        return this.email;
-    }
-
-    public User getUser(UserRepository userRepository) {
-        return userRepository.findOneActive(getUserDbId());
+        return email;
     }
 
     public String getUserDbId() {
-        return this.userDbId;
+        return userDbId;
     }
 
     public Locale getLocale() {
-        return this.locale;
+        return locale;
     }
 
     @Override
@@ -102,7 +98,7 @@ public class MongoUserDetails implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return !this.locked;
+        return !locked;
     }
 
     @Override
@@ -112,15 +108,15 @@ public class MongoUserDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return this.enabled;
+        return enabled;
     }
 
     public boolean hasAuthority(String authority) {
-        return getAuthorities().stream().anyMatch(a -> authority.equals(a.getAuthority()));
+        return getAuthorities().stream().anyMatch(ga -> authority.equals(ga.getAuthority()));
     }
 
     public boolean isScreenLocked() {
-        return this.screenLocked;
+        return screenLocked;
     }
 
     public void setScreenLocked(boolean screenLocked) {
@@ -128,7 +124,7 @@ public class MongoUserDetails implements UserDetails {
     }
 
     private static Set<GrantedAuthority> createAuthorities(Collection<String> stringAuthorities) {
-        return stringAuthorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toSet());
+        return stringAuthorities.stream().map(SimpleGrantedAuthority::new).collect(toSet());
     }
 
 }

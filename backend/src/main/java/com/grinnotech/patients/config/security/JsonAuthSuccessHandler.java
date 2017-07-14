@@ -42,7 +42,7 @@ public class JsonAuthSuccessHandler implements AuthenticationSuccessHandler {
 
         MongoUserDetails userDetails = (MongoUserDetails) authentication.getPrincipal();
         if (userDetails != null) {
-            User user = userRepository.findOneActive(userDetails.getUserDbId());
+            User user = userRepository.findOne(userDetails.getUserDbId());
             if (userDetails.isPreAuth()) {
                 user.setLastAccess(new Date());
                 userRepository.save(user);

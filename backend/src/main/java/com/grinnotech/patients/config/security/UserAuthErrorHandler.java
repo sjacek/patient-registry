@@ -19,7 +19,7 @@ import static java.time.ZonedDateTime.now;
 @Component
 public class UserAuthErrorHandler implements ApplicationListener<AuthenticationFailureBadCredentialsEvent> {
 
-    private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final UserRepository userRepository;
     private final Integer loginLockAttempts;
@@ -42,13 +42,10 @@ public class UserAuthErrorHandler implements ApplicationListener<AuthenticationF
 
         if (loginLockAttempts != null && (principal instanceof String || principal instanceof MongoUserDetails)) {
 
-            User user;
-            if (principal instanceof String) {
-                user = userRepository.findByEmailActive((String) principal);
-            }
-            else {
-                user = userRepository.findOneActive(((MongoUserDetails) principal).getUserDbId());
-            }
+            User user = principal instanceof String ?
+                    userRepository.findByEmailActive((String) principal)
+                    :
+                    userRepository.findOne(((MongoUserDetails) principal).getUserDbId());
 
             if (user != null) {
                 user.setFailedLogins(user.getFailedLogins() + 1);
@@ -62,10 +59,10 @@ public class UserAuthErrorHandler implements ApplicationListener<AuthenticationF
                 }
                 userRepository.save(user);
             } else {
-                log.warn("Unknown user login attempt: {}", principal);
+                logger.warn("Unknown user login attempt: {}", principal);
             }
         } else {
-            log.warn("Invalid login attempt: {}", principal);
+            logger.warn("Invalid login attempt: {}", principal);
         }
     }
 

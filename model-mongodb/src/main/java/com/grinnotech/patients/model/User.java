@@ -13,6 +13,7 @@ import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.util.StringUtils;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.Set;
 
@@ -32,6 +33,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Getter
 @Setter
+@ToString
 public class User extends AbstractPersistable {
 
     @NotBlank(message = "{fieldrequired}")
@@ -46,11 +48,10 @@ public class User extends AbstractPersistable {
 
     private Set<String> organizationIds;
 
-    @ModelField
     @ch.rasc.bsoncodec.annotation.Transient
 //    @javax.persistence.Transient
     @org.springframework.data.annotation.Transient
-    private Set<Organization> organizations;
+    private Collection<Organization> organizations;
 
     private Set<String> authorities;
 

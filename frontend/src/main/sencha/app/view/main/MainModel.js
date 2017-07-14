@@ -21,7 +21,6 @@ Ext.define('Patients.view.main.MainModel', {
     data: {
         currentView: null,
         fullName: null,
-        // organizations: null,
         currentOrganization: null
     },
     stores: {

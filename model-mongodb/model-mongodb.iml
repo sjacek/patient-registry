@@ -73,7 +73,7 @@
     <orderEntry type="library" name="Maven: ch.rasc:constgen:1.0.3" level="project" />
     <orderEntry type="library" name="Maven: com.squareup:javapoet:1.5.1" level="project" />
     <orderEntry type="library" name="Maven: ch.rasc:bsoncodec:1.0.1" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.immutables:value:2.4.6" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.immutables:value:2.5.0" level="project" />
     <orderEntry type="library" name="Maven: ch.rasc:bsoncodec-apt:1.0.3" level="project" />
     <orderEntry type="library" name="Maven: com.google.auto.service:auto-service:1.0-rc2" level="project" />
     <orderEntry type="library" name="Maven: com.google.auto:auto-common:0.3" level="project" />
@@ -104,7 +104,7 @@
     <orderEntry type="library" name="Maven: com.querydsl:querydsl-core:4.1.4" level="project" />
     <orderEntry type="library" name="Maven: com.mysema.commons:mysema-commons-lang:0.2.4" level="project" />
     <orderEntry type="library" name="Maven: com.infradna.tool:bridge-method-annotation:1.13" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.poi:poi:3.15" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.poi:poi:3.16" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-collections4:4.1" level="project" />
     <orderEntry type="library" name="Maven: net.sf.supercsv:super-csv:2.4.0" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.projectlombok:lombok:1.16.16" level="project" />
