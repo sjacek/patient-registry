@@ -129,6 +129,11 @@ Ext.define('Patients.view.patient.Controller', {
         Ext.apply(certificateOfDisabilityExpirationDate, {allowBlank: !viewModel.get('certificateOfDisabilityExpirationEnabled')}, {});
         this.lookup('editPanel').isValid();
     },
+    onCurrentOrganizationChanged: function(organizationId) {
+        logService.debug("patient.Controller::onCurrentOrganizationChanged " + organizationId);
+        var viewModel = this.getViewModel();
+        viewModel.set('currentOrganizationId', organizationId);
+    },
     validateContacts: function () {
         var grid = this.lookup('contactsGrid');
         var ret = true;
@@ -149,9 +154,9 @@ Ext.define('Patients.view.patient.Controller', {
 
         var sort = 'Id';
         var dir = 'ASC';
-        if (typeof sorter != 'undefined') {
-            var sort = sorter.property;
-            var dir = sorter.direction;
+        if (typeof sorter !== 'undefined') {
+            sort = sorter.property;
+            dir = sorter.direction;
         }
         url += '&sort=' + sort + '&dir=' + dir;
 
@@ -160,10 +165,10 @@ Ext.define('Patients.view.patient.Controller', {
             method: 'GET',
             autoAbort: false,
             success: function(result) {
-                if (result.status == 204) {
+                if (result.status === 204) {
                     Ext.Msg.alert('Empty Report', 'There is no data');
                 }
-                else if(result.status == 200) {
+                else if(result.status === 200) {
                     Ext.DomHelper.append(Ext.getBody(), {
                         tag:          'iframe',
                         frameBorder:  0,

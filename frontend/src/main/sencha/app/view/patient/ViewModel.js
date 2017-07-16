@@ -24,7 +24,8 @@ Ext.define('Patients.view.patient.ViewModel', {
         totalCount: null,
         correspondenceAddressEnabled: false,
         certificateOfDisabilityEnabled: false,
-        certificateOfDisabilityExpirationEnabled: false
+        certificateOfDisabilityExpirationEnabled: false,
+        currentOrganizationId: null
     },
     stores: {
         objects: {
