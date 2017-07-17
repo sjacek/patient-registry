@@ -101,15 +101,15 @@ public class Patient extends AbstractPersistable {
     @ModelField
     private Address correspondenceAddress;
 
-    @ModelField
+//    @ModelField
 //    @ch.rasc.bsoncodec.annotation.Transient
-//    @javax.persistence.Transient
+////    @javax.persistence.Transient
 //    @org.springframework.data.annotation.Transient
-    @NotNull(message = "{fieldrequired}")
-    private Organization organization;
+//    @NotNull(message = "{fieldrequired}")
+//    private Organization organization;
 
-//    @NotBlank(message = "{fieldrequired}")
-//    private String organizationId;
+    @NotBlank(message = "{fieldrequired}")
+    private String organizationId;
     
 //    @ModelHasMany
     private List<Contact> contacts;

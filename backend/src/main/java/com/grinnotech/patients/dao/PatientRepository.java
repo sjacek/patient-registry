@@ -30,13 +30,14 @@ import java.util.List;
  */
 public interface PatientRepository extends MongoRepository<Patient, String>, QueryDslPredicateExecutor<Patient> {
 
-    @Query("{active:true}")
-    List<Patient> findAllActive(Sort sort);
+    @Query("{$and: [ {organizationId: ?0}, {active:true} ]}")
+    List<Patient> findByOrganizationIdActive(String organizationId, Sort sort);
 
-    @Query("{$and: [{ $or:["
-            + " {lastName: {$regex:?0,$options:'i'}}, {firstName: {$regex:?0,$options:'i'}}, {pesel: {$regex:?0,$options:'i'}}," 
-            + " {address.city: {$regex:?0,$options:'i'}}, {address.voivodship: {$regex:?0,$options:'i'}}, {address.county: {$regex:?0,$options:'i'}},"
-            + " {address.country: {$regex:?0,$options:'i'}} ]},"
+    @Query("{$and: [ {organizationId: ?0}, "
+            + " {$or:["
+            + "   {lastName: {$regex:?1,$options:'i'}}, {firstName: {$regex:?1,$options:'i'}}, {pesel: {$regex:?1,$options:'i'}},"
+            + "   {address.city: {$regex:?1,$options:'i'}}, {address.voivodship: {$regex:?1,$options:'i'}},"
+            + "   {address.county: {$regex:?1,$options:'i'}}, {address.country: {$regex:?1,$options:'i'}} ]},"
             + " {active:true} ]}")
-    List<Patient> findAllWithFilterActive(String filter, Sort sort);
+    List<Patient> findByOrganizationIdWithFilterActive(String organizationId, String filter, Sort sort);
 }

@@ -36,6 +36,7 @@ import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 
@@ -43,6 +44,7 @@ import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.STORE_MO
 import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.STORE_READ;
 import static com.grinnotech.patients.util.PeselValidator.peselIsValid;
 import static com.grinnotech.patients.util.QueryUtil.getSpringSort;
+import static org.apache.commons.lang3.StringUtils.join;
 
 /**
  *
@@ -54,11 +56,15 @@ public class PatientService extends AbstractService<Patient> {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    @Autowired
-    private PatientRepository patientRepository;
+    private final PatientRepository patientRepository;
+
+    private final MessageSource messageSource;
 
     @Autowired
-    private MessageSource messageSource;
+    public PatientService(PatientRepository patientRepository, MessageSource messageSource) {
+        this.patientRepository = patientRepository;
+        this.messageSource = messageSource;
+    }
 
     @ExtDirectMethod(STORE_READ)
     public ExtDirectStoreResult<Patient> read(ExtDirectStoreReadRequest request) {
@@ -71,19 +77,19 @@ public class PatientService extends AbstractService<Patient> {
 
         StringFilter stringFilter = request.getFirstFilterForField("filter");
         String filter = stringFilter != null ? stringFilter.getValue() : "";
-        List<Patient> list = findAllPatients(filter, getSpringSort(request));
-        return new ExtDirectStoreResult<>(list);
+        Collection<Patient> coll = findPatients(organizationFilter.getValue(), filter, getSpringSort(request));
+        return new ExtDirectStoreResult<>(coll);
     }
 
-    public List<Patient> findAllPatients(String filter, Sort sort) {
+    Collection<Patient> findPatients(String organizationId, String filter, Sort sort) {
 
-        List<Patient> list = filter.isEmpty()
-                ? patientRepository.findAllActive(sort)
-                : patientRepository.findAllWithFilterActive(filter, sort);
+        Collection<Patient> coll = filter.isEmpty()
+                ? patientRepository.findByOrganizationIdActive(organizationId, sort)
+                : patientRepository.findByOrganizationIdWithFilterActive(organizationId, filter, sort);
 
-        logger.debug("findAllPatients size:[" + list.size() + "]");
+        logger.debug("findPatients size:[" + coll.size() + "]");
 
-        return list;
+        return coll;
     }
 
     @ExtDirectMethod(STORE_MODIFY)
@@ -126,6 +132,9 @@ public class PatientService extends AbstractService<Patient> {
 
             patientRepository.save(patient);
         }
+
+        if (logger.isDebugEnabled())
+            violations.forEach(msg -> logger.debug("{} : {}", msg.getField(), join(msg.getMessages(), ',')));
 
         logger.debug("update end");
         return result;

@@ -94,17 +94,19 @@ Ext.define('Patients.view.patient.Controller', {
         }, 1);
     },
     save: function (callback) {
-        var viewModel = this.getViewModel(), selectedObject = this.getSelectedObject();
+        var selectedObject = this.getSelectedObject();
 
         var correspondence_address = this.lookup('correspondenceAddress');
         if (correspondence_address.collapsed) {
             selectedObject.getCorrespondenceAddress().destroy();
             delete selectedObject.getCorrespondenceAddress();
         }
-        if (!viewModel.get('certificateOfDisabilityExpirationEnabled')) {
+        if (!this.getViewModel().get('certificateOfDisabilityExpirationEnabled')) {
             delete selectedObject.get('certificateOfDisabilityExpiration');
             selectedObject.set('certificateOfDisabilityExpiration', null);
         }
+
+        selectedObject.set('organizationId', Patients.app.globals.organizationId);
 
         this.callParent(arguments);
     },
