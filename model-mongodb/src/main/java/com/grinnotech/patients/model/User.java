@@ -13,6 +13,7 @@ import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.util.StringUtils;
 
+import javax.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Set;
@@ -46,6 +47,7 @@ public class User extends AbstractPersistable {
     @NotBlank(message = "{fieldrequired}")
     private String email;
 
+//    @NotNull(message = "{fieldrequired}")
     private Set<String> organizationIds;
 
     @ch.rasc.bsoncodec.annotation.Transient

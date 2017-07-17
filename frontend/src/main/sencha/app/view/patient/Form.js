@@ -18,7 +18,8 @@
 
 Ext.define('Patients.view.patient.Form', {
     extend: 'Ext.form.Panel',
-    requires: ['Ext.form.field.Date', 'Ext.form.field.ComboBox', 'Ext.grid.Panel', 'Ext.grid.plugin.CellEditing', 'Patients.ux.address.FieldSet', 'Patients.ux.address.CorrespondenceFieldSet'],
+    requires: ['Ext.form.field.Date', 'Ext.form.field.ComboBox', 'Ext.grid.Panel', 'Ext.grid.plugin.CellEditing',
+        'Patients.ux.address.FieldSet', 'Patients.ux.address.CorrespondenceFieldSet'],
     reference: 'editPanel',
     xtype: 'patient.form',
 //    initComponent: function () {
@@ -197,9 +198,9 @@ Ext.define('Patients.view.patient.Form', {
                                         xtype: 'combobox',
                                         fieldLabel: i18n.patient_status,
                                         store: 'patientStatus',
-                                        bind: {
-                                            value: '{selectedObject.status}'
-                                        },
+                                        // bind: {
+                                        //     value: '{selectedObject.status}'
+                                        // },
                                         name: 'status',
                                         valueField: 'value',
                                         displayField: 'text',
@@ -711,7 +712,7 @@ Ext.define('Patients.view.patient.Form', {
 //                                            logService.debug("onDestroy");
 ////                                            this.callParent();
 //                                        }
-//                                        
+//
 //                                    });
 //                                    break;
 //                                default:

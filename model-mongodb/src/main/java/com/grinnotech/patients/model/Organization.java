@@ -23,6 +23,8 @@ import com.grinnotech.patients.domain.AbstractPersistable;
 import lombok.*;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.data.annotation.Transient;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.index.CompoundIndexes;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -33,6 +35,10 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
  * @author Jacek Sztajnke
  */
 @Document(collection = "organization")
+//@CompoundIndexes(
+    //TODO: @CompoundIndex(name = "name", def = "{ ... }")
+    //TODO: @CompoundIndex(name = "code", def = "{ ... }")
+//)
 @Model(value = "Patients.model.Organization",
         createMethod = "organizationService.update",
         readMethod = "organizationService.read",

@@ -38,8 +38,6 @@ Ext.define('Patients.view.main.MainModel', {
             },
             set: function(data) {
                 logService.debug('organization.set: ' + data);
-                // logService.debug('updateOrganizationId2 ' + ());
-                // return data.organizationId === undefined || data.organizationId === null || data.organizationId === '';
                 Patients.app.globals.organizationId = data;
                 Patients.ux.Mediator.fireEvent('currentOrganizationChanged', data);
             }
