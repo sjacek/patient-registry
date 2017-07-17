@@ -30,6 +30,9 @@ Ext.define('Patients.Application', {
 
     stores: ['Navigation', 'Languages', 'Authority', 'DisabilityLevel', 'ProjectStatus', 'Gender'],
 
+    globals: {
+        organizationId: null
+    },
     constructor: function () {
         // <debug>
         Ext.Ajax.on('beforerequest', function (conn, options, eOpts) {

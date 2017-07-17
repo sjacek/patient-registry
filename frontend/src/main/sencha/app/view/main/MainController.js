@@ -171,10 +171,11 @@ Ext.define('Patients.view.main.MainController', {
         this.appready = true;
         this.redirectTo('auth.pwreset');
     },
-    onOrganizationChanged: function(combo, newValue, oldValue, eOpts) {
-        logService.debug('onOrganizationChanged ' + newValue);
-        Patients.ux.Mediator.fireEvent('currentOrganizationChanged', newValue);
-    },
+    // onOrganizationChanged: function(combo, newValue, oldValue, eOpts) {
+    //     // Patients.app.globals.organizationId = newValue;
+    //     logService.debug('onOrganizationChanged ' + newValue);
+    //     Patients.ux.Mediator.fireEvent('currentOrganizationChanged', newValue);
+    // },
     routeToAuthSignin: function () {
         this.setCurrentView('auth.Signin', true);
     },

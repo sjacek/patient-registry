@@ -56,16 +56,17 @@ Ext.define('Patients.view.main.Main', {
             xtype: 'combobox',
             fieldLabel: i18n.organization,
             bind: {
-                store: '{organizations}'
+                store: '{organizations}',
+                value: '{organization}'
             },
             valueField: 'id',
             displayField: 'code',
             queryMode: 'local',
             forceSelection: true,
-            editable: false,
-            listeners: {
-                change: 'onOrganizationChanged'
-            }
+            editable: false
+            // listeners: {
+            //     change: 'onOrganizationChanged'
+            // }
         }, {
             cls: 'no-bg-button',
             iconCls: 'x-fa fa-cog',

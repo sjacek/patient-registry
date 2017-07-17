@@ -29,13 +29,19 @@ Ext.define('Patients.view.main.MainModel', {
         }
     },
     formulas : {
-        currentOrganization: {
+        organization: {
             bind: {
-                bindTo: '{combobox.selection}',
-                deep: true
+                organizationId: '{Patients.app.globals.organizationId}'
             },
-            get: function(organization) {
-                return organization;
+            get: function(data) {
+                return data;
+            },
+            set: function(data) {
+                logService.debug('organization.set: ' + data);
+                // logService.debug('updateOrganizationId2 ' + ());
+                // return data.organizationId === undefined || data.organizationId === null || data.organizationId === '';
+                Patients.app.globals.organizationId = data;
+                Patients.ux.Mediator.fireEvent('currentOrganizationChanged', data);
             }
         }
     }

@@ -28,6 +28,7 @@ Ext.define('Patients.view.base.ViewController', {
     },
     init: function() {
         Patients.ux.Mediator.on('currentOrganizationChanged', this.onCurrentOrganizationChanged, this);
+        this.setOrganizationFilter(Patients.app.globals.organizationId);
     },
     onBaseAfterRender: function (cmp) {
         cmp.tip = Ext.create('Patients.view.base.GridCellToolTip', {
@@ -56,32 +57,18 @@ Ext.define('Patients.view.base.ViewController', {
         this.createSubobjects();
         this.edit();
     },
-    // onFilter: function (tf) {
-    //     var value = tf.getValue();
-    //     var store = this.getStore(this.getObjectStoreName());
-    //     if (value) {
-    //         this.getViewModel().set('filter', value);
-    //         store.filter('filter', value);
-    //     } else {
-    //         this.getViewModel().set('filter', null);
-    //         store.removeFilter('filter');
-    //     }
-    // },
-    onCurrentOrganizationChanged: function(organizationId) {
-        logService.debug("ViewController::onCurrentOrganizationChanged " + organizationId);
-
+    setOrganizationFilter: function (organizationId) {
         var store = this.getStore(this.getObjectStoreName());
-        if (value) {
-            this.getViewModel().set('organizationId', value);
-            store.filter('organizationId', value);
+        if (organizationId) {
+            store.filter('organizationId', organizationId);
         } else {
-            this.getViewModel().set('organizationId', null);
             store.removeFilter('organizationId');
         }
     },
-    // setOrganizationFilter: function(value) {
-    //     logService.debug("setOrganizationFilter " + value);
-    // },
+    onCurrentOrganizationChanged: function(organizationId) {
+        logService.debug("ViewController::onCurrentOrganizationChanged " + organizationId);
+        this.setOrganizationFilter(organizationId);
+    },
     onItemdblclick: function (store, record) {
         this.getViewModel().set(this.getSelectedObjectName(), record);
         this.createSubobjects();

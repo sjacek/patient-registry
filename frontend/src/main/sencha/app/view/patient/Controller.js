@@ -23,6 +23,10 @@ Ext.define('Patients.view.patient.Controller', {
         objectName: i18n.patient,
         objectNamePlural: i18n.patients
     },
+    init: function() {
+        this.callParent(arguments);
+        this.updateOrganizationEmpty();
+    },
     onDelete: function (grid, rowIndex, colIndex) {
         this.setSelectedObject(grid.getStore().getAt(rowIndex));
         this.eraseObject(this.getSelectedObject().get('firstName') + " " + this.getSelectedObject().get('lastName'), function () {
@@ -130,9 +134,16 @@ Ext.define('Patients.view.patient.Controller', {
         this.lookup('editPanel').isValid();
     },
     onCurrentOrganizationChanged: function(organizationId) {
+        // this.callParent(organizationId);
+        this.setOrganizationFilter(organizationId);
+
         logService.debug("patient.Controller::onCurrentOrganizationChanged " + organizationId);
-        var viewModel = this.getViewModel();
-        viewModel.set('currentOrganizationId', organizationId);
+
+        this.updateOrganizationEmpty();
+    },
+    updateOrganizationEmpty: function() {
+        var organizationId = Patients.app.globals.organizationId;
+        this.getViewModel().set('isOrganizationEmpty', organizationId === undefined || organizationId === null || organizationId === '');
     },
     validateContacts: function () {
         var grid = this.lookup('contactsGrid');
