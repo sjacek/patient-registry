@@ -23,6 +23,10 @@ Ext.define('Patients.view.patient.Controller', {
         objectName: i18n.patient,
         objectNamePlural: i18n.patients
     },
+    init: function() {
+        this.callParent(arguments);
+        this.updateOrganizationEmpty();
+    },
     onDelete: function (grid, rowIndex, colIndex) {
         this.setSelectedObject(grid.getStore().getAt(rowIndex));
         this.eraseObject(this.getSelectedObject().get('firstName') + " " + this.getSelectedObject().get('lastName'), function () {
@@ -90,17 +94,19 @@ Ext.define('Patients.view.patient.Controller', {
         }, 1);
     },
     save: function (callback) {
-        var viewModel = this.getViewModel(), selectedObject = this.getSelectedObject();
+        var selectedObject = this.getSelectedObject();
 
         var correspondence_address = this.lookup('correspondenceAddress');
         if (correspondence_address.collapsed) {
             selectedObject.getCorrespondenceAddress().destroy();
             delete selectedObject.getCorrespondenceAddress();
         }
-        if (!viewModel.get('certificateOfDisabilityExpirationEnabled')) {
+        if (!this.getViewModel().get('certificateOfDisabilityExpirationEnabled')) {
             delete selectedObject.get('certificateOfDisabilityExpiration');
             selectedObject.set('certificateOfDisabilityExpiration', null);
         }
+
+        selectedObject.set('organizationId', Patients.app.globals.organizationId);
 
         this.callParent(arguments);
     },
@@ -129,6 +135,18 @@ Ext.define('Patients.view.patient.Controller', {
         Ext.apply(certificateOfDisabilityExpirationDate, {allowBlank: !viewModel.get('certificateOfDisabilityExpirationEnabled')}, {});
         this.lookup('editPanel').isValid();
     },
+    onCurrentOrganizationChanged: function(organizationId) {
+        // this.callParent(organizationId);
+        this.setOrganizationFilter(organizationId);
+
+        logService.debug("patient.Controller::onCurrentOrganizationChanged " + organizationId);
+
+        this.updateOrganizationEmpty();
+    },
+    updateOrganizationEmpty: function() {
+        var organizationId = Patients.app.globals.organizationId;
+        this.getViewModel().set('isOrganizationEmpty', organizationId === undefined || organizationId === null || organizationId === '');
+    },
     validateContacts: function () {
         var grid = this.lookup('contactsGrid');
         var ret = true;
@@ -149,9 +167,9 @@ Ext.define('Patients.view.patient.Controller', {
 
         var sort = 'Id';
         var dir = 'ASC';
-        if (typeof sorter != 'undefined') {
-            var sort = sorter.property;
-            var dir = sorter.direction;
+        if (typeof sorter !== 'undefined') {
+            sort = sorter.property;
+            dir = sorter.direction;
         }
         url += '&sort=' + sort + '&dir=' + dir;
 
@@ -160,10 +178,10 @@ Ext.define('Patients.view.patient.Controller', {
             method: 'GET',
             autoAbort: false,
             success: function(result) {
-                if (result.status == 204) {
+                if (result.status === 204) {
                     Ext.Msg.alert('Empty Report', 'There is no data');
                 }
-                else if(result.status == 200) {
+                else if(result.status === 200) {
                     Ext.DomHelper.append(Ext.getBody(), {
                         tag:          'iframe',
                         frameBorder:  0,

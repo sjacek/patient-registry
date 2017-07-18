@@ -18,14 +18,29 @@
 
 Ext.define('Patients.view.main.MainModel', {
     extend: 'Ext.app.ViewModel',
+    reference: 'mainModel',
     data: {
         currentView: null,
-        fullName: null,
-        currentOrganization: null
+        fullName: null
     },
     stores: {
         organizations: {
-            fields: [ 'id', 'name' ]
+            fields: [ 'id', 'code' ]
+        }
+    },
+    formulas : {
+        organization: {
+            bind: {
+                organizationId: '{Patients.app.globals.organizationId}'
+            },
+            get: function(data) {
+                return data;
+            },
+            set: function(data) {
+                logService.debug('organization.set: ' + data);
+                Patients.app.globals.organizationId = data;
+                Patients.ux.Mediator.fireEvent('currentOrganizationChanged', data);
+            }
         }
     }
 });

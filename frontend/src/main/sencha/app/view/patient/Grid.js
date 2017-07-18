@@ -58,7 +58,10 @@ Ext.define('Patients.view.patient.Grid', {
                 tooltip: i18n.patient_create_tooltip,
                 iconCls: 'x-fa fa-plus',
                 ui: 'soft-green',
-                handler: 'newObject'
+                handler: 'newObject',
+                bind: {
+                    disabled: '{isOrganizationEmpty}'
+                }
             }, {
                 xtype: 'splitbutton',
                 text: i18n.export,

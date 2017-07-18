@@ -38,15 +38,20 @@ public class ExportController {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
+    @Autowired
+    public ExportController(PatientService patientService) {
+        this.patientService = patientService;
+    }
+
     public enum Attributes {
         patients
     }
 
-    @Autowired
-    private PatientService patientService;
+    private final PatientService patientService;
 
     @RequestMapping(path = "/patients", method = RequestMethod.GET)
-    public String patients(@RequestParam("filter") String filter,
+    public String patients(@RequestParam("organizationId") String organizationId,
+                           @RequestParam("filter") String filter,
                            @RequestParam("sort") String sort,
                            @RequestParam("dir") String dir,
                            Model model) {
@@ -54,7 +59,7 @@ public class ExportController {
         List<Sort.Order> list = new ArrayList<Sort.Order>() {{
             add(new Sort.Order(ASC, sort));
         }};
-        model.addAttribute(Attributes.patients.name(), patientService.findAllPatients(filter, new Sort(list)));
+        model.addAttribute(Attributes.patients.name(), patientService.findPatients(organizationId, filter, new Sort(list)));
         return "";
     }
 }

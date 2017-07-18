@@ -24,7 +24,8 @@ Ext.define('Patients.view.patient.ViewModel', {
         totalCount: null,
         correspondenceAddressEnabled: false,
         certificateOfDisabilityEnabled: false,
-        certificateOfDisabilityExpirationEnabled: false
+        certificateOfDisabilityExpirationEnabled: false,
+        isOrganizationEmpty: false
     },
     stores: {
         objects: {
@@ -34,5 +35,17 @@ Ext.define('Patients.view.patient.ViewModel', {
             }
         },
         diagnosis: { type: 'diagnosis' }
+    },
+    formulas : {
+        // isOrganizationEmpty: {
+        //     bind: {
+        //         organizationId: '{Patients.app.globals.organizationId}'
+        //     },
+        //     get: function(data) {
+        //         logService.debug('isOrganizationEmpty.get ' + data);
+        //         // logService.debug('updateOrganizationId2 ' + ());
+        //         return data === undefined || data === null || data === '';
+        //     }
+        // }
     }
 });

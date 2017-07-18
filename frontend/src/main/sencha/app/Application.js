@@ -28,8 +28,11 @@ Ext.define('Patients.Application', {
     requires: ['Ext.direct.*', 'Ext.form.action.DirectSubmit', 'Patients.*', 'Ext.state.Manager', 'Ext.state.LocalStorageProvider', 'Ext.container.Container'],
     name: 'Patients',
 
-    stores: ['Navigation', 'Languages', 'Authority', 'DisabilityLevel', 'ProjectStatus', 'Gender'],
+    stores: ['Navigation', 'Languages', 'Authority', 'DisabilityLevel', 'ProjectStatus', 'PatientStatus', 'Gender'],
 
+    globals: {
+        organizationId: null
+    },
     constructor: function () {
         // <debug>
         Ext.Ajax.on('beforerequest', function (conn, options, eOpts) {

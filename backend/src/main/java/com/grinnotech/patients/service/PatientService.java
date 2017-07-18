@@ -26,13 +26,17 @@ import com.grinnotech.patients.dao.authorities.RequireUserEmployeeAuthority;
 import com.grinnotech.patients.model.Patient;
 import com.grinnotech.patients.util.ValidationMessages;
 import com.grinnotech.patients.util.ValidationMessagesResult;
-import lombok.extern.log4j.Log4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 
+import java.lang.invoke.MethodHandles;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 
@@ -40,6 +44,7 @@ import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.STORE_MO
 import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.STORE_READ;
 import static com.grinnotech.patients.util.PeselValidator.peselIsValid;
 import static com.grinnotech.patients.util.QueryUtil.getSpringSort;
+import static org.apache.commons.lang3.StringUtils.join;
 
 /**
  *
@@ -47,50 +52,61 @@ import static com.grinnotech.patients.util.QueryUtil.getSpringSort;
  */
 @Service
 @RequireUserEmployeeAuthority
-@Log4j
 public class PatientService extends AbstractService<Patient> {
 
-    @Autowired
-    private PatientRepository patientRepository;
+    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
+    private final PatientRepository patientRepository;
+
+    private final MessageSource messageSource;
 
     @Autowired
-    private MessageSource messageSource;
+    public PatientService(PatientRepository patientRepository, MessageSource messageSource) {
+        this.patientRepository = patientRepository;
+        this.messageSource = messageSource;
+    }
 
     @ExtDirectMethod(STORE_READ)
     public ExtDirectStoreResult<Patient> read(ExtDirectStoreReadRequest request) {
 
+        StringFilter organizationFilter = request.getFirstFilterForField("organizationId");
+        String organizationId = organizationFilter == null ? "null" : organizationFilter.getValue();
+        logger.debug("organizationFilter: {}", organizationId);
+        if (organizationFilter == null || organizationFilter.getValue().isEmpty())
+            return new ExtDirectStoreResult<>(new ArrayList<>());
+
         StringFilter stringFilter = request.getFirstFilterForField("filter");
         String filter = stringFilter != null ? stringFilter.getValue() : "";
-        List<Patient> list = findAllPatients(filter, getSpringSort(request));
-        return new ExtDirectStoreResult<>(list);
+        Collection<Patient> coll = findPatients(organizationFilter.getValue(), filter, getSpringSort(request));
+        return new ExtDirectStoreResult<>(coll);
     }
 
-    public List<Patient> findAllPatients(String filter, Sort sort) {
+    Collection<Patient> findPatients(String organizationId, String filter, Sort sort) {
 
-        List<Patient> list = filter.isEmpty()
-                ? patientRepository.findAllActive(sort)
-                : patientRepository.findAllWithFilterActive(filter, sort);
+        Collection<Patient> coll = filter.isEmpty()
+                ? patientRepository.findByOrganizationIdActive(organizationId, sort)
+                : patientRepository.findByOrganizationIdWithFilterActive(organizationId, filter, sort);
 
-        log.debug("findAllPatients size:[" + list.size() + "]");
+        logger.debug("findPatients size:[" + coll.size() + "]");
 
-        return list;
+        return coll;
     }
 
     @ExtDirectMethod(STORE_MODIFY)
     public ExtDirectStoreResult<Patient> destroy(@AuthenticationPrincipal MongoUserDetails userDetails, Patient patient) {
         ExtDirectStoreResult<Patient> result = new ExtDirectStoreResult<>();
 
-        log.debug("destroy 1");
+        logger.debug("destroy 1");
         Patient old = patientRepository.findOne(patient.getId());
 
         old.setId(null);
         old.setActive(false);
         patientRepository.save(old);
-        log.debug("destroy 2 " + old.getId());
+        logger.debug("destroy 2 " + old.getId());
 
         setAttrsForDelete(patient, userDetails, old);
         patientRepository.save(patient);
-        log.debug("destroy end");
+        logger.debug("destroy end");
         return result.setSuccess(true);
     }
 
@@ -101,7 +117,7 @@ public class PatientService extends AbstractService<Patient> {
         ValidationMessagesResult<Patient> result = new ValidationMessagesResult<>(patient);
         result.setValidations(violations);
 
-        log.debug("update 1: " + patient.toString());
+        logger.debug("update 1: " + patient.toString());
         if (violations.isEmpty()) {
             Patient old = patientRepository.findOne(patient.getId());
             if (old != null) {
@@ -117,7 +133,10 @@ public class PatientService extends AbstractService<Patient> {
             patientRepository.save(patient);
         }
 
-        log.debug("update end");
+        if (logger.isDebugEnabled())
+            violations.forEach(msg -> logger.debug("{} : {}", msg.getField(), join(msg.getMessages(), ',')));
+
+        logger.debug("update end");
         return result;
     }
 

@@ -26,7 +26,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
-import org.springframework.data.mongodb.core.index.CompoundIndexes;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -102,12 +101,14 @@ public class Patient extends AbstractPersistable {
     @ModelField
     private Address correspondenceAddress;
 
-    @ModelField
-    @ch.rasc.bsoncodec.annotation.Transient
-//    @javax.persistence.Transient
-    @org.springframework.data.annotation.Transient
-    private Organization organization;
+//    @ModelField
+//    @ch.rasc.bsoncodec.annotation.Transient
+////    @javax.persistence.Transient
+//    @org.springframework.data.annotation.Transient
+//    @NotNull(message = "{fieldrequired}")
+//    private Organization organization;
 
+    @NotBlank(message = "{fieldrequired}")
     private String organizationId;
     
 //    @ModelHasMany

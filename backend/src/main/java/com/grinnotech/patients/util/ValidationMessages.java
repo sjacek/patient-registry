@@ -32,8 +32,4 @@ public class ValidationMessages {
     public void setMessages(List<String> messages) {
         this.messages = messages;
     }
-
-//    public void setMessage(String message) {
-//        this.messages = new String[]{message};
-//    }
 }

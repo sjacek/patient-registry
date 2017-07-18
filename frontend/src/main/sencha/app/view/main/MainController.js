@@ -74,7 +74,7 @@ Ext.define('Patients.view.main.MainController', {
 
         var organizationsStore = me.getViewModel().getStore('organizations');
         Object.keys(user.organizations).forEach(function(id) {
-            organizationsStore.add({id: id, name: user.organizations[id]});
+            organizationsStore.add({id: id, code: user.organizations[id]});
         });
 
         if (localStorage.patients_navigation_micro === 'true') {
@@ -171,6 +171,11 @@ Ext.define('Patients.view.main.MainController', {
         this.appready = true;
         this.redirectTo('auth.pwreset');
     },
+    // onOrganizationChanged: function(combo, newValue, oldValue, eOpts) {
+    //     // Patients.app.globals.organizationId = newValue;
+    //     logService.debug('onOrganizationChanged ' + newValue);
+    //     Patients.ux.Mediator.fireEvent('currentOrganizationChanged', newValue);
+    // },
     routeToAuthSignin: function () {
         this.setCurrentView('auth.Signin', true);
     },
@@ -317,6 +322,24 @@ Ext.define('Patients.view.main.MainController', {
 
         this.getViewModel().set('currentView', newView);
     },
+    // onOrganizationFilter: function (tf) {
+    //     var value = tf.getValue();
+    //     logService.debug("onOrganizationFilter " + value);
+    //     var selectedOrganizationId = this.getViewModel().get(this.getSelectedObjectName());
+    //
+    //     var store = this.getStore(this.getObjectStoreName());
+    //     if (value) {
+    //         this.getViewModel().set('organization', value);
+    //         store.filter('organization', value);
+    //     } else {
+    //         this.getViewModel().set('organization', null);
+    //         store.removeFilter('organization');
+    //     }
+    //
+    //     var view = this.getViewModel().get('currentView');
+    //     view.setOrganizationFilter(tf.getValue());
+    //
+    // },
     onLogoutClick: function () {
         Ext.Ajax.request({
             url: serverUrl + 'logout',

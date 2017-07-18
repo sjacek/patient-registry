@@ -62,7 +62,7 @@ public class DisorderService extends AbstractService<Disorder> {
                 ? disorderRepository.findAll(sort)
                 : disorderRepository.findAllWithFilter(filter, sort);
 
-        logger.debug("findAllPatients size:[" + collection.size() + "]");
+        logger.debug("findPatients size:[" + collection.size() + "]");
 
         return collection;
     }
