@@ -123,7 +123,7 @@
         <dependency>
             <groupId>ch.ralscha</groupId>
             <artifactId>extdirectspring</artifactId>
-            <version>1.7.1</version>
+            <version>1.7.3</version>
         </dependency>
 
         <dependency>
@@ -141,7 +141,7 @@
         <dependency>
             <groupId>org.unbescape</groupId>
             <artifactId>unbescape</artifactId>
-            <version>1.1.4.RELEASE</version>
+            <version>1.1.5.RELEASE</version>
         </dependency>
 
         <dependency>
@@ -169,7 +169,7 @@
         <dependency>
             <groupId>com.google.zxing</groupId>
             <artifactId>javase</artifactId>
-            <version>3.3.0</version>
+            <version>3.3.1</version>
             <exclusions>
                 <exclusion>
                     <artifactId>jcommander</artifactId>
@@ -194,14 +194,14 @@
         <dependency>
             <groupId>org.immutables</groupId>
             <artifactId>value</artifactId>
-            <version>2.5.0</version>
+            <version>2.5.6</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>ch.rasc</groupId>
             <artifactId>bsoncodec-apt</artifactId>
-            <version>1.0.3</version>
+            <version>1.0.5</version>
             <optional>true</optional>
         </dependency>
         <dependency>
@@ -212,7 +212,7 @@
         <dependency>
             <groupId>com.opencsv</groupId>
             <artifactId>opencsv</artifactId>
-            <version>3.9</version>
+            <version>4.1</version>
             <type>jar</type>
         </dependency>
         <dependency>
@@ -224,12 +224,12 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.5</version>
+            <version>3.7</version>
         </dependency>
         <dependency>
             <groupId>com.itextpdf</groupId>
             <artifactId>itextpdf</artifactId>
-            <version>5.5.11</version>
+            <version>5.5.12</version>
         </dependency>
 
         <dependency>
@@ -246,7 +246,7 @@
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi</artifactId>
-            <version>3.16</version>
+            <version>3.17</version>
         </dependency>
         <dependency>
             <groupId>net.sf.supercsv</groupId>
@@ -349,7 +349,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.6.1</version>
+                <version>3.7.0</version>
                 <configuration>
                     <debug>true</debug>
                     <source>${java.version}</source>
