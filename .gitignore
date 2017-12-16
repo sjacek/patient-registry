@@ -10,5 +10,6 @@
 /nbproject/
 /tomcat/
 /.idea/
-/patients.iml
+/**/*.iml
 keystore.p12
+/**/target

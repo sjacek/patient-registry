@@ -70,8 +70,11 @@ class Startup {
     private final DisorderRepository disorderRepository;
 
     private String uuidRoot;
+
     private String uuidPpmdPoland;
+
     private String uuidTest;
+
     private OrphadataProperties orphadataProperties;
 
     @Autowired

@@ -39,9 +39,9 @@ public class OrphadataParserTest {
 
 //        DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.SHORT, new Locale("pl_PL"));
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", new Locale("pl"));
-        assertEquals(dateFormat.parse("2016-12-01 04:17:21"), parser.getInfo().getDate());
-        assertEquals("1.2.4 / 4.1.6 [2016-04-08] (orientdb version)", parser.getInfo().getVersion());
-        assertEquals("Orphanet (c) 2016", parser.getInfo().getCopyright());
+        assertEquals(dateFormat.parse("2017-10-02 04:17:21"), parser.getInfo().getDate());
+        assertEquals("1.2.7 / 4.1.6 [2017-03-09] (orientdb version)", parser.getInfo().getVersion());
+        assertEquals("Orphanet (c) 2017", parser.getInfo().getCopyright());
     }
 
 }

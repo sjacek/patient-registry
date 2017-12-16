@@ -18,20 +18,16 @@ package com.grinnotech.patients.util;
 
 import ch.ralscha.extdirectspring.bean.ExtDirectStoreReadRequest;
 import com.mongodb.client.FindIterable;
-import org.bson.conversions.Bson;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Order;
 
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import static ch.ralscha.extdirectspring.bean.SortDirection.ASCENDING;
-import static com.mongodb.client.model.Sorts.ascending;
-import static com.mongodb.client.model.Sorts.descending;
 import static java.util.stream.Collectors.toList;
 import static org.springframework.data.domain.Sort.Direction.ASC;
 import static org.springframework.data.domain.Sort.Direction.DESC;

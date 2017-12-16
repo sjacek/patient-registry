@@ -26,12 +26,8 @@ public class MessageSource {
 
     private ResourceBundle resourceBundle;
 
-    public MessageSource(Locale locale)
-    {
+    public MessageSource(Locale locale) {
         this.resourceBundle = ResourceBundle.getBundle("messages", locale);
-        // TODO: remove
-        Enumeration<String> e = resourceBundle.getKeys();
-        int a = 10;
     }
 
     public String getMessage(String key) {
