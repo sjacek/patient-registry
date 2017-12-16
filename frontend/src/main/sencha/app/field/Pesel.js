@@ -23,6 +23,6 @@ Ext.define('Patients.field.Pesel', {
 
      validators: {
          type: 'format',
-         matcher: '/\d{11}/'
+         matcher: '/d{11}/'
      }
 });

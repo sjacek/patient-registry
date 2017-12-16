@@ -23,6 +23,6 @@ Ext.define('App.field.PhoneNumber', {
 
      validators: {
          type: 'format',
-         matcher: '/\d{3}\-\d{3}\-\d{3}/'
+         matcher: '/d{3}-d{3}-d{3}/'
      }
  });

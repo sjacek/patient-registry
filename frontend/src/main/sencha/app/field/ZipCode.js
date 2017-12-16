@@ -23,6 +23,6 @@ Ext.define('App.field.ZipCode', {
 
      validators: {
          type: 'format',
-         matcher: '/\d{2}\-\d{3}/'
+         matcher: '/d{2}-d{3}/'
      }
  });
