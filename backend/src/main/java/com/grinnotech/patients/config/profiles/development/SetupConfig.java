@@ -16,8 +16,26 @@
  */
 package com.grinnotech.patients.config.profiles.development;
 
+import static ch.ralscha.extdirectspring.util.ExtDirectSpringUtil.generateApiString;
+import static java.lang.String.format;
+import static java.lang.System.getProperty;
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.util.Arrays.asList;
+import static java.util.Arrays.stream;
+import static java.util.Collections.singleton;
+import static java.util.Collections.singletonList;
+import static java.util.Locale.ENGLISH;
+import static java.util.Locale.GERMAN;
+import static java.util.ResourceBundle.getBundle;
+import static org.springframework.boot.autoconfigure.security.SecurityProperties.DEFAULT_FILTER_ORDER;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.grinnotech.patients.model.*;
+import com.grinnotech.patients.model.Authority;
+import com.grinnotech.patients.model.DisabilityLevel;
+import com.grinnotech.patients.model.Gender;
+import com.grinnotech.patients.model.PatientStatus;
+import com.grinnotech.patients.model.ProjectStatus;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -33,128 +51,118 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.ResourceBundle;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
-import static ch.ralscha.extdirectspring.util.ExtDirectSpringUtil.generateApiString;
-import static java.lang.String.format;
-import static java.lang.System.getProperty;
-import static java.nio.charset.StandardCharsets.UTF_8;
-import static java.util.Arrays.asList;
-import static java.util.Arrays.stream;
-import static java.util.Collections.singleton;
-import static java.util.Collections.singletonList;
-import static java.util.Locale.ENGLISH;
-import static java.util.Locale.GERMAN;
-import static java.util.ResourceBundle.getBundle;
-import static org.springframework.boot.autoconfigure.security.SecurityProperties.DEFAULT_FILTER_ORDER;
-
 /**
- *
  * @author Jacek Sztajnke
  */
 @Configuration
 @Profile("development")
 class SetupConfig {
 
-    @Value("${info.app.name}")
-    private String appName;
-    @Value("${sencha.client-dir}")
-    private String senchaClientDir;
+	@Value("${info.app.name}")
+	private String appName;
 
-    private static void writeEnums(Path clientDir) throws IOException {
-        writeEnum(clientDir, "Authority", Authority.values(), true);
-        writeEnum(clientDir, "PatientStatus", PatientStatus.values(), false);
-        writeEnum(clientDir, "DisabilityLevel", DisabilityLevel.values(), false);
-        writeEnum(clientDir, "ProjectStatus", ProjectStatus.values(), false);
-        writeEnum(clientDir, "Gender", Gender.values(), false);
-    }
+	@Value("${sencha.client-dir}")
+	private String senchaClientDir;
 
-    private static void writeEnum(Path clientDir, String name, Enum<?>[] values, boolean writeStore) throws IOException {
-        StringBuilder sb = new StringBuilder(200);
-        sb.append("Ext.define('Patients.constant.").append(name).append("', {\n").append("\tsingleton: true,\n");
-        String valuesString = stream(values)
-                .map(e -> format("\t%s: '%s'", e.name(), e.name()))
-                .collect(Collectors.joining(",\n"));
-        sb.append(valuesString).append("\n});");
+	private static void writeEnums(Path clientDir) throws IOException {
+		writeEnum(clientDir, "Authority", Authority.values(), true);
+		writeEnum(clientDir, "PatientStatus", PatientStatus.values(), false);
+		writeEnum(clientDir, "DisabilityLevel", DisabilityLevel.values(), false);
+		writeEnum(clientDir, "ProjectStatus", ProjectStatus.values(), false);
+		writeEnum(clientDir, "Gender", Gender.values(), false);
+	}
 
-        Path constantDir = clientDir.resolve("app").resolve("constant");
-        if (Files.notExists(constantDir)) {
-            Files.createDirectories(constantDir);
-        }
+	private static void writeEnum(Path clientDir, String name, Enum<?>[] values, boolean writeStore)
+			throws IOException {
+		StringBuilder sb = new StringBuilder(200);
+		sb.append("Ext.define('Patients.constant.").append(name).append("', {\n").append("\tsingleton: true,\n");
+		String valuesString = stream(values).map(e -> format("\t%s: '%s'", e.name(), e.name()))
+				.collect(Collectors.joining(",\n"));
+		sb.append(valuesString).append("\n});");
 
-        Files.write(constantDir.resolve(name + ".js"), sb.toString().getBytes(UTF_8));
+		Path constantDir = clientDir.resolve("app").resolve("constant");
+		if (Files.notExists(constantDir)) {
+			Files.createDirectories(constantDir);
+		}
 
-        if (writeStore) {
-            sb = new StringBuilder(200);
+		Files.write(constantDir.resolve(name + ".js"), sb.toString().getBytes(UTF_8));
 
-            sb.append("Ext.define('Patients.store.").append(name).append("', {\n")
-                    .append("\textend: 'Ext.data.Store',\n")
-                    .append("\tstoreId: '").append(StringUtils.uncapitalize(name)).append("',\n")
-                    .append("\tdata: [\n");
+		if (writeStore) {
+			sb = new StringBuilder(200);
 
-            valuesString = stream(values)
-                    .map(e -> format("\t\t{ value: Patients.constant.%s.%s }", name, e.name()))
-                    .collect(Collectors.joining(",\n"));
-            sb.append(valuesString).append("\n\t]\n});");
+			sb.append("Ext.define('Patients.store.").append(name).append("', {\n")
+					.append("\textend: 'Ext.data.Store',\n").append("\tstoreId: '")
+					.append(StringUtils.uncapitalize(name)).append("',\n").append("\tdata: [\n");
 
-            Files.write(clientDir.resolve("app").resolve("store").resolve(name + ".js"), sb.toString().getBytes(UTF_8));
-        }
-    }
+			valuesString = stream(values).map(e -> format("\t\t{ value: Patients.constant.%s.%s }", name, e.name()))
+					.collect(Collectors.joining(",\n"));
+			sb.append(valuesString).append("\n\t]\n});");
 
-    @Bean
-    public FilterRegistrationBean corsFilter() {
-        return new FilterRegistrationBean() {{
-            setFilter(new CorsFilter(r -> new CorsConfiguration() {{
-                setAllowedOrigins(singletonList(ALL));
-                setAllowedMethods(singletonList(ALL));
-                setAllowedHeaders(singletonList(ALL));
-                setAllowCredentials(true);
-            }}));
-            setUrlPatterns(singleton("/*"));
-            setOrder(DEFAULT_FILTER_ORDER - 1);
-        }};
-    }
+			Files.write(clientDir.resolve("app").resolve("store").resolve(name + ".js"), sb.toString().getBytes(UTF_8));
+		}
+	}
 
-    @EventListener
-    public void handleContextRefresh(ApplicationReadyEvent event) throws IOException {
-        String extDirectConfig = generateApiString(event.getApplicationContext());
-        String userDir = getProperty("user.dir");
-        Files.write(Paths.get(userDir, senchaClientDir, "api.js"), extDirectConfig.getBytes(UTF_8));
+	@Bean
+	public FilterRegistrationBean corsFilter() {
+		return new FilterRegistrationBean() {{
+			setFilter(new CorsFilter(r -> new CorsConfiguration() {{
+				setAllowedOrigins(singletonList(ALL));
+				setAllowedMethods(singletonList(ALL));
+				setAllowedHeaders(singletonList(ALL));
+				setAllowCredentials(true);
+			}}));
+			setUrlPatterns(singleton("/*"));
+			setOrder(DEFAULT_FILTER_ORDER - 1);
+		}};
+	}
 
-        Path clientDir = Paths.get(userDir, senchaClientDir);
-        writeI18n(clientDir);
-        writeEnums(clientDir);
-    }
+	@EventListener
+	public void handleContextRefresh(ApplicationReadyEvent event) throws IOException {
+		String extDirectConfig = generateApiString(event.getApplicationContext());
+		String userDir = getProperty("user.dir");
+		Files.write(Paths.get(userDir, senchaClientDir, "api.js"), extDirectConfig.getBytes(UTF_8));
 
-    private void writeI18n(Path clientDir) throws IOException {
-        List<Locale> locales = asList(ENGLISH, GERMAN, new Locale("pl"));
-        for (Locale locale : locales) {
-            String tag = locale.toLanguageTag();
-            String output = "var i18n = " + new ObjectMapper().writeValueAsString(buildMessageMap(locale)) + ";";
-            Files.write(clientDir.resolve("i18n-" + tag + ".js"), output.getBytes(UTF_8));
-        }
-    }
+		Path clientDir = Paths.get(userDir, senchaClientDir);
+		writeI18n(clientDir);
+		writeEnums(clientDir);
+	}
 
-    private Map<String, String> buildMessageMap(Locale locale) {
-        Map<String, String> messages = new TreeMap<>();
+	private void writeI18n(Path clientDir) throws IOException {
+		List<Locale> locales = asList(ENGLISH, GERMAN, new Locale("pl"));
+		for (Locale locale : locales) {
+			String tag = locale.toLanguageTag();
+			String output = "var i18n = " + new ObjectMapper().writeValueAsString(buildMessageMap(locale)) + ";";
+			Files.write(clientDir.resolve("i18n-" + tag + ".js"), output.getBytes(UTF_8));
+		}
+	}
 
-        ResourceBundle rb = getBundle("messages", locale);
-        Enumeration<String> e = rb.getKeys();
-        while (e.hasMoreElements()) {
-            String key = e.nextElement();
-            messages.put(key, rb.getString(key));
-        }
+	private Map<String, String> buildMessageMap(Locale locale) {
+		Map<String, String> messages = new TreeMap<>();
 
-        rb = getBundle("ValidationMessages", locale);
-        e = rb.getKeys();
-        while (e.hasMoreElements()) {
-            String key = e.nextElement();
-            messages.put(key, rb.getString(key));
-        }
+		ResourceBundle rb = getBundle("messages", locale);
+		Enumeration<String> e = rb.getKeys();
+		while (e.hasMoreElements()) {
+			String key = e.nextElement();
+			messages.put(key, rb.getString(key));
+		}
 
-        messages.put("app_name", this.appName);
+		rb = getBundle("ValidationMessages", locale);
+		e = rb.getKeys();
+		while (e.hasMoreElements()) {
+			String key = e.nextElement();
+			messages.put(key, rb.getString(key));
+		}
 
-        return messages;
-    }
+		messages.put("app_name", this.appName);
+
+		return messages;
+	}
 }

@@ -278,6 +278,12 @@
             <!--<version>${org.springframework.boot-version}</version>-->
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>15.0</version>
+            <scope>compile</scope>
+        </dependency>
         <!--<dependency>-->
             <!--<groupId>de.flapdoodle.embed</groupId>-->
             <!--<artifactId>de.flapdoodle.embed.mongo</artifactId>-->

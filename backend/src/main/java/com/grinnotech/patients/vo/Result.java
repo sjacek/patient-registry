@@ -16,6 +16,8 @@
  */
 package com.grinnotech.patients.vo;
 
+import org.jetbrains.annotations.Contract;
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
@@ -89,6 +91,7 @@ public class Result<T> implements Serializable {
         return hash;
     }
 
+    @Contract(value = "null -> false", pure = true)
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {

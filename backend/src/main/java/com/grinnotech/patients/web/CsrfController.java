@@ -1,5 +1,7 @@
 package com.grinnotech.patients.web;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,7 +16,8 @@ public class CsrfController {
         return token;
     }
 
-    public static String getCsrfToken(HttpServletRequest request) {
+    @Nullable
+    public static String getCsrfToken(@NotNull HttpServletRequest request) {
         CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
         if (token != null) {
             return token.getToken();
