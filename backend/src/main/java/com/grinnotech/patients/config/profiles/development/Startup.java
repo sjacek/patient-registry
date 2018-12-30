@@ -16,14 +16,31 @@
  */
 package com.grinnotech.patients.config.profiles.development;
 
+import static com.grinnotech.patients.model.Authority.ADMIN;
+import static com.grinnotech.patients.model.Authority.EMPLOYEE;
+import static com.grinnotech.patients.model.Authority.USER;
+import static java.util.Arrays.asList;
+import static java.util.Collections.singleton;
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
+import static org.apache.commons.lang3.text.WordUtils.capitalizeFully;
+
 import com.grinnotech.patients.config.OrphadataProperties;
-import com.grinnotech.patients.dao.*;
+import com.grinnotech.patients.dao.ContactRepository;
+import com.grinnotech.patients.dao.CountryDictionaryRepository;
+import com.grinnotech.patients.dao.OrganizationRepository;
+import com.grinnotech.patients.dao.UserRepository;
+import com.grinnotech.patients.dao.ZipCodePolandRepository;
 import com.grinnotech.patients.dao.orphadata.DisorderRepository;
 import com.grinnotech.patients.domain.AbstractPersistable;
-import com.grinnotech.patients.model.*;
+import com.grinnotech.patients.model.ContactMethod;
+import com.grinnotech.patients.model.CountryDictionary;
+import com.grinnotech.patients.model.Organization;
+import com.grinnotech.patients.model.User;
+import com.grinnotech.patients.model.ZipCodePoland;
 import com.grinnotech.patients.util.startup.OrphadataParser;
 import com.grinnotech.patients.util.startup.OrphadataParserMongo;
 import com.opencsv.CSVReader;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,12 +56,6 @@ import java.lang.invoke.MethodHandles;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashSet;
-
-import static com.grinnotech.patients.model.Authority.*;
-import static java.util.Arrays.asList;
-import static java.util.Collections.singleton;
-import static org.apache.commons.lang3.StringUtils.isNotEmpty;
-import static org.apache.commons.lang3.text.WordUtils.capitalizeFully;
 
 /**
  * @author Jacek Sztajnke
