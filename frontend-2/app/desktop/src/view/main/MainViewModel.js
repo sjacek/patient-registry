@@ -30,6 +30,17 @@ Ext.define('PatientRegistry.view.main.MainViewModel', {
 			"root": {
 				"expanded": true,
 				"children": [
+					{ "text": "Userconfig", "iconCls": "x-fa fa-cog", "xtype": "userconfigview", "leaf": true },
+					{ "text": "User", "iconCls": "x-fa fa-cog", "xtype": "userview", "leaf": true },
+					{ "text": "Employee", "iconCls": "x-fa fa-cog", "xtype": "employeeview", "leaf": true },
+					{ "text": "Organization", "iconCls": "x-fa fa-cog", "xtype": "organizationview", "leaf": true },
+					{ "text": "Orphadata", "iconCls": "x-fa fa-cog", "xtype": "orphadataview", "leaf": true },
+					{ "text": "Patient", "iconCls": "x-fa fa-cog", "xtype": "patientview", "leaf": true },
+					{ "text": "Project", "iconCls": "x-fa fa-cog", "xtype": "projectview", "leaf": true },
+					{ "text": "Diagnosis", "iconCls": "x-fa fa-cog", "xtype": "diagnosisview", "leaf": true },
+					{ "text": "Countrydictionary", "iconCls": "x-fa fa-cog", "xtype": "countrydictionaryview", "leaf": true },
+					{ "text": "Contactmethod", "iconCls": "x-fa fa-cog", "xtype": "contactmethodview", "leaf": true },
+					{ "text": "Zipcodepl", "iconCls": "x-fa fa-cog", "xtype": "zipcodeplview", "leaf": true },
           { "text": "Home", "iconCls": "x-fa fa-home", "xtype": "homeview", "leaf": true },
 					{ "text": "Personnel", "iconCls": "x-fa fa-table", "xtype": "personnelview","leaf": true },
 					//add new items on the next line (from sencha-node generate viewpackage)
