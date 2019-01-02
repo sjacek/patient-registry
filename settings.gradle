@@ -3,3 +3,10 @@
  */
 
 rootProject.name = 'patient-registry'
+
+include ":model-mongodb"
+//project(':model-mongodb').projectDir = "$rootDir/model-mongodb" as File
+include ":backend"
+//project(':backend').projectDir = "$rootDir/backend" as File
+include ":frontend"
+//project(':frontend').projectDir = "$rootDir/frontend" as File
