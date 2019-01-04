@@ -25,7 +25,10 @@ import java.util.Collection;
  *
  * @author Jacek Sztajnke
  */
-public interface PersistentLoginRepository extends MongoRepository<PersistentLogin, String> /*, QueryDslPredicateExecutor<PersistentLogin> */ {
+public interface PersistentLoginRepository extends
+        MongoRepository<PersistentLogin, String>
+//        , QueryDslPredicateExecutor<PersistentLogin>
+{
 
     Collection<PersistentLogin> findByUserId(String userId);
 

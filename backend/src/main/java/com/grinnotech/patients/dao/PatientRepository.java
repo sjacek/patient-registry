@@ -28,7 +28,10 @@ import java.util.List;
  *
  * @author Jacek Sztajnke
  */
-public interface PatientRepository extends MongoRepository<Patient, String>, QueryDslPredicateExecutor<Patient> {
+public interface PatientRepository extends
+        MongoRepository<Patient, String>
+//        , QueryDslPredicateExecutor<Patient>
+{
 
     @Query("{$and: [ {organizationId: ?0}, {active:true} ]}")
     List<Patient> findByOrganizationIdActive(String organizationId, Sort sort);

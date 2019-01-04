@@ -28,7 +28,10 @@ import java.util.List;
  *
  * @author Jacek Sztajnke
  */
-public interface ContactRepository extends MongoRepository<ContactMethod, String>, QueryDslPredicateExecutor<ContactMethod> {
+public interface ContactRepository extends
+        MongoRepository<ContactMethod, String>
+//        , QueryDslPredicateExecutor<ContactMethod>
+{
     
     @Query("{active:true}")
     List<ContactMethod> findAllActive(Sort sort);
