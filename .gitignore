@@ -3,11 +3,9 @@
 /.factorypath
 /.project
 /.springBeans
-/.project
 /.settings
 
 /.idea/
-/**/*.iml
 /nbproject/
 
 /gradle/
