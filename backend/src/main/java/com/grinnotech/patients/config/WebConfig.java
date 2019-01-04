@@ -13,6 +13,8 @@ import org.apache.tomcat.util.descriptor.web.SecurityConstraint;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
+import org.springframework.boot.context.embedded.EmbeddedServletContainerFactory;
+import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
@@ -34,6 +36,8 @@ import ch.ralscha.extdirectspring.util.JsonHandler;
 //import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer;
 //import org.springframework.boot.context.embedded.EmbeddedServletContainerFactory;
 //import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
+
+import ch.ralscha.extdirectspring.util.JsonHandler;
 
 @Configuration
 public class WebConfig extends WebMvcConfigurer {

@@ -28,8 +28,10 @@ import org.springframework.data.querydsl.QueryDslPredicateExecutor;
  *
  * @author Jacek Sztajnke
  */
-public interface ZipCodePolandRepository extends MongoRepository<ZipCodePoland, String>,
-        QueryDslPredicateExecutor<ZipCodePoland> {
+public interface ZipCodePolandRepository extends
+        MongoRepository<ZipCodePoland, String>
+//        , QueryDslPredicateExecutor<ZipCodePoland>
+{
 
     @Query("{active:true}")
     Page<ZipCodePoland> findAllActive(Pageable pageable);

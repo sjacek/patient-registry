@@ -22,6 +22,8 @@
   },
   "dependencies": {
     "@sencha/ext": "^6.6.0",
+    "@sencha/ext-build-generate-app": "^1.0.2",
+    "@sencha/ext-core": "^6.6.0",
     "@sencha/ext-modern": "^6.6.0",
     "@sencha/ext-modern-theme-material": "^6.6.0",
     "react-dom": "^16.7.0"

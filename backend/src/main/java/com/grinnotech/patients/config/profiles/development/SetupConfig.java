@@ -110,19 +110,19 @@ class SetupConfig {
 		}
 	}
 
-	@Bean
-	public FilterRegistrationBean corsFilter() {
-		return new FilterRegistrationBean() {{
-			setFilter(new CorsFilter(r -> new CorsConfiguration() {{
-				setAllowedOrigins(singletonList(ALL));
-				setAllowedMethods(singletonList(ALL));
-				setAllowedHeaders(singletonList(ALL));
-				setAllowCredentials(true);
-			}}));
-			setUrlPatterns(singleton("/*"));
-			setOrder(DEFAULT_FILTER_ORDER - 1);
-		}};
-	}
+//	@Bean
+//	public FilterRegistrationBean corsFilter() {
+//		return new FilterRegistrationBean() {{
+//			setFilter(new CorsFilter(r -> new CorsConfiguration() {{
+//				setAllowedOrigins(singletonList(ALL));
+//				setAllowedMethods(singletonList(ALL));
+//				setAllowedHeaders(singletonList(ALL));
+//				setAllowCredentials(true);
+//			}}));
+//			setUrlPatterns(singleton("/*"));
+//			setOrder(DEFAULT_FILTER_ORDER - 1);
+//		}};
+//	}
 
 	@EventListener
 	public void handleContextRefresh(ApplicationReadyEvent event) throws IOException {
