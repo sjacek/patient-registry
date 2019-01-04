@@ -1,14 +1,15 @@
 plugins {
     id "io.franzbecker.gradle-lombok" version "1.14"
-//    id 'java'
     id 'net.ltgt.apt' version '0.10'
 }
 
 allprojects {
-//    apply plugin: 'maven'
-
     group = 'com.grinnotech'
     version = '0.0.1'
+}
+
+wrapper {
+    gradleVersion = '4.10.3'
 }
 
 subprojects {

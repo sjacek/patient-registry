@@ -17,10 +17,11 @@
 package com.grinnotech.patients.dao;
 
 import com.grinnotech.patients.model.Patient;
+
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 
 import java.util.List;
 
@@ -28,9 +29,7 @@ import java.util.List;
  *
  * @author Jacek Sztajnke
  */
-public interface PatientRepository extends
-        MongoRepository<Patient, String>
-//        , QueryDslPredicateExecutor<Patient>
+public interface PatientRepository extends MongoRepository<Patient, String>, QuerydslPredicateExecutor<Patient>
 {
 
     @Query("{$and: [ {organizationId: ?0}, {active:true} ]}")
