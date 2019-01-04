@@ -28,9 +28,9 @@ import java.util.Collection;
  * @author Jacek Sztajnke
  */
 public interface DisorderRepository extends
-        MongoRepository<Disorder, String>,
-        QueryDslPredicateExecutor<Disorder> {
-
+        MongoRepository<Disorder, String>
+//        , QueryDslPredicateExecutor<Disorder>
+{
     @Query("{ $or:["
             + " {name: {$regex:?0,$options:'i'}}, {icd10: {$regex:?0,$options:'i'}}, {synonyms: {$regex:?0,$options:'i'}} ]} }")
     Collection<Disorder> findAllWithFilter(String filter, Sort sort);
