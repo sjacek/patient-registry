@@ -1,40 +1,40 @@
-buildscript {
-    repositories {
+//buildscript {
+//    repositories {
+//
+//        mavenCentral()
+//        maven { url "http://repo.spring.io/libs-snapshot" }
+//        maven { url "https://plugins.gradle.org/m2/" }
+//        jcenter()
+//
+//    }
+////    dependencies {
+////        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.4.0.RELEASE")
+//////        classpath "gradle.plugin.com.ewerk.gradle.plugins:querydsl-plugin:1.0.7"
+////    }
+//}
 
-        mavenCentral()
-        maven { url "http://repo.spring.io/libs-snapshot" }
-        maven { url "https://plugins.gradle.org/m2/" }
-        jcenter()
+//plugins {
+//    id 'java'
+////    id 'maven'
+//    id 'com.ewerk.gradle.plugins.annotation-processor' version '1.0.4'
+//    id "com.ewerk.gradle.plugins.querydsl" version "1.0.9"
+//}
 
-    }
-    dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.4.0.RELEASE")
-        classpath "gradle.plugin.com.ewerk.gradle.plugins:querydsl-plugin:1.0.7"
-    }
-}
+//group = 'com.grinnotech.patients'
+//version = '0.0.1'
+//description = 'Patients Registry Data Model - MongoDb'
+//sourceCompatibility = '1.8'
 
-plugins {
-    id 'java'
-//    id 'maven'
-    id 'com.ewerk.gradle.plugins.annotation-processor' version '1.0.4'
-    id "com.ewerk.gradle.plugins.querydsl" version "1.0.9"
-}
-
-group = 'com.grinnotech.patients'
-version = '0.0.1'
-description = 'Patients Registry Data Model - MongoDb'
-sourceCompatibility = '1.8'
-
-tasks.withType(JavaCompile) {
-    options.encoding = 'UTF-8'
-}
+//tasks.withType(JavaCompile) {
+//    options.encoding = 'UTF-8'
+//}
 
 apply plugin: 'java'
 apply plugin: 'maven'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
-apply plugin: 'spring-boot'
-apply plugin: 'com.ewerk.gradle.plugins.querydsl'
+//apply plugin: 'spring-boot'
+//apply plugin: 'com.ewerk.gradle.plugins.querydsl'
 
 repositories {
     mavenLocal()
@@ -50,15 +50,15 @@ repositories {
 //    }
 //}
 
-sourceSets {
-    generated.java
-    main.java.srcDirs += generated.java.srcDirs
-}
+//sourceSets {
+//    generated.java
+//    main.java.srcDirs += generated.java.srcDirs
+//}
 
-configurations {
-//    springAgent
-    querydslapt
-}
+//configurations {
+////    springAgent
+//    querydslapt
+//}
 
 dependencies {
 //    querydslapt "com.querydsl:querydsl-apt:4.2.1"
@@ -90,55 +90,55 @@ dependencies {
 //    providedCompile "com.mysema.querydsl:querydsl-apt:3.7.4"
 //    providedCompile group: 'com.mysema.querydsl', name: 'querydsl-apt', version: '3.7.4'
 //    compile "com.mysema.querydsl:querydsl-apt:3.7.4"
-    compile 'com.querydsl:querydsl-mongodb:4.2.1'
+//    compile 'com.querydsl:querydsl-mongodb:4.2.1'
     testCompile 'junit:junit:4.12'
     testCompile 'org.springframework.boot:spring-boot-starter-test:1.5.3.RELEASE'
     testCompile 'de.flapdoodle.embed:de.flapdoodle.embed.mongo:1.50.5'
     compileOnly 'org.immutables:value:2.5.6'
-    compileOnly 'com.querydsl:querydsl-apt:4.1.4'
+//    compileOnly 'com.querydsl:querydsl-apt:4.1.4'
     compileOnly 'org.projectlombok:lombok:1.16.16'
 }
 
-annotationProcessor {
-  library "com.querydsl:querydsl-apt:4.2.1"
-  processor 'com.querydsl.apt.morphia.MorphiaAnnotationProcessor'
-  sourcesDir 'src/morphia/java'
-}
+//annotationProcessor {
+//  library "com.querydsl:querydsl-apt:4.2.1"
+//  processor 'com.querydsl.apt.morphia.MorphiaAnnotationProcessor'
+//  sourcesDir 'src/morphia/java'
+//}
 
-querydsl {
-  springDataMongo = true
+//querydsl {
+//  springDataMongo = true
+//
+//  library = 'com.querydsl:querydsl-apt'
+//  querydslSourcesDir = 'src/querydsl/java'
+//
+//  jpa = true
+////  jdo = false
+////  hibernate = false
+////  morphia = false
+////  roo = false
+//  springDataMongo = true
+//  querydslDefault = true
+//}
+//
+//task generateQueryDSL(type: JavaCompile, group: 'build', description: 'Generates the QueryDSL query types') {
+//    source = sourceSets.main.java
+//    classpath = configurations.compile + configurations.querydslapt
+//    options.compilerArgs = [
+//            "-proc:only",
+//            "-processor", "com.mysema.query.apt.jpa.JPAAnnotationProcessor"
+//    ]
+//    destinationDir = sourceSets.generated.java.srcDirs.iterator().next()
+//}
+//
+//compileJava {
+//    dependsOn generateQueryDSL
+//    source generateQueryDSL.destinationDir
+//}
 
-  library = 'com.querydsl:querydsl-apt'
-  querydslSourcesDir = 'src/querydsl/java'
-
-  jpa = true
-//  jdo = false
-//  hibernate = false
-//  morphia = false
-//  roo = false
-  springDataMongo = true
-  querydslDefault = true
-}
-
-task generateQueryDSL(type: JavaCompile, group: 'build', description: 'Generates the QueryDSL query types') {
-    source = sourceSets.main.java
-    classpath = configurations.compile + configurations.querydslapt
-    options.compilerArgs = [
-            "-proc:only",
-            "-processor", "com.mysema.query.apt.jpa.JPAAnnotationProcessor"
-    ]
-    destinationDir = sourceSets.generated.java.srcDirs.iterator().next()
-}
-
-compileJava {
-    dependsOn generateQueryDSL
-    source generateQueryDSL.destinationDir
-}
-
-compileGeneratedJava {
-    dependsOn generateQueryDSL
-    classpath += sourceSets.main.runtimeClasspath
-}
+//compileGeneratedJava {
+//    dependsOn generateQueryDSL
+//    classpath += sourceSets.main.runtimeClasspath
+//}
 
 //test {
 //    jvmArgs = ["-javaagent:$configurations.springAgent.singleFile"]
