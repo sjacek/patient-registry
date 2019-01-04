@@ -13,9 +13,8 @@ import org.apache.tomcat.util.descriptor.web.SecurityConstraint;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
-import org.springframework.boot.context.embedded.EmbeddedServletContainerFactory;
-import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;
@@ -23,6 +22,7 @@ import org.springframework.web.accept.ContentNegotiationManager;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.ContentNegotiatingViewResolver;
 
@@ -33,14 +33,10 @@ import java.util.Locale;
 
 import ch.ralscha.extdirectspring.util.JsonHandler;
 
-//import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer;
-//import org.springframework.boot.context.embedded.EmbeddedServletContainerFactory;
-//import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
-
-import ch.ralscha.extdirectspring.util.JsonHandler;
-
+@EnableWebMvc
 @Configuration
-public class WebConfig extends WebMvcConfigurer {
+@ComponentScan
+public class WebConfig implements WebMvcConfigurer {
 
 	@Override
 	public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
@@ -156,11 +152,13 @@ public class WebConfig extends WebMvcConfigurer {
 			}
 		};
 
-		tomcat.addAdditionalTomcatConnectors(initiateHttpConnector());
+		//		tomcat.addConnectorCustomizers(
+		//				(TomcatConnectorCustomizer) connector -> ((AbstractHttp11Protocol<?>) connector.getProtocolHandler()).setMaxSwallowSize(-1));
+
+		tomcat.addAdditionalTomcatConnectors(initiateAjpConnector());
 		if (tomcatAjpEnabled) {
 			tomcat.addAdditionalTomcatConnectors(initiateAjpConnector());
 		}
-
 		return tomcat;
 	}
 
