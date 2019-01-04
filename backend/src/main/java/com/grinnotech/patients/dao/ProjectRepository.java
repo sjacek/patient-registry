@@ -29,8 +29,9 @@ import java.util.List;
  * @author Jacek Sztajnke
  */
 public interface ProjectRepository extends
-        MongoRepository<Project, String>,
-        QueryDslPredicateExecutor<Project> {
+        MongoRepository<Project, String>
+//        , QueryDslPredicateExecutor<Project>
+{
 
     @Query("{active:true}")
     List<Project> findAllActive(Sort sort);

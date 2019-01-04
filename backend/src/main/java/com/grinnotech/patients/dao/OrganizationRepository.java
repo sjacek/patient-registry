@@ -28,8 +28,9 @@ import java.util.List;
  * @author Jacek Sztajnke
  */
 public interface OrganizationRepository extends
-        MongoRepository<Organization, String>,
-        QueryDslPredicateExecutor<Organization> {
+        MongoRepository<Organization, String>
+//        , QueryDslPredicateExecutor<Organization>
+{
 
     @Query("{active:true}")
     List<Organization> findAllActive(Sort sort);

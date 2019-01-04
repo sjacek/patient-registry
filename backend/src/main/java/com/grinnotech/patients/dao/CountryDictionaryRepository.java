@@ -29,8 +29,9 @@ import java.util.List;
  * @author Jacek Sztajnke
  */
 public interface CountryDictionaryRepository extends
-        MongoRepository<CountryDictionary, String>,
-        QueryDslPredicateExecutor<CountryDictionary> {
+        MongoRepository<CountryDictionary, String>
+//        , QueryDslPredicateExecutor<CountryDictionary>
+{
 
     @Query("{active:true}")
     List<CountryDictionary> findAllCountriesActive(Sort sort);
