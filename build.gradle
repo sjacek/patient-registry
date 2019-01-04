@@ -1,0 +1,31 @@
+plugins {
+    id "io.franzbecker.gradle-lombok" version "1.14"
+//    id 'java'
+    id 'net.ltgt.apt' version '0.10'
+}
+
+allprojects {
+//    apply plugin: 'maven'
+
+    group = 'com.grinnotech'
+    version = '0.0.1'
+}
+
+subprojects {
+    apply plugin: 'java'    
+    apply plugin: "io.franzbecker.gradle-lombok"
+
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        maven {
+            url = 'http://repo.maven.apache.org/maven2'
+        }
+    }
+
+    sourceCompatibility = '1.8'
+
+    tasks.withType(JavaCompile) {
+        options.encoding = 'UTF-8'
+    }
+}

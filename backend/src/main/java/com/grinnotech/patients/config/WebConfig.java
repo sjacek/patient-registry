@@ -1,18 +1,16 @@
 package com.grinnotech.patients.config;
 
-import ch.ralscha.extdirectspring.util.JsonHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.grinnotech.patients.view.CsvView;
 import com.grinnotech.patients.view.ExcelView;
 import com.grinnotech.patients.view.PdfView;
 import com.samskivert.mustache.Mustache;
+
 import org.apache.catalina.Context;
 import org.apache.catalina.connector.Connector;
 import org.apache.tomcat.util.descriptor.web.SecurityCollection;
 import org.apache.tomcat.util.descriptor.web.SecurityConstraint;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer;
 import org.springframework.boot.context.embedded.EmbeddedServletContainerFactory;
 import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
 import org.springframework.context.annotation.Bean;
@@ -31,13 +29,15 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
+import ch.ralscha.extdirectspring.util.JsonHandler;
+
 @Configuration
 public class WebConfig extends WebMvcConfigurerAdapter {
 
-    @Override
-    public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
-        configurer.defaultContentType(MediaType.APPLICATION_JSON).favorPathExtension(true);
-    }
+	@Override
+	public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
+		configurer.defaultContentType(MediaType.APPLICATION_JSON).favorPathExtension(true);
+	}
 
     /*
      * Configure ContentNegotiatingViewResolver
