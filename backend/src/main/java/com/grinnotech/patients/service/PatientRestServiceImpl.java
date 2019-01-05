@@ -29,11 +29,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.STORE_MODIFY;
 import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.STORE_READ;
 import static org.springframework.transaction.annotation.Propagation.REQUIRED;
 import static org.springframework.transaction.annotation.Propagation.SUPPORTS;
+
+import com.grinnotech.patients.NotFoundException;
 
 @Transactional
 @Service("patientRestService")
@@ -61,9 +64,10 @@ public class PatientRestServiceImpl implements PatientRestService {
     @ExtDirectMethod(STORE_MODIFY)
     @Transactional(readOnly = false, propagation = REQUIRED)
     @Override
-    public Result<Patient> destroy(String idPatient) {
-        Patient patient = patientRepository.findOne(idPatient);
-        patientRepository.delete(idPatient);
+    public Result<Patient> destroy(String idPatient) throws NotFoundException {
+        Optional<Patient> oPatient = patientRepository.findById(idPatient);
+        Patient patient = oPatient.orElseThrow(() -> new NotFoundException("Patient id={} not found", idPatient));
+        patientRepository.delete(patient);
         // TODO:
 //        String msg = "Patient PESEL=" + patient.getPesel() + " was deleted";
         String msg = "Patient PESEL=... was deleted";
@@ -74,8 +78,9 @@ public class PatientRestServiceImpl implements PatientRestService {
     @ExtDirectMethod(STORE_READ)
     @Transactional(readOnly = true, propagation = SUPPORTS)
     @Override
-    public Result<Patient> read(String idPatient) {
-        Patient patient = patientRepository.findOne(idPatient);
+    public Result<Patient> read(String idPatient) throws NotFoundException {
+        Optional<Patient> oPatient = patientRepository.findById(idPatient);
+        Patient patient = oPatient.orElseThrow(() -> new NotFoundException("Patient id={} not found", idPatient));
         return ResultFactory.getSuccessResult(patient);
     }
 

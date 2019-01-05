@@ -16,52 +16,48 @@
  */
 package com.grinnotech.patients.model;
 
-import ch.rasc.extclassgenerator.Model;
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.grinnotech.patients.domain.AbstractPersistable;
-import lombok.Getter;
-import lombok.Setter;
-import org.hibernate.validator.constraints.NotBlank;
+
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
 
-import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
+import javax.validation.constraints.NotBlank;
+
+import ch.rasc.extclassgenerator.Model;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
- *
  * @author Jacek Sztajnke
  */
-@Document(collection="dic_diagnosis")
-@Model(value = "Patients.model.Diagnosis",
-        createMethod = "diagnosisService.update",
-        readMethod = "diagnosisService.read",
-        updateMethod = "diagnosisService.update",
-        destroyMethod = "diagnosisService.destroy",
-        paging = true,
-        identifier = "uuid")
+@Document(collection = "dic_diagnosis")
+@Model(value = "Patients.model.Diagnosis", createMethod = "diagnosisService.update", readMethod = "diagnosisService.read", updateMethod = "diagnosisService.update", destroyMethod = "diagnosisService.destroy", paging = true, identifier = "uuid")
 @JsonInclude(NON_NULL)
 @Getter
 @Setter
 public class Diagnosis extends AbstractPersistable {
 
-    @NotBlank(message = "{fieldrequired}")
-    @Indexed
-    private String diagnosisName;
+	@NotBlank(message = "{fieldrequired}")
+	@Indexed
+	private String diagnosisName;
 
-    private List<String> otherNames;
+	private List<String> otherNames;
 
-    @NotBlank(message = "{fieldrequired}")
-    private String diagnosisEnglishName;
-    
-    @NotBlank(message = "{fieldrequired}")
-    private String icd10;
+	@NotBlank(message = "{fieldrequired}")
+	private String diagnosisEnglishName;
 
-    private String description;
+	@NotBlank(message = "{fieldrequired}")
+	private String icd10;
 
-    @Override
-    public String toString() {
-        return getId() + "[" + getDiagnosisName() + "]";
-    }
+	private String description;
+
+	@Override
+	public String toString() {
+		return getId() + "[" + getDiagnosisName() + "]";
+	}
 }

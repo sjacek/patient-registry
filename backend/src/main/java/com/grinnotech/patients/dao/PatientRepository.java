@@ -26,20 +26,20 @@ import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import java.util.List;
 
 /**
- *
  * @author Jacek Sztajnke
  */
-public interface PatientRepository extends MongoRepository<Patient, String>, QuerydslPredicateExecutor<Patient>
+public interface PatientRepository extends
+		MongoRepository<Patient, String>
+//		, QuerydslPredicateExecutor<Patient>
 {
 
-    @Query("{$and: [ {organizationId: ?0}, {active:true} ]}")
-    List<Patient> findByOrganizationIdActive(String organizationId, Sort sort);
+	@Query("{$and: [ {organizationId: ?0}, {active:true} ]}")
+	List<Patient> findByOrganizationIdActive(String organizationId, Sort sort);
 
-    @Query("{$and: [ {organizationId: ?0}, "
-            + " {$or:["
-            + "   {lastName: {$regex:?1,$options:'i'}}, {firstName: {$regex:?1,$options:'i'}}, {pesel: {$regex:?1,$options:'i'}},"
-            + "   {address.city: {$regex:?1,$options:'i'}}, {address.voivodship: {$regex:?1,$options:'i'}},"
-            + "   {address.county: {$regex:?1,$options:'i'}}, {address.country: {$regex:?1,$options:'i'}} ]},"
-            + " {active:true} ]}")
-    List<Patient> findByOrganizationIdWithFilterActive(String organizationId, String filter, Sort sort);
+	@Query("{$and: [ {organizationId: ?0}, " + " {$or:["
+			+ "   {lastName: {$regex:?1,$options:'i'}}, {firstName: {$regex:?1,$options:'i'}}, {pesel: {$regex:?1,$options:'i'}},"
+			+ "   {address.city: {$regex:?1,$options:'i'}}, {address.voivodship: {$regex:?1,$options:'i'}},"
+			+ "   {address.county: {$regex:?1,$options:'i'}}, {address.country: {$regex:?1,$options:'i'}} ]},"
+			+ " {active:true} ]}")
+	List<Patient> findByOrganizationIdWithFilterActive(String organizationId, String filter, Sort sort);
 }

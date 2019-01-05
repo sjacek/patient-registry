@@ -21,14 +21,17 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.repository.ExistsQuery;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 /**
  *
  * @author Jacek Sztajnke
  */
+@Repository
 public interface UserRepository extends MongoRepository<User, String>, UserRepositoryCustom {
 
     @Query("{ active: true }")
@@ -38,7 +41,7 @@ public interface UserRepository extends MongoRepository<User, String>, UserRepos
     List<User> findAllWithFilterActive(String filter, Sort sort);
 
     @Query("{ $and : [ { email: ?0 }, { active: true } ] }")
-    User findByEmailActive(String email);
+    Optional<User> findByEmailActive(String email);
 
     @Query("{ $and : [ { passwordResetToken: ?0 }, { enabled: true }, { active: true } ] }")
     User findOneByPasswordResetTokenAndEnabled(String passwordResetToken);

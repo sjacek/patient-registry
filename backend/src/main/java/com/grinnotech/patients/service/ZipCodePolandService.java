@@ -16,10 +16,13 @@
  */
 package com.grinnotech.patients.service;
 
-import ch.ralscha.extdirectspring.annotation.ExtDirectMethod;
-import ch.ralscha.extdirectspring.bean.ExtDirectStoreReadRequest;
-import ch.ralscha.extdirectspring.bean.ExtDirectStoreResult;
-import ch.ralscha.extdirectspring.filter.StringFilter;
+import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.STORE_MODIFY;
+import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.STORE_READ;
+import static com.grinnotech.patients.util.OptionalEx.ifPresent;
+import static com.grinnotech.patients.util.QueryUtil.getPageable;
+import static com.grinnotech.patients.util.ThrowingFunction.sneakyThrow;
+
+import com.grinnotech.patients.NotFoundException;
 import com.grinnotech.patients.config.security.MongoUserDetails;
 import com.grinnotech.patients.dao.ZipCodePolandRepository;
 import com.grinnotech.patients.dao.authorities.RequireAnyAuthority;
@@ -27,6 +30,7 @@ import com.grinnotech.patients.dao.authorities.RequireEmployeeAuthority;
 import com.grinnotech.patients.model.ZipCodePoland;
 import com.grinnotech.patients.util.ValidationMessages;
 import com.grinnotech.patients.util.ValidationMessagesResult;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,91 +41,102 @@ import org.springframework.stereotype.Service;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
-import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.STORE_MODIFY;
-import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.STORE_READ;
-import static com.grinnotech.patients.util.QueryUtil.getPageable;
+import ch.ralscha.extdirectspring.annotation.ExtDirectMethod;
+import ch.ralscha.extdirectspring.bean.ExtDirectStoreReadRequest;
+import ch.ralscha.extdirectspring.bean.ExtDirectStoreResult;
+import ch.ralscha.extdirectspring.filter.StringFilter;
 
 /**
- *
  * @author Jacek Sztajnke
  */
 @Service
 @RequireAnyAuthority
 public class ZipCodePolandService extends AbstractService<ZipCodePoland> {
 
-    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    @Autowired
-    private ZipCodePolandRepository zipCodePolandRepository;
+	@Autowired
+	private ZipCodePolandRepository zipCodePolandRepository;
 
-    @ExtDirectMethod(STORE_READ)
-    public ExtDirectStoreResult<ZipCodePoland> read(ExtDirectStoreReadRequest request) {
+	@ExtDirectMethod(STORE_READ)
+	public ExtDirectStoreResult<ZipCodePoland> read(ExtDirectStoreReadRequest request) {
 
-        StringFilter filter = request.getFirstFilterForField("filter");
+		StringFilter filter = request.getFirstFilterForField("filter");
 
-        Page<ZipCodePoland> page = (filter != null)
-                ? zipCodePolandRepository.findAllWithFilterActive(filter.getValue(), getPageable(request))
-                : zipCodePolandRepository.findAllActive(getPageable(request));
+		Page<ZipCodePoland> page = (filter != null) ?
+				zipCodePolandRepository.findAllWithFilterActive(filter.getValue(), getPageable(request)) :
+				zipCodePolandRepository.findAllActive(getPageable(request));
 
-        logger.debug("read size:[" + page.getSize() + "]");
-        return new ExtDirectStoreResult<>(page.getTotalElements(), page.getContent());
-    }
+		logger.debug("read size:[" + page.getSize() + "]");
+		return new ExtDirectStoreResult<>(page.getTotalElements(), page.getContent());
+	}
 
-    @ExtDirectMethod(STORE_MODIFY)
-    @RequireEmployeeAuthority
-    public ExtDirectStoreResult<ZipCodePoland> destroy(@AuthenticationPrincipal MongoUserDetails userDetails, ZipCodePoland zipCodePoland) {
-        ExtDirectStoreResult<ZipCodePoland> result = new ExtDirectStoreResult<>();
+	@ExtDirectMethod(STORE_MODIFY)
+	@RequireEmployeeAuthority
+	public ExtDirectStoreResult<ZipCodePoland> destroy(@AuthenticationPrincipal MongoUserDetails userDetails,
+			ZipCodePoland zipCodePoland) throws NotFoundException {
+		ExtDirectStoreResult<ZipCodePoland> result = new ExtDirectStoreResult<>();
 
-        logger.debug("destroy 1");
-        ZipCodePoland old = zipCodePolandRepository.findOne(zipCodePoland.getId());
+		logger.debug("destroy 1");
+		Optional<ZipCodePoland> oOld = zipCodePolandRepository.findById(zipCodePoland.getId());
+		ZipCodePoland old = oOld.orElseThrow(() -> new NotFoundException("ZipCodePoland id={} not found"));
 
-        old.setId(null);
-        old.setActive(false);
-        zipCodePolandRepository.save(old);
-        logger.debug("destroy 2 " + old.getId());
+		old.setId(null);
+		old.setActive(false);
+		zipCodePolandRepository.save(old);
+		logger.debug("destroy 2 " + old.getId());
 
-        setAttrsForDelete(zipCodePoland, userDetails, old);
-        zipCodePolandRepository.save(zipCodePoland);
-        logger.debug("destroy end");
-        return result.setSuccess(true);
-    }
+		setAttrsForDelete(zipCodePoland, userDetails, old);
+		zipCodePolandRepository.save(zipCodePoland);
+		logger.debug("destroy end");
+		return result.setSuccess(true);
+	}
 
-    @ExtDirectMethod(STORE_MODIFY)
-    @RequireEmployeeAuthority
-    public ValidationMessagesResult<ZipCodePoland> update(@AuthenticationPrincipal MongoUserDetails userDetails, ZipCodePoland zipCodePoland) {
-        List<ValidationMessages> violations = validateEntity(zipCodePoland, userDetails.getLocale());
+	@ExtDirectMethod(STORE_MODIFY)
+	@RequireEmployeeAuthority
+	public ValidationMessagesResult<ZipCodePoland> update(@AuthenticationPrincipal MongoUserDetails userDetails,
+			ZipCodePoland zipCodePoland) {
+		List<ValidationMessages> violations = validateEntity(zipCodePoland, userDetails.getLocale());
 
-        ValidationMessagesResult<ZipCodePoland> result = new ValidationMessagesResult<>(zipCodePoland);
-        result.setValidations(violations);
+		ValidationMessagesResult<ZipCodePoland> result = new ValidationMessagesResult<>(zipCodePoland);
+		result.setValidations(violations);
 
-        logger.debug("update 1: " + zipCodePoland.toString());
-        if (violations.isEmpty()) {
-            ZipCodePoland old = zipCodePolandRepository.findOne(zipCodePoland.getId());
-            if (old != null) {
-                old.setId(null);
-                old.setActive(false);
-                zipCodePolandRepository.save(old);
-                logger.debug("update 2 " + old);
-                setAttrsForUpdate(zipCodePoland, userDetails, old);
-            }
-            else {
-                setAttrsForCreate(zipCodePoland, userDetails);
-            }
+		logger.debug("update 1: " + zipCodePoland.toString());
+		if (violations.isEmpty()) {
+			Optional<ZipCodePoland> old = zipCodePolandRepository.findById(zipCodePoland.getId());
+			ifPresent(old, zipCodePoland1 -> {
+				zipCodePoland1.setId(null);
+				zipCodePoland1.setActive(false);
+				zipCodePolandRepository.save(zipCodePoland1);
+				logger.debug("update 2 " + zipCodePoland1);
+				try {
+					setAttrsForUpdate(zipCodePoland, userDetails, zipCodePoland1);
+				} catch (NotFoundException e) {
+					sneakyThrow(e);
+				}
+			}).orElse(() -> {
+				try {
+					setAttrsForCreate(zipCodePoland, userDetails);
+				} catch (NotFoundException e) {
+					sneakyThrow(e);
+				}
+			});
 
-            zipCodePolandRepository.save(zipCodePoland);
-            logger.debug("update 3");
-        }
-        
-        logger.debug("update end");
-        return result;
-    }
+			zipCodePolandRepository.save(zipCodePoland);
+			logger.debug("update 3");
+		}
 
-    protected List<ValidationMessages> validateEntity(ZipCodePoland zipCodePoland, Locale locale) {
-        List<ValidationMessages> validations = super.validateEntity(zipCodePoland);
+		logger.debug("update end");
+		return result;
+	}
 
-        // TODO:
-        return validations;
-    }
-    
+	protected List<ValidationMessages> validateEntity(ZipCodePoland zipCodePoland, Locale locale) {
+		List<ValidationMessages> validations = super.validateEntity(zipCodePoland);
+
+		// TODO:
+		return validations;
+	}
+
 }

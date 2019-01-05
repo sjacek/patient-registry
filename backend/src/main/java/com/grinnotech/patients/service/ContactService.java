@@ -16,15 +16,21 @@
  */
 package com.grinnotech.patients.service;
 
-import ch.ralscha.extdirectspring.annotation.ExtDirectMethod;
-import ch.ralscha.extdirectspring.bean.ExtDirectStoreReadRequest;
-import ch.ralscha.extdirectspring.bean.ExtDirectStoreResult;
+import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.STORE_MODIFY;
+import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.STORE_READ;
+import static com.grinnotech.patients.util.OptionalEx.ifPresent;
+import static com.grinnotech.patients.util.QueryUtil.getSpringSort;
+import static com.grinnotech.patients.util.ThrowingFunction.sneakyThrow;
+
+import com.grinnotech.patients.NotFoundException;
+import com.grinnotech.patients.NotFoundExceptionSuppl;
 import com.grinnotech.patients.config.security.MongoUserDetails;
 import com.grinnotech.patients.dao.ContactRepository;
 import com.grinnotech.patients.dao.authorities.RequireAdminEmployeeAuthority;
 import com.grinnotech.patients.model.ContactMethod;
 import com.grinnotech.patients.util.ValidationMessages;
 import com.grinnotech.patients.util.ValidationMessagesResult;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,10 +40,11 @@ import org.springframework.stereotype.Service;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
-import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.STORE_MODIFY;
-import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.STORE_READ;
-import static com.grinnotech.patients.util.QueryUtil.getSpringSort;
+import ch.ralscha.extdirectspring.annotation.ExtDirectMethod;
+import ch.ralscha.extdirectspring.bean.ExtDirectStoreReadRequest;
+import ch.ralscha.extdirectspring.bean.ExtDirectStoreResult;
 
 /**
  *
@@ -60,11 +67,13 @@ public class ContactService extends AbstractService<ContactMethod> {
     }
 
     @ExtDirectMethod(STORE_MODIFY)
-    public ExtDirectStoreResult<ContactMethod> destroy(@AuthenticationPrincipal MongoUserDetails userDetails, ContactMethod contact) {
+    public ExtDirectStoreResult<ContactMethod> destroy(@AuthenticationPrincipal MongoUserDetails userDetails, ContactMethod contact)
+            throws NotFoundException {
         ExtDirectStoreResult<ContactMethod> result = new ExtDirectStoreResult<>();
 
         LOGGER.debug("destroy 1");
-        ContactMethod old = contactRepository.findOne(contact.getId());
+        Optional<ContactMethod> oOld = contactRepository.findById(contact.getId());
+        ContactMethod old = oOld.orElseThrow(new NotFoundExceptionSuppl("ContactMethod id={} not found", contact.getId()));
 
         old.setId(null);
         old.setActive(false);
@@ -78,7 +87,8 @@ public class ContactService extends AbstractService<ContactMethod> {
     }
 
     @ExtDirectMethod(STORE_MODIFY)
-    public ValidationMessagesResult<ContactMethod> update(@AuthenticationPrincipal MongoUserDetails userDetails, ContactMethod contact) {
+    public ValidationMessagesResult<ContactMethod> update(@AuthenticationPrincipal MongoUserDetails userDetails, ContactMethod contact)
+            throws NotFoundException {
         List<ValidationMessages> violations = validateEntity(contact, userDetails.getLocale());
 
         ValidationMessagesResult<ContactMethod> result = new ValidationMessagesResult<>(contact);
@@ -86,17 +96,24 @@ public class ContactService extends AbstractService<ContactMethod> {
 
         LOGGER.debug("update 1: " + contact.toString());
         if (violations.isEmpty()) {
-            ContactMethod old = contactRepository.findOne(contact.getId());
-            if (old != null) {
-                old.setId(null);
-                old.setActive(false);
-                contactRepository.save(old);
-                LOGGER.debug("update 2 " + old.getId());
-                setAttrsForUpdate(contact, userDetails, old);
-            }
-            else {
-                setAttrsForCreate(contact, userDetails);
-            }
+            Optional<ContactMethod> old = contactRepository.findById(contact.getId());
+            ifPresent(old, contactMethod -> {
+                contactMethod.setId(null);
+                contactMethod.setActive(false);
+                contactRepository.save(contactMethod);
+                LOGGER.debug("update 2 " + contactMethod.getId());
+                try {
+                    setAttrsForUpdate(contact, userDetails, contactMethod);
+                } catch (NotFoundException e) {
+                    sneakyThrow(e);
+                }
+            }).orElse(() -> {
+                try {
+                    setAttrsForCreate(contact, userDetails);
+                } catch (NotFoundException e) {
+                    sneakyThrow(e);
+                }
+            });
 
             contactRepository.save(contact);
             LOGGER.debug("update 3");

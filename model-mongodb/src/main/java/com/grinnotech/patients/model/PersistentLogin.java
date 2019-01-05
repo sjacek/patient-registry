@@ -40,7 +40,7 @@ public class PersistentLogin {
     @ModelField(dateFormat = "time")
     private Date lastUsed;
 
-    @Size(min = 0, max = 39)
+    @Size(max = 39)
     private String ipAddress;
 
     @JsonIgnore

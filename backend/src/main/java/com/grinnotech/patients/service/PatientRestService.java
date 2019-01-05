@@ -16,6 +16,7 @@
  */
 package com.grinnotech.patients.service;
 
+import com.grinnotech.patients.NotFoundException;
 import com.grinnotech.patients.model.Patient;
 import com.grinnotech.patients.vo.Result;
 
@@ -28,7 +29,7 @@ import java.util.List;
  */
 public interface PatientRestService {
     Result<Patient> update(String idPatient, String firstName, String secondName, String lastName, String pesel, Date birthday);
-    Result<Patient> destroy (String idPatient);
-    Result<Patient> read(String idPatient);
+    Result<Patient> destroy (String idPatient) throws NotFoundException;
+    Result<Patient> read(String idPatient) throws NotFoundException;
     Result<List<Patient>> findAll();
 }

@@ -17,19 +17,26 @@
 
 package com.grinnotech.patients.domain;
 
-import ch.rasc.extclassgenerator.ModelField;
+import static javax.persistence.TemporalType.DATE;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.grinnotech.patients.model.User;
-import lombok.Getter;
-import lombok.Setter;
+
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
-import static javax.persistence.TemporalType.DATE;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
+import javax.persistence.Temporal;
+
+import ch.rasc.extclassgenerator.ModelField;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  *

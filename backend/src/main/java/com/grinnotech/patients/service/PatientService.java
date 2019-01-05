@@ -16,16 +16,22 @@
  */
 package com.grinnotech.patients.service;
 
-import ch.ralscha.extdirectspring.annotation.ExtDirectMethod;
-import ch.ralscha.extdirectspring.bean.ExtDirectStoreReadRequest;
-import ch.ralscha.extdirectspring.bean.ExtDirectStoreResult;
-import ch.ralscha.extdirectspring.filter.StringFilter;
+import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.STORE_MODIFY;
+import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.STORE_READ;
+import static com.grinnotech.patients.util.OptionalEx.ifPresent;
+import static com.grinnotech.patients.util.PeselValidator.peselIsValid;
+import static com.grinnotech.patients.util.QueryUtil.getSpringSort;
+import static org.apache.commons.lang3.StringUtils.join;
+
+import com.grinnotech.patients.NotFoundException;
 import com.grinnotech.patients.config.security.MongoUserDetails;
 import com.grinnotech.patients.dao.PatientRepository;
 import com.grinnotech.patients.dao.authorities.RequireUserEmployeeAuthority;
 import com.grinnotech.patients.model.Patient;
+import com.grinnotech.patients.util.ThrowingFunction;
 import com.grinnotech.patients.util.ValidationMessages;
 import com.grinnotech.patients.util.ValidationMessagesResult;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,134 +45,147 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
-import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.STORE_MODIFY;
-import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.STORE_READ;
-import static com.grinnotech.patients.util.PeselValidator.peselIsValid;
-import static com.grinnotech.patients.util.QueryUtil.getSpringSort;
-import static org.apache.commons.lang3.StringUtils.join;
+import ch.ralscha.extdirectspring.annotation.ExtDirectMethod;
+import ch.ralscha.extdirectspring.bean.ExtDirectStoreReadRequest;
+import ch.ralscha.extdirectspring.bean.ExtDirectStoreResult;
+import ch.ralscha.extdirectspring.filter.StringFilter;
 
 /**
- *
  * @author Jacek Sztajnke
  */
 @Service
 @RequireUserEmployeeAuthority
 public class PatientService extends AbstractService<Patient> {
 
-    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    private final PatientRepository patientRepository;
+	private final PatientRepository patientRepository;
 
-    private final MessageSource messageSource;
+	private final MessageSource messageSource;
 
-    @Autowired
-    public PatientService(PatientRepository patientRepository, MessageSource messageSource) {
-        this.patientRepository = patientRepository;
-        this.messageSource = messageSource;
-    }
+	@Autowired
+	public PatientService(PatientRepository patientRepository, MessageSource messageSource) {
+		this.patientRepository = patientRepository;
+		this.messageSource = messageSource;
+	}
 
-    @ExtDirectMethod(STORE_READ)
-    public ExtDirectStoreResult<Patient> read(ExtDirectStoreReadRequest request) {
+	@ExtDirectMethod(STORE_READ)
+	public ExtDirectStoreResult<Patient> read(ExtDirectStoreReadRequest request) {
 
-        StringFilter organizationFilter = request.getFirstFilterForField("organizationId");
-        String organizationId = organizationFilter == null ? "null" : organizationFilter.getValue();
-        logger.debug("organizationFilter: {}", organizationId);
-        if (organizationFilter == null || organizationFilter.getValue().isEmpty())
-            return new ExtDirectStoreResult<>(new ArrayList<>());
+		StringFilter organizationFilter = request.getFirstFilterForField("organizationId");
+		String organizationId = organizationFilter == null ? "null" : organizationFilter.getValue();
+		logger.debug("organizationFilter: {}", organizationId);
+		if (organizationFilter == null || organizationFilter.getValue().isEmpty())
+			return new ExtDirectStoreResult<>(new ArrayList<>());
 
-        StringFilter stringFilter = request.getFirstFilterForField("filter");
-        String filter = stringFilter != null ? stringFilter.getValue() : "";
-        Collection<Patient> coll = findPatients(organizationFilter.getValue(), filter, getSpringSort(request));
-        return new ExtDirectStoreResult<>(coll);
-    }
+		StringFilter stringFilter = request.getFirstFilterForField("filter");
+		String filter = stringFilter != null ? stringFilter.getValue() : "";
+		Collection<Patient> coll = findPatients(organizationFilter.getValue(), filter, getSpringSort(request));
+		return new ExtDirectStoreResult<>(coll);
+	}
 
-    Collection<Patient> findPatients(String organizationId, String filter, Sort sort) {
+	Collection<Patient> findPatients(String organizationId, String filter, Sort sort) {
 
-        Collection<Patient> coll = filter.isEmpty()
-                ? patientRepository.findByOrganizationIdActive(organizationId, sort)
-                : patientRepository.findByOrganizationIdWithFilterActive(organizationId, filter, sort);
+		Collection<Patient> coll = filter.isEmpty() ?
+				patientRepository.findByOrganizationIdActive(organizationId, sort) :
+				patientRepository.findByOrganizationIdWithFilterActive(organizationId, filter, sort);
 
-        logger.debug("findPatients size:[" + coll.size() + "]");
+		logger.debug("findPatients size:[" + coll.size() + "]");
 
-        return coll;
-    }
+		return coll;
+	}
 
-    @ExtDirectMethod(STORE_MODIFY)
-    public ExtDirectStoreResult<Patient> destroy(@AuthenticationPrincipal MongoUserDetails userDetails, Patient patient) {
-        ExtDirectStoreResult<Patient> result = new ExtDirectStoreResult<>();
+	@ExtDirectMethod(STORE_MODIFY)
+	public ExtDirectStoreResult<Patient> destroy(@AuthenticationPrincipal MongoUserDetails userDetails,
+			Patient patient) {
+		ExtDirectStoreResult<Patient> result = new ExtDirectStoreResult<>();
 
-        logger.debug("destroy 1");
-        Patient old = patientRepository.findOne(patient.getId());
+		logger.debug("destroy 1");
+		Optional<Patient> old = patientRepository.findById(patient.getId());
 
-        old.setId(null);
-        old.setActive(false);
-        patientRepository.save(old);
-        logger.debug("destroy 2 " + old.getId());
+		old.ifPresent(patient1 -> {
+			patient1.setId(null);
+			patient1.setActive(false);
+			patientRepository.save(patient1);
+			logger.debug("destroy 2 " + patient1);
 
-        setAttrsForDelete(patient, userDetails, old);
-        patientRepository.save(patient);
-        logger.debug("destroy end");
-        return result.setSuccess(true);
-    }
+			try {
+				setAttrsForDelete(patient, userDetails, patient1);
+			} catch (NotFoundException e) {
+				logger.warn("Patient {} not found", patient1);
+			}
+		});
+		patientRepository.save(patient);
+		logger.debug("destroy end");
+		return result.setSuccess(true);
+	}
 
-    @ExtDirectMethod(STORE_MODIFY)
-    public ValidationMessagesResult<Patient> update(@AuthenticationPrincipal MongoUserDetails userDetails, Patient patient) {
-        List<ValidationMessages> violations = validateEntity(patient, userDetails.getLocale());
+	@ExtDirectMethod(STORE_MODIFY)
+	public ValidationMessagesResult<Patient> update(@AuthenticationPrincipal MongoUserDetails userDetails,
+			Patient patient) {
+		List<ValidationMessages> violations = validateEntity(patient, userDetails.getLocale());
 
-        ValidationMessagesResult<Patient> result = new ValidationMessagesResult<>(patient);
-        result.setValidations(violations);
+		ValidationMessagesResult<Patient> result = new ValidationMessagesResult<>(patient);
+		result.setValidations(violations);
 
-        logger.debug("update 1: " + patient.toString());
-        if (violations.isEmpty()) {
-            Patient old = patientRepository.findOne(patient.getId());
-            if (old != null) {
-                old.setId(null);
-                old.setActive(false);
-                patientRepository.save(old);
-                setAttrsForUpdate(patient, userDetails, old);
-            }
-            else {
-                setAttrsForCreate(patient, userDetails);
-            }
+		logger.debug("update 1: " + patient.toString());
+		if (violations.isEmpty()) {
+			Optional<Patient> old = patientRepository.findById(patient.getId());
 
-            patientRepository.save(patient);
-        }
+			ifPresent(old, patient1 -> {
+				patient1.setId(null);
+				patient1.setActive(false);
+				patientRepository.save(patient1);
+				try {
+					setAttrsForUpdate(patient, userDetails, patient1);
+				} catch (NotFoundException e) {
+					ThrowingFunction.sneakyThrow(e);
+				}
+			}).orElse(() -> {
+				try {
+					setAttrsForCreate(patient, userDetails);
+				} catch (NotFoundException e) {
+					ThrowingFunction.sneakyThrow(e);
+				}
+			});
 
-        if (logger.isDebugEnabled())
-            violations.forEach(msg -> logger.debug("{} : {}", msg.getField(), join(msg.getMessages(), ',')));
+			patientRepository.save(patient);
+		}
 
-        logger.debug("update end");
-        return result;
-    }
+		if (logger.isDebugEnabled())
+			violations.forEach(msg -> logger.debug("{} : {}", msg.getField(), join(msg.getMessages(), ',')));
 
-    protected List<ValidationMessages> validateEntity(Patient patient, Locale locale) {
-        List<ValidationMessages> validations = super.validateEntity(patient);
+		logger.debug("update end");
+		return result;
+	}
 
-        if (!peselIsValid(patient.getPesel())) {
-            validations.add(ValidationMessages.builder()
-                    .field("pesel")
-                    .message(messageSource.getMessage("patient_pesel_not_valid", null, locale))
-                    .build());
-        }
-        return validations;
-    }
+	protected List<ValidationMessages> validateEntity(Patient patient, Locale locale) {
+		List<ValidationMessages> validations = super.validateEntity(patient);
 
-//    private boolean isEmailUnique(String patientId, String email) {
-//        if (StringUtils.hasText(email)) {
-//            long count;
-//            if (patientId != null) {
-//                count = this.mongoDb.getCollection(Patient.class)
-//                        .count(Filters.and(
-//                                Filters.regex(CPatient.email, "^" + email + "$", "i"),
-//                                Filters.ne(CPatient.id, patientId)));
-//            } else {
-//                count = this.mongoDb.getCollection(Patient.class)
-//                        .count(Filters.regex(CPatient.email, "^" + email + "$", "i"));
-//            }
-//
-//            return count == 0;
-//        }
-//        return true;
-//    }
+		if (!peselIsValid(patient.getPesel())) {
+			validations.add(ValidationMessages.builder().field("pesel")
+					.message(messageSource.getMessage("patient_pesel_not_valid", null, locale)).build());
+		}
+		return validations;
+	}
+
+	//    private boolean isEmailUnique(String patientId, String email) {
+	//        if (StringUtils.hasText(email)) {
+	//            long count;
+	//            if (patientId != null) {
+	//                count = this.mongoDb.getCollection(Patient.class)
+	//                        .count(Filters.and(
+	//                                Filters.regex(CPatient.email, "^" + email + "$", "i"),
+	//                                Filters.ne(CPatient.id, patientId)));
+	//            } else {
+	//                count = this.mongoDb.getCollection(Patient.class)
+	//                        .count(Filters.regex(CPatient.email, "^" + email + "$", "i"));
+	//            }
+	//
+	//            return count == 0;
+	//        }
+	//        return true;
+	//    }
 }

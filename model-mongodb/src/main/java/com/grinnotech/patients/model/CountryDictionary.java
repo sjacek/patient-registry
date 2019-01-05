@@ -16,54 +16,50 @@
  */
 package com.grinnotech.patients.model;
 
-import ch.rasc.extclassgenerator.Model;
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.grinnotech.patients.domain.AbstractPersistable;
 import com.opencsv.bean.CsvBindByName;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import org.hibernate.validator.constraints.NotBlank;
+
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
+import javax.validation.constraints.NotBlank;
+
+import ch.rasc.extclassgenerator.Model;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
- *
  * @author Jacek Sztajnke
  */
-@Document(collection="dic_countries")
-@Model(value = "Patients.model.CountryDictionary",
-        createMethod = "countryDictionaryService.update",
-        readMethod = "countryDictionaryService.read",
-        updateMethod = "countryDictionaryService.update",
-        destroyMethod = "countryDictionaryService.destroy",
-        paging = true,
-        identifier = "uuid")
+@Document(collection = "dic_countries")
+@Model(value = "Patients.model.CountryDictionary", createMethod = "countryDictionaryService.update", readMethod = "countryDictionaryService.read", updateMethod = "countryDictionaryService.update", destroyMethod = "countryDictionaryService.destroy", paging = true, identifier = "uuid")
 @JsonInclude(NON_NULL)
 @Builder
 @Getter
 @Setter
 public class CountryDictionary extends AbstractPersistable {
 
-    @Indexed
-    @CsvBindByName(column = "code", required = true)
-    @NotBlank(message = "{fieldrequired}")
-    private String code;
+	@Indexed
+	@CsvBindByName(column = "code", required = true)
+	@NotBlank(message = "{fieldrequired}")
+	private String code;
 
-    @Indexed
-    @CsvBindByName(column = "country_en", required = true)
-    @NotBlank(message = "{fieldrequired}")
-    private String countryEn;
+	@Indexed
+	@CsvBindByName(column = "country_en", required = true)
+	@NotBlank(message = "{fieldrequired}")
+	private String countryEn;
 
-    @Indexed
-    @CsvBindByName(column = "country_pl", required = true)
-    @NotBlank(message = "{fieldrequired}")
-    private String countryPl;
+	@Indexed
+	@CsvBindByName(column = "country_pl", required = true)
+	@NotBlank(message = "{fieldrequired}")
+	private String countryPl;
 
-    @Indexed
-    @CsvBindByName(column = "country_de", required = true)
-    @NotBlank(message = "{fieldrequired}")
-    private String countryDe;
+	@Indexed
+	@CsvBindByName(column = "country_de", required = true)
+	@NotBlank(message = "{fieldrequired}")
+	private String countryDe;
 }

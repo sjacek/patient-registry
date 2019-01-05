@@ -1,7 +1,11 @@
 package com.grinnotech.patients.service;
 
-import ch.ralscha.extdirectspring.annotation.ExtDirectMethod;
-import ch.ralscha.extdirectspring.bean.ExtDirectStoreResult;
+import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.STORE_MODIFY;
+import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.STORE_READ;
+import static java.util.stream.Collectors.toList;
+import static org.springframework.util.StringUtils.hasText;
+
+import com.grinnotech.patients.NotFoundException;
 import com.grinnotech.patients.config.security.MongoUserDetails;
 import com.grinnotech.patients.dao.PersistentLoginRepository;
 import com.grinnotech.patients.dao.UserRepository;
@@ -14,143 +18,145 @@ import com.grinnotech.patients.util.TotpAuthUtil;
 import com.grinnotech.patients.util.ValidationMessages;
 import com.grinnotech.patients.util.ValidationMessagesResult;
 import com.grinnotech.patients.util.ValidationUtil;
-import eu.bitwalker.useragentutils.UserAgent;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.validation.Validator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
-import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.STORE_MODIFY;
-import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.STORE_READ;
-import static java.util.stream.Collectors.toList;
-import static org.springframework.util.StringUtils.hasText;
+import javax.validation.Validator;
+
+import ch.ralscha.extdirectspring.annotation.ExtDirectMethod;
+import ch.ralscha.extdirectspring.bean.ExtDirectStoreResult;
+import eu.bitwalker.useragentutils.UserAgent;
 
 @Service
 @RequireAnyAuthority
 public class UserConfigService {
 
-    private final PasswordEncoder passwordEncoder;
+	private final PasswordEncoder passwordEncoder;
 
-    private final UserRepository userRepository;
+	private final UserRepository userRepository;
 
-    private final PersistentLoginRepository persistentLoginRepository;
+	private final PersistentLoginRepository persistentLoginRepository;
 
-    private final Validator validator;
+	private final Validator validator;
 
-    private final MessageSource messageSource;
+	private final MessageSource messageSource;
 
-    @Autowired
-    public UserConfigService(PasswordEncoder passwordEncoder, UserRepository userRepository, PersistentLoginRepository persistentLoginRepository, Validator validator, MessageSource messageSource) {
-        this.passwordEncoder = passwordEncoder;
-        this.userRepository = userRepository;
-        this.persistentLoginRepository = persistentLoginRepository;
-        this.validator = validator;
-        this.messageSource = messageSource;
-    }
+	@Autowired
+	public UserConfigService(PasswordEncoder passwordEncoder, UserRepository userRepository,
+			PersistentLoginRepository persistentLoginRepository, Validator validator, MessageSource messageSource) {
+		this.passwordEncoder = passwordEncoder;
+		this.userRepository = userRepository;
+		this.persistentLoginRepository = persistentLoginRepository;
+		this.validator = validator;
+		this.messageSource = messageSource;
+	}
 
-    @ExtDirectMethod(STORE_READ)
-    public ExtDirectStoreResult<UserSettings> readSettings(@AuthenticationPrincipal MongoUserDetails userDetails) {
-        UserSettings userSettings = new UserSettings(userRepository.findOne(userDetails.getUserDbId()));
-        return new ExtDirectStoreResult<>(userSettings);
-    }
+	@ExtDirectMethod(STORE_READ)
+	public ExtDirectStoreResult<UserSettings> readSettings(@AuthenticationPrincipal MongoUserDetails userDetails)
+			throws NotFoundException {
+		Optional<User> user = userRepository.findById(userDetails.getUserDbId());
+		User user1 = user.orElseThrow(() -> new NotFoundException("User id={} not found", userDetails.getUserDbId()));
 
-    @ExtDirectMethod
-    public String enable2f(@AuthenticationPrincipal MongoUserDetails userDetails) {
-        String randomSecret = TotpAuthUtil.randomSecret();
+		UserSettings userSettings = new UserSettings(user1);
+		return new ExtDirectStoreResult<>(userSettings);
+	}
 
-        User user = userRepository.findOne(userDetails.getUserDbId());
-        user.setSecret(randomSecret);
-        userRepository.save(user);
+	@ExtDirectMethod
+	public String enable2f(@AuthenticationPrincipal MongoUserDetails userDetails) throws NotFoundException {
+		String randomSecret = TotpAuthUtil.randomSecret();
 
-        return randomSecret;
-    }
+		Optional<User> user = userRepository.findById(userDetails.getUserDbId());
+		User user1 = user.orElseThrow(() -> new NotFoundException("User id={} not found", userDetails.getUserDbId()));
 
-    @ExtDirectMethod
-    public void disable2f(@AuthenticationPrincipal MongoUserDetails userDetails) {
-        User user = userRepository.findOne(userDetails.getUserDbId());
-        user.setSecret(null);
-        userRepository.save(user);
-    }
+		user1.setSecret(randomSecret);
+		userRepository.save(user1);
 
-    @ExtDirectMethod(STORE_MODIFY)
-    public ValidationMessagesResult<UserSettings> updateSettings(UserSettings modifiedUserSettings,
-                                                                 @AuthenticationPrincipal MongoUserDetails userDetails, Locale locale) {
+		return randomSecret;
+	}
 
-        List<ValidationMessages> validations = ValidationUtil.validateEntity(validator, modifiedUserSettings);
-        User user = userRepository.findOne(userDetails.getUserDbId());
-        boolean userModified = false;
+	@ExtDirectMethod
+	public void disable2f(@AuthenticationPrincipal MongoUserDetails userDetails) throws NotFoundException {
+		Optional<User> oUser = userRepository.findById(userDetails.getUserDbId());
+		User user = oUser.orElseThrow(() -> new NotFoundException("User id={} not found", userDetails.getUserDbId()));
+		user.setSecret(null);
+		userRepository.save(user);
+	}
 
-        if (hasText(modifiedUserSettings.getNewPassword()) && validations.isEmpty()) {
-            if (passwordEncoder.matches(modifiedUserSettings.getCurrentPassword(), user.getPasswordHash())) {
-                if (modifiedUserSettings.getNewPassword().equals(modifiedUserSettings.getNewPasswordRetype())) {
-                    user.setPasswordHash(passwordEncoder.encode(modifiedUserSettings.getNewPassword()));
-                    userModified = true;
-                } else {
-                    validations.add(ValidationMessages.builder()
-                            .field("newPassword")
-                            .message(messageSource.getMessage("userconfig_pwdonotmatch", null, locale))
-                            .build());
-                    validations.add(ValidationMessages.builder()
-                            .field("newPasswordRetype")
-                            .message(messageSource.getMessage("userconfig_pwdonotmatch", null, locale))
-                            .build());
-                }
-            } else {
-                validations.add(ValidationMessages.builder()
-                        .field("currentPassword")
-                        .message(messageSource.getMessage("userconfig_wrongpassword", null, locale))
-                        .build());
-            }
-        }
+	@ExtDirectMethod(STORE_MODIFY)
+	public ValidationMessagesResult<UserSettings> updateSettings(UserSettings modifiedUserSettings,
+			@AuthenticationPrincipal MongoUserDetails userDetails, Locale locale) {
 
-        if (!isEmailUnique(user.getId(), modifiedUserSettings.getEmail())) {
-            validations.add(ValidationMessages.builder()
-                    .field(CUser.email)
-                    .message(messageSource.getMessage("user_emailtaken", null, locale))
-                    .build());
-        }
+		List<ValidationMessages> validations = ValidationUtil.validateEntity(validator, modifiedUserSettings);
+		Optional<User> oUser = userRepository.findById(userDetails.getUserDbId());
+		User user = oUser.orElseThrow(() -> new javax.ws.rs.NotFoundException(
+				String.format("User id={} not found", userDetails.getUserDbId())));
+		boolean userModified = false;
 
-        if (validations.isEmpty()) {
-            user.setLastName(modifiedUserSettings.getLastName());
-            user.setFirstName(modifiedUserSettings.getFirstName());
-            user.setEmail(modifiedUserSettings.getEmail());
-            user.setLocale(modifiedUserSettings.getLocale());
-            userModified = true;
-        }
+		if (hasText(modifiedUserSettings.getNewPassword()) && validations.isEmpty()) {
+			if (passwordEncoder.matches(modifiedUserSettings.getCurrentPassword(), user.getPasswordHash())) {
+				if (modifiedUserSettings.getNewPassword().equals(modifiedUserSettings.getNewPasswordRetype())) {
+					user.setPasswordHash(passwordEncoder.encode(modifiedUserSettings.getNewPassword()));
+					userModified = true;
+				} else {
+					validations.add(ValidationMessages.builder().field("newPassword")
+							.message(messageSource.getMessage("userconfig_pwdonotmatch", null, locale)).build());
+					validations.add(ValidationMessages.builder().field("newPasswordRetype")
+							.message(messageSource.getMessage("userconfig_pwdonotmatch", null, locale)).build());
+				}
+			} else {
+				validations.add(ValidationMessages.builder().field("currentPassword")
+						.message(messageSource.getMessage("userconfig_wrongpassword", null, locale)).build());
+			}
+		}
 
-        if (userModified) {
-            userRepository.save(user);
-        }
+		if (!isEmailUnique(user.getId(), modifiedUserSettings.getEmail())) {
+			validations.add(ValidationMessages.builder().field(CUser.email)
+					.message(messageSource.getMessage("user_emailtaken", null, locale)).build());
+		}
 
-        return new ValidationMessagesResult<>(modifiedUserSettings, validations);
-    }
+		if (validations.isEmpty()) {
+			user.setLastName(modifiedUserSettings.getLastName());
+			user.setFirstName(modifiedUserSettings.getFirstName());
+			user.setEmail(modifiedUserSettings.getEmail());
+			user.setLocale(modifiedUserSettings.getLocale());
+			userModified = true;
+		}
 
-    private boolean isEmailUnique(String userId, String email) {
-        return userRepository.existsByEmailRegexAndIdNot(email, userId);
-    }
+		if (userModified) {
+			userRepository.save(user);
+		}
 
-    @ExtDirectMethod(STORE_READ)
-    public List<PersistentLogin> readPersistentLogins(@AuthenticationPrincipal MongoUserDetails userDetails) {
-        return persistentLoginRepository.findByUserId(userDetails.getUserDbId()).stream()
-                .peek(login -> {
-                    String ua = login.getUserAgent();
-                    if (hasText(ua)) {
-                        UserAgent userAgent = UserAgent.parseUserAgentString(ua);
-                        login.setUserAgentName(userAgent.getBrowser().getGroup().getName());
-                        login.setUserAgentVersion(userAgent.getBrowserVersion().getMajorVersion());
-                        login.setOperatingSystem(userAgent.getOperatingSystem().getName());
-                    }
-                }).collect(toList());
-    }
+		return new ValidationMessagesResult<>(modifiedUserSettings, validations);
+	}
 
-    @ExtDirectMethod(STORE_MODIFY)
-    public void destroyPersistentLogin(String series, @AuthenticationPrincipal MongoUserDetails userDetails) {
-        persistentLoginRepository.deletePersistentLoginBySeriesAndUserId(series, userDetails.getUserDbId());
-    }
+	private boolean isEmailUnique(String userId, String email) {
+		return userRepository.existsByEmailRegexAndIdNot(email, userId);
+	}
+
+	@ExtDirectMethod(STORE_READ)
+	public List<PersistentLogin> readPersistentLogins(@AuthenticationPrincipal MongoUserDetails userDetails) {
+		return persistentLoginRepository.findByUserId(userDetails.getUserDbId()).stream().peek(login -> {
+			String ua = login.getUserAgent();
+			if (hasText(ua)) {
+				UserAgent userAgent = UserAgent.parseUserAgentString(ua);
+				login.setUserAgentName(userAgent.getBrowser().getGroup().getName());
+				login.setUserAgentVersion(userAgent.getBrowserVersion().getMajorVersion());
+				login.setOperatingSystem(userAgent.getOperatingSystem().getName());
+			}
+		}).collect(toList());
+	}
+
+	@ExtDirectMethod(STORE_MODIFY)
+	public void destroyPersistentLogin(String series, @AuthenticationPrincipal MongoUserDetails userDetails) {
+		persistentLoginRepository.deletePersistentLoginBySeriesAndUserId(series, userDetails.getUserDbId());
+	}
 
 }

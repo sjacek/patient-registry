@@ -1,7 +1,12 @@
 package com.grinnotech.patients.service;
 
-import ch.ralscha.extdirectspring.annotation.ExtDirectMethod;
-import ch.ralscha.extdirectspring.bean.ExtDirectFormPostResult;
+import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.FORM_POST;
+import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.POLL;
+import static java.time.ZoneOffset.UTC;
+import static java.time.ZonedDateTime.now;
+import static java.util.Date.from;
+
+import com.grinnotech.patients.NotFoundException;
 import com.grinnotech.patients.config.security.MongoUserDetails;
 import com.grinnotech.patients.dao.UserRepository;
 import com.grinnotech.patients.dao.authorities.RequireAdminAuthority;
@@ -10,6 +15,7 @@ import com.grinnotech.patients.dto.UserDetailDto;
 import com.grinnotech.patients.model.User;
 import com.grinnotech.patients.util.TotpAuthUtil;
 import com.grinnotech.patients.web.CsrfController;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,200 +33,206 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.lang.invoke.MethodHandles;
 import java.util.Base64;
 import java.util.Date;
+import java.util.Optional;
 import java.util.UUID;
 
-import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.FORM_POST;
-import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.POLL;
-import static java.time.ZoneOffset.UTC;
-import static java.time.ZonedDateTime.now;
-import static java.util.Date.from;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import ch.ralscha.extdirectspring.annotation.ExtDirectMethod;
+import ch.ralscha.extdirectspring.bean.ExtDirectFormPostResult;
 
 @Service
 public class SecurityService {
 
-    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    public static final String AUTH_USER = "authUser";
+	public static final String AUTH_USER = "authUser";
 
-    private final UserRepository userRepository;
+	private final UserRepository userRepository;
 
-    private final PasswordEncoder passwordEncoder;
+	private final PasswordEncoder passwordEncoder;
 
-    private final MailService mailService;
+	private final MailService mailService;
 
-    private final ApplicationEventPublisher applicationEventPublisher;
+	private final ApplicationEventPublisher applicationEventPublisher;
 
-    @Autowired
-    public SecurityService(UserRepository userRepository, PasswordEncoder passwordEncoder, MailService mailService, ApplicationEventPublisher applicationEventPublisher) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.mailService = mailService;
-        this.applicationEventPublisher = applicationEventPublisher;
-    }
+	@Autowired
+	public SecurityService(UserRepository userRepository, PasswordEncoder passwordEncoder, MailService mailService,
+			ApplicationEventPublisher applicationEventPublisher) {
+		this.userRepository = userRepository;
+		this.passwordEncoder = passwordEncoder;
+		this.mailService = mailService;
+		this.applicationEventPublisher = applicationEventPublisher;
+	}
 
-    @ExtDirectMethod
-    public UserDetailDto getAuthUser(@AuthenticationPrincipal MongoUserDetails userDetails) {
+	@ExtDirectMethod
+	public UserDetailDto getAuthUser(@AuthenticationPrincipal MongoUserDetails userDetails) throws NotFoundException {
 
-        logger.debug("getAuthUser {}", userDetails);
-        if (userDetails == null) {
-            return null;
-        }
+		logger.debug("getAuthUser {}", userDetails);
+		if (userDetails == null) {
+			return null;
+		}
 
-        User user = userRepository.findOne(userDetails.getUserDbId());
-        userRepository.loadOrganizationsData(user);
-        UserDetailDto userDetailDto = new UserDetailDto(userDetails, user, null);
+		Optional<User> oUser = userRepository.findById(userDetails.getUserDbId());
+		User user = oUser.orElseThrow(() -> new NotFoundException("User id={} not found", userDetails.getUserDbId()));
 
-        if (!userDetails.isPreAuth()) {
-            user.setLastAccess(new Date());
-            userRepository.save(user);
-        }
+		userRepository.loadOrganizationsData(user);
+		UserDetailDto userDetailDto = new UserDetailDto(userDetails, user, null);
 
-        return userDetailDto;
-    }
+		if (!userDetails.isPreAuth()) {
+			user.setLastAccess(new Date());
+			userRepository.save(user);
+		}
 
-    @ExtDirectMethod(FORM_POST)
-    @PreAuthorize("hasAuthority('PRE_AUTH')")
-    public ExtDirectFormPostResult signin2fa(HttpServletRequest request, @AuthenticationPrincipal MongoUserDetails userDetails, @RequestParam("code") int code) {
+		return userDetailDto;
+	}
 
-        User user = userRepository.findOne(userDetails.getUserDbId());
-        if (user != null) {
-            if (TotpAuthUtil.verifyCode(user.getSecret(), code, 3)) {
-                user.setLastAccess(new Date());
-                userRepository.save(user);
-                userDetails.grantAuthorities();
+	@ExtDirectMethod(FORM_POST)
+	@PreAuthorize("hasAuthority('PRE_AUTH')")
+	public ExtDirectFormPostResult signin2fa(HttpServletRequest request,
+			@AuthenticationPrincipal MongoUserDetails userDetails, @RequestParam("code") int code)
+			throws NotFoundException {
 
-                Authentication newAuth = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                SecurityContextHolder.getContext().setAuthentication(newAuth);
+		Optional<User> oUser = userRepository.findById(userDetails.getUserDbId());
+		User user = oUser.orElseThrow(() -> new NotFoundException("User id={} not found", userDetails.getUserDbId()));
 
-                ExtDirectFormPostResult result = new ExtDirectFormPostResult();
-                userRepository.loadOrganizationsData(user);
-                result.addResultProperty(AUTH_USER, new UserDetailDto(userDetails, user, CsrfController.getCsrfToken(request)));
-                return result;
-            }
+		if (TotpAuthUtil.verifyCode(user.getSecret(), code, 3)) {
+			user.setLastAccess(new Date());
+			userRepository.save(user);
+			userDetails.grantAuthorities();
 
-            BadCredentialsException excp = new BadCredentialsException("Bad verification code");
-            AuthenticationFailureBadCredentialsEvent event = new AuthenticationFailureBadCredentialsEvent(
-                    SecurityContextHolder.getContext().getAuthentication(), excp);
-            applicationEventPublisher.publishEvent(event);
+			Authentication newAuth = new UsernamePasswordAuthenticationToken(userDetails, null,
+					userDetails.getAuthorities());
+			SecurityContextHolder.getContext().setAuthentication(newAuth);
 
-            user = userRepository.findOne(userDetails.getUserDbId());
-            if (user.getLockedOutUntil() != null) {
-                HttpSession session = request.getSession(false);
-                if (session != null) {
-                    logger.debug("Invalidating session: " + session.getId());
-                    session.invalidate();
-                }
-                SecurityContext context = SecurityContextHolder.getContext();
-                context.setAuthentication(null);
-                SecurityContextHolder.clearContext();
-            }
-        }
+			ExtDirectFormPostResult result = new ExtDirectFormPostResult();
+			userRepository.loadOrganizationsData(user);
+			result.addResultProperty(AUTH_USER,
+					new UserDetailDto(userDetails, user, CsrfController.getCsrfToken(request)));
+			return result;
+		}
 
-        return new ExtDirectFormPostResult(false);
-    }
+		BadCredentialsException excp = new BadCredentialsException("Bad verification code");
+		AuthenticationFailureBadCredentialsEvent event = new AuthenticationFailureBadCredentialsEvent(
+				SecurityContextHolder.getContext().getAuthentication(), excp);
+		applicationEventPublisher.publishEvent(event);
 
-    @ExtDirectMethod
-    @RequireAnyAuthority
-    public void enableScreenLock(@AuthenticationPrincipal MongoUserDetails userDetails) {
-        userDetails.setScreenLocked(true);
-    }
+		oUser = userRepository.findById(userDetails.getUserDbId());
+		user = oUser.orElseThrow(() -> new NotFoundException("User id={} not found", userDetails.getUserDbId()));
+		if (user.getLockedOutUntil() != null) {
+			HttpSession session = request.getSession(false);
+			if (session != null) {
+				logger.debug("Invalidating session: " + session.getId());
+				session.invalidate();
+			}
+			SecurityContext context = SecurityContextHolder.getContext();
+			context.setAuthentication(null);
+			SecurityContextHolder.clearContext();
+		}
 
-    @ExtDirectMethod(FORM_POST)
-    @RequireAnyAuthority
-    public ExtDirectFormPostResult disableScreenLock(@AuthenticationPrincipal MongoUserDetails userDetails, @RequestParam("password") String password) {
+		return new ExtDirectFormPostResult(false);
+	}
 
-        User user = userRepository.findOne(userDetails.getUserDbId());
+	@ExtDirectMethod
+	@RequireAnyAuthority
+	public void enableScreenLock(@AuthenticationPrincipal MongoUserDetails userDetails) {
+		userDetails.setScreenLocked(true);
+	}
 
-        boolean matches = passwordEncoder.matches(password, user.getPasswordHash());
-        userDetails.setScreenLocked(!matches);
+	@ExtDirectMethod(FORM_POST)
+	@RequireAnyAuthority
+	public ExtDirectFormPostResult disableScreenLock(@AuthenticationPrincipal MongoUserDetails userDetails,
+			@RequestParam("password") String password) throws NotFoundException {
 
-        return new ExtDirectFormPostResult(matches);
-    }
+		Optional<User> oUser = userRepository.findById(userDetails.getUserDbId());
+		User user = oUser.orElseThrow(() -> new NotFoundException("User id={} not found", userDetails.getUserDbId()));
 
-    @ExtDirectMethod(FORM_POST)
-    public ExtDirectFormPostResult resetRequest(@RequestParam("email") String email) {
+		boolean matches = passwordEncoder.matches(password, user.getPasswordHash());
+		userDetails.setScreenLocked(!matches);
 
-        String token = UUID.randomUUID().toString();
+		return new ExtDirectFormPostResult(matches);
+	}
 
-        User user = userRepository.findByEmailActive(email);
-        if (user != null) {
-            user.setPasswordResetTokenValidUntil(from(now(UTC).plusHours(4).toInstant()));
-            user.setPasswordResetToken(token);
-            userRepository.save(user);
+	@ExtDirectMethod(FORM_POST)
+	public ExtDirectFormPostResult resetRequest(@RequestParam("email") String email) throws NotFoundException {
 
-            mailService.sendPasswortResetEmail(user);
-        }
+		String token = UUID.randomUUID().toString();
 
-        return new ExtDirectFormPostResult();
-    }
+		Optional<User> oUser = userRepository.findByEmailActive(email);
+		User user = oUser.orElseThrow(() -> new NotFoundException("User with email={} not found", email));
 
-    @ExtDirectMethod(FORM_POST)
-    public ExtDirectFormPostResult reset(@RequestParam("newPassword") String newPassword,
-                                         @RequestParam("newPasswordRetype") String newPasswordRetype,
-                                         @RequestParam("token") String token) {
+		user.setPasswordResetTokenValidUntil(from(now(UTC).plusHours(4).toInstant()));
+		user.setPasswordResetToken(token);
+		userRepository.save(user);
 
-        if (StringUtils.hasText(token) && StringUtils.hasText(newPassword)
-                && StringUtils.hasText(newPasswordRetype)
-                && newPassword.equals(newPasswordRetype)) {
-            String decodedToken = new String(Base64.getUrlDecoder().decode(token));
-            
-            User user = userRepository.findOneByPasswordResetTokenAndEnabled(decodedToken);
-            if (user != null && user.getPasswordResetTokenValidUntil() != null) {
+		mailService.sendPasswortResetEmail(user);
 
-                ExtDirectFormPostResult result;
+		return new ExtDirectFormPostResult();
+	}
 
-                if (user.getPasswordResetTokenValidUntil().after(new Date())) {
-                    user.setPasswordHash(passwordEncoder.encode(newPassword));
-                    user.setSecret(null);
+	@ExtDirectMethod(FORM_POST)
+	public ExtDirectFormPostResult reset(@RequestParam("newPassword") String newPassword,
+			@RequestParam("newPasswordRetype") String newPasswordRetype, @RequestParam("token") String token) {
 
-                    MongoUserDetails principal = new MongoUserDetails(user);
-                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(principal, null, principal.getAuthorities());
-                    SecurityContextHolder.getContext().setAuthentication(authToken);
+		if (StringUtils.hasText(token) && StringUtils.hasText(newPassword) && StringUtils.hasText(newPasswordRetype)
+				&& newPassword.equals(newPasswordRetype)) {
+			String decodedToken = new String(Base64.getUrlDecoder().decode(token));
 
-                    result = new ExtDirectFormPostResult();
-                    userRepository.loadOrganizationsData(user);
-                    result.addResultProperty(AUTH_USER, new UserDetailDto(principal, user, null));
-                } else {
-                    result = new ExtDirectFormPostResult(false);
-                }
-                user.setPasswordResetToken(null);
-                user.setPasswordResetTokenValidUntil(null);
-                userRepository.save(user);
-                
-                return result;
-            }
-        }
+			User user = userRepository.findOneByPasswordResetTokenAndEnabled(decodedToken);
+			if (user != null && user.getPasswordResetTokenValidUntil() != null) {
 
-        return new ExtDirectFormPostResult(false);
-    }
+				ExtDirectFormPostResult result;
 
-    @ExtDirectMethod
-    @RequireAdminAuthority
-    public UserDetailDto switchUser(String userId) {
-        User switchToUser = userRepository.findOne(userId);
-        if (switchToUser != null) {
-            userRepository.loadOrganizationsData(switchToUser);
+				if (user.getPasswordResetTokenValidUntil().after(new Date())) {
+					user.setPasswordHash(passwordEncoder.encode(newPassword));
+					user.setSecret(null);
 
-            MongoUserDetails principal = new MongoUserDetails(switchToUser);
-            UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(principal, null, principal.getAuthorities());
+					MongoUserDetails principal = new MongoUserDetails(user);
+					UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(principal,
+							null, principal.getAuthorities());
+					SecurityContextHolder.getContext().setAuthentication(authToken);
 
-            SecurityContextHolder.getContext().setAuthentication(token);
+					result = new ExtDirectFormPostResult();
+					userRepository.loadOrganizationsData(user);
+					result.addResultProperty(AUTH_USER, new UserDetailDto(principal, user, null));
+				} else {
+					result = new ExtDirectFormPostResult(false);
+				}
+				user.setPasswordResetToken(null);
+				user.setPasswordResetTokenValidUntil(null);
+				userRepository.save(user);
 
-            return new UserDetailDto(principal, switchToUser, null);
-        }
+				return result;
+			}
+		}
 
-        return null;
-    }
+		return new ExtDirectFormPostResult(false);
+	}
 
-    @ExtDirectMethod(value = POLL, event = "heartbeat")
-    @RequireAnyAuthority
-    public void heartbeat() {
-        // nothing here
-    }
+	@ExtDirectMethod
+	@RequireAdminAuthority
+	public UserDetailDto switchUser(String userId) throws NotFoundException {
+		Optional<User> oSwitchToUser = userRepository.findById(userId);
+		User switchToUser = oSwitchToUser.orElseThrow(() -> new NotFoundException("User id={} not found", userId));
+		userRepository.loadOrganizationsData(switchToUser);
+
+		MongoUserDetails principal = new MongoUserDetails(switchToUser);
+		UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(principal, null,
+				principal.getAuthorities());
+
+		SecurityContextHolder.getContext().setAuthentication(token);
+
+		return new UserDetailDto(principal, switchToUser, null);
+	}
+
+	@ExtDirectMethod(value = POLL, event = "heartbeat")
+	@RequireAnyAuthority
+	public void heartbeat() {
+		// nothing here
+	}
 
 }
