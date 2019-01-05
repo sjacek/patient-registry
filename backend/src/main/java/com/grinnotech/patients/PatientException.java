@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.grinnotech.patients.util;
+package com.grinnotech.patients;
 
 /**
  *
@@ -22,11 +22,15 @@ package com.grinnotech.patients.util;
  */
 public class PatientException extends Exception {
 
-    protected PatientException(ReflectiveOperationException ex) {
+    public PatientException(String message) {
+        super(message);
+    }
+
+    public PatientException(Exception ex) {
         super(ex);
     }
 
-    protected PatientException(String message, ReflectiveOperationException ex) {
+    public PatientException(String message, Exception ex) {
         super(message, ex);
     }
 }

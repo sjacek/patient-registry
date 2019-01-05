@@ -1,5 +1,6 @@
 package com.grinnotech.patients.config.security;
 
+import com.grinnotech.patients.Constants;
 import com.grinnotech.patients.config.AppProperties;
 import com.grinnotech.patients.dao.PersistentLoginRepository;
 import com.grinnotech.patients.dao.UserRepository;
@@ -28,6 +29,7 @@ import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Date;
+import java.util.Optional;
 
 import static org.springframework.http.HttpHeaders.USER_AGENT;
 
@@ -108,13 +110,13 @@ public class CustomPersistentRememberMeServices extends AbstractRememberMeServic
         login.setUserAgent(request.getHeader(USER_AGENT));
         persistentLoginRepository.save(login);
 
-        User user = userRepository.findOne(login.getUserId());
-
-        logger.debug("Refreshing persistent login token for user '{}', series '{}'", user.getEmail(), series);
+        Optional<User> user = userRepository.findById(login.getUserId());
+        String email = user.map(User::getEmail).orElse(Constants.ERROR);
+        logger.debug("Refreshing persistent login token for user '{}', series '{}'", email, series);
 
         addCookie(series, login.getToken(), request, response);
 
-        return getUserDetailsService().loadUserByUsername(user.getEmail());
+        return getUserDetailsService().loadUserByUsername(email);
     }
 
     /**
@@ -131,10 +133,8 @@ public class CustomPersistentRememberMeServices extends AbstractRememberMeServic
 
         logger.debug("Creating new persistent login for user {}", loginName);
 
-        User user = userRepository.findByEmailActive(loginName);
-        if (user == null) {
-            throw new UsernameNotFoundException("User " + loginName + " was not found in the database");
-        }
+        Optional<User> oUser = userRepository.findByEmailActive(loginName);
+        User user = oUser.orElseThrow(() -> new UsernameNotFoundException(String.format("User %s was not found in the database", loginName)));
 
 //        PersistentLogin newPersistentLogin = new PersistentLogin();
 //        newPersistentLogin.setSeries(generateSeriesData());

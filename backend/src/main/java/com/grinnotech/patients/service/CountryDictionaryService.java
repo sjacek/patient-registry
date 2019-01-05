@@ -19,6 +19,8 @@ package com.grinnotech.patients.service;
 import ch.ralscha.extdirectspring.annotation.ExtDirectMethod;
 import ch.ralscha.extdirectspring.bean.ExtDirectStoreReadRequest;
 import ch.ralscha.extdirectspring.bean.ExtDirectStoreResult;
+
+import com.grinnotech.patients.NotFoundException;
 import com.grinnotech.patients.config.security.MongoUserDetails;
 import com.grinnotech.patients.dao.CountryDictionaryRepository;
 import com.grinnotech.patients.dao.authorities.RequireAdminEmployeeAuthority;
@@ -35,10 +37,13 @@ import org.springframework.stereotype.Service;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.STORE_MODIFY;
 import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.STORE_READ;
+import static com.grinnotech.patients.util.OptionalEx.ifPresent;
 import static com.grinnotech.patients.util.QueryUtil.getSpringSort;
+import static com.grinnotech.patients.util.ThrowingFunction.sneakyThrow;
 
 /**
  *
@@ -63,11 +68,13 @@ public class CountryDictionaryService extends AbstractService<CountryDictionary>
 
     @ExtDirectMethod(STORE_MODIFY)
     @RequireEmployeeAuthority
-    public ExtDirectStoreResult<CountryDictionary> destroy(@AuthenticationPrincipal MongoUserDetails userDetails, CountryDictionary addressDictionary) {
+    public ExtDirectStoreResult<CountryDictionary> destroy(@AuthenticationPrincipal MongoUserDetails userDetails, CountryDictionary addressDictionary)
+            throws NotFoundException {
         ExtDirectStoreResult<CountryDictionary> result = new ExtDirectStoreResult<>();
 
         LOGGER.debug("destroy 1");
-        CountryDictionary old = addressDictionaryRepository.findOne(addressDictionary.getId());
+        Optional<CountryDictionary> oOld = addressDictionaryRepository.findById(addressDictionary.getId());
+        CountryDictionary old = oOld.orElseThrow(() -> new NotFoundException("CountryDictionary id={} not found", addressDictionary.getId()));
 
         old.setId(null);
         old.setActive(false);
@@ -87,21 +94,27 @@ public class CountryDictionaryService extends AbstractService<CountryDictionary>
 
         ValidationMessagesResult<CountryDictionary> result = new ValidationMessagesResult<>(addressDictionary);
         result.setValidations(violations);
-//
 
         LOGGER.debug("update 1: " + addressDictionary.toString());
         if (violations.isEmpty()) {
-            CountryDictionary old = addressDictionaryRepository.findOne(addressDictionary.getId());
-            if (old != null) {
-                old.setId(null);
-                old.setActive(false);
-                addressDictionaryRepository.save(old);
-                LOGGER.debug("update 2 " + old);
-                setAttrsForUpdate(addressDictionary, userDetails, old);
-            }
-            else {
-                setAttrsForCreate(addressDictionary, userDetails);
-            }
+            Optional<CountryDictionary> old = addressDictionaryRepository.findById(addressDictionary.getId());
+            ifPresent(old, countryDictionary -> {
+                countryDictionary.setId(null);
+                countryDictionary.setActive(false);
+                addressDictionaryRepository.save(countryDictionary);
+                LOGGER.debug("update 2 " + countryDictionary);
+                try {
+                    setAttrsForUpdate(addressDictionary, userDetails, countryDictionary);
+                } catch (NotFoundException e) {
+                    sneakyThrow(e);
+                }
+            }).orElse(() -> {
+                    try {
+                        setAttrsForCreate(addressDictionary, userDetails);
+                    } catch (NotFoundException e) {
+                        sneakyThrow(e);
+                    }
+                });
 
             addressDictionaryRepository.save(addressDictionary);
             LOGGER.debug("update 3");

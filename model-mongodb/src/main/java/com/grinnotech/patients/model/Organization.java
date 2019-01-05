@@ -16,36 +16,34 @@
  */
 package com.grinnotech.patients.model;
 
-import ch.rasc.extclassgenerator.Model;
-import ch.rasc.extclassgenerator.ModelField;
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.grinnotech.patients.domain.AbstractPersistable;
-import lombok.*;
-import org.hibernate.validator.constraints.NotBlank;
+
 import org.springframework.data.annotation.Transient;
-import org.springframework.data.mongodb.core.index.CompoundIndex;
-import org.springframework.data.mongodb.core.index.CompoundIndexes;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
+import javax.validation.constraints.NotBlank;
+
+import ch.rasc.extclassgenerator.Model;
+import ch.rasc.extclassgenerator.ModelField;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
- *
  * @author Jacek Sztajnke
  */
 @Document(collection = "organization")
 //@CompoundIndexes(
-    //TODO: @CompoundIndex(name = "name", def = "{ ... }")
-    //TODO: @CompoundIndex(name = "code", def = "{ ... }")
+//TODO: @CompoundIndex(name = "name", def = "{ ... }")
+//TODO: @CompoundIndex(name = "code", def = "{ ... }")
 //)
-@Model(value = "Patients.model.Organization",
-        createMethod = "organizationService.update",
-        readMethod = "organizationService.read",
-        updateMethod = "organizationService.update",
-        destroyMethod = "organizationService.destroy",
-        paging = true,
-        identifier = "uuid")
+@Model(value = "Patients.model.Organization", createMethod = "organizationService.update", readMethod = "organizationService.read", updateMethod = "organizationService.update", destroyMethod = "organizationService.destroy", paging = true, identifier = "uuid")
 @JsonInclude(NON_NULL)
 @Builder
 @NoArgsConstructor
@@ -53,19 +51,19 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 @Getter
 @Setter
 public class Organization extends AbstractPersistable {
-    
-    @NotBlank(message = "{fieldrequired}")
-    @Indexed
-    private String name;
-    
-    @Indexed
-    private String code;
 
-    @Indexed
-    private String parentId;
+	@NotBlank(message = "{fieldrequired}")
+	@Indexed
+	private String name;
 
-    @Transient
-    @ModelField
-    @Builder.Default
-    private Organization parent = null;
+	@Indexed
+	private String code;
+
+	@Indexed
+	private String parentId;
+
+	@Transient
+	@ModelField
+	@Builder.Default
+	private Organization parent = null;
 }

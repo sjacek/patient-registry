@@ -16,48 +16,43 @@
  */
 package com.grinnotech.patients.model;
 
-import ch.rasc.extclassgenerator.Model;
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.grinnotech.patients.domain.AbstractPersistable;
+
+import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import javax.validation.constraints.NotBlank;
+
+import ch.rasc.extclassgenerator.Model;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.validator.constraints.NotBlank;
-import org.springframework.data.mongodb.core.index.CompoundIndex;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 
 /**
- *
  * @author Jacek Sztajnke
  */
-@Document(collection="dic_contactmethod")
+@Document(collection = "dic_contactmethod")
 @CompoundIndex(name = "locale_method", def = "{'locale': 1, 'method': 1, 'version': 1}", unique = true)
-@Model(value = "Patients.model.ContactMethod",
-        createMethod = "contactService.update",
-        readMethod = "contactService.read",
-        updateMethod = "contactService.update",
-        destroyMethod = "contactService.destroy",
-        paging = true,
-        identifier = "uuid")
+@Model(value = "Patients.model.ContactMethod", createMethod = "contactService.update", readMethod = "contactService.read", updateMethod = "contactService.update", destroyMethod = "contactService.destroy", paging = true, identifier = "uuid")
 @JsonInclude(NON_NULL)
 @Builder
 @Getter
 @Setter
 public class ContactMethod extends AbstractPersistable {
 
-    @NotBlank(message = "{fieldrequired}")
-    private String locale;
+	@NotBlank(message = "{fieldrequired}")
+	private String locale;
 
-    @NotBlank(message = "{fieldrequired}")
-    private String method;
+	@NotBlank(message = "{fieldrequired}")
+	private String method;
 
-    private String description;
+	private String description;
 
-    @Override
-    public String toString() {
-        return getId() + "[" + getMethod() + "]";
-    }
+	@Override
+	public String toString() {
+		return getId() + "[" + getMethod() + "]";
+	}
 }

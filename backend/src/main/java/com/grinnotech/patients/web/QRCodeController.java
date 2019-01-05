@@ -9,6 +9,8 @@ import com.grinnotech.patients.config.security.MongoUserDetails;
 import com.grinnotech.patients.dao.UserRepository;
 import com.grinnotech.patients.dao.authorities.RequireAnyAuthority;
 import com.grinnotech.patients.model.User;
+import com.grinnotech.patients.util.ThrowingFunction;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -17,37 +19,47 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Optional;
+
+import javax.servlet.http.HttpServletResponse;
 
 @Controller
 public class QRCodeController {
 
-    private final UserRepository userRepository;
-    
-    private final String appName;
+	private final UserRepository userRepository;
 
-    @Autowired
-    QRCodeController(UserRepository userRepository, @Value("${info.app.name}") String appName) {
-        this.userRepository = userRepository;
-        this.appName = appName;
-    }
+	private final String appName;
 
-    @RequireAnyAuthority
-    @RequestMapping(value = "/qr", method = RequestMethod.GET)
-    public void qrcode(HttpServletResponse response, @AuthenticationPrincipal MongoUserDetails userDetails)
-            throws WriterException, IOException {
+	@Autowired
+	QRCodeController(UserRepository userRepository, @Value("${info.app.name}") String appName) {
+		this.userRepository = userRepository;
+		this.appName = appName;
+	}
 
-        User user = userRepository.findOne(userDetails.getUserDbId());
-        if (user != null && StringUtils.hasText(user.getSecret())) {
-            response.setContentType("image/png");
-            String contents = "otpauth://totp/" + user.getEmail() + "?secret=" + user.getSecret() + "&issuer=" + this.appName;
+	@RequireAnyAuthority
+	@RequestMapping(value = "/qr", method = RequestMethod.GET)
+	public void qrcode(HttpServletResponse response, @AuthenticationPrincipal MongoUserDetails userDetails)
+			throws WriterException, IOException {
 
-            QRCodeWriter writer = new QRCodeWriter();
-            BitMatrix matrix = writer.encode(contents, BarcodeFormat.QR_CODE, 200, 200);
-            MatrixToImageWriter.writeToStream(matrix, "PNG", response.getOutputStream());
-            response.getOutputStream().flush();
-        }
-    }
+		Optional<User> oUser = userRepository.findById(userDetails.getUserDbId());
+		oUser.ifPresent(user -> {
+			if (!StringUtils.hasText(user.getSecret())) {
+				return;
+			}
+			response.setContentType("image/png");
+			String contents =
+					"otpauth://totp/" + user.getEmail() + "?secret=" + user.getSecret() + "&issuer=" + this.appName;
+
+			QRCodeWriter writer = new QRCodeWriter();
+			try {
+				BitMatrix matrix = writer.encode(contents, BarcodeFormat.QR_CODE, 200, 200);
+				MatrixToImageWriter.writeToStream(matrix, "PNG", response.getOutputStream());
+				response.getOutputStream().flush();
+			} catch (WriterException | IOException e) {
+				ThrowingFunction.sneakyThrow(e);
+			}
+		});
+	}
 
 }

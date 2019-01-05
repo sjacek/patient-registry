@@ -8,6 +8,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.IndexOptions;
 import org.bson.Document;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
@@ -54,7 +55,7 @@ public class MongoDb {
 //        return mongoDatabase;
 //    }
 
-    private boolean indexExists(MongoCollection<?> collection, String indexName) {
+    private boolean indexExists(@NotNull MongoCollection<?> collection, String indexName) {
         for (Document doc : collection.listIndexes()) {
             if (doc.containsKey("key")) {
                 Document key = (Document) doc.get("key");

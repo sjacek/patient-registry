@@ -16,16 +16,20 @@
  */
 package com.grinnotech.patients.service;
 
-import ch.ralscha.extdirectspring.annotation.ExtDirectMethod;
-import ch.ralscha.extdirectspring.bean.ExtDirectStoreReadRequest;
-import ch.ralscha.extdirectspring.bean.ExtDirectStoreResult;
-import ch.ralscha.extdirectspring.filter.StringFilter;
+import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.STORE_MODIFY;
+import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.STORE_READ;
+import static com.grinnotech.patients.util.OptionalEx.ifPresent;
+import static com.grinnotech.patients.util.QueryUtil.getSpringSort;
+
+import com.grinnotech.patients.NotFoundException;
 import com.grinnotech.patients.config.security.MongoUserDetails;
 import com.grinnotech.patients.dao.OrganizationRepository;
 import com.grinnotech.patients.dao.authorities.RequireAdminAuthority;
 import com.grinnotech.patients.model.Organization;
+import com.grinnotech.patients.util.ThrowingFunction;
 import com.grinnotech.patients.util.ValidationMessages;
 import com.grinnotech.patients.util.ValidationMessagesResult;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,89 +39,103 @@ import org.springframework.stereotype.Service;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
-import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.STORE_MODIFY;
-import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.STORE_READ;
-import static com.grinnotech.patients.util.QueryUtil.getSpringSort;
+import ch.ralscha.extdirectspring.annotation.ExtDirectMethod;
+import ch.ralscha.extdirectspring.bean.ExtDirectStoreReadRequest;
+import ch.ralscha.extdirectspring.bean.ExtDirectStoreResult;
+import ch.ralscha.extdirectspring.filter.StringFilter;
 
 /**
- *
  * @author Jacek Sztajnke
  */
 @Service
 @RequireAdminAuthority
 public class OrganizationService extends AbstractService<Organization> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    @Autowired
-    private OrganizationRepository organizationRepository;
+	@Autowired
+	private OrganizationRepository organizationRepository;
 
-    @ExtDirectMethod(STORE_READ)
-    public ExtDirectStoreResult<Organization> read(ExtDirectStoreReadRequest request) {
+	@ExtDirectMethod(STORE_READ)
+	public ExtDirectStoreResult<Organization> read(ExtDirectStoreReadRequest request) {
 
-        StringFilter filter = request.getFirstFilterForField("filter");
-        List<Organization> list = (filter != null)
-                ? organizationRepository.findAllWithFilterActive(filter.getValue(), getSpringSort(request))
-                : organizationRepository.findAllActive(getSpringSort(request));
+		StringFilter filter = request.getFirstFilterForField("filter");
+		List<Organization> list = (filter != null) ?
+				organizationRepository.findAllWithFilterActive(filter.getValue(), getSpringSort(request)) :
+				organizationRepository.findAllActive(getSpringSort(request));
 
-        list.forEach(organization -> {
-            if (organization.getParentId() != null)
-                organization.setParent(organizationRepository.findOneActive(organization.getParentId()));
-        });
-        
-        LOGGER.debug("read size:[" + list.size() + "]");
+		list.forEach(organization -> {
+			if (organization.getParentId() != null)
+				organization.setParent(organizationRepository.findOneActive(organization.getParentId()));
+		});
 
-        return new ExtDirectStoreResult<>(list);
-    }
+		LOGGER.debug("read size:[" + list.size() + "]");
 
-    @ExtDirectMethod(STORE_MODIFY)
-    public ExtDirectStoreResult<Organization> destroy(@AuthenticationPrincipal MongoUserDetails userDetails, Organization organization) {
-        ExtDirectStoreResult<Organization> result = new ExtDirectStoreResult<>();
+		return new ExtDirectStoreResult<>(list);
+	}
 
-        LOGGER.debug("destroy 1");
-        Organization old = organizationRepository.findOne(organization.getId());
+	@ExtDirectMethod(STORE_MODIFY)
+	public ExtDirectStoreResult<Organization> destroy(@AuthenticationPrincipal MongoUserDetails userDetails,
+			Organization organization) throws NotFoundException {
+		ExtDirectStoreResult<Organization> result = new ExtDirectStoreResult<>();
 
-        old.setId(null);
-        old.setActive(false);
-        organizationRepository.save(old);
-        LOGGER.debug("destroy 2 " + old.getId());
+		LOGGER.debug("destroy 1");
+		Optional<Organization> oOld = organizationRepository.findById(organization.getId());
 
-        setAttrsForDelete(organization, userDetails, old);
-        organizationRepository.save(organization);
-        LOGGER.debug("destroy end");
-        return result.setSuccess(true);
-    }
+		Organization old = oOld
+				.orElseThrow(() -> new NotFoundException("Organization {} not found", organization.getId()));
 
-    @ExtDirectMethod(STORE_MODIFY)
-    public ValidationMessagesResult<Organization> update(@AuthenticationPrincipal MongoUserDetails userDetails, Organization organization) {
-        List<ValidationMessages> violations = validateEntity(organization, userDetails.getLocale());
+		old.setId(null);
+		old.setActive(false);
+		organizationRepository.save(old);
+		LOGGER.debug("destroy 2 " + old.getId());
 
-        ValidationMessagesResult<Organization> result = new ValidationMessagesResult<>(organization);
-        result.setValidations(violations);
+		setAttrsForDelete(organization, userDetails, old);
+		organizationRepository.save(organization);
+		LOGGER.debug("destroy end");
+		return result.setSuccess(true);
+	}
 
-        LOGGER.debug("update 1: " + organization.toString());
-        if (violations.isEmpty()) {
-            Organization old = organizationRepository.findOne(organization.getId());
-            if (old != null) {
-                old.setId(null);
-                old.setActive(false);
-                organizationRepository.save(old);
-                setAttrsForUpdate(organization, userDetails, old);
-            }
-            else {
-                setAttrsForCreate(organization, userDetails);
-            }
+	@ExtDirectMethod(STORE_MODIFY)
+	public ValidationMessagesResult<Organization> update(@AuthenticationPrincipal MongoUserDetails userDetails,
+			Organization organization) {
+		List<ValidationMessages> violations = validateEntity(organization, userDetails.getLocale());
 
-            organizationRepository.save(organization);
-        }
+		ValidationMessagesResult<Organization> result = new ValidationMessagesResult<>(organization);
+		result.setValidations(violations);
 
-        LOGGER.debug("update end");
-        return result;
-    }
+		LOGGER.debug("update 1: " + organization.toString());
 
-    protected List<ValidationMessages> validateEntity(Organization organization, Locale locale) {
+		if (violations.isEmpty()) {
+			Optional<Organization> oOld = organizationRepository.findById(organization.getId());
+			ifPresent(oOld, organization1 -> {
+				organization1.setId(null);
+				organization1.setActive(false);
+				organizationRepository.save(organization1);
+				try {
+					setAttrsForUpdate(organization, userDetails, organization1);
+				} catch (NotFoundException e) {
+					ThrowingFunction.sneakyThrow(e);
+				}
+			}).orElse(() -> {
+				try {
+					setAttrsForCreate(organization, userDetails);
+				} catch (NotFoundException e) {
+					ThrowingFunction.sneakyThrow(e);
+				}
+			});
 
-        return super.validateEntity(organization);
-    }
+			organizationRepository.save(organization);
+		}
+
+		LOGGER.debug("update end");
+		return result;
+	}
+
+	protected List<ValidationMessages> validateEntity(Organization organization, Locale locale) {
+
+		return super.validateEntity(organization);
+	}
 }

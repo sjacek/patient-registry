@@ -2,10 +2,14 @@ package com.grinnotech.patients.config.security;
 
 import com.grinnotech.patients.dao.UserRepository;
 import com.grinnotech.patients.model.User;
+
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.authentication.event.InteractiveAuthenticationSuccessEvent;
 import org.springframework.stereotype.Component;
+
+import java.util.Optional;
 
 @Component
 public class UserAuthSuccessfulHandler implements ApplicationListener<InteractiveAuthenticationSuccessEvent> {
@@ -18,17 +22,17 @@ public class UserAuthSuccessfulHandler implements ApplicationListener<Interactiv
     }
 
     @Override
-    public void onApplicationEvent(InteractiveAuthenticationSuccessEvent event) {
+    public void onApplicationEvent(@NotNull InteractiveAuthenticationSuccessEvent event) {
         Object principal = event.getAuthentication().getPrincipal();
         if (principal instanceof MongoUserDetails) {
             String userId = ((MongoUserDetails) principal).getUserDbId();
 
-            User user = userRepository.findOne(userId);
-            if (user != null) {
+            Optional<User> oUser = userRepository.findById(userId);
+            oUser.ifPresent(user -> {
                 user.setFailedLogins(0);
                 user.setLockedOutUntil(null);
                 userRepository.save(user);
-            }
+            });
         }
     }
 }

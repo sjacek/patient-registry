@@ -17,22 +17,20 @@
 package com.grinnotech.patients.dao;
 
 import com.grinnotech.patients.model.ContactMethod;
+
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 
 import java.util.List;
 
 /**
- *
  * @author Jacek Sztajnke
  */
-public interface ContactRepository extends
-        MongoRepository<ContactMethod, String>
-//        , QueryDslPredicateExecutor<ContactMethod>
-{
-    
-    @Query("{active:true}")
-    List<ContactMethod> findAllActive(Sort sort);
+public interface ContactRepository
+		extends MongoRepository<ContactMethod, String>, QuerydslPredicateExecutor<ContactMethod> {
+
+	@Query("{active:true}")
+	List<ContactMethod> findAllActive(Sort sort);
 }

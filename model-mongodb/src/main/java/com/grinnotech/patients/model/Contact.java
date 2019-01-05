@@ -16,15 +16,13 @@
  */
 package com.grinnotech.patients.model;
 
+import javax.validation.constraints.NotBlank;
+
 import ch.rasc.extclassgenerator.Model;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.validator.constraints.NotBlank;
-
-import javax.ws.rs.GET;
 
 /**
- *
  * @author Jacek Sztajnke
  */
 @Model(value = "Patients.model.Contact")
@@ -32,9 +30,9 @@ import javax.ws.rs.GET;
 @Setter
 public class Contact {
 
-    @NotBlank(message = "{fieldrequired}")
-    private String method;
+	@NotBlank(message = "{fieldrequired}")
+	private String method;
 
-    @NotBlank(message = "{fieldrequired}")
-    private String contact;
+	@NotBlank(message = "{fieldrequired}")
+	private String contact;
 }

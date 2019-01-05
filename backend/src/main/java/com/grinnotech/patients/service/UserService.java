@@ -1,9 +1,19 @@
 package com.grinnotech.patients.service;
 
-import ch.ralscha.extdirectspring.annotation.ExtDirectMethod;
-import ch.ralscha.extdirectspring.bean.ExtDirectStoreReadRequest;
-import ch.ralscha.extdirectspring.bean.ExtDirectStoreResult;
-import ch.ralscha.extdirectspring.filter.StringFilter;
+import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.STORE_MODIFY;
+import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.STORE_READ;
+import static com.grinnotech.patients.model.Authority.ADMIN;
+import static com.grinnotech.patients.util.OptionalEx.ifPresent;
+import static com.grinnotech.patients.util.QueryUtil.getSpringSort;
+import static com.grinnotech.patients.util.ThrowingFunction.sneakyThrow;
+import static de.danielbechler.diff.node.DiffNode.State.UNTOUCHED;
+import static java.time.ZoneOffset.UTC;
+import static java.time.ZonedDateTime.now;
+import static java.util.Collections.singleton;
+import static java.util.Date.from;
+import static java.util.stream.Collectors.toSet;
+
+import com.grinnotech.patients.NotFoundException;
 import com.grinnotech.patients.config.security.MongoUserDetails;
 import com.grinnotech.patients.dao.OrganizationRepository;
 import com.grinnotech.patients.dao.PersistentLoginRepository;
@@ -14,9 +24,7 @@ import com.grinnotech.patients.model.Organization;
 import com.grinnotech.patients.model.User;
 import com.grinnotech.patients.util.ValidationMessages;
 import com.grinnotech.patients.util.ValidationMessagesResult;
-import de.danielbechler.diff.ObjectDiffer;
-import de.danielbechler.diff.ObjectDifferBuilder;
-import de.danielbechler.diff.node.DiffNode;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,262 +32,265 @@ import org.springframework.context.MessageSource;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 
-import javax.validation.Validator;
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.UUID;
 
-import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.STORE_MODIFY;
-import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.STORE_READ;
-import static com.grinnotech.patients.model.Authority.ADMIN;
-import static com.grinnotech.patients.util.QueryUtil.getSpringSort;
-import static de.danielbechler.diff.node.DiffNode.State.UNTOUCHED;
-import static java.time.ZoneOffset.UTC;
-import static java.time.ZonedDateTime.now;
-import static java.util.Collections.singleton;
-import static java.util.Date.from;
-import static java.util.stream.Collectors.toSet;
+import javax.validation.Validator;
+
+import ch.ralscha.extdirectspring.annotation.ExtDirectMethod;
+import ch.ralscha.extdirectspring.bean.ExtDirectStoreReadRequest;
+import ch.ralscha.extdirectspring.bean.ExtDirectStoreResult;
+import ch.ralscha.extdirectspring.filter.StringFilter;
+import de.danielbechler.diff.ObjectDiffer;
+import de.danielbechler.diff.ObjectDifferBuilder;
+import de.danielbechler.diff.node.DiffNode;
 
 /**
- *
  * @author Jacek Sztajnke
  */
 @Service
 @RequireAdminAuthority
 public class UserService extends AbstractService<User> {
 
-    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    private final MessageSource messageSource;
+	private final MessageSource messageSource;
 
-    private final Validator validator;
+	private final Validator validator;
 
-    private final UserRepository userRepository;
+	private final UserRepository userRepository;
 
-    private final MailService mailService;
+	private final MailService mailService;
 
-    private final OrganizationRepository organizationRepository;
+	private final OrganizationRepository organizationRepository;
 
-    private final PersistentLoginRepository persistentLoginRepository;
+	private final PersistentLoginRepository persistentLoginRepository;
 
-    @Autowired
-    public UserService(MessageSource messageSource,
-                       Validator validator,
-                       UserRepository userRepository,
-                       MailService mailService,
-                       OrganizationRepository organizationRepository, PersistentLoginRepository persistentLoginRepository) {
-        this.messageSource = messageSource;
-        this.validator = validator;
-        this.userRepository = userRepository;
-        this.mailService = mailService;
-        this.organizationRepository = organizationRepository;
-        this.persistentLoginRepository = persistentLoginRepository;
-    }
+	@Autowired
+	public UserService(MessageSource messageSource, Validator validator, UserRepository userRepository,
+			MailService mailService, OrganizationRepository organizationRepository,
+			PersistentLoginRepository persistentLoginRepository) {
+		this.messageSource = messageSource;
+		this.validator = validator;
+		this.userRepository = userRepository;
+		this.mailService = mailService;
+		this.organizationRepository = organizationRepository;
+		this.persistentLoginRepository = persistentLoginRepository;
+	}
 
-    @ExtDirectMethod(STORE_READ)
-    public ExtDirectStoreResult<User> read(ExtDirectStoreReadRequest request) {
+	@ExtDirectMethod(STORE_READ)
+	public ExtDirectStoreResult<User> read(ExtDirectStoreReadRequest request) {
 
-        StringFilter filter = request.getFirstFilterForField("filter");
-        List<User> list = (filter != null)
-                ? userRepository.findAllWithFilterActive(filter.getValue(), getSpringSort(request))
-                : userRepository.findAllActive(getSpringSort(request));
+		StringFilter filter = request.getFirstFilterForField("filter");
+		List<User> list = (filter != null) ?
+				userRepository.findAllWithFilterActive(filter.getValue(), getSpringSort(request)) :
+				userRepository.findAllActive(getSpringSort(request));
 
-        userRepository.loadOrganizationsData(list);
+		userRepository.loadOrganizationsData(list);
 
-        logger.debug("read size:[{}]", list.size());
+		logger.debug("read size:[{}]", list.size());
 
-        return new ExtDirectStoreResult<>(list);
-    }
+		return new ExtDirectStoreResult<>(list);
+	}
 
-    @ExtDirectMethod(STORE_MODIFY)
-    public ExtDirectStoreResult<User> destroy(@AuthenticationPrincipal MongoUserDetails userDetails, User user) {
-        ExtDirectStoreResult<User> result = new ExtDirectStoreResult<>();
-        if (isLastAdmin(user.getId())) {
-            return result.setSuccess(false);
-        }
+	@ExtDirectMethod(STORE_MODIFY)
+	public ExtDirectStoreResult<User> destroy(@AuthenticationPrincipal MongoUserDetails userDetails, User user)
+			throws NotFoundException {
+		ExtDirectStoreResult<User> result = new ExtDirectStoreResult<>();
+		if (isLastAdmin(user.getId())) {
+			return result.setSuccess(false);
+		}
 
-        logger.debug("destroy 1");
-        User old = userRepository.findOne(user.getId());
+		logger.debug("destroy 1");
+		Optional<User> oOld = userRepository.findById(user.getId());
+		User old = oOld.orElseThrow(() -> new NotFoundException("User id={} not found", user.getId()));
+		old.setId(null);
+		old.setActive(false);
+		userRepository.save(old);
+		logger.debug("destroy 2 " + old.getId());
 
-        old.setId(null);
-        old.setActive(false);
-        userRepository.save(old);
-        logger.debug("destroy 2 " + old.getId());
+		setAttrsForDelete(user, userDetails, old);
+		userRepository.save(user);
+		persistentLoginRepository.deleteByUserId(user.getId());
 
-        setAttrsForDelete(user, userDetails, old);
-        userRepository.save(user);
-        persistentLoginRepository.deleteByUserId(user.getId());
+		logger.debug("destroy end");
 
-        logger.debug("destroy end");
+		return result.setSuccess(true);
+	}
 
-        return result.setSuccess(true);
-    }
+	@ExtDirectMethod(STORE_MODIFY)
+	public ValidationMessagesResult<User> update(@AuthenticationPrincipal MongoUserDetails userDetails, User user) {
+		//        List<ValidationMessages> violations = validateEntity(user, locale);
+		//        violations.addAll(checkIfLastAdmin(user, locale));
+		//
+		//        if (violations.isEmpty()) {
+		//            List<Bson> updates = new ArrayList<>();
+		//            updates.add(Updates.set(CUser.email, user.getEmail()));
+		//            updates.add(Updates.set(CUser.firstName, user.getFirstName()));
+		//            updates.add(Updates.set(CUser.lastName, user.getLastName()));
+		//            updates.add(Updates.set(CUser.locale, user.getLocale()));
+		//            updates.add(Updates.set(CUser.enabled, user.isEnabled()));
+		//            if (user.getAuthorities() != null && !user.getAuthorities().isEmpty()) {
+		//                updates.add(Updates.set(CUser.authorities, user.getAuthorities()));
+		//            } else {
+		//                updates.add(Updates.unset(CUser.authorities));
+		//            }
+		//            updates.add(Updates.setOnInsert(CUser.deleted, false));
+		//
+		//            UpdateResult result = mongoDb.getCollection(User.class).updateOne(Filters.eq(CUser.id, user.getId()), Updates.combine(updates),
+		//                    new UpdateOptions().upsert(true));
+		//
+		//            if (!user.isEnabled()) {
+		//                deletePersistentLogins(user.getId());
+		//            }
+		//
+		//            return new ValidationMessagesResult<>(user);
+		//        }
+		//
+		//        ValidationMessagesResult<User> result = new ValidationMessagesResult<>(user);
+		//        result.setValidations(violations);
+		//        return result;
 
-    @ExtDirectMethod(STORE_MODIFY)
-    public ValidationMessagesResult<User> update(@AuthenticationPrincipal MongoUserDetails userDetails, User user) {
-//        List<ValidationMessages> violations = validateEntity(user, locale);
-//        violations.addAll(checkIfLastAdmin(user, locale));
-//
-//        if (violations.isEmpty()) {
-//            List<Bson> updates = new ArrayList<>();
-//            updates.add(Updates.set(CUser.email, user.getEmail()));
-//            updates.add(Updates.set(CUser.firstName, user.getFirstName()));
-//            updates.add(Updates.set(CUser.lastName, user.getLastName()));
-//            updates.add(Updates.set(CUser.locale, user.getLocale()));
-//            updates.add(Updates.set(CUser.enabled, user.isEnabled()));
-//            if (user.getAuthorities() != null && !user.getAuthorities().isEmpty()) {
-//                updates.add(Updates.set(CUser.authorities, user.getAuthorities()));
-//            } else {
-//                updates.add(Updates.unset(CUser.authorities));
-//            }
-//            updates.add(Updates.setOnInsert(CUser.deleted, false));
-//
-//            UpdateResult result = mongoDb.getCollection(User.class).updateOne(Filters.eq(CUser.id, user.getId()), Updates.combine(updates),
-//                    new UpdateOptions().upsert(true));
-//
-//            if (!user.isEnabled()) {
-//                deletePersistentLogins(user.getId());
-//            }
-//
-//            return new ValidationMessagesResult<>(user);
-//        }
-//
-//        ValidationMessagesResult<User> result = new ValidationMessagesResult<>(user);
-//        result.setValidations(violations);
-//        return result;
+		List<ValidationMessages> violations = validateEntity(user, userDetails.getLocale());
+		violations.addAll(checkIfLastAdmin(user, userDetails.getLocale()));
 
-        List<ValidationMessages> violations = validateEntity(user, userDetails.getLocale());
-        violations.addAll(checkIfLastAdmin(user, userDetails.getLocale()));
+		ValidationMessagesResult<User> result = new ValidationMessagesResult<>(user);
+		result.setValidations(violations);
 
-        ValidationMessagesResult<User> result = new ValidationMessagesResult<>(user);
-        result.setValidations(violations);
+		logger.debug("update 1: " + user.toString());
+		if (violations.isEmpty()) {
+			Optional<User> old = userRepository.findById(user.getId());
+			ifPresent(old, user1 -> {
+				user1.setId(null);
+				user1.setActive(false);
+				try {
+					setAttrsForUpdate(user, userDetails, user1);
+				} catch (NotFoundException e) {
+					sneakyThrow(e);
+				}
+			}).orElse(() -> {
+				try {
+					setAttrsForCreate(user, userDetails);
+				} catch (NotFoundException e) {
+					sneakyThrow(e);
+				}
+			});
 
-        logger.debug("update 1: " + user.toString());
-        if (violations.isEmpty()) {
-            User old = userRepository.findOne(user.getId());
+			if (user.getOrganizations() == null || user.getOrganizations().isEmpty()) {
+				Organization organization = organizationRepository
+						.findByCodeActive("PPMDPoland"); // TODO: change to user active org
+				user.setOrganizationIds(singleton(organization.getId()));
+				userRepository.loadOrganizationsData(user);
+			} else {
+				user.setOrganizationIds(user.getOrganizations().stream().map(Organization::getId).collect(toSet()));
+			}
 
-            if (old != null) {
-                old.setId(null);
-                old.setActive(false);
-                setAttrsForUpdate(user, userDetails, old);
-            } else {
-                setAttrsForCreate(user, userDetails);
-            }
+			// copy all JsonIgnore fields
+			old.ifPresent(user1 -> {
+				user.setPasswordHash(user1.getPasswordHash());
+				user.setPasswordResetToken(user1.getPasswordResetToken());
+				user.setPasswordResetTokenValidUntil(user1.getPasswordResetTokenValidUntil());
+				user.setSecret(user1.getSecret());
+			});
+			userRepository.save(user);
+			if (!user.isEnabled())
+				persistentLoginRepository.deleteByUserId(user.getId());
 
-            if (user.getOrganizations() == null || user.getOrganizations().isEmpty()) {
-                Organization organization = organizationRepository.findByCodeActive("PPMDPoland"); // TODO: change to user active org
-                user.setOrganizationIds(singleton(organization.getId()));
-                userRepository.loadOrganizationsData(user);
-            } else {
-                user.setOrganizationIds(user.getOrganizations().stream().map(Organization::getId).collect(toSet()));
-            }
+			old.ifPresent(userRepository::save);
+		}
 
-            // copy all JsonIgnore fields
-            if (old != null) {
-                user.setPasswordHash(old.getPasswordHash());
-                user.setPasswordResetToken(old.getPasswordResetToken());
-                user.setPasswordResetTokenValidUntil(old.getPasswordResetTokenValidUntil());
-                user.setSecret(old.getSecret());
-            }
-            userRepository.save(user);
-            if (!user.isEnabled())
-                persistentLoginRepository.deleteByUserId(user.getId());
+		logger.debug("update end");
+		return result;
+	}
 
-            if (old != null)
-                userRepository.save(old);
-        }
+	private List<ValidationMessages> checkIfLastAdmin(User user, Locale locale) {
+		Optional<User> dbUser = userRepository.findById(user.getId());
 
-        logger.debug("update end");
-        return result;
-    }
+		List<ValidationMessages> validationErrors = new ArrayList<>();
 
-    private List<ValidationMessages> checkIfLastAdmin(User user, Locale locale) {
-        User dbUser = userRepository.findOne(user.getId());
+		if (dbUser.isPresent() && (!user.isEnabled() || user.getAuthorities() == null || !user.getAuthorities()
+				.contains(ADMIN.name()))) {
+			if (isLastAdmin(user.getId())) {
 
-        List<ValidationMessages> validationErrors = new ArrayList<>();
+				ObjectDiffer objectDiffer = ObjectDifferBuilder.startBuilding().filtering()
+						.returnNodesWithState(UNTOUCHED).and().build();
+				DiffNode diff = objectDiffer.compare(user, dbUser);
 
-        if (dbUser != null && (!user.isEnabled() || user.getAuthorities() == null || !user.getAuthorities().contains(ADMIN.name()))) {
-            if (isLastAdmin(user.getId())) {
+				User user1 = dbUser.get();
+				DiffNode diffNode = diff.getChild(CUser.enabled);
+				if (!diffNode.isUntouched()) {
+					user.setEnabled(user1.isEnabled());
 
-                ObjectDiffer objectDiffer = ObjectDifferBuilder.startBuilding().filtering().returnNodesWithState(UNTOUCHED).and().build();
-                DiffNode diff = objectDiffer.compare(user, dbUser);
+					validationErrors.add(ValidationMessages.builder().field(CUser.enabled)
+							.message(messageSource.getMessage("user_lastadmin_error", null, locale)).build());
+				}
 
-                DiffNode diffNode = diff.getChild(CUser.enabled);
-                if (!diffNode.isUntouched()) {
-                    user.setEnabled(dbUser.isEnabled());
+				diffNode = diff.getChild(CUser.authorities);
+				if (!diffNode.isUntouched()) {
+					user.setAuthorities(user1.getAuthorities());
 
-                    validationErrors.add(ValidationMessages.builder()
-                            .field(CUser.enabled)
-                            .message(messageSource.getMessage("user_lastadmin_error", null, locale))
-                            .build());
-                }
+					validationErrors.add(ValidationMessages.builder().field(CUser.authorities)
+							.message(messageSource.getMessage("user_lastadmin_error", null, locale)).build());
+				}
+			}
+		}
 
-                diffNode = diff.getChild(CUser.authorities);
-                if (!diffNode.isUntouched()) {
-                    user.setAuthorities(dbUser.getAuthorities());
+		return validationErrors;
+	}
 
-                    validationErrors.add(ValidationMessages.builder()
-                            .field(CUser.authorities)
-                            .message(messageSource.getMessage("user_lastadmin_error", null, locale))
-                            .build());
-                }
-            }
-        }
+	private List<ValidationMessages> validateEntity(User user, Locale locale) {
+		List<ValidationMessages> validations = super.validateEntity(user);
 
-        return validationErrors;
-    }
+		if (!isEmailUnique(user.getId(), user.getEmail())) {
+			validations.add(ValidationMessages.builder().field(CUser.email)
+					.message(messageSource.getMessage("user_emailtaken", null, locale)).build());
+		}
 
-    private List<ValidationMessages> validateEntity(User user, Locale locale) {
-        List<ValidationMessages> validations = super.validateEntity(user);
+		return validations;
+	}
 
-        if (!isEmailUnique(user.getId(), user.getEmail())) {
-            validations.add(ValidationMessages.builder()
-                    .field(CUser.email)
-                    .message(messageSource.getMessage("user_emailtaken", null, locale))
-                    .build());
-        }
+	private boolean isLastAdmin(String id) {
+		return userRepository.existsByIdAndAuthoritiesActive(id, singleton(ADMIN.name()));
+	}
 
-        return validations;
-    }
+	private boolean isEmailUnique(String id, String email) {
+		return id != null ?
+				!userRepository.existsByIdNotAndEmailActive(id, email) :
+				!userRepository.existsByEmailActive(email);
+	}
 
-    private boolean isLastAdmin(String id) {
-        return userRepository.existsByIdAndAuthoritiesActive(id, singleton(ADMIN.name()));
-    }
+	@ExtDirectMethod
+	public void unlock(String userId) throws NotFoundException {
+		Optional<User> oUser = userRepository.findById(userId);
+		User user = oUser.orElseThrow(() -> new NotFoundException("User id={} not found", userId));
+		user.setLockedOutUntil(null);
+		user.setFailedLogins(0);
+		userRepository.save(user);
+	}
 
-    private boolean isEmailUnique(String id, String email) {
-        return id != null ?
-                !userRepository.existsByIdNotAndEmailActive(id, email)
-                :
-                !userRepository.existsByEmailActive(email);
-    }
+	@ExtDirectMethod
+	public void disableTwoFactorAuth(String userId) throws NotFoundException {
+		Optional<User> oUser = userRepository.findById(userId);
+		User user = oUser.orElseThrow(() -> new NotFoundException("User id={} not found", userId));
+		user.setSecret(null);
+		userRepository.save(user);
+	}
 
-    @ExtDirectMethod
-    public void unlock(String userId) {
-        User user = userRepository.findOne(userId);
-        user.setLockedOutUntil(null);
-        user.setFailedLogins(0);
-        userRepository.save(user);
-    }
+	@ExtDirectMethod
+	public void sendPassordResetEmail(String userId) throws NotFoundException {
+		String token = UUID.randomUUID().toString();
 
-    @ExtDirectMethod
-    public void disableTwoFactorAuth(String userId) {
-        User user = userRepository.findOne(userId);
-        user.setSecret(null);
-        userRepository.save(user);
-    }
+		Optional<User> oUser = userRepository.findById(userId);
+		User user = oUser.orElseThrow(() -> new NotFoundException("User id={} not found", userId));
+		user.setPasswordResetTokenValidUntil(from(now(UTC).plusHours(4).toInstant()));
+		user.setPasswordResetToken(token);
+		userRepository.save(user);
 
-    @ExtDirectMethod
-    public void sendPassordResetEmail(String userId) {
-        String token = UUID.randomUUID().toString();
-
-        User user = userRepository.findOne(userId);
-        user.setPasswordResetTokenValidUntil(from(now(UTC).plusHours(4).toInstant()));
-        user.setPasswordResetToken(token);
-        userRepository.save(user);
-
-        mailService.sendPasswortResetEmail(user);
-    }
+		mailService.sendPasswortResetEmail(user);
+	}
 
 }

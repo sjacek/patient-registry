@@ -16,127 +16,122 @@
  */
 package com.grinnotech.patients.model;
 
-import ch.rasc.extclassgenerator.Model;
-import ch.rasc.extclassgenerator.ModelField;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.grinnotech.patients.domain.AbstractPersistable;
-import com.grinnotech.patients.model.address.Address;
-import lombok.Getter;
-import lombok.Setter;
-import org.hibernate.validator.constraints.NotBlank;
-import org.springframework.data.mongodb.core.index.CompoundIndex;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-import javax.persistence.Temporal;
-import javax.validation.constraints.NotNull;
-import java.util.Date;
-import java.util.List;
-
 import static com.fasterxml.jackson.annotation.JsonFormat.Shape.STRING;
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 import static javax.persistence.TemporalType.DATE;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.grinnotech.patients.domain.AbstractPersistable;
+import com.grinnotech.patients.model.address.Address;
+
+import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.Temporal;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
+import ch.rasc.extclassgenerator.Model;
+import ch.rasc.extclassgenerator.ModelField;
+import lombok.Getter;
+import lombok.Setter;
+
 //import ch.rasc.extclassgenerator.ModelHasMany;
 
 /**
- *
  * @author Jacek Sztajnke
  */
 @Document
 @CompoundIndex(name = "lastName_firstName", def = "{'lastName': 1, 'firstName': 1}")
-@Model(value = "Patients.model.Patient",
-        createMethod = "patientService.update",
-        readMethod = "patientService.read",
-        updateMethod = "patientService.update",
-        destroyMethod = "patientService.destroy",
-        paging = true,
-        identifier = "uuid")
+@Model(value = "Patients.model.Patient", createMethod = "patientService.update", readMethod = "patientService.read", updateMethod = "patientService.update", destroyMethod = "patientService.destroy", paging = true, identifier = "uuid")
 @JsonInclude(NON_NULL)
 @Getter
 @Setter
 public class Patient extends AbstractPersistable {
 
-    @NotBlank(message = "{fieldrequired}")
-    @Indexed
-    private String firstName;
+	@NotBlank(message = "{fieldrequired}")
+	@Indexed
+	private String firstName;
 
-    private String secondName;
+	private String secondName;
 
-    @NotBlank(message = "{fieldrequired}")
-    @Indexed
-    private String lastName;
+	@NotBlank(message = "{fieldrequired}")
+	@Indexed
+	private String lastName;
 
-    @NotNull(message = "{fieldrequired}")
-    @ModelField
-    private Gender gender;
-    
-    @NotNull(message = "{fieldrequired}")
-    @ModelField(defaultValue = "NEW")
-    private PatientStatus status;
+	@NotNull(message = "{fieldrequired}")
+	@ModelField
+	private Gender gender;
 
-    private boolean ward;
-    
-    @NotBlank(message = "{fieldrequired}")
-    @Indexed
-//    @ModelField(customType = "pesel")
-    private String pesel;
+	@NotNull(message = "{fieldrequired}")
+	@ModelField(defaultValue = "NEW")
+	private PatientStatus status;
 
-    @NotNull(message = "{fieldrequired}")
-    @Indexed
-    @ModelField(dateFormat = "c")
-    @JsonFormat(shape=STRING)
-    @Temporal(DATE)
-//    @Past
-    private Date birthday;
+	private boolean ward;
 
-//    @ModelHasOne
-//    @ModelField(reference=@ReferenceConfig(type="Patients.model.Address"))
-    @ModelField
-    private Address address;
+	@NotBlank(message = "{fieldrequired}")
+	@Indexed
+	//    @ModelField(customType = "pesel")
+	private String pesel;
 
-//    @ModelHasOne
-//    @ModelField(reference=@ReferenceConfig(type="Patients.model.Address"))
-    @ModelField
-    private Address correspondenceAddress;
+	@NotNull(message = "{fieldrequired}")
+	@Indexed
+	@ModelField(dateFormat = "c")
+	@JsonFormat(shape = STRING)
+	@Temporal(DATE)
+	//    @Past
+	private Date birthday;
 
-//    @ModelField
-//    @ch.rasc.bsoncodec.annotation.Transient
-////    @javax.persistence.Transient
-//    @org.springframework.data.annotation.Transient
-//    @NotNull(message = "{fieldrequired}")
-//    private Organization organization;
+	//    @ModelHasOne
+	//    @ModelField(reference=@ReferenceConfig(type="Patients.model.Address"))
+	@ModelField
+	private Address address;
 
-    @NotBlank(message = "{fieldrequired}")
-    private String organizationId;
-    
-//    @ModelHasMany
-    private List<Contact> contacts;
+	//    @ModelHasOne
+	//    @ModelField(reference=@ReferenceConfig(type="Patients.model.Address"))
+	@ModelField
+	private Address correspondenceAddress;
 
-    @ModelField
-    @NotNull(message = "{fieldrequired}")
-    private DisabilityLevel disabilityLevel;
-    
-    @ModelField(dateFormat = "c")
-    @JsonFormat(shape=STRING)
-    @Temporal(DATE)
-    private Date certificateOfDisabilityIssue;
+	//    @ModelField
+	//    @ch.rasc.bsoncodec.annotation.Transient
+	////    @javax.persistence.Transient
+	//    @org.springframework.data.annotation.Transient
+	//    @NotNull(message = "{fieldrequired}")
+	//    private Organization organization;
 
-    private String certificateOfDisabilityIssuingUnit;
+	@NotBlank(message = "{fieldrequired}")
+	private String organizationId;
 
-    @Indexed
-    @ModelField(dateFormat = "c")
-    @JsonFormat(shape=STRING)
-    @Temporal(DATE)
-    private Date certificateOfDisabilityExpiration;
+	//    @ModelHasMany
+	private List<Contact> contacts;
 
-    @ModelField
-    private Diagnosis diagnosis;
+	@ModelField
+	@NotNull(message = "{fieldrequired}")
+	private DisabilityLevel disabilityLevel;
 
-    @Override
-    public String toString() {
-        return getId() + "[" + getFirstName() + ", " + getLastName() + ", " + getPesel() + "]";
-    }
+	@ModelField(dateFormat = "c")
+	@JsonFormat(shape = STRING)
+	@Temporal(DATE)
+	private Date certificateOfDisabilityIssue;
 
+	private String certificateOfDisabilityIssuingUnit;
+
+	@Indexed
+	@ModelField(dateFormat = "c")
+	@JsonFormat(shape = STRING)
+	@Temporal(DATE)
+	private Date certificateOfDisabilityExpiration;
+
+	@ModelField
+	private Diagnosis diagnosis;
+
+	@Override
+	public String toString() {
+		return getId() + "[" + getFirstName() + ", " + getLastName() + ", " + getPesel() + "]";
+	}
 }
