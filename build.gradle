@@ -1,7 +1,23 @@
 plugins {
     id "io.franzbecker.gradle-lombok" version "1.14"
-    id 'net.ltgt.apt' version '0.10'
+    id 'net.ltgt.apt' version '0.19'
+    id 'net.ltgt.apt-idea' version '0.19'
+
+    id 'org.springframework.boot' version '2.1.1.RELEASE'
+//    id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
+//    id "com.ewerk.gradle.plugins.annotation-processor" version "1.0.4"
+//    id "net.ltgt.apt" version "0.18"
+//    id "net.ltgt.apt-idea" version "0.18"
 }
+
+//apply plugin: 'java'
+//apply plugin: 'groovy'
+apply plugin: 'idea'
+//apply plugin:  'spring-boot'
+//apply plugin: 'jacoco'
+apply plugin: 'net.ltgt.apt'
+apply plugin: 'net.ltgt.apt-idea'
+
 
 allprojects {
     group = 'com.grinnotech'

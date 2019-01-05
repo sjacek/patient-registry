@@ -1,6 +1,8 @@
 plugins {
     id 'java'
     id 'maven'
+
+    id 'org.springframework.boot'
 }
 
 repositories {
@@ -10,7 +12,7 @@ repositories {
     }
 }
 
-//apply plugin: 'org.springframework.boot'
+//apply plugin: 'spring-boot'
 //apply plugin: 'io.spring.dependency-management'
 
 dependencies {

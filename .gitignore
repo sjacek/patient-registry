@@ -21,6 +21,7 @@
 
 /app.log*
 /**/sencha-error*.log
+/**/*.bak
 /*~
 /tomcat/
 

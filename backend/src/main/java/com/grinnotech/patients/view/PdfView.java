@@ -16,75 +16,81 @@
  */
 package com.grinnotech.patients.view;
 
-import com.grinnotech.patients.model.Patient;
-import com.grinnotech.patients.service.ExportController.Attributes;
-import com.grinnotech.patients.util.MessageSource;
-import com.itextpdf.text.*;
-import com.itextpdf.text.pdf.PdfPCell;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfWriter;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Map;
-
 import static com.grinnotech.patients.model.address.Utils.address;
 import static java.lang.String.format;
 import static java.util.Locale.ENGLISH;
 
+import com.grinnotech.patients.model.Patient;
+import com.grinnotech.patients.service.ExportController.Attributes;
+import com.grinnotech.patients.util.MessageSource;
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.FontFactory;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 public class PdfView extends AbstractPdfView {
 
-    @Override
-    protected void buildPdfDocument(
-            Map<String, Object> model, Document document, PdfWriter writer, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        // change the file name
-        response.setHeader("Content-Disposition", "attachment; filename=\"patients.pdf\"");
+	@Override
+	protected void buildPdfDocument(Map<String, Object> model, Document document, PdfWriter writer,
+			HttpServletRequest request, HttpServletResponse response) throws Exception {
+		// change the file name
+		response.setHeader("Content-Disposition", "attachment; filename=\"patients.pdf\"");
 
-        List<Patient> patients = (List<Patient>) model.get(Attributes.patients.name());
-        document.add(new Paragraph("Generated patients list " + LocalDate.now()));
+		List<Patient> patients = (List<Patient>) model.get(Attributes.patients.name());
+		document.add(new Paragraph("Generated patients list " + LocalDate.now()));
 
-//        PdfPTable table = new PdfPTable(users.stream().findAny().get().getColumnCount());
-        PdfPTable table = new PdfPTable(5);
-        table.setWidthPercentage(100.0f);
-        table.setSpacingBefore(10);
+		//        PdfPTable table = new PdfPTable(users.stream().findAny().get().getColumnCount());
+		PdfPTable table = new PdfPTable(5);
+		table.setWidthPercentage(100.0f);
+		table.setSpacingBefore(10);
 
-        // define font for table header row
-        Font font = FontFactory.getFont(FontFactory.TIMES);
-        font.setColor(BaseColor.WHITE);
+		// define font for table header row
+		Font font = FontFactory.getFont(FontFactory.TIMES);
+		font.setColor(BaseColor.WHITE);
 
-        // define table header cell
-        PdfPCell cell = new PdfPCell();
-        cell.setBackgroundColor(BaseColor.DARK_GRAY);
-        cell.setPadding(5);
+		// define table header cell
+		PdfPCell cell = new PdfPCell();
+		cell.setBackgroundColor(BaseColor.DARK_GRAY);
+		cell.setPadding(5);
 
-        MessageSource msgSrc = new MessageSource(ENGLISH);
+		MessageSource msgSrc = new MessageSource(ENGLISH);
 
-        // write table header
-        cell.setPhrase(new Phrase(msgSrc.getMessage("patient_fullname"), font));
-        table.addCell(cell);
+		// write table header
+		cell.setPhrase(new Phrase(msgSrc.getMessage("patient_fullname"), font));
+		table.addCell(cell);
 
-        cell.setPhrase(new Phrase(msgSrc.getMessage("patient_birthday"), font));
-        table.addCell(cell);
+		cell.setPhrase(new Phrase(msgSrc.getMessage("patient_birthday"), font));
+		table.addCell(cell);
 
-        cell.setPhrase(new Phrase(msgSrc.getMessage("patient_pesel"), font));
-        table.addCell(cell);
+		cell.setPhrase(new Phrase(msgSrc.getMessage("patient_pesel"), font));
+		table.addCell(cell);
 
-        cell.setPhrase(new Phrase(msgSrc.getMessage("patient_address"), font));
-        table.addCell(cell);
+		cell.setPhrase(new Phrase(msgSrc.getMessage("patient_address"), font));
+		table.addCell(cell);
 
-        cell.setPhrase(new Phrase(msgSrc.getMessage("patient_status"), font));
-        table.addCell(cell);
+		cell.setPhrase(new Phrase(msgSrc.getMessage("patient_status"), font));
+		table.addCell(cell);
 
-        for (Patient patient : patients) {
-            table.addCell(format("%s %s", patient.getFirstName(), patient.getLastName()));
-            table.addCell(patient.getBirthday().toString());
-            table.addCell(patient.getPesel());
-            table.addCell(address(patient));
-            table.addCell(patient.getStatus().name());
-        }
+		for (Patient patient : patients) {
+			table.addCell(format("%s %s", patient.getFirstName(), patient.getLastName()));
+			table.addCell(patient.getBirthday().toString());
+			table.addCell(patient.getPesel());
+			table.addCell(address(patient));
+			table.addCell(patient.getStatus().name());
+		}
 
-        document.add(table);
-    }
+		document.add(table);
+	}
 }
