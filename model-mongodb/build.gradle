@@ -32,8 +32,6 @@ sourceSets {
 }
 
 dependencies {
-    querydslapt "com.querydsl:querydsl-apt:4.2.1"
-
     ext {
         springVersion = '5.1.3.RELEASE'
     }
@@ -59,8 +57,6 @@ dependencies {
     compile 'org.apache.commons:commons-lang3:3.8.1'
     compile 'com.itextpdf:itextpdf:5.5.13'
 
-    compile 'com.querydsl:querydsl-core:4.2.1'
-
     testCompile 'junit:junit:4.12'
     testCompile 'org.springframework.boot:spring-boot-starter-test:2.1.1.RELEASE'
     testCompile 'de.flapdoodle.embed:de.flapdoodle.embed.mongo:2.2.0'
@@ -73,6 +69,9 @@ dependencies {
     compile 'ch.rasc:extclassgenerator-annotations:1.0.10'
 
     compileOnly "com.querydsl:querydsl-jpa:4.2.1"
+    compile 'com.querydsl:querydsl-core:4.2.1'
+    querydslapt "com.querydsl:querydsl-apt:4.2.1"
+
     annotationProcessor(
             "com.querydsl:querydsl-mongodb:4.2.1",
             "com.querydsl:querydsl-jpa:4.2.1",

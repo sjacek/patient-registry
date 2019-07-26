@@ -1,1 +1,0 @@
-# PatientRegistry shared/app

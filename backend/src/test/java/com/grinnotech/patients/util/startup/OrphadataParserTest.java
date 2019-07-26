@@ -39,7 +39,7 @@ public class OrphadataParserTest {
 //        Date date = parser.getInfo().getDate();
 //        assertEquals(dateFormat.parse("18-7-6 15:59:45"), date);
         assertEquals("1.2.7 / 4.1.6 [2017-03-09] (orientdb version)", parser.getInfo().getVersion());
-        assertEquals("Orphanet (c) 2018", parser.getInfo().getCopyright());
+        assertEquals("Orphanet (c) 2019", parser.getInfo().getCopyright());
     }
 
 }
