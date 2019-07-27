@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: spring-boot-persistence
+#spring boot mongodb
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: springboot-mongo
+
+  thymeleaf:
+    cache: false
+
+  servlet:
+    multipart:
+      max-file-size: 256MB
+      max-request-size: 256MB
+      enabled: true
+
+server:
+  port: 8082
+

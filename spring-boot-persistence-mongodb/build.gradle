@@ -1,0 +1,76 @@
+plugins {
+    id 'java'
+    id 'maven'
+
+    id 'org.springframework.boot'
+}
+
+repositories {
+    mavenLocal()
+    maven {
+        url = 'http://repo.maven.apache.org/maven2'
+    }
+}
+
+//apply plugin: 'spring-boot'
+//apply plugin: 'io.spring.dependency-management'
+
+dependencies {
+
+    compile 'org.springframework.boot:spring-boot-starter-websocket:2.1.6.RELEASE'
+    compile 'org.springframework.boot:spring-boot-starter-thymeleaf:2.1.6.RELEASE'
+    compile 'org.springframework.boot:spring-boot-starter-data-mongodb:2.1.6.RELEASE'
+    testCompile 'de.flapdoodle.embed:de.flapdoodle.embed.mongo:2.2.0'
+    testCompile 'org.junit.jupiter:junit-jupiter-api:5.5.1'
+    testCompile 'org.junit.jupiter:junit-jupiter-engine:5.5.1'
+// JUnit platform launcher
+// To be able to run tests from IDE directly
+    testCompile 'org.junit.platform:junit-platform-launcher:1.2.0'
+    testCompile 'org.springframework.boot:spring-boot-starter-test:2.1.6.RELEASE'
+
+//    compile 'org.springframework.boot:spring-boot-starter-web:2.1.1.RELEASE'
+//    compile 'org.springframework.boot:spring-boot-starter-actuator:2.1.1.RELEASE'
+//    compile 'org.springframework.boot:spring-boot-starter-security:2.1.1.RELEASE'
+////    runtime 'org.springframework.boot:spring-boot-properties-migrator:2.1.1.RELEASE'
+//    compile 'org.springframework.boot:spring-boot-starter-mail:2.1.1.RELEASE'
+//    compile 'org.springframework.boot:spring-boot-configuration-processor:2.1.1.RELEASE'
+//
+//    compile 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.8.10'
+//
+//    compile 'org.springframework:spring-webmvc:5.1.3.RELEASE'
+//
+//    compile 'org.springframework.data:spring-data-commons:2.1.3.RELEASE'
+//
+//    compile 'ch.ralscha:extdirectspring:1.8.0'
+//    compile 'ch.rasc:extclassgenerator-annotations:1.0.10'
+//    compile 'eu.bitwalker:UserAgentUtils:1.21'
+//    compile 'org.unbescape:unbescape:1.1.6.RELEASE'
+//    compile 'commons-codec:commons-codec:1.11'
+//    compile 'com.samskivert:jmustache:1.14'
+//    compile 'de.danielbechler:java-object-diff:0.95'
+//    compile 'com.google.zxing:javase:3.3.3'
+//    compile 'ch.rasc:constgen:1.0.3'
+//    compile 'ch.rasc:bsoncodec:1.0.1'
+//    compile 'ch.rasc:bsoncodec-apt:1.0.6'
+//    compile 'com.opencsv:opencsv:4.4'
+//    compile 'javax:javaee-api:8.0'
+//    compile 'org.apache.commons:commons-lang3:3.8.1'
+//    compile 'com.itextpdf:itextpdf:5.5.13'
+//    compile 'org.apache.poi:poi:4.0.1'
+//    compile 'net.sf.supercsv:super-csv:2.4.0'
+//    compile 'org.projectlombok:lombok:1.18.4'
+//    compile 'org.jetbrains:annotations:15.0'
+//    testCompile 'junit:junit:4.12'
+//    testCompile 'org.springframework.boot:spring-boot-starter-test:2.1.1.RELEASE'
+//    compileOnly 'org.immutables:value:2.7.3'
+//    compileOnly 'com.querydsl:querydsl-apt:4.1.4'
+}
+
+group = 'com.grinnotech.patients'
+version = '0.0.1'
+description = 'Patients Registry Backend'
+sourceCompatibility = '1.8'
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
