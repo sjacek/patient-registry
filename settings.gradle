@@ -3,7 +3,6 @@ rootProject.name = 'patient-registry'
 include ":model-mongodb"
 include ":backend"
 include ":spring-boot-persistence-mongodb"
-include ":spring-boot-persistence-mongodb-copy"
 include ":frontend"
 include ":frontend-2"
 

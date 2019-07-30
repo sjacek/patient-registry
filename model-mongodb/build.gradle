@@ -1,9 +1,13 @@
 plugins {
+//    id 'java'
+//    id 'maven'
+
+//    id 'org.springframework.boot'
     id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
     id "com.ewerk.gradle.plugins.annotation-processor" version "1.0.4"
 //    id "net.ltgt.apt" version "0.18"
 //    id "net.ltgt.apt-idea" version "0.18"
-    id 'org.springframework.boot'
+//    id 'org.springframework.boot'
 }
 
 apply plugin: 'java'
@@ -15,9 +19,12 @@ apply plugin: 'idea'
 //apply plugin: 'net.ltgt.apt-idea'
 
 repositories {
-    mavenCentral()
+    mavenLocal()
     maven { url 'http://repo.maven.apache.org/maven2' }
 }
+
+//apply plugin: 'spring-boot'
+//apply plugin: 'io.spring.dependency-management'
 
 configurations {
 //    springAgent
@@ -32,14 +39,8 @@ sourceSets {
     }
 }
 
-//ext {
-//    springVersion = '5.1.8.RELEASE'
-//    springDataMongodbVersion = '2.1.9.RELEASE'
-//    mongoDbDriverVersion = '3.10.2'
-//}
-
 dependencies {
-    compile 'org.springframework.data:spring-data-mongodb:2.1.9.RELEASE'
+    compile 'org.springframework.boot:spring-boot-starter-data-mongodb:2.1.6.RELEASE'
     compile 'org.mongodb:mongodb-driver:3.10.2'
 
     compile 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.9'
@@ -53,14 +54,6 @@ dependencies {
     compile 'org.immutables:value:2.7.5'
     compile 'org.jetbrains:annotations:17.0.0'
 
-    testCompile 'de.flapdoodle.embed:de.flapdoodle.embed.mongo:2.2.0'
-    testCompile 'org.junit.jupiter:junit-jupiter-api:5.5.1'
-    testCompile 'org.junit.jupiter:junit-jupiter-engine:5.5.1'
-// JUnit platform launcher
-// To be able to run tests from IDE directly
-    testCompile 'org.junit.platform:junit-platform-launcher:1.5.1'
-    testCompile 'org.springframework.boot:spring-boot-starter-test:2.1.6.RELEASE'
-
     compileOnly 'org.immutables:value:2.7.5'
 
     compileOnly 'com.querydsl:querydsl-apt:4.2.1'
@@ -71,6 +64,15 @@ dependencies {
 
     compileOnly "com.querydsl:querydsl-jpa:4.2.1"
     compile 'com.querydsl:querydsl-core:4.2.1'
+
+    testCompile 'de.flapdoodle.embed:de.flapdoodle.embed.mongo:2.2.0'
+    testCompile 'org.junit.jupiter:junit-jupiter-api:5.5.1'
+    testCompile 'org.junit.jupiter:junit-jupiter-engine:5.5.1'
+// JUnit platform launcher
+// To be able to run tests from IDE directly
+    testCompile 'org.junit.platform:junit-platform-launcher:1.2.0'
+    testCompile 'org.springframework.boot:spring-boot-starter-test:2.1.6.RELEASE'
+
     querydslapt "com.querydsl:querydsl-apt:4.2.1"
 
     annotationProcessor(
