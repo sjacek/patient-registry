@@ -22,6 +22,8 @@ import static javax.persistence.TemporalType.DATE;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.grinnotech.patients.model.User;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -101,6 +103,7 @@ public abstract class AbstractPersistable implements Serializable {
         return String.format("Entity of type %s with id: %s", this.getClass().getName(), getId());
     }
 
+    @Contract(value = "null -> false", pure = true)
     @Override
     public boolean equals(Object obj) {
 
@@ -126,11 +129,14 @@ public abstract class AbstractPersistable implements Serializable {
         return  17 + (null == getId() ? 0 : getId().hashCode() * 31);
     }
 
+    @NotNull
+    @Contract(value = "!null -> param1", pure = true)
     public static String checkNull(String s) {
         if (s != null) return s;
         return "";
     }
     
+    @Contract(value = "!null -> param1", pure = true)
     public static Integer checkNull(Integer n) {
         if (n != null) return n;
         return -1;
