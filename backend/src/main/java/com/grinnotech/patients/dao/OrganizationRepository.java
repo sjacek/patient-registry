@@ -21,7 +21,7 @@ import com.grinnotech.patients.model.Organization;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
-import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+//import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 
 import java.util.List;
 
@@ -29,7 +29,9 @@ import java.util.List;
  * @author Jacek Sztajnke
  */
 public interface OrganizationRepository
-		extends MongoRepository<Organization, String>, QuerydslPredicateExecutor<Organization> {
+		extends MongoRepository<Organization, String>
+//		, QuerydslPredicateExecutor<Organization>
+{
 
 	@Query("{active:true}")
 	List<Organization> findAllActive(Sort sort);

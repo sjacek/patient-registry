@@ -1,13 +1,14 @@
 package com.grinnotech.patients.config.profiles.mongodb;
 
-import com.grinnotech.patients.model.CPersistentLogin;
-import com.grinnotech.patients.model.CUser;
+//import com.grinnotech.patients.model.CPersistentLogin;
+//import com.grinnotech.patients.model.CUser;
 import com.grinnotech.patients.model.PersistentLogin;
 import com.grinnotech.patients.model.User;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.IndexOptions;
 import org.bson.Document;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
@@ -23,28 +24,33 @@ import static com.mongodb.client.model.Indexes.compoundIndex;
 @Profile("mongodb")
 public class MongoDb {
 
-    @Autowired
-    private MongoDatabase mongoDatabase;
+    private final MongoDatabase mongoDatabase;
 
-    private static String getCollectionName(Class<?> documentClass) {
+	@Contract(pure = true)
+	public MongoDb(MongoDatabase mongoDatabase) {
+		this.mongoDatabase = mongoDatabase;
+	}
+
+	@NotNull
+    private static String getCollectionName(@NotNull Class<?> documentClass) {
         return StringUtils.uncapitalize(documentClass.getSimpleName());
     }
 
     @PostConstruct
     public void createIndexes() {
-        String idxName = CUser.email + "_version";
-        if (!indexExists(User.class, idxName)) {
-            getCollection(User.class).createIndex(ascending(CUser.email, "_version"), new IndexOptions().name(idxName).unique(true));
-        }
+//        String idxName = CUser.email + "_version";
+//        if (!indexExists(User.class, idxName)) {
+//            getCollection(User.class).createIndex(ascending(CUser.email, "_version"), new IndexOptions().name(idxName).unique(true));
+//        }
+//
+//        idxName = CUser.email + "_chain_id";
+//        if (!indexExists(User.class, idxName)) {
+//            getCollection(User.class).createIndex(ascending(CUser.email, "_chain_id"), new IndexOptions().name(idxName));
+//        }
 
-        idxName = CUser.email + "_chain_id";
-        if (!indexExists(User.class, idxName)) {
-            getCollection(User.class).createIndex(ascending(CUser.email, "_chain_id"), new IndexOptions().name(idxName));
-        }
-
-        if (!indexExists(PersistentLogin.class, CPersistentLogin.userId)) {
-            getCollection(PersistentLogin.class).createIndex(ascending(CPersistentLogin.userId));
-        }
+//        if (!indexExists(PersistentLogin.class, CPersistentLogin.userId)) {
+//            getCollection(PersistentLogin.class).createIndex(ascending(CPersistentLogin.userId));
+//        }
     }
 
     private boolean indexExists(Class<?> clazz, String indexName) {

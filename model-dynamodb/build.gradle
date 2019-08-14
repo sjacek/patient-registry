@@ -42,7 +42,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
     testCompile 'org.springframework.boot:spring-boot-starter-test:1.5.3.RELEASE'
     compileOnly 'org.immutables:value:2.4.6'
-    compileOnly 'com.querydsl:querydsl-apt:4.1.4'
+//    compileOnly 'com.querydsl:querydsl-apt:4.1.4'
 }
 
 group = 'com.grinnotech.patients'
