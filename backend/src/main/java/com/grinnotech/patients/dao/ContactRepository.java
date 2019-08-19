@@ -21,7 +21,7 @@ import com.grinnotech.patients.model.ContactMethod;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
-import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+//import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 
 import java.util.List;
 
@@ -29,8 +29,9 @@ import java.util.List;
  * @author Jacek Sztajnke
  */
 public interface ContactRepository
-		extends MongoRepository<ContactMethod, String>, QuerydslPredicateExecutor<ContactMethod> {
-
+		extends MongoRepository<ContactMethod, String>
+//		, QuerydslPredicateExecutor<ContactMethod>
+{
 	@Query("{active:true}")
 	List<ContactMethod> findAllActive(Sort sort);
 }

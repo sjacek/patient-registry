@@ -21,7 +21,7 @@ import com.grinnotech.patients.model.Patient;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
-import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+//import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 
 import java.util.List;
 

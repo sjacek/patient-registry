@@ -21,14 +21,16 @@ import com.grinnotech.patients.model.Project;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
-import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+//import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 
 import java.util.List;
 
 /**
  * @author Jacek Sztajnke
  */
-public interface ProjectRepository extends MongoRepository<Project, String>, QuerydslPredicateExecutor<Project> {
+public interface ProjectRepository extends MongoRepository<Project, String>
+//		, QuerydslPredicateExecutor<Project>
+{
 
 	@Query("{active:true}")
 	List<Project> findAllActive(Sort sort);

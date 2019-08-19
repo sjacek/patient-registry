@@ -11,7 +11,7 @@ import com.grinnotech.patients.dao.PersistentLoginRepository;
 import com.grinnotech.patients.dao.UserRepository;
 import com.grinnotech.patients.dao.authorities.RequireAnyAuthority;
 import com.grinnotech.patients.dto.UserSettings;
-import com.grinnotech.patients.model.CUser;
+//import com.grinnotech.patients.model.CUser;
 import com.grinnotech.patients.model.PersistentLogin;
 import com.grinnotech.patients.model.User;
 import com.grinnotech.patients.util.TotpAuthUtil;
@@ -19,6 +19,8 @@ import com.grinnotech.patients.util.ValidationMessages;
 import com.grinnotech.patients.util.ValidationMessagesResult;
 import com.grinnotech.patients.util.ValidationUtil;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -49,6 +51,7 @@ public class UserConfigService {
 
 	private final MessageSource messageSource;
 
+	@Contract(pure = true)
 	@Autowired
 	public UserConfigService(PasswordEncoder passwordEncoder, UserRepository userRepository,
 			PersistentLoginRepository persistentLoginRepository, Validator validator, MessageSource messageSource) {
@@ -60,7 +63,7 @@ public class UserConfigService {
 	}
 
 	@ExtDirectMethod(STORE_READ)
-	public ExtDirectStoreResult<UserSettings> readSettings(@AuthenticationPrincipal MongoUserDetails userDetails)
+	public ExtDirectStoreResult<UserSettings> readSettings(@NotNull @AuthenticationPrincipal MongoUserDetails userDetails)
 			throws NotFoundException {
 		Optional<User> user = userRepository.findById(userDetails.getUserDbId());
 		User user1 = user.orElseThrow(() -> new NotFoundException("User id={} not found", userDetails.getUserDbId()));
@@ -70,7 +73,7 @@ public class UserConfigService {
 	}
 
 	@ExtDirectMethod
-	public String enable2f(@AuthenticationPrincipal MongoUserDetails userDetails) throws NotFoundException {
+	public String enable2f(@NotNull @AuthenticationPrincipal MongoUserDetails userDetails) throws NotFoundException {
 		String randomSecret = TotpAuthUtil.randomSecret();
 
 		Optional<User> user = userRepository.findById(userDetails.getUserDbId());
@@ -83,7 +86,7 @@ public class UserConfigService {
 	}
 
 	@ExtDirectMethod
-	public void disable2f(@AuthenticationPrincipal MongoUserDetails userDetails) throws NotFoundException {
+	public void disable2f(@NotNull @AuthenticationPrincipal MongoUserDetails userDetails) throws NotFoundException {
 		Optional<User> oUser = userRepository.findById(userDetails.getUserDbId());
 		User user = oUser.orElseThrow(() -> new NotFoundException("User id={} not found", userDetails.getUserDbId()));
 		user.setSecret(null);
@@ -92,7 +95,7 @@ public class UserConfigService {
 
 	@ExtDirectMethod(STORE_MODIFY)
 	public ValidationMessagesResult<UserSettings> updateSettings(UserSettings modifiedUserSettings,
-			@AuthenticationPrincipal MongoUserDetails userDetails, Locale locale) {
+			@NotNull @AuthenticationPrincipal MongoUserDetails userDetails, Locale locale) {
 
 		List<ValidationMessages> validations = ValidationUtil.validateEntity(validator, modifiedUserSettings);
 		Optional<User> oUser = userRepository.findById(userDetails.getUserDbId());
@@ -118,8 +121,8 @@ public class UserConfigService {
 		}
 
 		if (!isEmailUnique(user.getId(), modifiedUserSettings.getEmail())) {
-			validations.add(ValidationMessages.builder().field(CUser.email)
-					.message(messageSource.getMessage("user_emailtaken", null, locale)).build());
+//			validations.add(ValidationMessages.builder().field(CUser.email)
+//					.message(messageSource.getMessage("user_emailtaken", null, locale)).build());
 		}
 
 		if (validations.isEmpty()) {
@@ -142,7 +145,7 @@ public class UserConfigService {
 	}
 
 	@ExtDirectMethod(STORE_READ)
-	public List<PersistentLogin> readPersistentLogins(@AuthenticationPrincipal MongoUserDetails userDetails) {
+	public List<PersistentLogin> readPersistentLogins(@NotNull @AuthenticationPrincipal MongoUserDetails userDetails) {
 		return persistentLoginRepository.findByUserId(userDetails.getUserDbId()).stream().peek(login -> {
 			String ua = login.getUserAgent();
 			if (hasText(ua)) {
@@ -155,7 +158,7 @@ public class UserConfigService {
 	}
 
 	@ExtDirectMethod(STORE_MODIFY)
-	public void destroyPersistentLogin(String series, @AuthenticationPrincipal MongoUserDetails userDetails) {
+	public void destroyPersistentLogin(String series, @NotNull @AuthenticationPrincipal MongoUserDetails userDetails) {
 		persistentLoginRepository.deletePersistentLoginBySeriesAndUserId(series, userDetails.getUserDbId());
 	}
 
