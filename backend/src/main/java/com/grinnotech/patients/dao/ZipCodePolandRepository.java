@@ -23,13 +23,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.ExistsQuery;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
-import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+//import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 
 /**
  * @author Jacek Sztajnke
  */
 public interface ZipCodePolandRepository
-		extends MongoRepository<ZipCodePoland, String>, QuerydslPredicateExecutor<ZipCodePoland> {
+		extends MongoRepository<ZipCodePoland, String>
+//		, QuerydslPredicateExecutor<ZipCodePoland>
+{
 
 	@Query("{active:true}")
 	Page<ZipCodePoland> findAllActive(Pageable pageable);

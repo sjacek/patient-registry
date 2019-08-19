@@ -19,12 +19,13 @@ import com.grinnotech.patients.dao.OrganizationRepository;
 import com.grinnotech.patients.dao.PersistentLoginRepository;
 import com.grinnotech.patients.dao.UserRepository;
 import com.grinnotech.patients.dao.authorities.RequireAdminAuthority;
-import com.grinnotech.patients.model.CUser;
+//import com.grinnotech.patients.model.CUser;
 import com.grinnotech.patients.model.Organization;
 import com.grinnotech.patients.model.User;
 import com.grinnotech.patients.util.ValidationMessages;
 import com.grinnotech.patients.util.ValidationMessagesResult;
 
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,7 +99,7 @@ public class UserService extends AbstractService<User> {
 	}
 
 	@ExtDirectMethod(STORE_MODIFY)
-	public ExtDirectStoreResult<User> destroy(@AuthenticationPrincipal MongoUserDetails userDetails, User user)
+	public ExtDirectStoreResult<User> destroy(@AuthenticationPrincipal MongoUserDetails userDetails, @NotNull User user)
 			throws NotFoundException {
 		ExtDirectStoreResult<User> result = new ExtDirectStoreResult<>();
 		if (isLastAdmin(user.getId())) {
@@ -123,7 +124,7 @@ public class UserService extends AbstractService<User> {
 	}
 
 	@ExtDirectMethod(STORE_MODIFY)
-	public ValidationMessagesResult<User> update(@AuthenticationPrincipal MongoUserDetails userDetails, User user) {
+	public ValidationMessagesResult<User> update(@NotNull @AuthenticationPrincipal MongoUserDetails userDetails, User user) {
 		//        List<ValidationMessages> violations = validateEntity(user, locale);
 		//        violations.addAll(checkIfLastAdmin(user, locale));
 		//
@@ -207,7 +208,8 @@ public class UserService extends AbstractService<User> {
 		return result;
 	}
 
-	private List<ValidationMessages> checkIfLastAdmin(User user, Locale locale) {
+	@NotNull
+	private List<ValidationMessages> checkIfLastAdmin(@NotNull User user, Locale locale) {
 		Optional<User> dbUser = userRepository.findById(user.getId());
 
 		List<ValidationMessages> validationErrors = new ArrayList<>();
@@ -220,22 +222,22 @@ public class UserService extends AbstractService<User> {
 						.returnNodesWithState(UNTOUCHED).and().build();
 				DiffNode diff = objectDiffer.compare(user, dbUser);
 
-				User user1 = dbUser.get();
-				DiffNode diffNode = diff.getChild(CUser.enabled);
-				if (!diffNode.isUntouched()) {
-					user.setEnabled(user1.isEnabled());
+//				User user1 = dbUser.get();
+//				DiffNode diffNode = diff.getChild(CUser.enabled);
+//				if (!diffNode.isUntouched()) {
+//					user.setEnabled(user1.isEnabled());
+//
+//					validationErrors.add(ValidationMessages.builder().field(CUser.enabled)
+//							.message(messageSource.getMessage("user_lastadmin_error", null, locale)).build());
+//				}
 
-					validationErrors.add(ValidationMessages.builder().field(CUser.enabled)
-							.message(messageSource.getMessage("user_lastadmin_error", null, locale)).build());
-				}
-
-				diffNode = diff.getChild(CUser.authorities);
-				if (!diffNode.isUntouched()) {
-					user.setAuthorities(user1.getAuthorities());
-
-					validationErrors.add(ValidationMessages.builder().field(CUser.authorities)
-							.message(messageSource.getMessage("user_lastadmin_error", null, locale)).build());
-				}
+//				diffNode = diff.getChild(CUser.authorities);
+//				if (!diffNode.isUntouched()) {
+//					user.setAuthorities(user1.getAuthorities());
+//
+//					validationErrors.add(ValidationMessages.builder().field(CUser.authorities)
+//							.message(messageSource.getMessage("user_lastadmin_error", null, locale)).build());
+//				}
 			}
 		}
 
@@ -246,8 +248,8 @@ public class UserService extends AbstractService<User> {
 		List<ValidationMessages> validations = super.validateEntity(user);
 
 		if (!isEmailUnique(user.getId(), user.getEmail())) {
-			validations.add(ValidationMessages.builder().field(CUser.email)
-					.message(messageSource.getMessage("user_emailtaken", null, locale)).build());
+//			validations.add(ValidationMessages.builder().field(CUser.email)
+//					.message(messageSource.getMessage("user_emailtaken", null, locale)).build());
 		}
 
 		return validations;

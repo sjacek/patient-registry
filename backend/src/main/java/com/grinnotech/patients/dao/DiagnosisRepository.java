@@ -21,14 +21,16 @@ import com.grinnotech.patients.model.Diagnosis;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
-import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+//import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 
 import java.util.List;
 
 /**
  * @author Jacek Sztajnke
  */
-public interface DiagnosisRepository extends MongoRepository<Diagnosis, String>, QuerydslPredicateExecutor<Diagnosis> {
+public interface DiagnosisRepository extends MongoRepository<Diagnosis, String>
+//		, QuerydslPredicateExecutor<Diagnosis>
+{
 
 	@Query("{active:true}")
 	List<Diagnosis> findAllActive(Sort sort);
