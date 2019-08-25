@@ -22,7 +22,6 @@ import static java.util.Locale.ENGLISH;
 
 import com.grinnotech.patients.model.Patient;
 import com.grinnotech.patients.service.ExportController;
-import com.grinnotech.patients.util.MessageSource;
 
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.CellStyle;

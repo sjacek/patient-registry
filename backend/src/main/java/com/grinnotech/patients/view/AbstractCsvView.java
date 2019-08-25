@@ -16,6 +16,7 @@
  */
 package com.grinnotech.patients.view;
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.web.servlet.view.AbstractView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,19 +28,17 @@ import java.util.Map;
  */
 public abstract class AbstractCsvView extends AbstractView {
 
-
     private static final String CONTENT_TYPE = "text/csv";
 
+//    private String url;
 
-    private String url;
-
-    public AbstractCsvView() {
+    AbstractCsvView() {
         setContentType(CONTENT_TYPE);
     }
 
-    public void setUrl(String url) {
-        this.url = url;
-    }
+//    public void setUrl(String url) {
+//        this.url = url;
+//    }
 
     @Override
     protected boolean generatesDownloadContent() {
@@ -48,7 +47,8 @@ public abstract class AbstractCsvView extends AbstractView {
 
     @Override
     protected final void renderMergedOutputModel(
-            Map<String, Object> model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+            @NotNull Map<String, Object> model, @NotNull HttpServletRequest request,
+		    @NotNull HttpServletResponse response) throws Exception {
         response.setContentType(getContentType());
         buildCsvDocument(model, request, response);
     }

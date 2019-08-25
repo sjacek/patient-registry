@@ -22,7 +22,6 @@ import static java.util.Locale.ENGLISH;
 
 import com.grinnotech.patients.model.Patient;
 import com.grinnotech.patients.service.ExportController.Attributes;
-import com.grinnotech.patients.util.MessageSource;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Font;

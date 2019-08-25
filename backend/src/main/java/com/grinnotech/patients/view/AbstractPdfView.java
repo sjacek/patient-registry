@@ -20,6 +20,9 @@ import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.pdf.PdfWriter;
+
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.web.servlet.view.AbstractView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -43,7 +46,8 @@ public abstract class AbstractPdfView extends AbstractView {
     }
 
     @Override
-    protected void renderMergedOutputModel(Map<String, Object> model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    protected void renderMergedOutputModel(@NotNull Map<String, Object> model,
+		    @NotNull HttpServletRequest request, @NotNull HttpServletResponse response) throws Exception {
 
         // IE workaround: write into byte array first.
         ByteArrayOutputStream baos = createTemporaryOutputStream();
@@ -51,7 +55,7 @@ public abstract class AbstractPdfView extends AbstractView {
         // Apply preferences and build metadata.
         Document document = new Document(PageSize.A4.rotate(), 36, 36, 54, 36);
         PdfWriter writer = PdfWriter.getInstance(document, baos);
-        prepareWriter(model, writer, request);
+        prepareWriter(writer);
         buildPdfMetadata(model, document, request);
 
         // Build PDF document.
@@ -69,12 +73,9 @@ public abstract class AbstractPdfView extends AbstractView {
      * <p>Useful for registering a page event listener, for example.
      * The default implementation sets the viewer preferences as returned
      * by this class's {@code getViewerPreferences()} method.
-     * @param model the model, in case meta information must be populated from it
      * @param writer the PdfWriter to prepare
-     * @param request in case we need locale etc. Shouldn't look at attributes.
-     * @throws DocumentException if thrown during writer preparation
      */
-    protected void prepareWriter(Map<String, Object> model, PdfWriter writer, HttpServletRequest request) throws DocumentException {
+    private void prepareWriter(@NotNull PdfWriter writer) {
         writer.setViewerPreferences(getViewerPreferences());
     }
 
@@ -86,7 +87,8 @@ public abstract class AbstractPdfView extends AbstractView {
      * them from bean properties defined on the View.
      * @return an int containing the bits information against PdfWriter definitions
      */
-    protected int getViewerPreferences() {
+    @Contract(pure = true)
+    private int getViewerPreferences() {
         return PdfWriter.ALLOW_PRINTING | PdfWriter.PageLayoutSinglePage;
     }
 
@@ -100,7 +102,7 @@ public abstract class AbstractPdfView extends AbstractView {
      * @param document the iText document being populated
      * @param request in case we need locale etc. Shouldn't look at attributes.
      */
-    protected void buildPdfMetadata(Map<String, Object> model, Document document, HttpServletRequest request) {
+    private void buildPdfMetadata(Map<String, Object> model, Document document, HttpServletRequest request) {
     }
 
     /**

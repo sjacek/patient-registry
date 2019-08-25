@@ -18,7 +18,8 @@ package com.grinnotech.patients.view;
 
 import com.grinnotech.patients.model.Patient;
 import com.grinnotech.patients.service.ExportController.Attributes;
-import com.grinnotech.patients.util.MessageSource;
+
+import org.jetbrains.annotations.NotNull;
 import org.supercsv.io.CsvBeanWriter;
 import org.supercsv.io.ICsvBeanWriter;
 import org.supercsv.prefs.CsvPreference;
@@ -33,7 +34,7 @@ import static java.util.Locale.ENGLISH;
 public class CsvView extends AbstractCsvView {
 
     @Override
-    protected void buildCsvDocument(Map<String, Object> model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    protected void buildCsvDocument(@NotNull Map<String, Object> model, HttpServletRequest request, HttpServletResponse response) throws Exception {
         if (model.isEmpty())
             return;
         response.setHeader("Content-Disposition", "attachment; filename=\"patients.csv\"");

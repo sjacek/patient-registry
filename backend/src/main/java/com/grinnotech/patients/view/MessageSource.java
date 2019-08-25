@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.grinnotech.patients.util;
+package com.grinnotech.patients.view;
 
 import java.text.MessageFormat;
 import java.util.Enumeration;
@@ -22,11 +22,11 @@ import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-public class MessageSource {
+class MessageSource {
 
     private ResourceBundle resourceBundle;
 
-    public MessageSource(Locale locale) {
+    MessageSource(Locale locale) {
         this.resourceBundle = ResourceBundle.getBundle("messages", locale);
     }
 
