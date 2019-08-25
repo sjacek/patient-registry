@@ -16,6 +16,12 @@
 
 package com.grinnotech.patients;
 
+import static java.nio.charset.Charset.forName;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.util.StreamUtils.copyToString;
+
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,12 +38,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.ByteArrayInputStream;
 import java.util.zip.GZIPInputStream;
-
-import static java.nio.charset.Charset.forName;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.http.HttpMethod.GET;
-import static org.springframework.http.HttpStatus.OK;
-import static org.springframework.util.StreamUtils.copyToString;
 
 /**
  * Basic integration tests for demo application.

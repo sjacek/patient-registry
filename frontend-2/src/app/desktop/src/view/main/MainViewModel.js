@@ -30,6 +30,7 @@ Ext.define('PatientsApp.view.main.MainViewModel', {
 			"root": {
 				"expanded": true,
 				"children": [
+					{ "text": "Auth", "iconCls": "x-fa fa-cog", "xtype": "authview", "leaf": true },
           { "text": "Home", "iconCls": "x-fa fa-home", "xtype": "homeview", "leaf": true },
 					{ "text": "Personnel", "iconCls": "x-fa fa-table", "xtype": "personnelview","leaf": true },
 					//add new items on the next line (from sencha-node generate viewpackage)
