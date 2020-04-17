@@ -27,12 +27,12 @@
   },
   "devDependencies": {
     "@sencha/ext-webpack-plugin": "~6.7.0",
+    "cross-env": "^5.2.1",
     "html-webpack-plugin": "^3.2.0",
-    "cross-env": "^5.2.0",
-    "portfinder": "^1.0.20",
-    "webpack": "^4.29.1",
-    "webpack-cli": "^3.2.3",
-    "webpack-dev-server": "^3.1.14"
+    "portfinder": "^1.0.24",
+    "webpack": "^4.40.2",
+    "webpack-cli": "^3.3.9",
+    "webpack-dev-server": "^3.8.1"
   },
   "repository": {
     "type": "git",
