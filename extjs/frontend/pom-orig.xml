@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <prerequisites>
+        <maven>3.3.9</maven>
+    </prerequisites>
+
+    <groupId>com.grinnotech.patients</groupId>
+    <artifactId>frontend</artifactId>
+    <version>0.0.1</version>
+    <packaging>jar</packaging>
+
+    <name>Patients Registry Frontend</name>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.build.timestamp.format>yyyy-MM-dd'T'HH-mm-ssZ</maven.build.timestamp.format>
+        <build.timestamp>${maven.build.timestamp}</build.timestamp>
+        <client.app.dir>${basedir}/src/main/sencha</client.app.dir>
+    </properties>
+
+    <profiles>
+        <profile>
+            <id>production</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <id>development</id>
+            <activation>
+                <property>
+                    <name>spring.profiles.active</name>
+                    <value>development</value>
+                </property>
+            </activation>
+            <!--            <properties>
+                <spring.profiles.active>development</spring.profiles.active>
+            </properties>-->
+        </profile>
+    </profiles>
+
+    <build>
+        <finalName>patients-frontend</finalName>
+        <plugins>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.6.0</version>
+                <executions>
+                    <execution>
+                        <id>sencha-app-clean-development</id>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <phase>clean</phase>
+                        <configuration>
+                            <executable>sencha</executable>
+                            <workingDirectory>${client.app.dir}</workingDirectory>
+                            <arguments>
+                                <argument>app</argument>
+                                <argument>clean</argument>
+                                <argument>development</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>sencha-app-clean</id>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <phase>clean</phase>
+                        <configuration>
+                            <executable>sencha</executable>
+                            <workingDirectory>${client.app.dir}</workingDirectory>
+                            <arguments>
+                                <argument>app</argument>
+                                <argument>clean</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>sencha-app-build</id>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <phase>prepare-package</phase>
+                        <configuration>
+                            <executable>sencha</executable>
+                            <workingDirectory>${client.app.dir}</workingDirectory>
+                            <arguments>
+                                <argument>app</argument>
+                                <argument>build</argument>
+                                <!--<argument>- dev</argument>-->
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>prepare-package</phase>
+                        <configuration>
+                            <target>
+
+                                <copy todir="${basedir}/target/classes/static">
+                                    <fileset dir="${client.app.dir}">
+                                        <include name="locale-*.js" />
+                                        <include name="i18n-*.js" />
+                                        <include name="robots.txt" />
+                                    </fileset>
+                                </copy>
+
+                                <copy todir="${basedir}/target/classes/static"
+                                      includeEmptyDirs="false">
+                                    <fileset dir="${client.app.dir}/build/production/Patients">
+                                        <!--<fileset dir="${client.app.dir}/build/development/Patients">-->
+                                        <exclude name="**/Readme.md" />
+                                        <exclude name="resources/ext/" />
+                                        <exclude name="resources/fonts/OpenSans*" />
+                                    </fileset>
+                                </copy>
+
+                                <checksum file="${basedir}/target/classes/static/i18n-de.js" algorithm="SHA-1" property="i18n_de_sha1" />
+                                <checksum file="${basedir}/target/classes/static/i18n-en.js" algorithm="SHA-1" property="i18n_en_sha1" />
+                                <checksum file="${basedir}/target/classes/static/i18n-pl.js" algorithm="SHA-1" property="i18n_pl_sha1" />
+
+                                <replace file="${basedir}/target/classes/static/index.html">
+                                    <replacefilter token="var serverUrl = 'https://localhost:8443/';"
+                                                   value="var serverUrl = '';" />
+                                    <replacefilter token="var i18nEnUrl = 'i18n-en.js';"
+                                                   value="var i18nEnUrl = 'i18n-en.js?_dc=${i18n_en_sha1}';" />
+                                    <replacefilter token="var i18nDeUrl = 'i18n-de.js';"
+                                                   value="var i18nDeUrl = 'i18n-de.js?_dc=${i18n_de_sha1}';" />
+                                    <replacefilter token="var i18nPlUrl = 'i18n-pl.js';"
+                                                   value="var i18nPlUrl = 'i18n-pl.js?_dc=${i18n_pl_sha1}';" />
+                                </replace>
+
+                                <replaceregexp file="${basedir}/target/classes/static/index.html"
+                                               match="&lt;!--.*--&gt;" replace="" />
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

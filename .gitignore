@@ -26,5 +26,4 @@
 /tomcat/
 
 keystore.p12
-ext-runtime-modern/
-src/styles.css
+/node_modules/
