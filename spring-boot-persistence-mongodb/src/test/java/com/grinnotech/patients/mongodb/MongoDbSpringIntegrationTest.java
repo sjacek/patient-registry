@@ -2,6 +2,7 @@ package com.grinnotech.patients.mongodb;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import org.junit.Ignore;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,6 +19,7 @@ import com.mongodb.DBObject;
 @ContextConfiguration(classes = SpringBootPersistenceApplication.class)
 @DataMongoTest
 @ExtendWith(SpringExtension.class)
+@Ignore
 public class MongoDbSpringIntegrationTest {
     @DisplayName("Given object When save object using MongoDB template Then object can be found")
     @Test

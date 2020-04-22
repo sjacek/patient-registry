@@ -5,7 +5,17 @@
  */
 package com.grinnotech.patients;
 
-import org.junit.*;
+import static com.grinnotech.patients.WelcomeController.REPLY_WELCOME;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
+
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Ignore;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.ConfigFileApplicationContextInitializer;
@@ -17,11 +27,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.servlet.ServletContext;
-
-import static com.grinnotech.patients.WelcomeController.REPLY_WELCOME;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 /**
  * @author Jacek Sztajnke
@@ -71,7 +76,6 @@ public class ControllersTest {
     @Test
     @Ignore
     public void testVersion() {
-
         assertNotNull(servletContext);
         assertNotNull(servletContext.getAttribute("servlet-context-attr"));
         assertEquals("test", servletContext.getAttribute("servlet-context-attr"));
