@@ -3,9 +3,9 @@ import { BrowserModule } from '@angular/platform-browser'
 import { Route, RouterModule } from '@angular/router'
 
 import { AppComponent } from './app.component'
-import { HomeComponent } from './Home/home.component'
-import { AboutComponent } from './About/about.component'
-import { NavMenuComponent } from './NavMenu/navmenu.component'
+import { HomeComponent } from './view/Home/home.component'
+import { AboutComponent } from './view/About/about.component'
+import { NavMenuComponent } from './view/NavMenu/navmenu.component'
 import '../themer.ts'
 import { ExtAngularModernModule } from '@sencha/ext-angular-modern';
 
@@ -33,7 +33,7 @@ export const routingModule: ModuleWithProviders = RouterModule.forRoot(routes, {
     AppComponent,
     HomeComponent,
     AboutComponent,
-    NavMenuComponent
+    NavMenuComponent,
     // ExtPanelComponent,
     // ExtContainerComponent,
     // ExtTitlebarComponent,
