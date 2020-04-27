@@ -1,13 +1,15 @@
-import { NgModule, ModuleWithProviders } from '@angular/core'
-import { BrowserModule } from '@angular/platform-browser'
-import { Route, RouterModule } from '@angular/router'
+import {NgModule, ModuleWithProviders} from '@angular/core'
+import {BrowserModule} from '@angular/platform-browser'
+import {Route, RouterModule} from '@angular/router'
 
-import { AppComponent } from './app.component'
-import { HomeComponent } from './view/Home/home.component'
-import { AboutComponent } from './view/About/about.component'
-import { NavMenuComponent } from './view/NavMenu/navmenu.component'
+import {AppComponent} from './app.component'
+import {HomeComponent} from './view/home/home.component'
+import {AboutComponent} from './view/about/about.component'
+import {NavMenuComponent} from './view/navmenu/navmenu.component'
 import '../themer.ts'
-import { ExtAngularModernModule } from '@sencha/ext-angular-modern';
+import {ExtAngularModernModule} from '@sencha/ext-angular-modern';
+// import { PatientsComponent } from './view/patients/patients.component';
+import {PatientListComponent} from './view/patients/list/patient-list.component';
 
 // import { ExtPanelComponent } from '@sencha/ext-angular-modern/lib/ExtPanel';
 // import { ExtContainerComponent } from '@sencha/ext-angular-modern/lib/ExtContainer';
@@ -17,9 +19,10 @@ import { ExtAngularModernModule } from '@sencha/ext-angular-modern';
 // import { ExtGridComponent } from '@sencha/ext-angular-modern/lib/ExtGrid';
 
 const routes: Route[] = [
-  { path: '', redirectTo: 'about', pathMatch: 'full' },
-  { path: 'about', component: AboutComponent },
-  { path: 'home', component: HomeComponent }
+  {path: '', redirectTo: 'about', pathMatch: 'full'},
+  {path: 'about', component: AboutComponent},
+  {path: 'home', component: HomeComponent},
+  {path: 'patient/list', component: PatientListComponent}
 ]
 export const routingModule: ModuleWithProviders = RouterModule.forRoot(routes, {useHash: true});
 
@@ -34,6 +37,8 @@ export const routingModule: ModuleWithProviders = RouterModule.forRoot(routes, {
     HomeComponent,
     AboutComponent,
     NavMenuComponent,
+    // PatientsComponent,
+    PatientListComponent,
     // ExtPanelComponent,
     // ExtContainerComponent,
     // ExtTitlebarComponent,
@@ -41,8 +46,8 @@ export const routingModule: ModuleWithProviders = RouterModule.forRoot(routes, {
     // ExtTreelistComponent,
     // ExtGridComponent
   ],
-    providers: [],
-    bootstrap: [AppComponent]
-  })
-  export class AppModule {
-  }
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule {
+}

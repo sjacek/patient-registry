@@ -1,0 +1,38 @@
+<ExtPanel
+        extname="home"
+        padding="10 10 10 2"
+        layout="fit"
+        fitToParent="true"
+>
+    <ExtGrid
+            extname="grid"
+            title='Patients'
+            shadow="true"
+            [store]="store"
+            [columns]='[
+                {"text": "Id", "dataIndex": "id", "flex": "0", "hidden": true},
+                {"text": "Imię i nazwisko", "dataIndex": "fullname", "flex": "1"},
+                {"text": "PESEL", "dataIndex": "pesel", "width": "150", "flex": "1"},
+                {"text": "Data urodzenia", "dataIndex": "birthday", "width": "150", "flex": "1"},
+                {"text": "Adres zamieszkania", "dataIndex": "address", "width": "150", "flex": "1"},
+                {"text": "Status", "dataIndex": "status", "width": "150", "flex": "0", "hidden": true},
+                {"text": "Wersja", "dataIndex": "version", "width": "150", "flex": "0", "hidden": true}
+            ]'
+            (ready)="readyGrid($event)"
+    >
+        <ExtToolbar extname="toolbar" docked="top">
+            <ExtSearchfield
+                    extname="searchfield"
+                    ui="faded"
+                    placeholder="Search..."
+                    (change)="this.onSearch($event)"
+            >
+            </ExtSearchfield>
+        </ExtToolbar>
+        <!--
+        <ExtColumn text="Name" dataIndex="name" width="300"></ExtColumn>
+        <ExtColumn text="Email" dataIndex="email" width="300"></ExtColumn>
+        <ExtColumn text="Phone" dataIndex="phone"width="200"></ExtColumn>
+        -->
+    </ExtGrid>
+</ExtPanel>

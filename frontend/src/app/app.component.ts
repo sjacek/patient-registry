@@ -50,10 +50,10 @@ export class AppComponent {
   storeData = {
     children: [
       {
-        id: "/about",
-        name: "about",
-        text: "About",
-        iconCls: "x-fa fa-info",
+        id: "/patient/list",
+        name: "patients",
+        text: "Patients",
+        iconCls: "x-fa fa-home",
         leaf: true
       },
       {
@@ -62,6 +62,13 @@ export class AppComponent {
           text: "Home",
           iconCls: "x-fa fa-home",
           leaf: true
+      },
+      {
+        id: "/about",
+        name: "about",
+        text: "About",
+        iconCls: "x-fa fa-info",
+        leaf: true
       }
     ]
   };
