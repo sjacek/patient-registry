@@ -41,12 +41,9 @@ import com.grinnotech.patients.util.startup.OrphadataParser;
 import com.grinnotech.patients.util.startup.OrphadataParserMongo;
 import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
-
 import com.opencsv.CSVReaderBuilder;
 
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.ClassPathResource;
@@ -56,19 +53,19 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.invoke.MethodHandles;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashSet;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author Jacek Sztajnke
  */
 @Component
 @Profile("development")
+@Slf4j
 class Startup {
-
-	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	private final PasswordEncoder passwordEncoder;
 
@@ -90,7 +87,7 @@ class Startup {
 
 	private String uuidTest;
 
-	private OrphadataProperties orphadataProperties;
+	private final OrphadataProperties orphadataProperties;
 
 	@Autowired
 	public Startup(UserRepository userRepository, OrganizationRepository organizationRepository, ContactRepository contactRepository, CountryDictionaryRepository addressDictionaryRepository, ZipCodePolandRepository zipCodePolandRepository,
@@ -117,18 +114,24 @@ class Startup {
 
 	private void initOrganizations() {
 		Organization root = organizationRepository.findByCodeActive("ROOT");
-		if (root == null)
+		if (root == null) {
 			root = insert(Organization.builder().name("ROOT").code("ROOT").build(), organizationRepository);
+			log.debug(root.getName() + " initialized");
+		}
 		uuidRoot = root.getId();
 
 		Organization ppmdPoland = organizationRepository.findByCodeActive("PPMDPoland");
-		if (ppmdPoland == null)
+		if (ppmdPoland == null) {
 			ppmdPoland = insert(Organization.builder().name("Fundacja Parent Project Muscular Dystrophy").code("PPMDPoland").parentId(uuidRoot).build(), organizationRepository);
+			log.debug(ppmdPoland.getName() + " initialized");
+		}
 		uuidPpmdPoland = ppmdPoland.getId();
 
 		Organization test = organizationRepository.findByCodeActive("test");
-		if (test == null)
+		if (test == null) {
 			test = insert(Organization.builder().name("Test").code("test").parentId(uuidRoot).build(), organizationRepository);
+			log.debug(test.getName() + " initialized");
+		}
 		uuidTest = test.getId();
 	}
 
@@ -185,10 +188,10 @@ class Startup {
 				// line[] is an array of values from the line
 				CountryDictionary cd = insert(CountryDictionary.builder().code(line[0]).countryEn(line[2]).countryPl(isNotEmpty(line[3]) ? line[3] : line[2]).countryDe(isNotEmpty(line[4]) ? line[4] : line[2]).build(),
 						addressDictionaryRepository);
-				logger.debug("initAddressDictionary: {}, {}" + cd.getCode(), cd.getCountryEn());
+				log.debug("initAddressDictionary: {}, {}" + cd.getCode(), cd.getCountryEn());
 			}
 		} catch (IOException ex) {
-			logger.error("File " + CSV + " not found", ex);
+			log.error("File " + CSV + " not found", ex);
 		}
 	}
 
@@ -220,15 +223,15 @@ class Startup {
 				final String county = capitalizeFully(line[5], delimiters);
 
 				if (!zipCodePolandRepository.existsByExample(zipCode, postOffice, city, voivodship, street, county)) {
-					logger.debug("initZipCodePoland: {}, {}, {}, {}, {}, {}, ()", zipCode, postOffice, city, voivodship, street, county);
+					log.debug("initZipCodePoland: {}, {}, {}, {}, {}, {}, ()", zipCode, postOffice, city, voivodship, street, county);
 					insert(ZipCodePoland.builder().zipCode(zipCode).postOffice(postOffice).city(city).voivodship(voivodship).street(street).county(county).build(), zipCodePolandRepository);
 
 				} else {
-					logger.debug("****************** duplicate found, don't insert!");
+					log.debug("****************** duplicate found, don't insert!");
 				}
 			}
 		} catch (IOException ex) {
-			logger.error("File " + CSV + " not found", ex);
+			log.error("File " + CSV + " not found", ex);
 		}
 	}
 
@@ -240,13 +243,13 @@ class Startup {
 		try {
 			urlPl = new URL(orphadataProperties.getUrlPl());
 		} catch (MalformedURLException ex) {
-			logger.error("Bad orphaData JSON address: {}", orphadataProperties.getUrlPl(), ex);
+			log.error("Bad orphaData JSON address: {}", orphadataProperties.getUrlPl(), ex);
 			return;
 		}
 
 		OrphadataParser parser = new OrphadataParser(urlPl);
 		parser.parse(20);
-		logger.info("Orphadata version: {}", parser.getInfo().getVersion());
+		log.info("Orphadata version: {}", parser.getInfo().getVersion());
 
 		OrphadataParserMongo.parse(urlPl, disorderRepository);
 	}

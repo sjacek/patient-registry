@@ -1,9 +1,16 @@
+buildscript {
+    ext {
+        springVersion = '5.1.6.RELEASE'
+        springBootVersion = '2.1.6.RELEASE'
+    }
+}
+
 plugins {
     id "io.freefair.lombok" version "3.8.4"
     id 'net.ltgt.apt' version '0.19'
     id 'net.ltgt.apt-idea' version '0.19'
     id "com.moowork.node" version "1.3.1"
-    id 'org.springframework.boot' version '2.1.1.RELEASE'
+    id 'org.springframework.boot' version "${springBootVersion}"
 //    id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
 //    id "com.ewerk.gradle.plugins.annotation-processor" version "1.0.4"
 }

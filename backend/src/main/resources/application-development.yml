@@ -1,6 +1,7 @@
 spring:
   resources:
-    cache-period: 0
+    cache:
+        period: 31556926
     static-locations: file:./src/main/sencha
   jpa:
     show-sql: true
@@ -11,17 +12,16 @@ server:
   compression:
     enabled: false
 
-endpoints:
-  metrics:
-    enabled: true
-    filter:
-      enabled: true
-  health:
-    sensitive: false
-    
 management:
   security:
     enabled: true
+  endpoint:
+    metrics:
+      enabled: true
+        #    filter:
+        #      enabled: true
+        #  health:
+        #    sensitive: false
 
 logging:
   level:
@@ -31,6 +31,3 @@ logging:
     org.springframework.data: DEBUG
     org.springframework.data.mongodb.core.MongoDbUtils: INFO
     com.grinnotech: DEBUG
-
-sencha:
-  client-dir: frontend/src/main/sencha

@@ -1,12 +1,9 @@
 package com.grinnotech.patients;
 
-import static org.springframework.context.annotation.FilterType.ASSIGNABLE_TYPE;
-
 import com.fasterxml.jackson.databind.Module;
 
+import org.jetbrains.annotations.NotNull;
 import org.openapitools.jackson.nullable.JsonNullableModule;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.ExitCodeGenerator;
 import org.springframework.boot.SpringApplication;
@@ -20,20 +17,17 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import java.lang.invoke.MethodHandles;
+import lombok.extern.slf4j.Slf4j;
 
-import ch.ralscha.extdirectspring.ExtDirectSpring;
-import ch.ralscha.extdirectspring.controller.ApiController;
-
-@ComponentScan(basePackageClasses = {ExtDirectSpring.class, Application.class},
-        excludeFilters = {@ComponentScan.Filter(type = ASSIGNABLE_TYPE, value = ApiController.class)})
+//@ComponentScan(basePackageClasses = {ExtDirectSpring.class, Application.class},
+//        excludeFilters = {@ComponentScan.Filter(type = ASSIGNABLE_TYPE, value = ApiController.class)})
+@ComponentScan
 @EnableAutoConfiguration(exclude = {MustacheAutoConfiguration.class, SpringDataWebAutoConfiguration.class})
 @EnableAsync
 @EnableScheduling
 @EnableCaching
+@Slf4j
 public class Application implements CommandLineRunner {
-
-	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	static class ExitException extends RuntimeException implements ExitCodeGenerator {
 		private static final long serialVersionUID = 1L;
@@ -50,14 +44,14 @@ public class Application implements CommandLineRunner {
 //        if (AuthConfigFactory.getFactory() == null) {
 //            AuthConfigFactory.setFactory(new AuthConfigFactoryImpl());
 //        }
-		logger.debug("main !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+		log.debug("main !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 
         SpringApplication.run(Application.class, args);
     }
 
 	@Override
-	public void run(String... args) throws Exception {
-		logger.debug("run !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+	public void run(String @NotNull ... args) throws Exception {
+		log.debug("run !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 
 		if (args.length > 0 && args[0].equals("exitcode")) {
 			throw new ExitException();

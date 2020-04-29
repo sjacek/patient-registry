@@ -1,13 +1,13 @@
+import org.codehaus.groovy.runtime.GStringImpl
+
 plugins {
     id 'org.springframework.boot'
     id 'org.openapi.generator' version "$openApiGeneratorVersion"
 }
 
 ext {
-    springVersion = '5.1.6.RELEASE'
-    springBootVersion = '2.1.6.RELEASE'
-
-    openapiGeneratedDir = "${buildDir}/generated/openapi"
+    openapiGeneratedDir = "${buildDir}/generated/openapi" as GStringImpl
+    patientYmlFile = "$rootDir/openapi/patients-gui.yml" as GStringImpl
 }
 
 apply plugin: 'java'
@@ -95,7 +95,7 @@ tasks.withType(JavaCompile) {
 // Builds a Kotlin client by default.
 openApiGenerate {
     generatorName = "spring"
-    inputSpec = "$rootDir/openapi/patients-gui.yml".toString()
+    inputSpec = "${patientYmlFile}".toString()
     outputDir = "${openapiGeneratedDir}".toString()
     apiPackage = "com.grinnotech.patients.api"
     invokerPackage = "com.grinnotech.patients.api.invoker"
@@ -125,3 +125,13 @@ idea {
         generatedSourceDirs += file("${openapiGeneratedDir}/src/main/java")
     }
 }
+
+//task validateGoodSpec(type: org.openapitools.generator.gradle.plugin.tasks.ValidateTask){
+//    inputSpec = "${patientYmlFile}".toString()
+//}
+//
+//task validateBadSpec(type: org.openapitools.generator.gradle.plugin.tasks.ValidateTask){
+//    inputSpec = "${patientYmlFile}".toString()
+//}
+//
+//task validateSpecs(dependsOn: ['validateGoodSpec', 'validateBadSpec'])

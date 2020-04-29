@@ -5,26 +5,19 @@ plugins {
     id 'org.springframework.boot'
 }
 
-repositories {
-    mavenLocal()
-    maven {
-        url = 'http://repo.maven.apache.org/maven2'
-    }
-}
-
 //apply plugin: 'spring-boot'
 //apply plugin: 'io.spring.dependency-management'
 
 dependencies {
 
-    compile 'org.springframework.boot:spring-boot-starter-websocket:2.1.6.RELEASE'
-    compile 'org.springframework.boot:spring-boot-starter-thymeleaf:2.1.6.RELEASE'
-    compile 'org.springframework.boot:spring-boot-starter-data-mongodb:2.1.6.RELEASE'
+    compile "org.springframework.boot:spring-boot-starter-websocket:${springBootVersion}"
+    compile "org.springframework.boot:spring-boot-starter-thymeleaf:${springBootVersion}"
+    compile "org.springframework.boot:spring-boot-starter-data-mongodb:${springBootVersion}"
     testCompile 'de.flapdoodle.embed:de.flapdoodle.embed.mongo:2.2.0'
     testCompile 'org.junit.jupiter:junit-jupiter-api:5.5.1'
     testCompile 'org.junit.jupiter:junit-jupiter-engine:5.5.1'
 // JUnit platform launcher
 // To be able to run tests from IDE directly
     testCompile 'org.junit.platform:junit-platform-launcher:1.2.0'
-    testCompile 'org.springframework.boot:spring-boot-starter-test:2.1.6.RELEASE'
+    testCompile "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
 }
