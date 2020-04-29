@@ -1,6 +1,5 @@
-package com.grinnotech.patients.mongodb.models;
+package com.grinnotech.patients.mongodb.model;
 
-import org.jetbrains.annotations.Contract;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -13,7 +12,6 @@ public class DatabaseSequence {
 
     private long seq;
 
-    @Contract(pure = true)
     public DatabaseSequence() {}
 
     public String getId() {

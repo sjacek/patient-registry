@@ -1,23 +1,25 @@
 package com.grinnotech.patients.mongodb.services;
 
-import java.io.IOException;
+import com.grinnotech.patients.mongodb.dao.PhotoRepository;
+import com.grinnotech.patients.mongodb.model.Photo;
 
 import org.bson.BsonBinarySubType;
 import org.bson.types.Binary;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.grinnotech.patients.mongodb.daos.PhotoRepository;
-import com.grinnotech.patients.mongodb.models.Photo;
+import java.io.IOException;
 
 @Service
 public class PhotoService {
 
-    @Autowired
-    private PhotoRepository photoRepo;
+    private final PhotoRepository photoRepo;
 
-    public Photo getPhoto(String id) {
+	public PhotoService(PhotoRepository photoRepo) {
+		this.photoRepo = photoRepo;
+	}
+
+	public Photo getPhoto(String id) {
         return photoRepo.findById(id).get();
     }
 

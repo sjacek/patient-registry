@@ -5,12 +5,11 @@ import static java.time.ZoneOffset.UTC;
 import static java.time.ZonedDateTime.now;
 
 import com.grinnotech.patients.config.AppProperties;
-import com.grinnotech.patients.dao.UserRepository;
-import com.grinnotech.patients.model.User;
+import com.grinnotech.patients.mongodb.dao.UserRepository;
+import com.grinnotech.patients.mongodb.model.User;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.authentication.event.AuthenticationFailureBadCredentialsEvent;
 import org.springframework.stereotype.Component;
@@ -28,7 +27,6 @@ public class UserAuthErrorHandler implements ApplicationListener<AuthenticationF
 	private final Integer loginLockAttempts;
 	private final Integer loginLockMinutes;
 
-	@Autowired
 	public UserAuthErrorHandler(UserRepository userRepository, AppProperties appProperties) {
 		this.userRepository = userRepository;
 		this.loginLockAttempts = appProperties.getLoginLockAttempts();

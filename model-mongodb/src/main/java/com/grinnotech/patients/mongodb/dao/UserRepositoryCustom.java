@@ -14,13 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.grinnotech.patients.dao;
+package com.grinnotech.patients.mongodb.dao;
 
-import com.grinnotech.patients.model.User;
+import com.grinnotech.patients.mongodb.model.User;
 
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 
 /**
  *

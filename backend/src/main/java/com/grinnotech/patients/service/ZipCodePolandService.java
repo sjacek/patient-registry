@@ -33,7 +33,6 @@ import com.grinnotech.patients.util.ValidationMessagesResult;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
@@ -57,8 +56,11 @@ public class ZipCodePolandService extends AbstractService<ZipCodePoland> {
 
 	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-	@Autowired
-	private ZipCodePolandRepository zipCodePolandRepository;
+	private final ZipCodePolandRepository zipCodePolandRepository;
+
+	public ZipCodePolandService(ZipCodePolandRepository zipCodePolandRepository) {
+		this.zipCodePolandRepository = zipCodePolandRepository;
+	}
 
 	@ExtDirectMethod(STORE_READ)
 	public ExtDirectStoreResult<ZipCodePoland> read(ExtDirectStoreReadRequest request) {

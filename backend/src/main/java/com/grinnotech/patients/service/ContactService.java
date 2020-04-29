@@ -33,7 +33,6 @@ import com.grinnotech.patients.util.ValidationMessagesResult;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 
@@ -56,10 +55,13 @@ public class ContactService extends AbstractService<ContactMethod> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    @Autowired
-    private ContactRepository contactRepository;
+    private final ContactRepository contactRepository;
 
-    @ExtDirectMethod(STORE_READ)
+	public ContactService(ContactRepository contactRepository) {
+		this.contactRepository = contactRepository;
+	}
+
+	@ExtDirectMethod(STORE_READ)
     public ExtDirectStoreResult<ContactMethod> read(ExtDirectStoreReadRequest request) {
         List<ContactMethod> list = contactRepository.findAllActive(getSpringSort(request));
         LOGGER.debug("read size:[" + list.size() + "]");

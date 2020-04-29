@@ -1,14 +1,16 @@
 package com.grinnotech.patients.config.security;
 
+import static org.springframework.http.HttpHeaders.USER_AGENT;
+
 import com.grinnotech.patients.Constants;
 import com.grinnotech.patients.config.AppProperties;
 import com.grinnotech.patients.dao.PersistentLoginRepository;
-import com.grinnotech.patients.dao.UserRepository;
 import com.grinnotech.patients.model.PersistentLogin;
-import com.grinnotech.patients.model.User;
+import com.grinnotech.patients.mongodb.model.User;
+import com.grinnotech.patients.mongodb.dao.UserRepository;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -19,8 +21,6 @@ import org.springframework.security.web.authentication.rememberme.InvalidCookieE
 import org.springframework.security.web.authentication.rememberme.RememberMeAuthenticationException;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.lang.invoke.MethodHandles;
 import java.security.SecureRandom;
 import java.time.Instant;
@@ -31,7 +31,8 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.Optional;
 
-import static org.springframework.http.HttpHeaders.USER_AGENT;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * Copy of the CustomPersistentRememberMeServices class from the
@@ -75,7 +76,6 @@ public class CustomPersistentRememberMeServices extends AbstractRememberMeServic
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    @Autowired
     public CustomPersistentRememberMeServices(UserDetailsService userDetailsService,
                                               AppProperties appProperties,
                                               UserRepository userRepository,

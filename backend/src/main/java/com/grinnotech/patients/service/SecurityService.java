@@ -8,17 +8,16 @@ import static java.util.Date.from;
 
 import com.grinnotech.patients.NotFoundException;
 import com.grinnotech.patients.config.security.MongoUserDetails;
-import com.grinnotech.patients.dao.UserRepository;
 import com.grinnotech.patients.dao.authorities.RequireAdminAuthority;
 import com.grinnotech.patients.dao.authorities.RequireAnyAuthority;
 import com.grinnotech.patients.dto.UserDetailDto;
-import com.grinnotech.patients.model.User;
+import com.grinnotech.patients.mongodb.dao.UserRepository;
+import com.grinnotech.patients.mongodb.model.User;
 import com.grinnotech.patients.util.TotpAuthUtil;
 import com.grinnotech.patients.web.CsrfController;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -60,7 +59,6 @@ public class SecurityService {
 
 	private final ApplicationEventPublisher applicationEventPublisher;
 
-	@Autowired
 	public SecurityService(UserRepository userRepository, PasswordEncoder passwordEncoder, MailService mailService,
 			ApplicationEventPublisher applicationEventPublisher) {
 		this.userRepository = userRepository;

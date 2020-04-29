@@ -1,13 +1,12 @@
 package com.grinnotech.patients.config.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.grinnotech.patients.dao.UserRepository;
 import com.grinnotech.patients.dto.UserDetailDto;
-import com.grinnotech.patients.model.User;
+import com.grinnotech.patients.mongodb.dao.UserRepository;
+import com.grinnotech.patients.mongodb.model.User;
 import com.grinnotech.patients.service.SecurityService;
 import com.grinnotech.patients.web.CsrfController;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -28,7 +27,6 @@ public class JsonAuthSuccessHandler implements AuthenticationSuccessHandler {
 
 	private final ObjectMapper objectMapper;
 
-	@Autowired
 	public JsonAuthSuccessHandler(UserRepository userRepository, ObjectMapper objectMapper) {
 		this.userRepository = userRepository;
 		this.objectMapper = objectMapper;

@@ -16,14 +16,19 @@
  */
 package com.grinnotech.patients.service;
 
-import ch.ralscha.extdirectspring.annotation.ExtDirectMethod;
+import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.STORE_MODIFY;
+import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.STORE_READ;
+import static org.springframework.transaction.annotation.Propagation.REQUIRED;
+import static org.springframework.transaction.annotation.Propagation.SUPPORTS;
+
+import com.grinnotech.patients.NotFoundException;
 import com.grinnotech.patients.dao.PatientRepository;
 import com.grinnotech.patients.model.Patient;
 import com.grinnotech.patients.vo.Result;
 import com.grinnotech.patients.vo.ResultFactory;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,12 +36,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.STORE_MODIFY;
-import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.STORE_READ;
-import static org.springframework.transaction.annotation.Propagation.REQUIRED;
-import static org.springframework.transaction.annotation.Propagation.SUPPORTS;
-
-import com.grinnotech.patients.NotFoundException;
+import ch.ralscha.extdirectspring.annotation.ExtDirectMethod;
 
 @Transactional
 @Service("patientRestService")
@@ -44,10 +44,13 @@ public class PatientRestServiceImpl implements PatientRestService {
 
     final protected Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired
-    private PatientRepository patientRepository;
-    
-    @ExtDirectMethod(STORE_MODIFY)
+    private final PatientRepository patientRepository;
+
+	public PatientRestServiceImpl(PatientRepository patientRepository) {
+		this.patientRepository = patientRepository;
+	}
+
+	@ExtDirectMethod(STORE_MODIFY)
     @Transactional(readOnly = false, propagation = REQUIRED)
     @Override
     public Result<Patient> update(String idPatient, String firstName, String secondName, String lastName, String pesel, Date birthday) {

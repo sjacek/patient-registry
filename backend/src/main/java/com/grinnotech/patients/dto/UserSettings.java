@@ -1,14 +1,16 @@
 package com.grinnotech.patients.dto;
 
-import ch.rasc.extclassgenerator.Model;
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.grinnotech.patients.model.User;
-import lombok.Getter;
-import lombok.Setter;
+import com.grinnotech.patients.mongodb.model.User;
+
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 
-import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
+import ch.rasc.extclassgenerator.Model;
+import lombok.Getter;
+import lombok.Setter;
 
 @Model(value = "Patients.model.UserSettings",
         readMethod = "userConfigService.readSettings",

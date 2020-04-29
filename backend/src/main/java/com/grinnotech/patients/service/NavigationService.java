@@ -16,20 +16,27 @@
  */
 package com.grinnotech.patients.service;
 
-import ch.ralscha.extdirectspring.annotation.ExtDirectMethod;
+import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.TREE_LOAD;
+import static com.grinnotech.patients.model.Authority.ADMIN;
+import static com.grinnotech.patients.model.Authority.EMPLOYEE;
+import static com.grinnotech.patients.model.Authority.USER;
+
 import com.grinnotech.patients.config.security.MongoUserDetails;
 import com.grinnotech.patients.dto.NavigationNode;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.MessageSource;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.TREE_LOAD;
-import static com.grinnotech.patients.model.Authority.*;
+import ch.ralscha.extdirectspring.annotation.ExtDirectMethod;
 
 /**
  *
@@ -43,7 +50,6 @@ public class NavigationService {
 
     private final List<NavigationNode> rootNodes = new ArrayList<>();
 
-    @Autowired
     public NavigationService(MessageSource messageSource) {
         this.messageSource = messageSource;
 

@@ -19,9 +19,9 @@ package com.grinnotech.patients.service;
 import static java.util.stream.Collectors.toList;
 
 import com.grinnotech.patients.NotFoundException;
-import com.grinnotech.patients.dao.UserRepository;
 import com.grinnotech.patients.domain.AbstractPersistable;
-import com.grinnotech.patients.model.User;
+import com.grinnotech.patients.mongodb.dao.UserRepository;
+import com.grinnotech.patients.mongodb.model.User;
 import com.grinnotech.patients.util.ValidationMessages;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +45,9 @@ public abstract class AbstractService<T> {
 
 	@Autowired
 	private UserRepository userRepository;
+
+	@Autowired
+	private Validator validator;
 
 	protected void setAttrsForCreate(AbstractPersistable persistable, UserDetails userDetails)
 			throws NotFoundException {
@@ -102,9 +105,6 @@ public abstract class AbstractService<T> {
 
 		return slimUser;
 	}
-
-	@Autowired
-	private Validator validator;
 
 	protected List<ValidationMessages> validateEntity(T entity, Class<?>... groups) {
 		Set<ConstraintViolation<T>> constraintViolations = validator.validate(entity, groups);

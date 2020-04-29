@@ -24,6 +24,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.grinnotech.patients.domain.AbstractPersistable;
+import com.grinnotech.patients.mongodb.model.User;
 
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.index.Indexed;

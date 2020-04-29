@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.grinnotech.patients.config.security.MongoUserDetails;
 import com.grinnotech.patients.model.Organization;
-import com.grinnotech.patients.model.User;
+import com.grinnotech.patients.mongodb.model.User;
 import lombok.Getter;
 import lombok.ToString;
 

@@ -1,12 +1,12 @@
-package com.grinnotech.patients.model;
+package com.grinnotech.patients.mongodb.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.grinnotech.patients.domain.AbstractPersistable;
+import com.grinnotech.patients.model.Organization;
 
-//import org.hibernate.validator.constraints.Email;
-import javax.validation.constraints.Email;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.util.StringUtils;
 
@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Set;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
 import ch.rasc.extclassgenerator.Model;
@@ -26,10 +27,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@Document
+@Document(collection = "users")
 @Model(value = "Patients.model.User", createMethod = "userService.update", readMethod = "userService.read", updateMethod = "userService.update", destroyMethod = "userService.destroy", rootProperty = "records", paging = true, identifier = "uuid")
 @ModelField(value = "twoFactorAuth", persist = false, type = ModelType.BOOLEAN)
-@JsonInclude(Include.NON_NULL)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -38,15 +39,27 @@ import lombok.ToString;
 @ToString
 public class User extends AbstractPersistable {
 
-	@NotBlank(message = "{fieldrequired}")
-	private String firstName;
+    @Transient
+    public static final String SEQUENCE_NAME = "users_sequence";
+
+	public User(String firstName, String lastName, String email) {
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.email = email;
+	}
+
+	@Id
+    private String id;
 
 	@NotBlank(message = "{fieldrequired}")
-	private String lastName;
+    private String firstName;
+
+	@NotBlank(message = "{fieldrequired}")
+    private String lastName;
 
 	@Email(message = "{invalidemail}")
 	@NotBlank(message = "{fieldrequired}")
-	private String email;
+    private String email;
 
 	//    @NotNull(message = "{fieldrequired}")
 	private Set<String> organizationIds;

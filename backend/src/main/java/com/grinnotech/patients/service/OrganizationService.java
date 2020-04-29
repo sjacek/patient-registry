@@ -23,16 +23,15 @@ import static com.grinnotech.patients.util.QueryUtil.getSpringSort;
 
 import com.grinnotech.patients.NotFoundException;
 import com.grinnotech.patients.config.security.MongoUserDetails;
-import com.grinnotech.patients.dao.OrganizationRepository;
 import com.grinnotech.patients.dao.authorities.RequireAdminAuthority;
 import com.grinnotech.patients.model.Organization;
+import com.grinnotech.patients.mongodb.dao.OrganizationRepository;
 import com.grinnotech.patients.util.ThrowingFunction;
 import com.grinnotech.patients.util.ValidationMessages;
 import com.grinnotech.patients.util.ValidationMessagesResult;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 
@@ -55,8 +54,11 @@ public class OrganizationService extends AbstractService<Organization> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-	@Autowired
-	private OrganizationRepository organizationRepository;
+	private final OrganizationRepository organizationRepository;
+
+	public OrganizationService(OrganizationRepository organizationRepository) {
+		this.organizationRepository = organizationRepository;
+	}
 
 	@ExtDirectMethod(STORE_READ)
 	public ExtDirectStoreResult<Organization> read(ExtDirectStoreReadRequest request) {

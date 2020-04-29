@@ -20,7 +20,7 @@ package com.grinnotech.patients.domain;
 import static javax.persistence.TemporalType.DATE;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.grinnotech.patients.model.User;
+import com.grinnotech.patients.mongodb.model.User;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;

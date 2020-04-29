@@ -16,25 +16,26 @@
  */
 package com.grinnotech.patients.service.orphadata;
 
-import ch.ralscha.extdirectspring.annotation.ExtDirectMethod;
-import ch.ralscha.extdirectspring.bean.ExtDirectStoreReadRequest;
-import ch.ralscha.extdirectspring.bean.ExtDirectStoreResult;
-import ch.ralscha.extdirectspring.filter.StringFilter;
+import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.STORE_READ;
+import static com.grinnotech.patients.util.QueryUtil.getSpringSort;
+
 import com.grinnotech.patients.dao.authorities.RequireEmployeeAuthority;
 import com.grinnotech.patients.dao.orphadata.DisorderRepository;
 import com.grinnotech.patients.model.orphadata.Disorder;
 import com.grinnotech.patients.service.AbstractService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
 import java.util.Collection;
 
-import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.STORE_READ;
-import static com.grinnotech.patients.util.QueryUtil.getSpringSort;
+import ch.ralscha.extdirectspring.annotation.ExtDirectMethod;
+import ch.ralscha.extdirectspring.bean.ExtDirectStoreReadRequest;
+import ch.ralscha.extdirectspring.bean.ExtDirectStoreResult;
+import ch.ralscha.extdirectspring.filter.StringFilter;
 
 /**
  * @author Jacek Sztajnke
@@ -45,10 +46,13 @@ public class DisorderService extends AbstractService<Disorder> {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    @Autowired
-    private DisorderRepository disorderRepository;
+    private final DisorderRepository disorderRepository;
 
-    @ExtDirectMethod(STORE_READ)
+	public DisorderService(DisorderRepository disorderRepository) {
+		this.disorderRepository = disorderRepository;
+	}
+
+	@ExtDirectMethod(STORE_READ)
     public ExtDirectStoreResult<Disorder> read(ExtDirectStoreReadRequest request) {
         StringFilter stringFilter = request.getFirstFilterForField("filter");
         String filter = stringFilter != null ? stringFilter.getValue() : "";

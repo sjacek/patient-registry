@@ -32,7 +32,6 @@ import com.grinnotech.patients.util.ValidationMessagesResult;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 
@@ -54,8 +53,11 @@ public class DiagnosisService extends AbstractService<Diagnosis> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-	@Autowired
-	private DiagnosisRepository diagnosisRepository;
+	private final DiagnosisRepository diagnosisRepository;
+
+	public DiagnosisService(DiagnosisRepository diagnosisRepository) {
+		this.diagnosisRepository = diagnosisRepository;
+	}
 
 	@ExtDirectMethod(STORE_READ)
 	public ExtDirectStoreResult<Diagnosis> read(ExtDirectStoreReadRequest request) {

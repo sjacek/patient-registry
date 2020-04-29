@@ -42,9 +42,6 @@ dependencies {
     compile "org.springframework.boot:spring-boot-configuration-processor:${springBootVersion}"
     compile "org.springframework.data:spring-data-commons:${springBootVersion}"
 
-    compile 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.9'
-
-
     compile 'ch.ralscha:extdirectspring:1.8.1'
     compile 'ch.rasc:extclassgenerator-annotations:1.0.10'
     compile 'eu.bitwalker:UserAgentUtils:1.21'
@@ -73,9 +70,12 @@ dependencies {
     compileOnly 'org.immutables:value:2.7.5'
 //    compileOnly 'com.querydsl:querydsl-apt:4.2.1'
 
-    compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.8.0'
-    compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.8.0'
-    compile group: 'org.openapitools', name: 'jackson-databind-nullable', version: '0.1.0'
+    compile 'io.springfox:springfox-swagger2:2.8.0'
+    compile 'io.springfox:springfox-swagger-ui:2.8.0'
+    compile 'org.openapitools:jackson-databind-nullable:0.1.0'
+    compile 'javax.xml.bind:jaxb-api:2.2.11'
+    compile 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.9'
+    compile 'javax.validation:validation-api'
 
     // optional dependencies for using Spock
     testCompile "org.hamcrest:hamcrest-core:1.3" // only necessary if Hamcrest matchers are used

@@ -1,7 +1,7 @@
 package com.grinnotech.patients.mongodb;
 
-import com.grinnotech.patients.mongodb.daos.UserRepository;
-import com.grinnotech.patients.mongodb.models.User;
+import com.grinnotech.patients.mongodb.dao.UserRepository;
+import com.grinnotech.patients.mongodb.model.User;
 
 import org.junit.Ignore;
 import org.junit.Test;

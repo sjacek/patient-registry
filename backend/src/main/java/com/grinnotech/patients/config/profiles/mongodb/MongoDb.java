@@ -1,24 +1,16 @@
 package com.grinnotech.patients.config.profiles.mongodb;
 
-//import com.grinnotech.patients.model.CPersistentLogin;
-//import com.grinnotech.patients.model.CUser;
-import com.grinnotech.patients.model.PersistentLogin;
-import com.grinnotech.patients.model.User;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.model.IndexOptions;
+
 import org.bson.Document;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.PostConstruct;
-
-import static com.mongodb.client.model.Indexes.ascending;
-import static com.mongodb.client.model.Indexes.compoundIndex;
 
 @Component
 @Profile("mongodb")

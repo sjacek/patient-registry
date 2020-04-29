@@ -1,10 +1,8 @@
 package com.grinnotech.patients.mongodb.events;
 
-
-import com.grinnotech.patients.mongodb.models.User;
+import com.grinnotech.patients.mongodb.model.User;
 import com.grinnotech.patients.mongodb.services.SequenceGeneratorService;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.mapping.event.AbstractMongoEventListener;
 import org.springframework.data.mongodb.core.mapping.event.BeforeConvertEvent;
 import org.springframework.stereotype.Component;
@@ -15,7 +13,6 @@ public class UserModelListener extends AbstractMongoEventListener<User> {
 
     private SequenceGeneratorService sequenceGenerator;
 
-    @Autowired
     public UserModelListener(SequenceGeneratorService sequenceGenerator) {
         this.sequenceGenerator = sequenceGenerator;
     }

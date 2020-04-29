@@ -32,7 +32,6 @@ import com.grinnotech.patients.util.ValidationMessagesResult;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 
@@ -55,8 +54,11 @@ public class ProjectService extends AbstractService<Project> {
 
 	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-	@Autowired
-	private ProjectRepository projectRepository;
+	private final ProjectRepository projectRepository;
+
+	public ProjectService(ProjectRepository projectRepository) {
+		this.projectRepository = projectRepository;
+	}
 
 	@ExtDirectMethod(STORE_READ)
 	public ExtDirectStoreResult<Project> read(ExtDirectStoreReadRequest request) {

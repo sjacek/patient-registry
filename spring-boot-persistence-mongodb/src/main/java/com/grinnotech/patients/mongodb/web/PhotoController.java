@@ -1,9 +1,8 @@
 package com.grinnotech.patients.mongodb.web;
 
-import java.io.IOException;
-import java.util.Base64;
+import com.grinnotech.patients.mongodb.model.Photo;
+import com.grinnotech.patients.mongodb.services.PhotoService;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,16 +11,19 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.grinnotech.patients.mongodb.models.Photo;
-import com.grinnotech.patients.mongodb.services.PhotoService;
+import java.io.IOException;
+import java.util.Base64;
 
 @Controller
 public class PhotoController {
 
-    @Autowired
-    private PhotoService photoService;
+    private final PhotoService photoService;
 
-    @GetMapping("/photos/{id}")
+	public PhotoController(PhotoService photoService) {
+		this.photoService = photoService;
+	}
+
+	@GetMapping("/photos/{id}")
     public String getPhoto(@PathVariable String id, Model model) {
         Photo photo = photoService.getPhoto(id);
         model.addAttribute("title", photo.getTitle());

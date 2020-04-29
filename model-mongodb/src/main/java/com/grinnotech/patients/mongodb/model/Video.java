@@ -1,4 +1,4 @@
-package com.grinnotech.patients.mongodb.models;
+package com.grinnotech.patients.mongodb.model;
 
 import java.io.InputStream;
 

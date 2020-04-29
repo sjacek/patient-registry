@@ -16,9 +16,11 @@
  */
 package com.grinnotech.patients.service;
 
-import ch.ralscha.extdirectspring.annotation.ExtDirectMethod;
-import ch.ralscha.extdirectspring.bean.ExtDirectStoreReadRequest;
-import ch.ralscha.extdirectspring.bean.ExtDirectStoreResult;
+import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.STORE_MODIFY;
+import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.STORE_READ;
+import static com.grinnotech.patients.util.OptionalEx.ifPresent;
+import static com.grinnotech.patients.util.QueryUtil.getSpringSort;
+import static com.grinnotech.patients.util.ThrowingFunction.sneakyThrow;
 
 import com.grinnotech.patients.NotFoundException;
 import com.grinnotech.patients.config.security.MongoUserDetails;
@@ -28,9 +30,9 @@ import com.grinnotech.patients.dao.authorities.RequireEmployeeAuthority;
 import com.grinnotech.patients.model.CountryDictionary;
 import com.grinnotech.patients.util.ValidationMessages;
 import com.grinnotech.patients.util.ValidationMessagesResult;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 
@@ -39,11 +41,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
-import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.STORE_MODIFY;
-import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.STORE_READ;
-import static com.grinnotech.patients.util.OptionalEx.ifPresent;
-import static com.grinnotech.patients.util.QueryUtil.getSpringSort;
-import static com.grinnotech.patients.util.ThrowingFunction.sneakyThrow;
+import ch.ralscha.extdirectspring.annotation.ExtDirectMethod;
+import ch.ralscha.extdirectspring.bean.ExtDirectStoreReadRequest;
+import ch.ralscha.extdirectspring.bean.ExtDirectStoreResult;
 
 /**
  *
@@ -55,10 +55,13 @@ public class CountryDictionaryService extends AbstractService<CountryDictionary>
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    @Autowired
-    private CountryDictionaryRepository addressDictionaryRepository;
+    private final CountryDictionaryRepository addressDictionaryRepository;
 
-    @ExtDirectMethod(STORE_READ)
+	public CountryDictionaryService(CountryDictionaryRepository addressDictionaryRepository) {
+		this.addressDictionaryRepository = addressDictionaryRepository;
+	}
+
+	@ExtDirectMethod(STORE_READ)
     public ExtDirectStoreResult<CountryDictionary> read(ExtDirectStoreReadRequest request) {
         LOGGER.debug("read 1");
         List<CountryDictionary> list = addressDictionaryRepository.findAllCountriesActive(getSpringSort(request));

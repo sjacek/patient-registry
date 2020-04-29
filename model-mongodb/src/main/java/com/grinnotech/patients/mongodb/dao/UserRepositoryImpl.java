@@ -14,10 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.grinnotech.patients.dao;
+package com.grinnotech.patients.mongodb.dao;
 
-import com.grinnotech.patients.model.User;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.grinnotech.patients.mongodb.model.User;
+
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -39,7 +39,6 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
 
     private final MongoTemplate mongoTemplate;
 
-    @Autowired
     public UserRepositoryImpl(OrganizationRepository organizationRepository, MongoTemplate mongoTemplate) {
         this.organizationRepository = organizationRepository;
         this.mongoTemplate = mongoTemplate;

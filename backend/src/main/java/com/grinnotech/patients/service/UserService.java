@@ -15,20 +15,18 @@ import static java.util.stream.Collectors.toSet;
 
 import com.grinnotech.patients.NotFoundException;
 import com.grinnotech.patients.config.security.MongoUserDetails;
-import com.grinnotech.patients.dao.OrganizationRepository;
 import com.grinnotech.patients.dao.PersistentLoginRepository;
-import com.grinnotech.patients.dao.UserRepository;
 import com.grinnotech.patients.dao.authorities.RequireAdminAuthority;
-//import com.grinnotech.patients.model.CUser;
 import com.grinnotech.patients.model.Organization;
-import com.grinnotech.patients.model.User;
+import com.grinnotech.patients.mongodb.dao.OrganizationRepository;
+import com.grinnotech.patients.mongodb.dao.UserRepository;
+import com.grinnotech.patients.mongodb.model.User;
 import com.grinnotech.patients.util.ValidationMessages;
 import com.grinnotech.patients.util.ValidationMessagesResult;
 
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
@@ -71,7 +69,6 @@ public class UserService extends AbstractService<User> {
 
 	private final PersistentLoginRepository persistentLoginRepository;
 
-	@Autowired
 	public UserService(MessageSource messageSource, Validator validator, UserRepository userRepository,
 			MailService mailService, OrganizationRepository organizationRepository,
 			PersistentLoginRepository persistentLoginRepository) {

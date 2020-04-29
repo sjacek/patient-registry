@@ -1,9 +1,11 @@
 package com.grinnotech.patients.mongodb.services;
 
-import java.io.IOException;
+import com.grinnotech.patients.mongodb.model.Video;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
+import com.mongodb.client.gridfs.model.GridFSFile;
 
 import org.bson.types.ObjectId;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.gridfs.GridFsOperations;
@@ -11,21 +13,21 @@ import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.grinnotech.patients.mongodb.models.Video;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
-import com.mongodb.client.gridfs.model.GridFSFile;
+import java.io.IOException;
 
 @Service
 public class VideoService {
 
-    @Autowired
-    private GridFsTemplate gridFsTemplate;
+    private final GridFsTemplate gridFsTemplate;
 
-    @Autowired
-    private GridFsOperations operations;
+    private final GridFsOperations operations;
 
-    public Video getVideo(String id) throws IllegalStateException, IOException {
+	public VideoService(GridFsTemplate gridFsTemplate, GridFsOperations operations) {
+		this.gridFsTemplate = gridFsTemplate;
+		this.operations = operations;
+	}
+
+	public Video getVideo(String id) throws IllegalStateException, IOException {
         GridFSFile file = gridFsTemplate.findOne(new Query(Criteria.where("_id").is(id)));
         Video video = new Video();
         video.setTitle(file.getMetadata().get("title").toString());

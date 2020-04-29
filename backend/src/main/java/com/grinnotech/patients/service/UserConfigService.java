@@ -8,12 +8,11 @@ import static org.springframework.util.StringUtils.hasText;
 import com.grinnotech.patients.NotFoundException;
 import com.grinnotech.patients.config.security.MongoUserDetails;
 import com.grinnotech.patients.dao.PersistentLoginRepository;
-import com.grinnotech.patients.dao.UserRepository;
 import com.grinnotech.patients.dao.authorities.RequireAnyAuthority;
 import com.grinnotech.patients.dto.UserSettings;
-//import com.grinnotech.patients.model.CUser;
 import com.grinnotech.patients.model.PersistentLogin;
-import com.grinnotech.patients.model.User;
+import com.grinnotech.patients.mongodb.dao.UserRepository;
+import com.grinnotech.patients.mongodb.model.User;
 import com.grinnotech.patients.util.TotpAuthUtil;
 import com.grinnotech.patients.util.ValidationMessages;
 import com.grinnotech.patients.util.ValidationMessagesResult;
@@ -21,7 +20,6 @@ import com.grinnotech.patients.util.ValidationUtil;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -52,7 +50,6 @@ public class UserConfigService {
 	private final MessageSource messageSource;
 
 	@Contract(pure = true)
-	@Autowired
 	public UserConfigService(PasswordEncoder passwordEncoder, UserRepository userRepository,
 			PersistentLoginRepository persistentLoginRepository, Validator validator, MessageSource messageSource) {
 		this.passwordEncoder = passwordEncoder;

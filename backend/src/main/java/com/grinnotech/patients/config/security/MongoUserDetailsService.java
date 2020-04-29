@@ -1,7 +1,7 @@
 package com.grinnotech.patients.config.security;
 
-import com.grinnotech.patients.dao.UserRepository;
-import com.grinnotech.patients.model.User;
+import com.grinnotech.patients.mongodb.model.User;
+import com.grinnotech.patients.mongodb.dao.UserRepository;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

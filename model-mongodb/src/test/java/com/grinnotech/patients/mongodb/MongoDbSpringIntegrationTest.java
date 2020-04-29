@@ -19,9 +19,13 @@ import com.mongodb.DBObject;
 @DataMongoTest
 @ExtendWith(SpringExtension.class)
 public class MongoDbSpringIntegrationTest {
+
+	@Autowired
+	private MongoTemplate mongoTemplate;
+
     @DisplayName("Given object When save object using MongoDB template Then object can be found")
     @Test
-    public void test(@Autowired MongoTemplate mongoTemplate) {
+    public void test() {
         // given
         DBObject objectToSave = BasicDBObjectBuilder.start()
             .add("key", "value")

@@ -1,10 +1,8 @@
 package com.grinnotech.patients.mongodb.web;
 
-import java.io.IOException;
+import com.grinnotech.patients.mongodb.model.Video;
+import com.grinnotech.patients.mongodb.services.VideoService;
 
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
@@ -14,16 +12,20 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.grinnotech.patients.mongodb.models.Video;
-import com.grinnotech.patients.mongodb.services.VideoService;
+import java.io.IOException;
+
+import javax.servlet.http.HttpServletResponse;
 
 @Controller
 public class VideoController {
 
-    @Autowired
-    private VideoService videoService;
+    private final VideoService videoService;
 
-    @GetMapping("/videos/{id}")
+	public VideoController(VideoService videoService) {
+		this.videoService = videoService;
+	}
+
+	@GetMapping("/videos/{id}")
     public String getVideo(@PathVariable String id, Model model) throws IllegalStateException, IOException {
         Video video = videoService.getVideo(id);
         model.addAttribute("title", video.getTitle());

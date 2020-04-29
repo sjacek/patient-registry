@@ -1,4 +1,4 @@
-package com.grinnotech.patients.mongodb.models;
+package com.grinnotech.patients.mongodb.model;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;

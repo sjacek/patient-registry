@@ -152,10 +152,6 @@ public class WebConfig implements WebMvcConfigurer {
 			}
 		};
 
-		//		tomcat.addConnectorCustomizers(
-		//				(TomcatConnectorCustomizer) connector -> ((AbstractHttp11Protocol<?>) connector.getProtocolHandler()).setMaxSwallowSize(-1));
-
-		tomcat.addAdditionalTomcatConnectors(initiateAjpConnector());
 		if (tomcatAjpEnabled) {
 			tomcat.addAdditionalTomcatConnectors(initiateAjpConnector());
 		}

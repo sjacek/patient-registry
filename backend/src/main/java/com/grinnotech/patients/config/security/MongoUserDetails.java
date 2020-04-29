@@ -1,6 +1,14 @@
 package com.grinnotech.patients.config.security;
 
-import com.grinnotech.patients.model.User;
+import static com.grinnotech.patients.model.Authority.PRE_AUTH;
+import static java.util.Collections.emptySet;
+import static java.util.Collections.unmodifiableCollection;
+import static java.util.stream.Collectors.toSet;
+import static org.springframework.security.core.authority.AuthorityUtils.createAuthorityList;
+import static org.springframework.util.StringUtils.hasText;
+
+import com.grinnotech.patients.mongodb.model.User;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,13 +17,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Set;
-
-import static com.grinnotech.patients.model.Authority.PRE_AUTH;
-import static java.util.Collections.emptySet;
-import static java.util.Collections.unmodifiableCollection;
-import static java.util.stream.Collectors.toSet;
-import static org.springframework.security.core.authority.AuthorityUtils.createAuthorityList;
-import static org.springframework.util.StringUtils.hasText;
 
 public class MongoUserDetails implements UserDetails {
 

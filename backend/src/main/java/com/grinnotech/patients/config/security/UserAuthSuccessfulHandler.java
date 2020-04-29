@@ -1,10 +1,9 @@
 package com.grinnotech.patients.config.security;
 
-import com.grinnotech.patients.dao.UserRepository;
-import com.grinnotech.patients.model.User;
+import com.grinnotech.patients.mongodb.dao.UserRepository;
+import com.grinnotech.patients.mongodb.model.User;
 
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.authentication.event.InteractiveAuthenticationSuccessEvent;
 import org.springframework.stereotype.Component;
@@ -16,7 +15,6 @@ public class UserAuthSuccessfulHandler implements ApplicationListener<Interactiv
 
     private final UserRepository userRepository;
 
-    @Autowired
     public UserAuthSuccessfulHandler(UserRepository userRepository) {
         this.userRepository = userRepository;
     }

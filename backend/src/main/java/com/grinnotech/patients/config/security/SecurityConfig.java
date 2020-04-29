@@ -1,7 +1,7 @@
 package com.grinnotech.patients.config.security;
 
 import com.grinnotech.patients.config.AppProperties;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -21,20 +21,23 @@ import org.springframework.security.web.authentication.logout.HttpStatusReturnin
 @EnableWebSecurity
 class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    private RememberMeServices rememberMeServices;
+    private final RememberMeServices rememberMeServices;
 
-    @Autowired
-    private AppProperties appProperties;
+    private final AppProperties appProperties;
 
-    @Autowired
-    private AuthenticationSuccessHandler authenticationSuccessHandler;
+    private final AuthenticationSuccessHandler authenticationSuccessHandler;
 
-    @Autowired
-    private Environment environment;
+    private final Environment environment;
 
-    @Override
-    public void configure(WebSecurity web) throws Exception {
+	public SecurityConfig(RememberMeServices rememberMeServices, AppProperties appProperties, AuthenticationSuccessHandler authenticationSuccessHandler, Environment environment) {
+		this.rememberMeServices = rememberMeServices;
+		this.appProperties = appProperties;
+		this.authenticationSuccessHandler = authenticationSuccessHandler;
+		this.environment = environment;
+	}
+
+	@Override
+    public void configure(WebSecurity web) {
         if (environment.acceptsProfiles("development")) {
             web.ignoring().antMatchers("/resources/**", "/build/**", "/ext/**", "/**/*.js", "/bootstrap.json", "/robots.txt");
         } else {
@@ -42,7 +45,6 @@ class SecurityConfig extends WebSecurityConfigurerAdapter {
         }
     }
 
-    @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth, UserDetailsService userDetailsService, PasswordEncoder passwordEncoder)
             throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);

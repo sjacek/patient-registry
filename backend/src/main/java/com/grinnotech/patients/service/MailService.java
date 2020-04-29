@@ -1,12 +1,12 @@
 package com.grinnotech.patients.service;
 
 import com.grinnotech.patients.config.AppProperties;
-import com.grinnotech.patients.model.User;
+import com.grinnotech.patients.mongodb.model.User;
 import com.samskivert.mustache.Mustache;
 import com.samskivert.mustache.Template;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.core.io.ClassPathResource;
@@ -16,8 +16,6 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -26,6 +24,9 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 
 @Service
 public class MailService {
@@ -44,7 +45,6 @@ public class MailService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    @Autowired
     public MailService(JavaMailSender mailSender, MessageSource messageSource, AppProperties appProperties, Mustache.Compiler mustacheCompiler,
             @Value("${info.app.name}") String appName) {
         this.mailSender = mailSender;

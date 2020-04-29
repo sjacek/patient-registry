@@ -27,16 +27,16 @@ import static org.apache.commons.text.WordUtils.capitalizeFully;
 import com.grinnotech.patients.config.OrphadataProperties;
 import com.grinnotech.patients.dao.ContactRepository;
 import com.grinnotech.patients.dao.CountryDictionaryRepository;
-import com.grinnotech.patients.dao.OrganizationRepository;
-import com.grinnotech.patients.dao.UserRepository;
 import com.grinnotech.patients.dao.ZipCodePolandRepository;
 import com.grinnotech.patients.dao.orphadata.DisorderRepository;
 import com.grinnotech.patients.domain.AbstractPersistable;
 import com.grinnotech.patients.model.ContactMethod;
 import com.grinnotech.patients.model.CountryDictionary;
 import com.grinnotech.patients.model.Organization;
-import com.grinnotech.patients.model.User;
+import com.grinnotech.patients.mongodb.model.User;
 import com.grinnotech.patients.model.ZipCodePoland;
+import com.grinnotech.patients.mongodb.dao.OrganizationRepository;
+import com.grinnotech.patients.mongodb.dao.UserRepository;
 import com.grinnotech.patients.util.startup.OrphadataParser;
 import com.grinnotech.patients.util.startup.OrphadataParserMongo;
 import com.opencsv.CSVParserBuilder;
@@ -44,7 +44,6 @@ import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -89,7 +88,6 @@ class Startup {
 
 	private final OrphadataProperties orphadataProperties;
 
-	@Autowired
 	public Startup(UserRepository userRepository, OrganizationRepository organizationRepository, ContactRepository contactRepository, CountryDictionaryRepository addressDictionaryRepository, ZipCodePolandRepository zipCodePolandRepository,
 			DisorderRepository disorderRepository, PasswordEncoder passwordEncoder, OrphadataProperties orphadataProperties) {
 		this.userRepository = userRepository;

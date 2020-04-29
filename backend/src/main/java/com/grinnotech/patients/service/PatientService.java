@@ -34,7 +34,6 @@ import com.grinnotech.patients.util.ValidationMessagesResult;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -65,7 +64,6 @@ public class PatientService extends AbstractService<Patient> {
 
 	private final MessageSource messageSource;
 
-	@Autowired
 	public PatientService(PatientRepository patientRepository, MessageSource messageSource) {
 		this.patientRepository = patientRepository;
 		this.messageSource = messageSource;
