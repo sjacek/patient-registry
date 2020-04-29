@@ -18,6 +18,7 @@ package com.grinnotech.patients.util.startup;
 
 import static org.junit.Assert.assertEquals;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.net.MalformedURLException;
@@ -30,6 +31,7 @@ import java.text.ParseException;
  */
 public class OrphadataParserTest {
     @Test
+    @Ignore
     public void checkOrphadataInfo() throws ParseException, MalformedURLException {
         OrphadataParser parser = new OrphadataParser(new URL("http://www.orphadata.org/data/export/pl_product1.json"));
         parser.parse(20);

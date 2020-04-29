@@ -24,9 +24,12 @@ spring:
   jackson:
     serialization:
       write-date-timestamps-as-nanoseconds: false
-  
-  resources:
-    cache-period: 31556926
+      WRITE_DATES_AS_TIMESTAMPS: false
+
+    date-format: com.grinnotech.patients.config.RFC3339DateFormat
+
+#  resources:
+#    cache-period: 31556926
   
   mvc:
     favicon:
@@ -42,8 +45,8 @@ spring:
     thread-name-prefix: patients-async-executor
 
   main:
-    banner-mode: log 
-
+    banner-mode: log
+    allow-bean-definition-overriding: true
 
 server:
   port: 8443
@@ -80,19 +83,29 @@ logging:
     com.grinnotech: INFO
   file: ./app.log
 
-endpoints:
-  metrics:
-    enabled: false
-    filter:
-      enabled: false
+#endpoints:
+#  metrics:
+#    enabled: false
+#    filter:
+#      enabled: false
 #  health:
 #    sensitive: false
     
 management:
-  add-application-context-header: false
+    server:
+        add-application-context-header: false
 #  security:
 #    enabled: true
+    endpoint:
+        metrics:
+            enabled: true
 
 orphadata:
   enabled: true
   url-pl: http://www.orphadata.org/data/export/pl_product1.json
+
+springfox:
+    documentation:
+        swagger:
+            v2:
+                path: /api-docs

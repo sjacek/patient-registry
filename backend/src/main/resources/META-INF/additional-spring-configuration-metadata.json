@@ -54,6 +54,11 @@
       "name": "sencha.client-dir",
       "type": "java.lang.String",
       "description": "Description for sencha.client-dir."
+    },
+    {
+      "name": "app.url",
+      "type": "java.lang.String",
+      "description": "Description for app.url."
     }
   ]
 }

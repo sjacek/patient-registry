@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.springframework.data.domain.Sort.Direction.ASC;
+import static org.springframework.data.domain.Sort.by;
 
 @Controller
 @RequestMapping(path = "/export")
@@ -59,7 +60,7 @@ public class ExportController {
         List<Sort.Order> list = new ArrayList<Sort.Order>() {{
             add(new Sort.Order(ASC, sort));
         }};
-        model.addAttribute(Attributes.patients.name(), patientService.findPatients(organizationId, filter, new Sort(list)));
+        model.addAttribute(Attributes.patients.name(), patientService.findPatients(organizationId, filter, by(list)));
         return "";
     }
 }

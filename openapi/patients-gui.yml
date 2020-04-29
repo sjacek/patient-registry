@@ -44,11 +44,11 @@ paths:
                 405:
                     description: Validation exception
                     content: {}
-            security:
-            -   patient_registry_auth:
-                    - write:patients
-                    - read:patients
-            x-codegen-request-body-name: body
+#            security:
+#            -   patient_registry_auth:
+#                    - write:patients
+#                    - read:patients
+#            x-codegen-request-body-name: body
         post:
             tags:
                 - patient
@@ -62,17 +62,17 @@ paths:
                             $ref: '#/components/schemas/Patient'
                     application/xml:
                         schema:
-                            $ref: '#/components/schemas/Pet'
+                            $ref: '#/components/schemas/Patient'
                 required: true
             responses:
                 405:
                     description: Invalid input
                     content: {}
-            security:
-            -   patient_registry_auth:
-                    - write:patients
-                    - read:patients
-            x-codegen-request-body-name: body
+#            security:
+#            -   patient_registry_auth:
+#                    - write:patients
+#                    - read:patients
+#            x-codegen-request-body-name: body
 
 components:
     schemas:
@@ -100,16 +100,16 @@ components:
                 checksum:
                     type: string
 
-    securitySchemes:
-        petstore_auth:
-            type: oauth2
-            flows:
-                implicit:
-                    authorizationUrl: http://petstore.swagger.io/oauth/dialog
-                    scopes:
-                        write:pets: modify pets in your account
-                        read:pets: read your pets
-        api_key:
-            type: apiKey
-            name: api_key
-            in: header
+#    securitySchemes:
+#        patient_registry_auth:
+#            type: oauth2
+#            flows:
+#                implicit:
+#                    authorizationUrl: http://petstore.swagger.io/oauth/dialog
+#                    scopes:
+#                        write:pets: modify pets in your account
+#                        read:pets: read your pets
+#        api_key:
+#            type: apiKey
+#            name: api_key
+#            in: header

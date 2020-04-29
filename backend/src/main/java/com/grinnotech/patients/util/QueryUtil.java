@@ -29,8 +29,10 @@ import java.util.stream.StreamSupport;
 
 import static ch.ralscha.extdirectspring.bean.SortDirection.ASCENDING;
 import static java.util.stream.Collectors.toList;
+import static org.springframework.data.domain.PageRequest.of;
 import static org.springframework.data.domain.Sort.Direction.ASC;
 import static org.springframework.data.domain.Sort.Direction.DESC;
+import static org.springframework.data.domain.Sort.by;
 
 /**
  *
@@ -46,10 +48,10 @@ public class QueryUtil {
         List<Order> list = request.getSorters().stream().map(sortInfo ->
                 new Order(sortInfo.getDirection() == ASCENDING ? ASC : DESC, sortInfo.getProperty())
         ).collect(toList());
-        return new Sort(list);
+        return by(list);
     }
 
     public static Pageable getPageable(ExtDirectStoreReadRequest request) {
-        return new PageRequest(request.getPage() - 1, request.getLimit(), getSpringSort(request));
+        return of(request.getPage() - 1, request.getLimit(), getSpringSort(request));
     }
 }
