@@ -1,12 +1,12 @@
 rootProject.name = 'patient-registry'
 
 include ":model-mongodb"
-include ":backend"
+include ":backend:patients"
 include ":spring-boot-persistence-mongodb"
 include ":frontend"
 //include ":frontend-2"
 
 project(':model-mongodb').projectDir = "$rootDir/model-mongodb" as File
-project(':backend').projectDir = "$rootDir/backend" as File
+project(':backend:patients').projectDir = "$rootDir/backend/patients" as File
 project(':frontend').projectDir = "$rootDir/frontend" as File
 //project(':frontend-2').projectDir = "$rootDir/frontend-2" as File
