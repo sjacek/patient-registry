@@ -26,27 +26,28 @@ repositories {
     mavenCentral()
 }
 dependencies {
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: "${springBootVersion}"
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: "${springBootVersion}"
-    compile group: 'org.springframework.boot', name: 'spring-boot-devtools', version: "${springBootVersion}"
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: "${springBootVersion}"
-    compile group: 'org.jboss.resteasy', name: 'resteasy-jaxb-provider', version: "${jbossResteasyVersion}"
-    compile group: 'org.jboss.resteasy', name: 'resteasy-jackson2-provider', version: "${jbossResteasyVersion}"
-    compile group: 'org.infinispan', name: 'infinispan-core', version: '9.4.16.Final'
-    compile group: 'org.keycloak', name: 'keycloak-model-infinispan', version: "${keycloakVersion}"
-    compile(group: 'org.keycloak', name: 'keycloak-services', version: "${keycloakVersion}") {
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: "${springBootVersion}"
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: "${springBootVersion}"
+    implementation group: 'org.springframework.boot', name: 'spring-boot-devtools', version: "${springBootVersion}"
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: "${springBootVersion}"
+    implementation group: 'org.jboss.resteasy', name: 'resteasy-jaxb-provider', version: "${jbossResteasyVersion}"
+    implementation group: 'org.jboss.resteasy', name: 'resteasy-jackson2-provider', version: "${jbossResteasyVersion}"
+    implementation group: 'org.infinispan', name: 'infinispan-core', version: '9.4.16.Final'
+    implementation group: 'org.keycloak', name: 'keycloak-model-infinispan', version: "${keycloakVersion}"
+    implementation(group: 'org.keycloak', name: 'keycloak-services', version: "${keycloakVersion}") {
         exclude(module: 'jboss-servlet-api_3.0_spec')
     }
-    compile group: 'org.jboss.modules', name: 'jboss-modules', version: '1.9.2.Final'
-    compile group: 'org.keycloak', name: 'keycloak-model-jpa', version: "${keycloakVersion}"
-    compile group: 'org.keycloak', name: 'keycloak-js-adapter', version: "${keycloakVersion}"
-    compile group: 'org.keycloak', name: 'keycloak-themes', version: "${keycloakVersion}"
-    compile group: 'org.keycloak', name: 'keycloak-saml-core', version: "${keycloakVersion}"
-    compile group: 'org.keycloak', name: 'keycloak-authz-policy-common', version: "${keycloakVersion}"
-    compile group: 'org.keycloak', name: 'keycloak-wildfly-extensions', version: "${keycloakVersion}"
-    compile group: 'org.freemarker', name: 'freemarker', version: '2.3.29'
-    compile group: 'org.springframework.boot', name: 'spring-boot-configuration-processor', version: "${springBootVersion}"
-    runtime group: 'com.h2database', name: 'h2', version: '1.4.200'
-    testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: "${springBootVersion}"
-    testCompile group: 'io.rest-assured', name: 'rest-assured', version: '3.3.0'
+    implementation group: 'org.jboss.modules', name: 'jboss-modules', version: '1.9.2.Final'
+    implementation group: 'org.keycloak', name: 'keycloak-model-jpa', version: "${keycloakVersion}"
+    implementation group: 'org.keycloak', name: 'keycloak-js-adapter', version: "${keycloakVersion}"
+    implementation group: 'org.keycloak', name: 'keycloak-themes', version: "${keycloakVersion}"
+    implementation group: 'org.keycloak', name: 'keycloak-saml-core', version: "${keycloakVersion}"
+    implementation group: 'org.keycloak', name: 'keycloak-authz-policy-common', version: "${keycloakVersion}"
+    implementation group: 'org.keycloak', name: 'keycloak-wildfly-extensions', version: "${keycloakVersion}"
+    implementation group: 'org.freemarker', name: 'freemarker', version: '2.3.29'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-configuration-processor', version: "${springBootVersion}"
+    runtimeOnly group: 'com.h2database', name: 'h2', version: '1.4.200'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.2'
+    testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: "${springBootVersion}"
+    testImplementation group: 'io.rest-assured', name: 'rest-assured', version: '3.3.0'
 }
