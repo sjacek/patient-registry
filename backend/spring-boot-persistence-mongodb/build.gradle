@@ -1,23 +1,17 @@
 plugins {
     id 'java'
-    id 'maven'
-
     id 'org.springframework.boot'
 }
 
-//apply plugin: 'spring-boot'
-//apply plugin: 'io.spring.dependency-management'
-
 dependencies {
-
-    compile "org.springframework.boot:spring-boot-starter-websocket:${springBootVersion}"
-    compile "org.springframework.boot:spring-boot-starter-thymeleaf:${springBootVersion}"
-    compile "org.springframework.boot:spring-boot-starter-data-mongodb:${springBootVersion}"
-    testCompile 'de.flapdoodle.embed:de.flapdoodle.embed.mongo:2.2.0'
-    testCompile 'org.junit.jupiter:junit-jupiter-api:5.5.1'
-    testCompile 'org.junit.jupiter:junit-jupiter-engine:5.5.1'
+    implementation "org.springframework.boot:spring-boot-starter-websocket:${springBootVersion}"
+    implementation "org.springframework.boot:spring-boot-starter-thymeleaf:${springBootVersion}"
+    implementation "org.springframework.boot:spring-boot-starter-data-mongodb:${springBootVersion}"
+    testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo:2.2.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.5.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.5.1'
 // JUnit platform launcher
 // To be able to run tests from IDE directly
-    testCompile 'org.junit.platform:junit-platform-launcher:1.2.0'
-    testCompile "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
+    testImplementation 'org.junit.platform:junit-platform-launcher:1.2.0'
+    testImplementation "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
 }
