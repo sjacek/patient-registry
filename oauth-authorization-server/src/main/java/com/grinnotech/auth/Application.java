@@ -1,7 +1,7 @@
 package com.grinnotech.auth;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.grinnotech.auth.config.KeycloakServerProperties;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.liquibase.LiquibaseAutoConfiguration;
@@ -11,16 +11,15 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 
-import com.grinnotech.auth.config.KeycloakServerProperties;
+import lombok.extern.slf4j.Slf4j;
 
 @SpringBootApplication(exclude = LiquibaseAutoConfiguration.class)
 @EnableConfigurationProperties(KeycloakServerProperties.class)
-public class AuthorizationServerApp {
+@Slf4j
+public class Application {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AuthorizationServerApp.class);
-
-    public static void main(String[] args) throws Exception {
-        SpringApplication.run(AuthorizationServerApp.class, args);
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
     }
 
     @Bean
@@ -31,7 +30,7 @@ public class AuthorizationServerApp {
             Integer port = serverProperties.getPort();
             String keycloakContextPath = keycloakServerProperties.getContextPath();
 
-            LOG.info("Embedded Keycloak started: http://localhost:{}{} to use keycloak", port, keycloakContextPath);
+            log.info("Embedded Keycloak started: http://localhost:{}{} to use keycloak", port, keycloakContextPath);
         };
     }
 

@@ -19,6 +19,7 @@
   "author": "Grinnotech",
   "license": "GPL-3.0-or-later",
   "devDependencies": {
+    "cloc": "^2.5.1",
     "lerna": "^3.20.2"
   }
 }

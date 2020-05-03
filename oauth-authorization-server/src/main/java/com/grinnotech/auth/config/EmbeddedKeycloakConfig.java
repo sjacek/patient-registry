@@ -23,7 +23,7 @@ public class EmbeddedKeycloakConfig {
 
 	@Bean
 	ServletRegistrationBean<HttpServlet30Dispatcher> keycloakJaxRsApplication(
-			KeycloakServerProperties keycloakServerProperties, DataSource dataSource) throws Exception {
+			KeycloakServerProperties keycloakServerProperties, DataSource dataSource) throws NamingException {
 
 		mockJndiEnvironment(dataSource);
 		EmbeddedKeycloakApplication.keycloakServerProperties = keycloakServerProperties;
