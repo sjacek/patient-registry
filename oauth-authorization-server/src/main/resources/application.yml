@@ -1,15 +1,15 @@
 server:
-  port: 8083
+    port: 8083
 
 spring:
-  datasource:
-    username: sa
-    url: jdbc:h2:mem:testdb
+    datasource:
+        username: sa
+        url: jdbc:h2:mem:testdb
 
 keycloak:
-  server:
-    contextPath: /auth
-    adminUser:
-      username: bael-admin
-      password: pass
-    realmImportFile: baeldung-realm.json
+    server:
+        contextPath: /auth
+        adminUser:
+            username: admin
+            password: admin
+        realmImportFile: keycloak-realm.json

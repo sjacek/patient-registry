@@ -6,7 +6,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = { AuthorizationServerApp.class })
+@SpringBootTest(classes = { Application.class })
 public class ContextIntegrationTest {
 
     @Test
