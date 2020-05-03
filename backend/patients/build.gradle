@@ -1,5 +1,3 @@
-import org.codehaus.groovy.runtime.GStringImpl
-
 plugins {
     id 'org.springframework.boot'
     id 'org.openapi.generator' version "$openApiGeneratorVersion"
@@ -7,8 +5,8 @@ plugins {
 }
 
 ext {
-    openapiGeneratedDir = "${buildDir}/generated/openapi" as GStringImpl
-    patientYmlFile = "$rootDir/openapi/patients-gui.yml" as GStringImpl
+    openapiGeneratedDir = "${buildDir}/generated/openapi"
+    patientYmlFile = "${rootDir}/openapi/patients-gui.yml"
 }
 
 apply plugin: 'java'
@@ -48,7 +46,7 @@ repositories {
 }
 
 dependencies {
-    compile project(':model-mongodb')
+    compile project(':backend:model-mongodb')
 
     implementation "org.springframework:spring-core:${springVersion}"
     implementation "org.springframework:spring-webmvc:${springVersion}"
@@ -121,7 +119,6 @@ tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
 
-// Builds a Kotlin client by default.
 openApiGenerate {
     generatorName = "spring"
     inputSpec = "${patientYmlFile}".toString()
