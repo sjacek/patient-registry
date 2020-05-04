@@ -18,6 +18,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class EmbeddedKeycloakApplication extends KeycloakApplication {
 
+//	private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
 	static KeycloakServerProperties keycloakServerProperties;
 
 	public EmbeddedKeycloakApplication() {

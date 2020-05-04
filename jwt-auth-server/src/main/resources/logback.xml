@@ -3,7 +3,7 @@
     <include resource="org/springframework/boot/logging/logback/base.xml"/>
 
     <!-- Kod podsystemu z enumeracji KodPodsystemu. Przykład recepta-ws -->
-    <property name="APP_CODE" value="e-recepta-ikp"/>
+    <property name="APP_CODE" value="jwt-auth-server"/>
 
     <appender name="ROLLING-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <encoder>
@@ -11,7 +11,8 @@
         </encoder>
 
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>/var/app-log/${APP_CODE}_%d{yyyyMMdd}.%i.log</fileNamePattern>
+<!--            <fileNamePattern>/var/app-log/${APP_CODE}_%d{yyyyMMdd}.%i.log</fileNamePattern>-->
+            <fileNamePattern>./${APP_CODE}_%d{yyyyMMdd}.%i.log</fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>100MB</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>
@@ -30,7 +31,6 @@
 
     <logger name="org.springframework" level="INFO"/>
     <logger name="org.apache.cxf" level="INFO"/>
-    <logger name="pl.gov.csioz.p1" level="INFO"/>
 
     <root level="INFO">
         <appender-ref ref="CONSOLE"/>
