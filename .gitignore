@@ -20,10 +20,12 @@
 /**/out
 
 /app.log*
-/**/sencha-error*.log
+/**/*.log
 /**/*.bak
 /*~
 /tomcat/
+/log/
 
 keystore.p12
 /node_modules/
+/**/*.out

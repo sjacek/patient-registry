@@ -1,7 +1,8 @@
-plugins {
-    id 'org.springframework.boot'
-    id 'io.spring.dependency-management'
-}
+//plugins {
+//    id 'org.springframework.boot'
+//    id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+//    id 'org.asciidoctor.convert' version '1.5.8'
+//}
 
 apply plugin: 'java'
 apply plugin: 'groovy'
@@ -11,6 +12,7 @@ group = 'com.grinnotech.patients'
 version = '0.0.1'
 description = 'OAuth Authorization Server'
 sourceCompatibility = '11'
+targetCompatibility = '11'
 
 configurations {
     developmentOnly
@@ -32,11 +34,17 @@ dependencies {
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: "${springBootVersion}"
     implementation group: 'org.jboss.resteasy', name: 'resteasy-jaxb-provider', version: "${jbossResteasyVersion}"
     implementation group: 'org.jboss.resteasy', name: 'resteasy-jackson2-provider', version: "${jbossResteasyVersion}"
+    implementation group: 'org.glassfish.jaxb', name: 'jaxb-runtime', version: '2.4.0-b180830.0438'
+
+//    implementation group: 'org.glassfish.jaxb', name: 'txw2', version: '2.4.0-b180830.0438'
     implementation group: 'org.infinispan', name: 'infinispan-core', version: '9.4.16.Final'
     implementation group: 'org.keycloak', name: 'keycloak-model-infinispan', version: "${keycloakVersion}"
     implementation(group: 'org.keycloak', name: 'keycloak-services', version: "${keycloakVersion}") {
         exclude(module: 'jboss-servlet-api_3.0_spec')
+        exclude(module: 'slf4j-log4j12')
+        exclude(module: 'log4j')
     }
+
 //    implementation group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.30'
 //    implementation group: 'com.sun.xml.bind', name: 'jaxb-osgi', version: '2.4.0-b180830.0438'
 
@@ -55,7 +63,30 @@ dependencies {
     implementation group: 'org.springframework.boot', name: 'spring-boot-configuration-processor', version: "${springBootVersion}"
     runtimeOnly group: 'com.h2database', name: 'h2', version: '1.4.200'
 
+    testImplementation "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.2'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation group: 'io.rest-assured', name: 'rest-assured', version: '3.3.0'
+//    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.6.2'
+//    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.6.2'
+//    testImplementation 'org.junit.jupiter:junit-jupiter:5.6.2'
+//    testImplementation 'org.junit.jupiter:junit-jupiter-migrationsupport:5.6.2'
+
+    testImplementation 'io.rest-assured:rest-assured:4.2.0'
+    testImplementation 'io.rest-assured:json-path:4.2.0'
+    testImplementation 'io.rest-assured:xml-path:4.2.0'
+
+//    testCompileOnly 'junit:junit:4.12'
+//    testRuntimeOnly 'org.junit.vintage:junit-vintage-engine:5.6.2'
 }
+
+test {
+//    useJUnitPlatform {
+//        includeTags 'fast'
+//        excludeTags 'slow'
+//    }
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+}
+
+build.dependsOn test
