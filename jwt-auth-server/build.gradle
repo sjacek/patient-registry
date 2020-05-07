@@ -69,11 +69,13 @@ dependencies {
     runtimeOnly group: 'com.h2database', name: 'h2', version: '1.4.200'
 
     testImplementation "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.2'
-    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.6.2'
-    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.6.2'
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.6.2'
+//    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.2'
+//    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.6.2'
+//    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.6.2'
+//    testImplementation 'org.junit.jupiter:junit-jupiter:5.6.2'
     testImplementation 'org.junit.jupiter:junit-jupiter-migrationsupport:5.6.2'
+    testImplementation 'org.junit.platform:junit-platform-engine:1.6.2'
+    testImplementation 'org.junit.platform:junit-platform-commons:1.6.2'
 
     testImplementation 'io.rest-assured:rest-assured:4.2.0'
     testImplementation 'io.rest-assured:json-path:4.2.0'
