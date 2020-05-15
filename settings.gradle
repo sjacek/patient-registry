@@ -4,9 +4,10 @@ include ':frontend'
 include ':jwt-auth-server'
 include ':backend:model-mongodb'
 include ':backend:patients'
+include ':backend:patients-legacy'
 include ':backend:spring-boot-persistence-mongodb'
 
-project(':frontend').projectDir = "$rootDir/frontend" as File
-project(':jwt-auth-server').projectDir = "$rootDir/jwt-auth-server" as File
-project(':backend:model-mongodb').projectDir = "$rootDir/backend/model-mongodb" as File
-project(':backend:patients').projectDir = "$rootDir/backend/patients" as File
+//project(':frontend').projectDir = "$rootDir/frontend" as File
+//project(':jwt-auth-server').projectDir = "$rootDir/jwt-auth-server" as File
+//project(':backend:model-mongodb').projectDir = "$rootDir/backend/model-mongodb" as File
+//project(':backend:patients').projectDir = "$rootDir/backend/patients" as File
