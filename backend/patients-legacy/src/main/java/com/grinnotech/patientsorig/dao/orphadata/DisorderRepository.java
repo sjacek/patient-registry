@@ -16,7 +16,7 @@
  */
 package com.grinnotech.patientsorig.dao.orphadata;
 
-import com.grinnotech.patientsorig.model.orphadata.Disorder;
+import com.grinnotech.patients.model.orphadata.Disorder;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.repository.MongoRepository;

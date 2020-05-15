@@ -16,7 +16,7 @@
  */
 package com.grinnotech.patientsorig.dao;
 
-import com.grinnotech.patientsorig.model.PersistentLogin;
+import com.grinnotech.patients.model.PersistentLogin;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.Collection;

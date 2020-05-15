@@ -23,7 +23,7 @@ import static org.springframework.transaction.annotation.Propagation.SUPPORTS;
 
 import com.grinnotech.patientsorig.NotFoundException;
 import com.grinnotech.patientsorig.dao.PatientRepository;
-import com.grinnotech.patientsorig.model.Patient;
+import com.grinnotech.patients.model.Patient;
 import com.grinnotech.patientsorig.vo.Result;
 import com.grinnotech.patientsorig.vo.ResultFactory;
 

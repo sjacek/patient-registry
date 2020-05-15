@@ -1,7 +1,7 @@
 package com.grinnotech.patientsorig.service;
 
 import com.grinnotech.patientsorig.config.AppProperties;
-import com.grinnotech.patientsorig.mongodb.model.User;
+import com.grinnotech.patients.mongodb.model.User;
 import com.samskivert.mustache.Mustache;
 import com.samskivert.mustache.Template;
 

@@ -11,8 +11,8 @@ import com.grinnotech.patientsorig.config.security.MongoUserDetails;
 import com.grinnotech.patientsorig.dao.authorities.RequireAdminAuthority;
 import com.grinnotech.patientsorig.dao.authorities.RequireAnyAuthority;
 import com.grinnotech.patientsorig.dto.UserDetailDto;
-import com.grinnotech.patientsorig.mongodb.dao.UserRepository;
-import com.grinnotech.patientsorig.mongodb.model.User;
+import com.grinnotech.patients.mongodb.dao.UserRepository;
+import com.grinnotech.patients.mongodb.model.User;
 import com.grinnotech.patientsorig.util.TotpAuthUtil;
 import com.grinnotech.patientsorig.web.CsrfController;
 

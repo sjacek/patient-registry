@@ -16,11 +16,11 @@
  */
 package com.grinnotech.patientsorig.test;
 
-import static org.junit.Assert.fail;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
-import com.grinnotech.patientsorig.model.ContactMethod;
-import com.grinnotech.patientsorig.service.ContactService;
+import com.grinnotech.patients.model.Foo;
+import com.grinnotech.patientsorig.service.FooRestService;
+import com.grinnotech.patientsorig.vo.Result;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -35,10 +35,6 @@ import org.springframework.boot.test.context.ConfigFileApplicationContextInitial
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
-
-import ch.ralscha.extdirectspring.bean.ExtDirectStoreReadRequest;
-import ch.ralscha.extdirectspring.bean.ExtDirectStoreResult;
 
 /**
  *
@@ -47,11 +43,10 @@ import ch.ralscha.extdirectspring.bean.ExtDirectStoreResult;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @ContextConfiguration(
-        initializers = ConfigFileApplicationContextInitializer.class
-//        locations = "classpath:/applicationContext.xml"
-)
+        initializers = ConfigFileApplicationContextInitializer.class,
+        locations = "classpath:/applicationContext.xml")
 @Ignore
-public class ContactServiceTest {
+public class FooRestServiceTest {
     
     @BeforeClass
     public static void setUpClass() {
@@ -70,56 +65,59 @@ public class ContactServiceTest {
     }
 
     @Autowired
-    private ContactService contactService;
-
-    @Autowired
-    RequestMappingHandlerAdapter adapter;
-
-    /**
-     * Test of read method, of class ContactService.
-     */
-    @Test
-    public void testRead() {
-//        Result<Foo> expResult = ResultFactory.getSuccessResult(new Foo());
-//        Result<Foo> result = fooService.read(idFoo);
-//        Assert.assertEquals(null, result.getData().getId());
-
-//        System.out.println("read");
-        ExtDirectStoreReadRequest request = null;
-        ExtDirectStoreResult<ContactMethod> expResult = null;
-        ExtDirectStoreResult<ContactMethod> result = contactService.read(request);
-        Assert.assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
+    private FooRestService fooService;
+    
 //    /**
-//     * Test of destroy method, of class ContactService.
-//     */
-//    @Test
-//    public void testDestroy() {
-//        System.out.println("destroy");
-//        MongoUserDetails userDetails = null;
-//        ContactMethod contact = null;
-//        ContactService instance = new ContactService();
-//        ExtDirectStoreResult<ContactMethod> expResult = null;
-//        ExtDirectStoreResult<ContactMethod> result = instance.destroy(userDetails, contact);
-//        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//
-//    /**
-//     * Test of update method, of class ContactService.
+//     * Test of update method, of class FooRestServiceImpl.
 //     */
 //    @Test
 //    public void testUpdate() {
 //        System.out.println("update");
-//        MongoUserDetails userDetails = null;
-//        ContactMethod contact = null;
-//        ContactService instance = new ContactService();
-//        ValidationMessagesResult<ContactMethod> expResult = null;
-//        ValidationMessagesResult<ContactMethod> result = instance.update(userDetails, contact);
+//        String idFoo = "";
+//        FooRestServiceImpl instance = new FooRestServiceImpl();
+//        Result<Foo> expResult = null;
+//        Result<Foo> result = instance.update(idFoo);
+//        assertEquals(expResult, result);
+//        // TODO review the generated test code and remove the default call to fail.
+//        fail("The test case is a prototype.");
+//    }
+
+//    /**
+//     * Test of destroy method, of class FooRestServiceImpl.
+//     */
+//    @Test
+//    public void testDestroy() {
+//        System.out.println("destroy");
+//        String idFoo = "";
+//        FooRestServiceImpl instance = new FooRestServiceImpl();
+//        Result<Foo> expResult = null;
+//        Result<Foo> result = instance.destroy(idFoo);
+//        assertEquals(expResult, result);
+//        // TODO review the generated test code and remove the default call to fail.
+//        fail("The test case is a prototype.");
+//    }
+
+    /**
+     * Test of read method, of class FooRestServiceImpl.
+     */
+    @Test
+    public void testRead() {
+//        Foo foo = ImmutableFoo.builder().build();
+        String idFoo = "";
+//        Result<Foo> expResult = ResultFactory.getSuccessResult(new Foo());
+        Result<Foo> result = fooService.read(idFoo);
+        Assert.assertEquals(null, result.getData().getId());
+    }
+
+//    /**
+//     * Test of findAll method, of class FooRestServiceImpl.
+//     */
+//    @Test
+//    public void testFindAll() {
+//        System.out.println("findAll");
+//        FooRestServiceImpl instance = new FooRestServiceImpl();
+//        Result<List<Foo>> expResult = null;
+//        Result<List<Foo>> result = instance.findAll();
 //        assertEquals(expResult, result);
 //        // TODO review the generated test code and remove the default call to fail.
 //        fail("The test case is a prototype.");

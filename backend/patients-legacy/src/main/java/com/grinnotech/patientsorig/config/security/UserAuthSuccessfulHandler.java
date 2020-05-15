@@ -1,7 +1,7 @@
 package com.grinnotech.patientsorig.config.security;
 
-import com.grinnotech.patientsorig.mongodb.dao.UserRepository;
-import com.grinnotech.patientsorig.mongodb.model.User;
+import com.grinnotech.patients.mongodb.dao.UserRepository;
+import com.grinnotech.patients.mongodb.model.User;
 
 import org.jetbrains.annotations.NotNull;
 import org.springframework.context.ApplicationListener;

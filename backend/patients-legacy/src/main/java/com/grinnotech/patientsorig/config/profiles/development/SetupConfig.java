@@ -21,25 +21,6 @@ import static java.lang.String.format;
 import static java.lang.System.getProperty;
 import static java.util.Arrays.stream;
 import static java.util.ResourceBundle.getBundle;
-import static org.springframework.boot.autoconfigure.security.SecurityProperties.DEFAULT_FILTER_ORDER;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.grinnotech.patientsorig.model.Authority;
-import com.grinnotech.patientsorig.model.DisabilityLevel;
-import com.grinnotech.patientsorig.model.Gender;
-import com.grinnotech.patientsorig.model.PatientStatus;
-import com.grinnotech.patientsorig.model.ProjectStatus;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
-import org.springframework.context.event.EventListener;
-import org.springframework.util.StringUtils;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.filter.CorsFilter;
 
 /**
  * @author Jacek Sztajnke

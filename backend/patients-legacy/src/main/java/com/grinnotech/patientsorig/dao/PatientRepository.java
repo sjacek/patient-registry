@@ -16,7 +16,7 @@
  */
 package com.grinnotech.patientsorig.dao;
 
-import com.grinnotech.patientsorig.model.Patient;
+import com.grinnotech.patients.model.Patient;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.repository.MongoRepository;

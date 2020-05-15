@@ -16,7 +16,7 @@
  */
 package com.grinnotech.patientsorig.dao;
 
-import com.grinnotech.patientsorig.model.ZipCodePoland;
+import com.grinnotech.patients.model.ZipCodePoland;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

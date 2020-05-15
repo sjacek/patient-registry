@@ -27,7 +27,7 @@ import com.grinnotech.patientsorig.config.security.MongoUserDetails;
 import com.grinnotech.patientsorig.dao.CountryDictionaryRepository;
 import com.grinnotech.patientsorig.dao.authorities.RequireAdminEmployeeAuthority;
 import com.grinnotech.patientsorig.dao.authorities.RequireEmployeeAuthority;
-import com.grinnotech.patientsorig.model.CountryDictionary;
+import com.grinnotech.patients.model.CountryDictionary;
 import com.grinnotech.patientsorig.util.ValidationMessages;
 import com.grinnotech.patientsorig.util.ValidationMessagesResult;
 

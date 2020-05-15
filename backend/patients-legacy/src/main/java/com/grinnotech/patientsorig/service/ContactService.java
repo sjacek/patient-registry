@@ -27,7 +27,7 @@ import com.grinnotech.patientsorig.NotFoundExceptionSuppl;
 import com.grinnotech.patientsorig.config.security.MongoUserDetails;
 import com.grinnotech.patientsorig.dao.ContactRepository;
 import com.grinnotech.patientsorig.dao.authorities.RequireAdminEmployeeAuthority;
-import com.grinnotech.patientsorig.model.ContactMethod;
+import com.grinnotech.patients.model.ContactMethod;
 import com.grinnotech.patientsorig.util.ValidationMessages;
 import com.grinnotech.patientsorig.util.ValidationMessagesResult;
 

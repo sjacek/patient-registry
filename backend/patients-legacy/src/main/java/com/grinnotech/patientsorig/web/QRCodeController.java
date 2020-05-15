@@ -7,8 +7,8 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.grinnotech.patientsorig.config.security.MongoUserDetails;
 import com.grinnotech.patientsorig.dao.authorities.RequireAnyAuthority;
-import com.grinnotech.patientsorig.mongodb.dao.UserRepository;
-import com.grinnotech.patientsorig.mongodb.model.User;
+import com.grinnotech.patients.mongodb.dao.UserRepository;
+import com.grinnotech.patients.mongodb.model.User;
 import com.grinnotech.patientsorig.util.ThrowingFunction;
 
 import org.springframework.beans.factory.annotation.Value;

@@ -3,7 +3,7 @@ package com.grinnotech.patientsorig.dto;
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.grinnotech.patientsorig.mongodb.model.User;
+import com.grinnotech.patients.mongodb.model.User;
 
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;

@@ -16,7 +16,7 @@
  */
 package com.grinnotech.patientsorig.view;
 
-import com.grinnotech.patientsorig.model.Patient;
+import com.grinnotech.patients.model.Patient;
 import com.grinnotech.patientsorig.service.ExportController.Attributes;
 
 import org.jetbrains.annotations.NotNull;

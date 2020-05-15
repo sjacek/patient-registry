@@ -19,9 +19,9 @@ package com.grinnotech.patientsorig.service;
 import static java.util.stream.Collectors.toList;
 
 import com.grinnotech.patientsorig.NotFoundException;
-import com.grinnotech.patientsorig.domain.AbstractPersistable;
-import com.grinnotech.patientsorig.mongodb.dao.UserRepository;
-import com.grinnotech.patientsorig.mongodb.model.User;
+import com.grinnotech.patients.domain.AbstractPersistable;
+import com.grinnotech.patients.mongodb.dao.UserRepository;
+import com.grinnotech.patients.mongodb.model.User;
 import com.grinnotech.patientsorig.util.ValidationMessages;
 
 import org.springframework.beans.factory.annotation.Autowired;

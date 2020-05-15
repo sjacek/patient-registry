@@ -16,9 +16,9 @@
  */
 package com.grinnotech.patientsorig.config.profiles.development;
 
-import static com.grinnotech.patientsorig.model.Authority.ADMIN;
-import static com.grinnotech.patientsorig.model.Authority.EMPLOYEE;
-import static com.grinnotech.patientsorig.model.Authority.USER;
+import static com.grinnotech.patients.model.Authority.ADMIN;
+import static com.grinnotech.patients.model.Authority.EMPLOYEE;
+import static com.grinnotech.patients.model.Authority.USER;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
@@ -29,14 +29,14 @@ import com.grinnotech.patientsorig.dao.ContactRepository;
 import com.grinnotech.patientsorig.dao.CountryDictionaryRepository;
 import com.grinnotech.patientsorig.dao.ZipCodePolandRepository;
 import com.grinnotech.patientsorig.dao.orphadata.DisorderRepository;
-import com.grinnotech.patientsorig.domain.AbstractPersistable;
-import com.grinnotech.patientsorig.model.ContactMethod;
-import com.grinnotech.patientsorig.model.CountryDictionary;
-import com.grinnotech.patientsorig.model.Organization;
-import com.grinnotech.patientsorig.mongodb.model.User;
-import com.grinnotech.patientsorig.model.ZipCodePoland;
-import com.grinnotech.patientsorig.mongodb.dao.OrganizationRepository;
-import com.grinnotech.patientsorig.mongodb.dao.UserRepository;
+import com.grinnotech.patients.domain.AbstractPersistable;
+import com.grinnotech.patients.model.ContactMethod;
+import com.grinnotech.patients.model.CountryDictionary;
+import com.grinnotech.patients.model.Organization;
+import com.grinnotech.patients.mongodb.model.User;
+import com.grinnotech.patients.model.ZipCodePoland;
+import com.grinnotech.patients.mongodb.dao.OrganizationRepository;
+import com.grinnotech.patients.mongodb.dao.UserRepository;
 import com.grinnotech.patientsorig.util.startup.OrphadataParser;
 import com.grinnotech.patientsorig.util.startup.OrphadataParserMongo;
 import com.opencsv.CSVParserBuilder;

@@ -16,11 +16,11 @@
  */
 package com.grinnotech.patientsorig.view;
 
-import static com.grinnotech.patientsorig.model.address.Utils.address;
+import static com.grinnotech.patients.model.address.Utils.address;
 import static java.lang.String.format;
 import static java.util.Locale.ENGLISH;
 
-import com.grinnotech.patientsorig.model.Patient;
+import com.grinnotech.patients.model.Patient;
 import com.grinnotech.patientsorig.service.ExportController;
 
 import org.apache.poi.hssf.util.HSSFColor;

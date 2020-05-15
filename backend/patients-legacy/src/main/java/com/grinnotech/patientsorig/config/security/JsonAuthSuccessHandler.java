@@ -2,8 +2,8 @@ package com.grinnotech.patientsorig.config.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.grinnotech.patientsorig.dto.UserDetailDto;
-import com.grinnotech.patientsorig.mongodb.dao.UserRepository;
-import com.grinnotech.patientsorig.mongodb.model.User;
+import com.grinnotech.patients.mongodb.dao.UserRepository;
+import com.grinnotech.patients.mongodb.model.User;
 import com.grinnotech.patientsorig.service.SecurityService;
 import com.grinnotech.patientsorig.web.CsrfController;
 

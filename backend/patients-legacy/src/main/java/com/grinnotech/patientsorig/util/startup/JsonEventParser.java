@@ -19,7 +19,7 @@ package com.grinnotech.patientsorig.util.startup;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
-import com.grinnotech.patientsorig.model.info.OrphadataInfo;
+import com.grinnotech.patients.model.info.OrphadataInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

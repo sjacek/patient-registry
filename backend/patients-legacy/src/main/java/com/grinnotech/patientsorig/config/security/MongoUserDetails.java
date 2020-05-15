@@ -1,13 +1,13 @@
 package com.grinnotech.patientsorig.config.security;
 
-import static com.grinnotech.patientsorig.model.Authority.PRE_AUTH;
+import static com.grinnotech.patients.model.Authority.PRE_AUTH;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.unmodifiableCollection;
 import static java.util.stream.Collectors.toSet;
 import static org.springframework.security.core.authority.AuthorityUtils.createAuthorityList;
 import static org.springframework.util.StringUtils.hasText;
 
-import com.grinnotech.patientsorig.mongodb.model.User;
+import com.grinnotech.patients.mongodb.model.User;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

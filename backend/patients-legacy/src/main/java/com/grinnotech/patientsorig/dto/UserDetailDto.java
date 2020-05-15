@@ -3,15 +3,15 @@ package com.grinnotech.patientsorig.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.grinnotech.patientsorig.config.security.MongoUserDetails;
-import com.grinnotech.patientsorig.model.Organization;
-import com.grinnotech.patientsorig.mongodb.model.User;
+import com.grinnotech.patients.model.Organization;
+import com.grinnotech.patients.mongodb.model.User;
 import lombok.Getter;
 import lombok.ToString;
 
 import java.util.Map;
 
-import static com.grinnotech.patientsorig.model.Authority.ADMIN;
-import static com.grinnotech.patientsorig.model.Authority.USER;
+import static com.grinnotech.patients.model.Authority.ADMIN;
+import static com.grinnotech.patients.model.Authority.USER;
 import static java.util.stream.Collectors.toMap;
 
 @JsonInclude(Include.NON_NULL)

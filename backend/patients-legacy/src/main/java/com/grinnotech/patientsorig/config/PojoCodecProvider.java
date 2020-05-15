@@ -1,6 +1,6 @@
 package com.grinnotech.patientsorig.config;
 
-import com.grinnotech.patientsorig.domain.UUIDStringGenerator;
+import com.grinnotech.patients.domain.UUIDStringGenerator;
 import org.bson.codecs.Codec;
 import org.bson.codecs.configuration.CodecProvider;
 import org.bson.codecs.configuration.CodecRegistry;

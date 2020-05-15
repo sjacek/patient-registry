@@ -17,7 +17,7 @@
 package com.grinnotech.patientsorig.service;
 
 import com.grinnotech.patientsorig.NotFoundException;
-import com.grinnotech.patientsorig.model.Patient;
+import com.grinnotech.patients.model.Patient;
 import com.grinnotech.patientsorig.vo.Result;
 
 import java.util.Date;

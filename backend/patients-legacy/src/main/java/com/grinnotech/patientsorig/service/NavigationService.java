@@ -17,9 +17,9 @@
 package com.grinnotech.patientsorig.service;
 
 import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.TREE_LOAD;
-import static com.grinnotech.patientsorig.model.Authority.ADMIN;
-import static com.grinnotech.patientsorig.model.Authority.EMPLOYEE;
-import static com.grinnotech.patientsorig.model.Authority.USER;
+import static com.grinnotech.patients.model.Authority.ADMIN;
+import static com.grinnotech.patients.model.Authority.EMPLOYEE;
+import static com.grinnotech.patients.model.Authority.USER;
 
 import com.grinnotech.patientsorig.config.security.MongoUserDetails;
 import com.grinnotech.patientsorig.dto.NavigationNode;

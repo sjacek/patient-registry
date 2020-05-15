@@ -16,8 +16,8 @@
  */
 package com.grinnotech.patientsorig.util.startup;
 
-import com.grinnotech.patientsorig.model.info.OrphadataInfo;
-import com.grinnotech.patientsorig.model.orphadata.Disorder;
+import com.grinnotech.patients.model.info.OrphadataInfo;
+import com.grinnotech.patients.model.orphadata.Disorder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

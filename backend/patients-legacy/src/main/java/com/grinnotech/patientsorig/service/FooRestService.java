@@ -16,7 +16,7 @@
  */
 package com.grinnotech.patientsorig.service;
 
-import com.grinnotech.patientsorig.model.Foo;
+import com.grinnotech.patients.model.Foo;
 import com.grinnotech.patientsorig.vo.Result;
 
 import java.util.List;

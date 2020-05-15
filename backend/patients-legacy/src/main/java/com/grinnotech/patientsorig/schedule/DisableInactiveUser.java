@@ -10,7 +10,7 @@ import java.util.Date;
 import static java.time.ZoneOffset.UTC;
 import static java.time.ZonedDateTime.now;
 
-import com.grinnotech.patientsorig.mongodb.dao.UserRepository;
+import com.grinnotech.patients.mongodb.dao.UserRepository;
 
 @Component
 public class DisableInactiveUser {

@@ -21,7 +21,7 @@ import static com.grinnotech.patientsorig.util.QueryUtil.getSpringSort;
 
 import com.grinnotech.patientsorig.dao.authorities.RequireEmployeeAuthority;
 import com.grinnotech.patientsorig.dao.orphadata.DisorderRepository;
-import com.grinnotech.patientsorig.model.orphadata.Disorder;
+import com.grinnotech.patients.model.orphadata.Disorder;
 import com.grinnotech.patientsorig.service.AbstractService;
 
 import org.slf4j.Logger;

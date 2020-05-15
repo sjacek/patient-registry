@@ -27,7 +27,7 @@ import com.grinnotech.patientsorig.config.security.MongoUserDetails;
 import com.grinnotech.patientsorig.dao.ZipCodePolandRepository;
 import com.grinnotech.patientsorig.dao.authorities.RequireAnyAuthority;
 import com.grinnotech.patientsorig.dao.authorities.RequireEmployeeAuthority;
-import com.grinnotech.patientsorig.model.ZipCodePoland;
+import com.grinnotech.patients.model.ZipCodePoland;
 import com.grinnotech.patientsorig.util.ValidationMessages;
 import com.grinnotech.patientsorig.util.ValidationMessagesResult;
 

@@ -18,7 +18,7 @@ package com.grinnotech.patientsorig.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.grinnotech.patientsorig.model.Authority;
+import com.grinnotech.patients.model.Authority;
 import lombok.Getter;
 import org.springframework.context.MessageSource;
 import org.springframework.security.core.GrantedAuthority;
@@ -26,7 +26,7 @@ import org.springframework.security.core.GrantedAuthority;
 import java.util.*;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
-import static com.grinnotech.patientsorig.model.Authority.valueOf;
+import static com.grinnotech.patients.model.Authority.valueOf;
 
 @JsonInclude(NON_NULL)
 @Getter

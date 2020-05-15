@@ -2,7 +2,7 @@ package com.grinnotech.patientsorig.service;
 
 import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.STORE_MODIFY;
 import static ch.ralscha.extdirectspring.annotation.ExtDirectMethodType.STORE_READ;
-import static com.grinnotech.patientsorig.model.Authority.ADMIN;
+import static com.grinnotech.patients.model.Authority.ADMIN;
 import static com.grinnotech.patientsorig.util.OptionalEx.ifPresent;
 import static com.grinnotech.patientsorig.util.QueryUtil.getSpringSort;
 import static com.grinnotech.patientsorig.util.ThrowingFunction.sneakyThrow;
@@ -17,10 +17,10 @@ import com.grinnotech.patientsorig.NotFoundException;
 import com.grinnotech.patientsorig.config.security.MongoUserDetails;
 import com.grinnotech.patientsorig.dao.PersistentLoginRepository;
 import com.grinnotech.patientsorig.dao.authorities.RequireAdminAuthority;
-import com.grinnotech.patientsorig.model.Organization;
-import com.grinnotech.patientsorig.mongodb.dao.OrganizationRepository;
-import com.grinnotech.patientsorig.mongodb.dao.UserRepository;
-import com.grinnotech.patientsorig.mongodb.model.User;
+import com.grinnotech.patients.model.Organization;
+import com.grinnotech.patients.mongodb.dao.OrganizationRepository;
+import com.grinnotech.patients.mongodb.dao.UserRepository;
+import com.grinnotech.patients.mongodb.model.User;
 import com.grinnotech.patientsorig.util.ValidationMessages;
 import com.grinnotech.patientsorig.util.ValidationMessagesResult;
 
