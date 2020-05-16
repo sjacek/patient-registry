@@ -1,5 +1,5 @@
 plugins {
-    id 'org.springframework.boot' version '2.1.6.RELEASE'
+    id 'org.springframework.boot' version "${springBootVersion}"
     id "io.spring.dependency-management" version "1.0.9.RELEASE"
 }
 
@@ -53,9 +53,9 @@ dependencies {
 //    implementation group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.30'
 //    implementation group: 'com.sun.xml.bind', name: 'jaxb-osgi', version: '2.4.0-b180830.0438'
 
-    compileOnly 'org.projectlombok:lombok:1.18.12'
+    compileOnly "org.projectlombok:lombok:${projectLombokVersion}"
+    annotationProcessor "org.projectlombok:lombok:${projectLombokVersion}"
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
-    annotationProcessor 'org.projectlombok:lombok:1.18.12'
 
     implementation group: 'org.jboss.modules', name: 'jboss-modules', version: '1.9.2.Final'
     implementation group: 'org.keycloak', name: 'keycloak-model-jpa', version: "${keycloakVersion}"
@@ -69,10 +69,10 @@ dependencies {
     runtimeOnly group: 'com.h2database', name: 'h2', version: '1.4.200'
 
     testImplementation "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
-//    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.2'
-//    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.6.2'
-//    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.6.2'
-//    testImplementation 'org.junit.jupiter:junit-jupiter:5.6.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.6.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.6.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.6.2'
     testImplementation 'org.junit.jupiter:junit-jupiter-migrationsupport:5.6.2'
     testImplementation 'org.junit.platform:junit-platform-engine:1.6.2'
     testImplementation 'org.junit.platform:junit-platform-commons:1.6.2'

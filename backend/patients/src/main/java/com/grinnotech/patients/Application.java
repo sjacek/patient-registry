@@ -23,21 +23,11 @@ import lombok.extern.slf4j.Slf4j;
 //        excludeFilters = {@ComponentScan.Filter(type = ASSIGNABLE_TYPE, value = ApiController.class)})
 @ComponentScan
 @EnableAutoConfiguration(exclude = {MustacheAutoConfiguration.class, SpringDataWebAutoConfiguration.class})
-@EnableAsync
-@EnableScheduling
-@EnableCaching
+//@EnableAsync
+//@EnableScheduling
+//@EnableCaching
 @Slf4j
-public class Application implements CommandLineRunner {
-
-	static class ExitException extends RuntimeException implements ExitCodeGenerator {
-		private static final long serialVersionUID = 1L;
-
-		@Override
-		public int getExitCode() {
-			return 10;
-		}
-
-	}
+public class Application {
 
 	public static void main(String[] args) {
         // -Dspring.profiles.active=development
@@ -49,30 +39,21 @@ public class Application implements CommandLineRunner {
         SpringApplication.run(Application.class, args);
     }
 
-	@Override
-	public void run(String @NotNull ... args) throws Exception {
-		log.debug("run !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+//	@Bean
+//	public WebMvcConfigurer webConfigurer() {
+//		return new WebMvcConfigurer() {
+//            /*@Override
+//            public void addCorsMappings(CorsRegistry registry) {
+//                registry.addMapping("/**")
+//                        .allowedOrigins("*")
+//                        .allowedMethods("*")
+//                        .allowedHeaders("Content-Type");
+//            }*/
+//		};
+//	}
 
-		if (args.length > 0 && args[0].equals("exitcode")) {
-			throw new ExitException();
-		}
-	}
-
-	@Bean
-	public WebMvcConfigurer webConfigurer() {
-		return new WebMvcConfigurer() {
-            /*@Override
-            public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**")
-                        .allowedOrigins("*")
-                        .allowedMethods("*")
-                        .allowedHeaders("Content-Type");
-            }*/
-		};
-	}
-
-	@Bean
-	public Module jsonNullableModule() {
-		return new JsonNullableModule();
-	}
+//	@Bean
+//	public Module jsonNullableModule() {
+//		return new JsonNullableModule();
+//	}
 }

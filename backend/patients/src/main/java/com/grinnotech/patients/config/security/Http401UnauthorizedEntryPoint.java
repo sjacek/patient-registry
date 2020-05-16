@@ -18,8 +18,8 @@ public class Http401UnauthorizedEntryPoint implements AuthenticationEntryPoint {
      * @param request
      * @param response
      * @param arg
-     * @throws java.io.IOException
-     * @throws javax.servlet.ServletException
+     * @throws IOException
+     * @throws ServletException
      */
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException arg)

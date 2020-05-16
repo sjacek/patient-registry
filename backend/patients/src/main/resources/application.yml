@@ -19,6 +19,13 @@ spring:
             uri: mongodb://localhost/patients?w=1&wtimeoutMS=0&journal=true
             auto-index-creation: true
 
+#security:
+#    oauth2:
+#        resourceserver:
+#            jwt:
+#                issuer-uri: http://localhost:8083/auth/realms/baeldung
+#                jwk-set-uri: http://localhost:8083/auth/realms/baeldung/protocol/openid-connect/certs
+
     jackson:
         serialization:
             write-date-timestamps-as-nanoseconds: false
@@ -45,6 +52,10 @@ spring:
         banner-mode: log
         allow-bean-definition-overriding: true
 
+    groovy:
+        template:
+            check-template-location: false
+
 server:
     port: 8443
     http-port: 8088
@@ -54,6 +65,7 @@ server:
         keyStoreType: PKCS12
         keyAlias: tomcat
     servlet:
+        context-path: /patients
         session:
             timeout: 480
     compression:
@@ -72,6 +84,7 @@ tomcat:
         port: 9091
         remoteauthentication: false
         enabled: true
+        secret: "myajpsecret"
 
 logging:
     level:
@@ -79,7 +92,8 @@ logging:
         org.mongodb: INFO
         org.apache: INFO
         com.grinnotech: INFO
-    file: ./app.log
+        org.springframework.data.mongodb.core.index: WARN
+    file: ./patients.log
 
       #endpoints:
       #  metrics:
@@ -87,7 +101,7 @@ logging:
       #    filter:
       #      enabled: false
       #  health:
-      #    sensitive: false
+    #    sensitive: false
 
 management:
     server:

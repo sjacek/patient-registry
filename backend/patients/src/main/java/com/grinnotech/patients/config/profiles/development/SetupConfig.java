@@ -16,25 +16,14 @@
  */
 package com.grinnotech.patients.config.profiles.development;
 
-import static ch.ralscha.extdirectspring.util.ExtDirectSpringUtil.generateApiString;
+//import static ch.ralscha.extdirectspring.util.ExtDirectSpringUtil.generateApiString;
 import static java.lang.String.format;
 import static java.lang.System.getProperty;
-import static java.nio.charset.StandardCharsets.UTF_8;
-import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
-import static java.util.Collections.singleton;
-import static java.util.Collections.singletonList;
-import static java.util.Locale.ENGLISH;
-import static java.util.Locale.GERMAN;
 import static java.util.ResourceBundle.getBundle;
 import static org.springframework.boot.autoconfigure.security.SecurityProperties.DEFAULT_FILTER_ORDER;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.grinnotech.patients.model.Authority;
-import com.grinnotech.patients.model.DisabilityLevel;
-import com.grinnotech.patients.model.Gender;
-import com.grinnotech.patients.model.PatientStatus;
-import com.grinnotech.patients.model.ProjectStatus;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -46,18 +35,6 @@ import org.springframework.context.event.EventListener;
 import org.springframework.util.StringUtils;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.filter.CorsFilter;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.ResourceBundle;
-import java.util.TreeMap;
-import java.util.stream.Collectors;
 
 /**
  * @author Jacek Sztajnke

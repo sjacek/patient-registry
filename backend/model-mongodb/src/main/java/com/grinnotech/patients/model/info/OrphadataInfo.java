@@ -16,11 +16,16 @@
  */
 package com.grinnotech.patients.model.info;
 
-import ch.rasc.extclassgenerator.Model;
 import com.grinnotech.patients.domain.Info;
-import lombok.*;
 
 import java.util.Date;
+
+import ch.rasc.extclassgenerator.Model;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  *

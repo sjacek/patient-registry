@@ -1,15 +1,15 @@
 plugins {
-    id "io.freefair.lombok" version "5.0.1"
+    id "io.freefair.lombok" version '5.0.1'
     id 'net.ltgt.apt' version '0.21'
     id 'net.ltgt.apt-idea' version '0.21'
-    id 'org.springframework.boot' version '2.1.6.RELEASE'
+    id 'org.springframework.boot' version "${springBootVersion}"
     id "org.jetbrains.gradle.plugin.idea-ext" version '0.7'
-    id "io.spring.dependency-management" version "1.0.9.RELEASE"
+    id "io.spring.dependency-management" version '1.0.9.RELEASE'
 }
 
 subprojects {
     apply plugin: 'java'
-    apply plugin: "io.freefair.lombok"
+    apply plugin: 'io.freefair.lombok'
 
     repositories {
         mavenLocal()
@@ -18,10 +18,10 @@ subprojects {
             url 'https://repo.maven.apache.org/maven2'
         }
         maven {
-            url "https://plugins.gradle.org/m2/"
+            url 'https://plugins.gradle.org/m2/'
         }
         maven {
-            url "https://oss.sonatype.org/content/repositories/releases/"
+            url 'https://oss.sonatype.org/content/repositories/releases/'
         }
     }
 
