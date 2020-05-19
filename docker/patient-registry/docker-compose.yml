@@ -1,0 +1,86 @@
+version: "3.1"
+
+volumes:
+    postgres_data:
+        driver: local
+
+networks:
+    net:
+        internal: false
+        ipam:
+            driver: default
+            config:
+                -   subnet: 179.179.0.0/16
+
+services:
+    postgres:
+        image: postgres:12.3-alpine
+#        build: postgres
+        container_name: postgres
+        volumes:
+            - postgres_data:/var/lib/postgresql/data
+            - ./postgres/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+        environment:
+            POSTGRES_DB: patient_registry
+            POSTGRES_USER: patient_registry
+            POSTGRES_PASSWORD: patient_registry
+        expose:
+            - 5432
+        networks:
+            net:
+                ipv4_address: 179.179.0.12
+
+    keycloak:
+        image: jboss/keycloak
+        volumes:
+            - ./keycloak/realm.json:/realm.json
+            - ./keycloak/keystore.jks:/keystore.jks
+        environment:
+            DB_VENDOR: POSTGRES
+            DB_ADDR: postgres
+            DB_DATABASE: patient_registry
+            DB_USER: keycloak
+            DB_SCHEMA: keycloak
+            DB_PASSWORD: keycloak
+            KEYCLOAK_USER: admin
+            KEYCLOAK_PASSWORD: admin
+            KEYCLOAK_IMPORT: ./realm.json
+            # Uncomment the line below if you want to specify JDBC parameters. The parameter below is just an example, and it shouldn't be used in production without knowledge. It is highly recommended that you read the PostgreSQL JDBC driver documentation in order to use it.
+            #JDBC_PARAMS: "ssl=true"
+        ports:
+            - 8082:8080
+            - 8445:8443
+        depends_on:
+            - postgres
+        expose:
+            - 9797
+        networks:
+            net:
+                ipv4_address: 179.179.0.13
+    #        build: ./keycloak
+
+    #    ldap:
+    #        networks:
+    #            net:
+    #                ipv4_address: 179.179.0.14
+    #        build: ./ldap/image
+
+#    patient-registry:
+#        image: library/openjdk:11.0.7-jdk-slim
+#        container_name: patient-registry
+#        environment:
+#            JAVA_OPTS: "-Djava.security.egd=file:/dev/./urandom"
+#        entrypoint: "/bin/sh -c \"java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:7086 -jar /patients.jar\""
+#        expose:
+#            - 8080
+#            - 7080
+#            - 7086
+#        ports:
+#            - 8081:8080
+#            - 8444:8443
+#            - 7081:7080
+#        networks:
+#            net:
+#                ipv4_address: 179.179.0.15
+#        volumes:
+#            - ../../backend/patients/build/libs/patients-0.0.1.jar:/patients.jar
