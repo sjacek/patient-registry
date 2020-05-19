@@ -16,42 +16,42 @@
  */
 package com.grinnotech.patients.util;
 
-import ch.ralscha.extdirectspring.bean.ExtDirectStoreReadRequest;
-import com.mongodb.client.FindIterable;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Order;
-
-import java.util.List;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
-
-import static ch.ralscha.extdirectspring.bean.SortDirection.ASCENDING;
-import static java.util.stream.Collectors.toList;
-import static org.springframework.data.domain.PageRequest.of;
-import static org.springframework.data.domain.Sort.Direction.ASC;
-import static org.springframework.data.domain.Sort.Direction.DESC;
-import static org.springframework.data.domain.Sort.by;
-
-/**
- *
- * @author Jacek Sztajnke
- */
-public class QueryUtil {
-
-    public static <T> Stream<T> stream(FindIterable<T> iterable) {
-        return StreamSupport.stream(iterable.spliterator(), false);
-    }
-
-    public static Sort getSpringSort(ExtDirectStoreReadRequest request) {
-        List<Order> list = request.getSorters().stream().map(sortInfo ->
-                new Order(sortInfo.getDirection() == ASCENDING ? ASC : DESC, sortInfo.getProperty())
-        ).collect(toList());
-        return by(list);
-    }
-
-    public static Pageable getPageable(ExtDirectStoreReadRequest request) {
-        return of(request.getPage() - 1, request.getLimit(), getSpringSort(request));
-    }
-}
+//import ch.ralscha.extdirectspring.bean.ExtDirectStoreReadRequest;
+//import com.mongodb.client.FindIterable;
+//import org.springframework.data.com.grinnotech.patients.domain.PageRequest;
+//import org.springframework.data.com.grinnotech.patients.domain.Pageable;
+//import org.springframework.data.com.grinnotech.patients.domain.Sort;
+//import org.springframework.data.com.grinnotech.patients.domain.Sort.Order;
+//
+//import java.util.List;
+//import java.util.stream.Stream;
+//import java.util.stream.StreamSupport;
+//
+//import static ch.ralscha.extdirectspring.bean.SortDirection.ASCENDING;
+//import static java.util.stream.Collectors.toList;
+//import static org.springframework.data.com.grinnotech.patients.domain.PageRequest.of;
+//import static org.springframework.data.com.grinnotech.patients.domain.Sort.Direction.ASC;
+//import static org.springframework.data.com.grinnotech.patients.domain.Sort.Direction.DESC;
+//import static org.springframework.data.com.grinnotech.patients.domain.Sort.by;
+//
+///**
+// *
+// * @author Jacek Sztajnke
+// */
+//public class QueryUtil {
+//
+//    public static <T> Stream<T> stream(FindIterable<T> iterable) {
+//        return StreamSupport.stream(iterable.spliterator(), false);
+//    }
+//
+//    public static Sort getSpringSort(ExtDirectStoreReadRequest request) {
+//        List<Order> list = request.getSorters().stream().map(sortInfo ->
+//                new Order(sortInfo.getDirection() == ASCENDING ? ASC : DESC, sortInfo.getProperty())
+//        ).collect(toList());
+//        return by(list);
+//    }
+//
+//    public static Pageable getPageable(ExtDirectStoreReadRequest request) {
+//        return of(request.getPage() - 1, request.getLimit(), getSpringSort(request));
+//    }
+//}

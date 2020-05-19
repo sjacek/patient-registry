@@ -1,6 +1,5 @@
 package com.grinnotech.patients.config.profiles.mongodb;
 
-import com.grinnotech.patients.config.ListCodec;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoDatabase;

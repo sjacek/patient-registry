@@ -1,9 +1,9 @@
 package com.grinnotech.patients.config.security;
 
-import static com.grinnotech.patients.util.OptionalEx.ifPresent;
 import static java.time.ZoneOffset.UTC;
 import static java.time.ZonedDateTime.now;
 
+import com.grinnotech.patients.util.OptionalEx;
 import com.grinnotech.patients.config.AppProperties;
 import com.grinnotech.patients.mongodb.dao.UserRepository;
 import com.grinnotech.patients.mongodb.model.User;
@@ -47,7 +47,7 @@ public class UserAuthErrorHandler implements ApplicationListener<AuthenticationF
 					userRepository.findByEmailActive((String) principal) :
 					userRepository.findById(((MongoUserDetails) principal).getUserDbId());
 
-			ifPresent(oUser, user -> {
+			OptionalEx.ifPresent(oUser, user -> {
 				user.setFailedLogins(user.getFailedLogins() + 1);
 
 				if (user.getFailedLogins() >= loginLockAttempts) {

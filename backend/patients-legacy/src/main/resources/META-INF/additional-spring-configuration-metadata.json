@@ -1,0 +1,64 @@
+{
+    "properties": [
+        {
+            "name": "server.httpPort",
+            "type": "java.lang.Integer",
+            "description": "Description for server.httpPort."
+        },
+        {
+            "name": "server.tomcat.access-log-enabled",
+            "type": "java.lang.Boolean",
+            "description": "Description for server.tomcat.access-log-enabled."
+        },
+        {
+            "name": "server.tomcat.access-log-pattern",
+            "type": "java.lang.String",
+            "description": "Description for server.tomcat.access-log-pattern."
+        },
+        {
+            "name": "server.tomcat.rotate",
+            "type": "java.lang.Boolean",
+            "description": "Description for server.tomcat.rotate."
+        },
+        {
+            "name": "tomcat.ajp.port",
+            "type": "java.lang.Integer",
+            "description": "Description for tomcat.ajp.port."
+        },
+        {
+            "name": "tomcat.ajp.remoteauthentication",
+            "type": "java.lang.Boolean",
+            "description": "Description for tomcat.ajp.remoteauthentication."
+        },
+        {
+            "name": "tomcat.ajp.enabled",
+            "type": "java.lang.Boolean",
+            "description": "Description for tomcat.ajp.enabled."
+        },
+        {
+            "name": "mongodb.uri",
+            "type": "java.lang.String",
+            "description": "Description for mongodb.uri."
+        },
+        {
+            "name": "orphadata.enabled",
+            "type": "java.lang.Boolean",
+            "description": "Description for orphadata.enabled."
+        },
+        {
+            "name": "orphadata.url.pl",
+            "type": "java.net.URL",
+            "description": "Description for orphadata.url.pl."
+        },
+        {
+            "name": "sencha.client-dir",
+            "type": "java.lang.String",
+            "description": "Description for sencha.client-dir."
+        },
+        {
+            "name": "app.url",
+            "type": "java.lang.String",
+            "description": "Description for app.url."
+        }
+  ]
+}

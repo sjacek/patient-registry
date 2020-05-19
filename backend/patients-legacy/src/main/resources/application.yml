@@ -1,0 +1,115 @@
+info:
+    app.name: "@project.name@"
+    app.description: "@project.description@"
+    app.version: "@project.version@"
+    build.artifact: "@project.artifactId@"
+    build.time: "@build.timestamp@"
+
+app:
+    url: https://localhost:8443
+    rememberme-cookie-key: patients
+    rememberme-cookie-valid-in-days: 31
+    default-email-sender: no-reply@parentproject.org.pl
+    login-lock-attempts: 10
+    login-lock-minutes: 30
+
+spring:
+    data:
+        mongodb:
+            uri: mongodb://localhost/patients?w=1&wtimeoutMS=0&journal=true
+            auto-index-creation: true
+
+    jackson:
+        serialization:
+            write-date-timestamps-as-nanoseconds: false
+            WRITE_DATES_AS_TIMESTAMPS: false
+        date-format: com.grinnotech.patients.config.RFC3339DateFormat
+
+    #  resources:
+    #    cache-period: 31556926
+
+    mvc:
+        favicon:
+            enabled: true
+
+    mail:
+        host: localhost
+
+    async:
+        core-pool-size: 2
+        max-pool-size: 20
+        queue-capacity: 200
+        thread-name-prefix: patients-async-executor
+
+    main:
+        banner-mode: log
+        allow-bean-definition-overriding: true
+
+    security:
+        user:
+            name: user
+            password: jestem
+
+server:
+    port: 8443
+    http-port: 8088
+    ssl:
+        key-store: keystore.p12
+        key-store-password: Pacjenci#123
+        keyStoreType: PKCS12
+        keyAlias: tomcat
+    servlet:
+        session:
+            timeout: 480
+    compression:
+        enabled: true
+        mime-types: text/html,text/xml,text/plain,text/css,application/json,application/javascript,image/svg+xml,application/x-font-ttf,application/x-font-truetype,application/x-font-opentype,application/vnd.ms-fontobject,application/font-sfnt
+    use-forward-headers: true
+
+    tomcat:
+        access-log-enabled: true
+        access-log-pattern: "%h %l %u %t %r %s %b %D"
+        basedir: ../tomcat
+        rotate: true
+
+tomcat:
+    ajp:
+        port: 9091
+        remoteauthentication: false
+        enabled: true
+        secret: "myajpsecret"
+
+logging:
+    level:
+        org.springframework: INFO
+        org.mongodb: INFO
+        org.apache: INFO
+        com.grinnotech: INFO
+    file: ./app.log
+
+      #endpoints:
+      #  metrics:
+      #    enabled: false
+      #    filter:
+      #      enabled: false
+      #  health:
+    #    sensitive: false
+
+management:
+    server:
+        add-application-context-header: false
+    #  security:
+    #    enabled: true
+    endpoint:
+        metrics:
+            enabled: true
+
+orphadata:
+    enabled: true
+    url-pl: http://www.orphadata.org/data/export/pl_product1.json
+
+springfox:
+    documentation:
+        swagger:
+            v2:
+                path: /api-docs

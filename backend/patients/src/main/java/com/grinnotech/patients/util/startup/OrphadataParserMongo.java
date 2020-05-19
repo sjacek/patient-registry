@@ -16,36 +16,36 @@
  */
 package com.grinnotech.patients.util.startup;
 
-import com.grinnotech.patients.dao.orphadata.DisorderRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.lang.invoke.MethodHandles;
-import java.net.URL;
-
-/**
- *
- * @author Jacek Sztajnke
- */
-public class OrphadataParserMongo extends OrphadataParser {
-
-    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-
-    private DisorderRepository disorderRepository;
-
-    public OrphadataParserMongo(URL url, DisorderRepository disorderRepository) {
-        super(url, OrphadataParserMongo.class);
-        this.disorderRepository = disorderRepository;
-    }
-
-    public static void parse(URL url, DisorderRepository disorderRepository) {
-        OrphadataParserMongo parser = new OrphadataParserMongo(url, disorderRepository);
-        parser.parse((Integer) null);
-    }
-
-    public void on_JDBOR_DisorderList_Disorder_end_object() {
-        super.on_JDBOR_DisorderList_Disorder_end_object();
-        disorderRepository.save(getDisorder());
-    }
-
-}
+//import com.grinnotech.patients.dao.orphadata.DisorderRepository;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
+//
+//import java.lang.invoke.MethodHandles;
+//import java.net.URL;
+//
+///**
+// *
+// * @author Jacek Sztajnke
+// */
+//public class OrphadataParserMongo extends OrphadataParser {
+//
+//    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+//
+//    private DisorderRepository disorderRepository;
+//
+//    public OrphadataParserMongo(URL url, DisorderRepository disorderRepository) {
+//        super(url, OrphadataParserMongo.class);
+//        this.disorderRepository = disorderRepository;
+//    }
+//
+//    public static void parse(URL url, DisorderRepository disorderRepository) {
+//        OrphadataParserMongo parser = new OrphadataParserMongo(url, disorderRepository);
+//        parser.parse((Integer) null);
+//    }
+//
+//    public void on_JDBOR_DisorderList_Disorder_end_object() {
+//        super.on_JDBOR_DisorderList_Disorder_end_object();
+//        disorderRepository.save(getDisorder());
+//    }
+//
+//}
