@@ -6,7 +6,7 @@ info:
     build.time: "@build.timestamp@"
 
 app:
-    url: https://localhost:8443
+    url: https://localhost:8444
     rememberme-cookie-key: patients
     rememberme-cookie-valid-in-days: 31
     default-email-sender: no-reply@parentproject.org.pl
@@ -56,11 +56,16 @@ spring:
         template:
             check-template-location: false
 
+    security:
+        user:
+            name: user
+#            password: pass
+
 server:
-    port: 8443
+    port: 8444
     http-port: 8088
     ssl:
-        key-store: keystore.p12
+        key-store: classpath:keystore.p12
         key-store-password: Pacjenci#123
         keyStoreType: PKCS12
         keyAlias: tomcat

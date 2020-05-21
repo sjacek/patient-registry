@@ -1,6 +1,6 @@
 package com.grinnotech.patients.config;
 
-import com.grinnotech.patients.config.security.MongoUserDetails;
+//import com.grinnotech.patients.config.security.MongoUserDetails;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,9 +24,9 @@ public class AppLocaleResolver extends AbstractLocaleResolver {
             return request.getLocale();
         }
         
-        if (authentication.getPrincipal() instanceof MongoUserDetails) {
-            return ((MongoUserDetails) authentication.getPrincipal()).getLocale();
-        }
+//        if (authentication.getPrincipal() instanceof MongoUserDetails) {
+//            return ((MongoUserDetails) authentication.getPrincipal()).getLocale();
+//        }
         
         if (getDefaultLocale() != null) {
             return getDefaultLocale();

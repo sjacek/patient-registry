@@ -49,7 +49,7 @@ repositories {
 
 dependencies {
     runtimeOnly project(':frontend')
-    implementation project(':backend:model-mongodb')
+//    implementation project(':backend:model-mongodb')
 
 //    implementation "org.springframework:spring-core:${springVersion}"
 //    implementation "org.springframework:spring-webmvc:${springVersion}"
@@ -57,7 +57,7 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-security:${springBootVersion}"
 //    implementation "org.springframework.boot:spring-boot-starter-actuator:${springBootVersion}"
 //    implementation "org.springframework.boot:spring-boot-starter-data-elasticsearch:${springBootVersion}"
-    implementation "org.springframework.boot:spring-boot-starter-data-mongodb-reactive:${springBootVersion}"
+//    implementation "org.springframework.boot:spring-boot-starter-data-mongodb-reactive:${springBootVersion}"
 //    implementation "org.springframework.boot:spring-boot-starter-hateoas:${springBootVersion}"
 //    implementation "org.springframework.boot:spring-boot-starter-mail:${springBootVersion}"
 //    implementation "org.springframework.boot:spring-boot-starter-oauth2-client:${springBootVersion}"
