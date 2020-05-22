@@ -72,7 +72,7 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
 
     testImplementation 'com.unboundid:unboundid-ldapsdk:5.0.1'
-    testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo:2.2.0'
+//    testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo:2.2.0'
     testImplementation 'io.projectreactor:reactor-test:3.3.5.RELEASE'
     testImplementation 'org.springframework.security:spring-security-test:5.3.1.RELEASE'
 

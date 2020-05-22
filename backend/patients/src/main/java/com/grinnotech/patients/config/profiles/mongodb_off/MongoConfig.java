@@ -1,4 +1,4 @@
-package com.grinnotech.patients.config.profiles.mongodb;
+package com.grinnotech.patients.config.profiles.mongodb_off;
 
 //import com.mongodb.MongoClient;
 //import com.mongodb.MongoClientURI;

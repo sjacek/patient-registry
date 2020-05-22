@@ -14,10 +14,10 @@ app:
     login-lock-minutes: 30
 
 spring:
-    data:
-        mongodb:
-            uri: mongodb://localhost/patients?w=1&wtimeoutMS=0&journal=true
-            auto-index-creation: true
+#    data:
+#        mongodb:
+#            uri: mongodb://localhost/patients?w=1&wtimeoutMS=0&journal=true
+#            auto-index-creation: true
 
 #security:
 #    oauth2:
@@ -70,7 +70,7 @@ server:
         keyStoreType: PKCS12
         keyAlias: tomcat
     servlet:
-        context-path: /patients
+#        context-path: /patients
         session:
             timeout: 480
     compression:
