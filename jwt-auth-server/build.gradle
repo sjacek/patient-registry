@@ -66,7 +66,8 @@ dependencies {
     implementation group: 'org.keycloak', name: 'keycloak-wildfly-extensions', version: "${keycloakVersion}"
     implementation group: 'org.freemarker', name: 'freemarker', version: '2.3.29'
     implementation group: 'org.springframework.boot', name: 'spring-boot-configuration-processor', version: "${springBootVersion}"
-    runtimeOnly group: 'com.h2database', name: 'h2', version: '1.4.200'
+//    runtimeOnly group: 'com.h2database', name: 'h2', version: '1.4.200'
+    runtimeOnly group: 'org.postgresql', name: 'postgresql', version: '42.2.12'
 
     testImplementation "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.2'
@@ -83,6 +84,7 @@ dependencies {
 
 //    testCompileOnly 'junit:junit:4.12'
 //    testRuntimeOnly 'org.junit.vintage:junit-vintage-engine:5.6.2'
+    testRuntimeOnly group: 'com.h2database', name: 'h2', version: '1.4.200'
 }
 
 test {

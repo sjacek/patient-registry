@@ -1411,7 +1411,7 @@
                         "true"
                     ],
                     "keystore": [
-                        "src/main/resources/mytest.jks"
+                        "classpath:mytest.jks"
                     ],
                     "priority": [
                         "101"

@@ -3,8 +3,14 @@ server:
 
 spring:
     datasource:
-        username: sa
-        url: jdbc:h2:mem:testdb
+        url: jdbc:postgresql://localhost:5434/patient-registry
+        username: keycloak
+        password: Keycloak123!
+    jpa:
+        database-platform: org.hibernate.dialect.PostgreSQLDialect
+        show-sql: false
+        hibernate:
+            ddl-auto: create
 
 keycloak:
     server:

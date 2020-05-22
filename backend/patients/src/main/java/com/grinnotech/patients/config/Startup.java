@@ -16,9 +16,9 @@
  */
 package com.grinnotech.patients.config;
 
-import static com.grinnotech.patients.model.Authority.ADMIN;
-import static com.grinnotech.patients.model.Authority.EMPLOYEE;
-import static com.grinnotech.patients.model.Authority.USER;
+//import static com.grinnotech.patients.model.Authority.ADMIN;
+//import static com.grinnotech.patients.model.Authority.EMPLOYEE;
+//import static com.grinnotech.patients.model.Authority.USER;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
 import static org.apache.commons.text.WordUtils.capitalizeFully;
@@ -27,11 +27,11 @@ import static org.apache.commons.text.WordUtils.capitalizeFully;
 //import com.grinnotech.patients.dao.CountryDictionaryRepository;
 //import com.grinnotech.patients.dao.ZipCodePolandRepository;
 //import com.grinnotech.patients.dao.orphadata.DisorderRepository;
-import com.grinnotech.patients.domain.AbstractPersistable;
-import com.grinnotech.patients.model.Organization;
-import com.grinnotech.patients.mongodb.model.User;
-import com.grinnotech.patients.mongodb.dao.OrganizationRepository;
-import com.grinnotech.patients.mongodb.dao.UserRepository;
+//import com.grinnotech.patients.domain.AbstractPersistable;
+//import com.grinnotech.patients.model.Organization;
+//import com.grinnotech.patients.mongodb.model.User;
+//import com.grinnotech.patients.mongodb.dao.OrganizationRepository;
+//import com.grinnotech.patients.mongodb.dao.UserRepository;
 //import com.grinnotech.patients.util.startup.OrphadataParser;
 //import com.grinnotech.patients.util.startup.OrphadataParserMongo;
 //import com.opencsv.CSVParserBuilder;
@@ -40,7 +40,7 @@ import com.grinnotech.patients.mongodb.dao.UserRepository;
 
 import org.jetbrains.annotations.NotNull;
 //import org.springframework.context.annotation.Profile;
-import org.springframework.data.mongodb.repository.MongoRepository;
+//import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -58,9 +58,9 @@ class Startup {
 
 	private final PasswordEncoder passwordEncoder;
 
-	private final UserRepository userRepository;
-
-	private final OrganizationRepository organizationRepository;
+//	private final UserRepository userRepository;
+//
+//	private final OrganizationRepository organizationRepository;
 
 //	private final ContactRepository contactRepository;
 //
@@ -78,16 +78,17 @@ class Startup {
 
 	private final OrphadataProperties orphadataProperties;
 
-	public Startup(UserRepository userRepository,
-			OrganizationRepository organizationRepository,
+	public Startup(
+//			UserRepository userRepository,
+//			OrganizationRepository organizationRepository,
 //			ContactRepository contactRepository,
 //			CountryDictionaryRepository addressDictionaryRepository,
 //			ZipCodePolandRepository zipCodePolandRepository,
 //			DisorderRepository disorderRepository,
 			PasswordEncoder passwordEncoder,
 			OrphadataProperties orphadataProperties) {
-		this.userRepository = userRepository;
-		this.organizationRepository = organizationRepository;
+//		this.userRepository = userRepository;
+//		this.organizationRepository = organizationRepository;
 //		this.contactRepository = contactRepository;
 //		this.addressDictionaryRepository = addressDictionaryRepository;
 //		this.zipCodePolandRepository = zipCodePolandRepository;
@@ -107,41 +108,41 @@ class Startup {
 	}
 
 	private void initOrganizations() {
-		Organization root = organizationRepository.findByCodeActive("ROOT");
-		if (root == null) {
-			root = insert(Organization.builder().name("ROOT").code("ROOT").build(), organizationRepository);
-			log.info("Created organization " + root.getName());
-		}
-		uuidRoot = root.getId();
-
-		Organization ppmdPoland = organizationRepository.findByCodeActive("PPMDPoland");
-		if (ppmdPoland == null) {
-			ppmdPoland = insert(Organization.builder().name("Fundacja Parent Project Muscular Dystrophy").code("PPMDPoland").parentId(uuidRoot).build(), organizationRepository);
-			log.info("Created organization " + ppmdPoland.getName());
-		}
-		uuidPpmdPoland = ppmdPoland.getId();
-
-		Organization test = organizationRepository.findByCodeActive("test");
-		if (test == null) {
-			test = insert(Organization.builder().name("Test").code("test").parentId(uuidRoot).build(), organizationRepository);
-			log.info("Created organization " + test.getName());
-		}
-		uuidTest = test.getId();
+//		Organization root = organizationRepository.findByCodeActive("ROOT");
+//		if (root == null) {
+//			root = insert(Organization.builder().name("ROOT").code("ROOT").build(), organizationRepository);
+//			log.info("Created organization " + root.getName());
+//		}
+//		uuidRoot = root.getId();
+//
+//		Organization ppmdPoland = organizationRepository.findByCodeActive("PPMDPoland");
+//		if (ppmdPoland == null) {
+//			ppmdPoland = insert(Organization.builder().name("Fundacja Parent Project Muscular Dystrophy").code("PPMDPoland").parentId(uuidRoot).build(), organizationRepository);
+//			log.info("Created organization " + ppmdPoland.getName());
+//		}
+//		uuidPpmdPoland = ppmdPoland.getId();
+//
+//		Organization test = organizationRepository.findByCodeActive("test");
+//		if (test == null) {
+//			test = insert(Organization.builder().name("Test").code("test").parentId(uuidRoot).build(), organizationRepository);
+//			log.info("Created organization " + test.getName());
+//		}
+//		uuidTest = test.getId();
 	}
 
 	private void initUsers() {
-		if (userRepository.count() != 0)
-			return;
-
-		// admin user
-		insert(User.builder().email("admin@starter.com").firstName("admin").lastName("admin").locale("pl").organizationIds(singleton(uuidRoot)).passwordHash(passwordEncoder.encode("admin")).enabled(true).authorities(singleton(ADMIN.name()))
-				.build(), userRepository);
-		log.info("Created user admin@starter.com");
-
-		// normal user
-		insert(User.builder().email("user@starter.com").firstName("user").lastName("user").locale("pl").organizationIds(new HashSet<>(asList(uuidPpmdPoland, uuidTest))).passwordHash(passwordEncoder.encode("user")).enabled(true)
-				.authorities(new HashSet<>(asList(USER.name(), EMPLOYEE.name()))).build(), userRepository);
-		log.info("Created user user@starter.com");
+//		if (userRepository.count() != 0)
+//			return;
+//
+//		// admin user
+//		insert(User.builder().email("admin@starter.com").firstName("admin").lastName("admin").locale("pl").organizationIds(singleton(uuidRoot)).passwordHash(passwordEncoder.encode("admin")).enabled(true).authorities(singleton(ADMIN.name()))
+//				.build(), userRepository);
+//		log.info("Created user admin@starter.com");
+//
+//		// normal user
+//		insert(User.builder().email("user@starter.com").firstName("user").lastName("user").locale("pl").organizationIds(new HashSet<>(asList(uuidPpmdPoland, uuidTest))).passwordHash(passwordEncoder.encode("user")).enabled(true)
+//				.authorities(new HashSet<>(asList(USER.name(), EMPLOYEE.name()))).build(), userRepository);
+//		log.info("Created user user@starter.com");
 	}
 
 //	private void initContactMethods() {
@@ -250,15 +251,15 @@ class Startup {
 //		OrphadataParserMongo.parse(urlPl, disorderRepository);
 //	}
 
-	@NotNull
-	private <T extends AbstractPersistable, R extends MongoRepository<T, String>> T insert(@NotNull T record, @NotNull R repository) {
-		record.setVersion(1);
-		record.setActive(true);
-
-		T newRecord = repository.insert(record);
-		newRecord.setChainId(newRecord.getId());
-		repository.save(newRecord);
-
-		return newRecord;
-	}
+//	@NotNull
+//	private <T extends AbstractPersistable, R extends MongoRepository<T, String>> T insert(@NotNull T record, @NotNull R repository) {
+//		record.setVersion(1);
+//		record.setActive(true);
+//
+//		T newRecord = repository.insert(record);
+//		newRecord.setChainId(newRecord.getId());
+//		repository.save(newRecord);
+//
+//		return newRecord;
+//	}
 }
