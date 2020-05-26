@@ -46,7 +46,7 @@ spring:
         allow-bean-definition-overriding: true
 
 server:
-    port: 8443
+    port: 8444
     http-port: 8088
     ssl:
         key-store: keystore.p12
@@ -66,6 +66,28 @@ server:
         access-log-pattern: "%h %l %u %t %r %s %b %D"
         basedir: ../tomcat
         rotate: true
+
+keycloak:
+    enabled: true # enables keycloak authentication
+    auth-server-url: https://keycloak:8443/auth # keycloak server address (from the docker run command)
+    realm: PatientRegistry # name of imported realm
+    resource: patient-registry-client # name of imported client
+    security-constraints: # private resources (user with role required)
+        - authRoles:
+              - user
+          securityCollections:
+              - name: protected resource
+                patterns:
+                    - /api/*
+                    - /*
+        - securityCollections: # public resources (no required role)
+              - name: public resource
+                patterns:
+                    - /api/keycloak/config
+    credentials:
+        secret: "7a88aa57-3ba1-428e-8afc-4066e840d5b4" # (Clients > SpringBootAngularClient > Credentials > Secret)
+    realm-key: "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgenowSOhP0q9dYPEdAWDEtzufDfD7AMxNzZ9SoDA/g+yzj0+oYPhGDDm/SFz0MfB4D0ULoaZG7HTvyojSBIZPFR0SeHc4/6ntIzqDoUqF2Xa27hZBRxXAawuK8USkyBQ7whEVUUMYsi3RskViNa9+pIG0TSB2FG+yVw3ABeIfoZv7GNqGYCry9cbBH/M998bNzaWevqzKeQcUh/P7dv7G+SCnI4K1SZ7v1+yeSrQnPe9sgQVm7pwjcH8z0l+brWD87NXM3uKNSKFsdwOYqrfBZnxRYpDzVXohgdutGpVgqHHGLMX1NoJzdtXrZ4GoPumbyfJkRk7K7m7hU/ETgyzHQIDAQAB"
+    # (Realm Settings > Keys > Active > RSA > Public Key)
 
 tomcat:
     ajp:

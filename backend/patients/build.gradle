@@ -54,7 +54,7 @@ dependencies {
     implementation "org.springframework:spring-core:${springVersion}"
     implementation "org.springframework:spring-webmvc:${springVersion}"
     implementation "org.springframework.boot:spring-boot-starter-actuator:${springBootVersion}"
-    implementation "org.springframework.boot:spring-boot-starter-data-elasticsearch:${springBootVersion}"
+//    implementation "org.springframework.boot:spring-boot-starter-data-elasticsearch:${springBootVersion}"
     implementation "org.springframework.boot:spring-boot-starter-data-mongodb-reactive:${springBootVersion}"
     implementation "org.springframework.boot:spring-boot-starter-hateoas:${springBootVersion}"
     implementation "org.springframework.boot:spring-boot-starter-mail:${springBootVersion}"
