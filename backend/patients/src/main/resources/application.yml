@@ -49,7 +49,7 @@ server:
     port: 8444
     http-port: 8088
     ssl:
-        key-store: keystore.p12
+        key-store: classpath:keystore.p12
         key-store-password: Pacjenci#123
         keyStoreType: PKCS12
         keyAlias: tomcat
