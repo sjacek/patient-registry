@@ -24,8 +24,5 @@
 /*~
 /tomcat/
 /log/
-
-backend/patients/src/main/resources/keystore.p12
-/node_modules/
 /**/*.out
 /*.log.*.gz
