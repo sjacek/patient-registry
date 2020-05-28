@@ -19,7 +19,7 @@ services:
         container_name: postgres
         volumes:
             - postgres_data:/var/lib/postgresql/data
-            - ./postgres/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+            - ./postgres/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql:ro
         environment:
             POSTGRES_DB: patient_registry
             POSTGRES_USER: patient_registry
@@ -30,11 +30,21 @@ services:
             net:
                 ipv4_address: 179.179.0.12
 
+    apacheds:
+        image: openmicroscopy/apacheds:0.8.0
+        container_name: apacheds
+        ports:
+            - 389:10389
+        environment:
+            APACHEDS_INSTANCE: patient-registry
+        volumes:
+            - ./apacheds/config.ldif:/bootstrap/conf/config.ldif:ro
+
     keycloak:
         image: jboss/keycloak
         container_name: keycloak
         volumes:
-            - ./keycloak/realms:/realms
+            - ./keycloak/realms:/realms:ro
         environment:
             DB_VENDOR: POSTGRES
             DB_ADDR: postgres
@@ -58,12 +68,6 @@ services:
             net:
                 ipv4_address: 179.179.0.13
     #        build: ./keycloak
-
-    #    ldap:
-    #        networks:
-    #            net:
-    #                ipv4_address: 179.179.0.14
-    #        build: ./ldap/image
 
 #    patient-registry:
 #        image: library/openjdk:11.0.7-jdk-slim
