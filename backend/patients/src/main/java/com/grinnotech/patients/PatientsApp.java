@@ -1,9 +1,12 @@
 package com.grinnotech.patients;
 
+import com.grinnotech.patients.config.KeycloakProperties;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.data.web.SpringDataWebAutoConfiguration;
 import org.springframework.boot.autoconfigure.mustache.MustacheAutoConfiguration;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.ComponentScan;
 
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 //@EnableScheduling
 //@EnableCaching
 @Slf4j
+@EnableConfigurationProperties(KeycloakProperties.class)
 public class PatientsApp {
 
 	public static void main(String[] args) {

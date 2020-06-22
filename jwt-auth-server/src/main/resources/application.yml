@@ -1,11 +1,11 @@
 server:
-    port: 8083
+    port: 9083
 
 spring:
     datasource:
         url: jdbc:postgresql://localhost:5434/patient-registry
         username: keycloak
-        password: Keycloak123!
+        password: keycloak
     jpa:
         database-platform: org.hibernate.dialect.PostgreSQLDialect
         show-sql: false

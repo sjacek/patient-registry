@@ -16,7 +16,7 @@ services:
     postgres:
         image: postgres:12.3-alpine
 #        build: postgres
-        container_name: postgres
+        container_name: patient-registry_postgres
         volumes:
             - postgres_data:/var/lib/postgresql/data
             - ./postgres/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
@@ -32,7 +32,7 @@ services:
 
     keycloak:
         image: jboss/keycloak
-        container_name: keycloak
+        container_name: patient-registry_keycloak
         volumes:
             - ./keycloak/realms:/realms
         environment:
@@ -48,8 +48,8 @@ services:
             # Uncomment the line below if you want to specify JDBC parameters. The parameter below is just an example, and it shouldn't be used in production without knowledge. It is highly recommended that you read the PostgreSQL JDBC driver documentation in order to use it.
             #JDBC_PARAMS: "ssl=true"
         ports:
-            - 8082:8080
-            - 8445:8443
+#            - 9082:9080
+            - 9443:8443
         depends_on:
             - postgres
         expose:
@@ -67,7 +67,7 @@ services:
 
 #    patient-registry:
 #        image: library/openjdk:11.0.7-jdk-slim
-#        container_name: patient-registry
+#        container_name: patient-registry_patient-registry
 #        environment:
 #            JAVA_OPTS: "-Djava.security.egd=file:/dev/./urandom"
 #        entrypoint: "/bin/sh -c \"java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:7086 -jar /patients.jar\""
