@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.grinnotech.patients.util.startup;
+package com.grinnotech.patients.util.startup.orphadata;
 
 //import com.grinnotech.patients.dao.orphadata.DisorderRepository;
 //import org.slf4j.Logger;

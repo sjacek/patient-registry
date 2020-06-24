@@ -47,17 +47,25 @@ repositories {
     mavenCentral()
 }
 
+dependencyManagement {
+    imports {
+        mavenBom "org.keycloak.bom:keycloak-adapter-bom:${keycloakVersion}"
+    }
+}
+
 dependencies {
     runtimeOnly project(':frontend')
-    implementation project(':backend:model-mongodb')
+//    implementation project(':backend:model-mongodb')
 
 //    implementation "org.springframework:spring-core:${springVersion}"
 //    implementation "org.springframework:spring-webmvc:${springVersion}"
     implementation "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
     implementation "org.springframework.boot:spring-boot-starter-security:${springBootVersion}"
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor:${springBootVersion}"
+
 //    implementation "org.springframework.boot:spring-boot-starter-actuator:${springBootVersion}"
 //    implementation "org.springframework.boot:spring-boot-starter-data-elasticsearch:${springBootVersion}"
-    implementation "org.springframework.boot:spring-boot-starter-data-mongodb-reactive:${springBootVersion}"
+//    implementation "org.springframework.boot:spring-boot-starter-data-mongodb-reactive:${springBootVersion}"
 //    implementation "org.springframework.boot:spring-boot-starter-hateoas:${springBootVersion}"
 //    implementation "org.springframework.boot:spring-boot-starter-mail:${springBootVersion}"
 //    implementation "org.springframework.boot:spring-boot-starter-oauth2-client:${springBootVersion}"
@@ -66,13 +74,18 @@ dependencies {
 //    implementation "org.springframework.boot:spring-boot-starter-webflux:${springBootVersion}"
 //    implementation "org.springframework.boot:spring-boot-starter-websocket:${springBootVersion}"
 //    implementation "org.springframework.session:spring-session-core:2.2.2.RELEASE"
+//    implementation 'org.keycloak:keycloak-spring-boot-starter'
+    implementation "org.keycloak:keycloak-adapter-core:${keycloakVersion}"
+    implementation "org.keycloak:keycloak-spring-boot-2-adapter:${keycloakVersion}"
+    implementation "org.keycloak:keycloak-tomcat-adapter:${keycloakVersion}"
+    implementation "org.keycloak:keycloak-spring-security-adapter:${keycloakVersion}"
 
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor 'org.projectlombok:lombok'
 
     testImplementation 'com.unboundid:unboundid-ldapsdk:5.0.1'
-    testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo:2.2.0'
+//    testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo:2.2.0'
     testImplementation 'io.projectreactor:reactor-test:3.3.5.RELEASE'
     testImplementation 'org.springframework.security:spring-security-test:5.3.1.RELEASE'
 
@@ -149,7 +162,7 @@ openApiGenerate {
     // This command will be passed one file at a time for most supported post processors.
     enablePostProcessFile = false
 }
-compileJava.dependsOn("openApiGenerate")
+compileJava.dependsOn('openApiGenerate', 'processResources')
 
 idea {
     module {

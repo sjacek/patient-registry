@@ -1,23 +1,57 @@
-info:
-    app.name: "@project.name@"
-    app.description: "@project.description@"
-    app.version: "@project.version@"
-    build.artifact: "@project.artifactId@"
-    build.time: "@build.timestamp@"
+#info:
+#    app.name: "@project.name@"
+#    app.description: "@project.description@"
+#    app.version: "@project.version@"
+#    build.artifact: "@project.artifactId@"
+#    build.time: "@build.timestamp@"
 
-app:
-    url: https://localhost:8443
-    rememberme-cookie-key: patients
-    rememberme-cookie-valid-in-days: 31
-    default-email-sender: no-reply@parentproject.org.pl
-    login-lock-attempts: 10
-    login-lock-minutes: 30
+#app:
+#    url: https://localhost:8444
+#    rememberme-cookie-key: patients
+#    rememberme-cookie-valid-in-days: 31
+#    default-email-sender: no-reply@parentproject.org.pl
+#    login-lock-attempts: 10
+#    login-lock-minutes: 30
+#
+server:
+    port: 8444
+    http-port: 8088
+    ssl:
+        key-store: classpath:keystore.p12
+        key-store-password: Pacjenci#123
+        keyStoreType: PKCS12
+        keyAlias: tomcat
+    servlet:
+        #        context-path: /patients
+        session:
+            timeout: 480
+    compression:
+        enabled: true
+        mime-types: text/html,text/xml,text/plain,text/css,application/json,application/javascript,image/svg+xml,application/x-font-ttf,application/x-font-truetype,application/x-font-opentype,application/vnd.ms-fontobject,application/font-sfnt
+    use-forward-headers: true
+
+    tomcat:
+        access-log-enabled: true
+        access-log-pattern: "%h %l %u %t %r %s %b %D"
+        basedir: ../tomcat
+        rotate: true
 
 spring:
-    data:
-        mongodb:
-            uri: mongodb://localhost/patients?w=1&wtimeoutMS=0&journal=true
-            auto-index-creation: true
+#    security:
+#        user:
+#            name: user
+#        #            password: pass
+
+#        oauth2:
+#            resourceserver:
+#                jwt:
+#                    issuer-uri: http://localhost:8083/auth/realms/baeldung
+#                    jwk-set-uri: http://localhost:8083/auth/realms/baeldung/protocol/openid-connect/certs
+
+#    data:
+#        mongodb:
+#            uri: mongodb://localhost/patients?w=1&wtimeoutMS=0&journal=true
+#            auto-index-creation: true
 
 #security:
 #    oauth2:
@@ -56,28 +90,27 @@ spring:
         template:
             check-template-location: false
 
-server:
-    port: 8443
-    http-port: 8088
-    ssl:
-        key-store: keystore.p12
-        key-store-password: Pacjenci#123
-        keyStoreType: PKCS12
-        keyAlias: tomcat
-    servlet:
-        context-path: /patients
-        session:
-            timeout: 480
-    compression:
-        enabled: true
-        mime-types: text/html,text/xml,text/plain,text/css,application/json,application/javascript,image/svg+xml,application/x-font-ttf,application/x-font-truetype,application/x-font-opentype,application/vnd.ms-fontobject,application/font-sfnt
-    use-forward-headers: true
-
-    tomcat:
-        access-log-enabled: true
-        access-log-pattern: "%h %l %u %t %r %s %b %D"
-        basedir: ../tomcat
-        rotate: true
+keycloak:
+    enabled: true # enables keycloak authentication
+    auth-server-url: https://keycloak:9443/auth # keycloak server address (from the docker run command)
+    realm: PatientRegistry # name of imported realm
+    resource: patient-registry-client # name of imported client
+    security-constraints: # private resources (user with role required)
+        - authRoles:
+              - user
+          securityCollections:
+              - name: protected resource
+                patterns:
+                    - /api/*
+                    - /*
+        - securityCollections: # public resources (no required role)
+              - name: public resource
+                patterns:
+                    - /api/keycloak/config
+    credentials:
+        secret: "7a88aa57-3ba1-428e-8afc-4066e840d5b4" # (Clients > SpringBootAngularClient > Credentials > Secret)
+    realm-key: "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgenowSOhP0q9dYPEdAWDEtzufDfD7AMxNzZ9SoDA/g+yzj0+oYPhGDDm/SFz0MfB4D0ULoaZG7HTvyojSBIZPFR0SeHc4/6ntIzqDoUqF2Xa27hZBRxXAawuK8USkyBQ7whEVUUMYsi3RskViNa9+pIG0TSB2FG+yVw3ABeIfoZv7GNqGYCry9cbBH/M998bNzaWevqzKeQcUh/P7dv7G+SCnI4K1SZ7v1+yeSrQnPe9sgQVm7pwjcH8z0l+brWD87NXM3uKNSKFsdwOYqrfBZnxRYpDzVXohgdutGpVgqHHGLMX1NoJzdtXrZ4GoPumbyfJkRk7K7m7hU/ETgyzHQIDAQAB"
+    # (Realm Settings > Keys > Active > RSA > Public Key)
 
 tomcat:
     ajp:

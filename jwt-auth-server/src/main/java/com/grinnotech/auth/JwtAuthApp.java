@@ -16,10 +16,10 @@ import lombok.extern.slf4j.Slf4j;
 @SpringBootApplication(exclude = LiquibaseAutoConfiguration.class)
 @EnableConfigurationProperties(KeycloakServerProperties.class)
 @Slf4j
-public class Application {
+public class JwtAuthApp {
 
 	public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
+        SpringApplication.run(JwtAuthApp.class, args);
     }
 
     @Bean

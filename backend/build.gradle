@@ -3,8 +3,8 @@ plugins {
     id 'net.ltgt.apt' version '0.21'
     id 'net.ltgt.apt-idea' version '0.21'
     id 'org.springframework.boot' version "${springBootVersion}"
-    id "org.jetbrains.gradle.plugin.idea-ext" version '0.7'
-    id "io.spring.dependency-management" version '1.0.9.RELEASE'
+    id 'org.jetbrains.gradle.plugin.idea-ext' version '0.7'
+    id 'io.spring.dependency-management' version '1.0.9.RELEASE'
 }
 
 subprojects {
