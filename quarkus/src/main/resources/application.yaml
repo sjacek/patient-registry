@@ -1,0 +1,26 @@
+# Configuration file
+quarkus:
+    oidc:
+#        auth-server-url: http://localhost:9080/auth/realms/quarkus
+#        client-id: frontend
+#        credentials:
+#            secret: "4b624484-dc5b-4bad-b885-b3e88afebfc1"
+
+        auth-server-url: http://localhost:9080/auth/realms/PatientRegistry
+#        auth-server-url: https://localhost:9443/auth/realms/PatientRegistry
+        client-id: the-frontend
+        credentials:
+            secret: "6c42e86c-8c47-4412-a293-b7b8c0960583"
+
+        application-type: web-app
+
+#    keycloak:
+#        policy-enforcer:
+#            enable: true
+
+    http:
+        auth:
+            permission:
+                authenticated:
+                    paths: /*
+                    policy: authenticated
