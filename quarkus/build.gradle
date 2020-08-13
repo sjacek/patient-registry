@@ -10,6 +10,8 @@ repositories {
 }
 
 dependencies {
+    runtimeOnly project(':frontend')
+
     implementation 'io.quarkus:quarkus-oidc'
     implementation 'io.quarkus:quarkus-keycloak-authorization'
     implementation 'io.quarkus:quarkus-jaxb'
